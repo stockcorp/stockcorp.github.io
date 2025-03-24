@@ -81,13 +81,14 @@
             box-sizing: border-box;
         }
         button {
-            background-color: #007BFF;
-            color: white;
+            background-color: #1E90FF; /* 調整為更亮的藍色，提高對比度 */
+            color: #FFFFFF; /* 白色文字 */
             border: none;
             cursor: pointer;
+            font-weight: bold; /* 加粗文字提升可讀性 */
         }
         button:hover {
-            background-color: #0056b3;
+            background-color: #0066CC; /* 懸停時變暗，但保持高對比度 */
         }
         footer {
             text-align: center;
@@ -104,31 +105,25 @@
         .row > div {
             flex: 1;
         }
-        /* 價格欄位與單一互換按鈕 */
-        .price-swap-container {
+        /* 互換按鈕容器 */
+        .swap-button-container {
             display: flex;
-            align-items: flex-end;
-            gap: 10px;
-            margin-bottom: 10px;
+            justify-content: center;
+            margin: 10px 0;
         }
-        .price-swap-container > div {
-            flex: 1;
-        }
-        .price-swap-container button {
-            width: 60px;
-            padding: 10px;
-            flex-shrink: 0;
+        .swap-button-container button {
+            width: 100px; /* 固定寬度，保持一致性 */
         }
         /* 利潤顯示樣式 */
         .profit-positive {
-            background-color: red;
-            color: white;
+            background-color: #FF0000; /* 純紅色 */
+            color: #FFFFFF;
             padding: 2px 8px;
             border-radius: 4px;
         }
         .profit-negative {
-            background-color: green;
-            color: white;
+            background-color: #008000; /* 純綠色 */
+            color: #FFFFFF;
             padding: 2px 8px;
             border-radius: 4px;
         }
@@ -160,17 +155,17 @@
 
         <!-- 輸入表單 -->
         <div class="form-section">
-            <!-- 買入價格與賣出價格，中間放單一互換按鈕 -->
-            <div class="price-swap-container">
-                <div>
-                    <label for="buy-price">買入價格:</label>
-                    <input type="number" id="buy-price" step="0.01" placeholder="輸入買入價格">
-                </div>
+            <!-- 買入價格 -->
+            <label for="buy-price">買入價格:</label>
+            <input type="number" id="buy-price" step="0.01" placeholder="輸入買入價格">
+
+            <!-- 賣出價格 -->
+            <label for="sell-price">賣出價格:</label>
+            <input type="number" id="sell-price" step="0.01" placeholder="輸入賣出價格">
+
+            <!-- 互換按鈕 -->
+            <div class="swap-button-container">
                 <button onclick="swapPrices()">互換</button>
-                <div>
-                    <label for="sell-price">賣出價格:</label>
-                    <input type="number" id="sell-price" step="0.01" placeholder="輸入賣出價格">
-                </div>
             </div>
 
             <!-- 股票張數獨立一排 -->
