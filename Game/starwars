@@ -3,16 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>星際大戰 - 復古太空射擊遊戲</title>
+    <title>星際大戰 - 免費線上太空射擊遊戲</title>
+    <meta name="description" content="免費線上玩星際大戰復古太空射擊遊戲！控制太空船，擊落敵人，挑戰高分。立即體驗經典射擊樂趣！">
+    <meta name="keywords" content="星際大戰, 太空射擊遊戲, 線上遊戲, 復古遊戲, 免費遊戲">
+    <meta name="robots" content="index, follow">
     <style>
         body {
             margin: 0;
             display: flex;
             justify-content: center;
-            align-items: center;
-            height: 100vh;
+            align-items: flex-start;
+            min-height: 100vh;
             background: #000;
-            overflow: hidden;
+            font-family: Arial, sans-serif;
+            color: #fff;
+            padding: 20px;
+        }
+        #wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            max-width: 1200px;
         }
         #game-container {
             position: relative;
@@ -53,7 +64,6 @@
             top: 10px;
             left: 10px;
             color: #fff;
-            font-family: Arial, sans-serif;
             font-size: 20px;
         }
         #game-over {
@@ -63,16 +73,62 @@
             transform: translate(-50%, -50%);
             color: #f00;
             font-size: 40px;
-            font-family: Arial, sans-serif;
             display: none;
+        }
+        #instructions {
+            max-width: 300px;
+            padding: 15px;
+            background: #222;
+            border: 1px solid #fff;
+            border-radius: 5px;
+        }
+        h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        h2 {
+            font-size: 20px;
+            margin-top: 15px;
+        }
+        p, ul {
+            font-size: 16px;
+            line-height: 1.5;
+        }
+        ul {
+            padding-left: 20px;
+        }
+        @media (max-width: 900px) {
+            #wrapper {
+                flex-direction: column;
+                align-items: center;
+            }
+            #game-container {
+                width: 100%;
+                max-width: 600px;
+            }
         }
     </style>
 </head>
 <body>
-    <div id="game-container">
-        <div id="player"></div>
-        <div id="score">得分: 0</div>
-        <div id="game-over">遊戲結束</div>
+    <div id="wrapper">
+        <div id="game-container">
+            <div id="player"></div>
+            <div id="score">得分: 0</div>
+            <div id="game-over">遊戲結束</div>
+        </div>
+        <div id="instructions">
+            <h1>星際大戰</h1>
+            <p>歡迎體驗這款復古風格的太空射擊遊戲！控制你的太空船，擊落敵人，挑戰最高分。</p>
+            <h2>遊戲說明</h2>
+            <ul>
+                <li><strong>移動太空船</strong>：使用「左箭頭」和「右箭頭」控制太空船左右移動。</li>
+                <li><strong>發射子彈</strong>：按「空白鍵」發射黃色子彈，擊落紅色敵人。</li>
+                <li><strong>得分</strong>：每擊落一個敵人得 10 分。</li>
+                <li><strong>小心</strong>：避開敵人的紫色子彈，被擊中則遊戲結束！</li>
+            </ul>
+            <p>立即開始，享受星際大戰的射擊樂趣吧！</p>
+        </div>
     </div>
 
     <script>
@@ -89,7 +145,6 @@
         let score = 0;
         let gameOver = false;
 
-        // 玩家移動
         document.addEventListener('keydown', (e) => {
             if (gameOver) return;
             if (e.key === 'ArrowLeft' && playerX > 0) playerX -= 10;
@@ -98,7 +153,6 @@
             player.style.left = playerX + 'px';
         });
 
-        // 發射子彈
         function shoot() {
             const bullet = document.createElement('div');
             bullet.className = 'bullet';
@@ -108,7 +162,6 @@
             bullets.push(bullet);
         }
 
-        // 生成敵人
         function spawnEnemy() {
             const enemy = document.createElement('div');
             enemy.className = 'enemy';
@@ -117,7 +170,6 @@
             container.appendChild(enemy);
             enemies.push(enemy);
 
-            // 敵人隨機射擊
             if (Math.random() < 0.1) {
                 const bullet = document.createElement('div');
                 bullet.className = 'enemy-bullet';
@@ -128,11 +180,9 @@
             }
         }
 
-        // 遊戲更新邏輯
         function update() {
             if (gameOver) return;
 
-            // 更新玩家子彈
             bullets.forEach((bullet, index) => {
                 let bulletY = parseFloat(bullet.style.bottom) || 0;
                 bulletY += 5;
@@ -142,7 +192,6 @@
                     bullets.splice(index, 1);
                 }
 
-                // 碰撞檢測（子彈擊中敵人）
                 enemies.forEach((enemy, eIndex) => {
                     const bulletRect = bullet.getBoundingClientRect();
                     const enemyRect = enemy.getBoundingClientRect();
@@ -160,7 +209,6 @@
                 });
             });
 
-            // 更新敵人
             enemies.forEach((enemy, index) => {
                 let enemyY = parseFloat(enemy.style.top) || 0;
                 enemyY += 2;
@@ -171,7 +219,6 @@
                 }
             });
 
-            // 更新敵人子彈
             enemyBullets.forEach((bullet, index) => {
                 let bulletY = parseFloat(bullet.style.top) || 0;
                 bulletY += 3;
@@ -181,7 +228,6 @@
                     enemyBullets.splice(index, 1);
                 }
 
-                // 碰撞檢測（敵人子彈擊中玩家）
                 const playerRect = player.getBoundingClientRect();
                 const bulletRect = bullet.getBoundingClientRect();
                 if (bulletRect.top < playerRect.bottom &&
@@ -194,12 +240,10 @@
             });
         }
 
-        // 遊戲循環
         setInterval(() => {
             if (!gameOver) spawnEnemy();
-        }, 1000); // 每秒生成一個敵人
-        setInterval(update, 1000 / 60); // 每秒 60 幀更新
-
+        }, 1000);
+        setInterval(update, 1000 / 60);
     </script>
 </body>
 </html>
