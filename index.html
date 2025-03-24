@@ -132,10 +132,6 @@
 
         <!-- 輸入表單 -->
         <div class="form-section">
-            <label for="stock-code">股票代號 (如 2330):</label>
-            <input type="text" id="stock-code" placeholder="輸入股票代號以抓取即時價格">
-            <button onclick="fetchStockPrice()">抓取即時價格</button>
-
             <label for="buy-price">買入價格:</label>
             <input type="number" id="buy-price" step="0.01" placeholder="輸入買入價格">
 
@@ -227,7 +223,7 @@
                         <option value="0.84">8.4 折</option>
                         <option value="0.85">8.5 折</option>
                         <option value="0.86">8.6 折</option>
-                        <option value="0.87">7 折</option>
+                        <option value="0.87">8.7 折</option>
                         <option value="0.88">8.8 折</option>
                         <option value="0.89">8.9 折</option>
                         <option value="0.9">9.0 折</option>
@@ -254,6 +250,11 @@
             </div>
 
             <button onclick="calculateProfit()">計算利潤</button>
+
+            <!-- 股票代號與抓取按鈕移到計算利潤下方 -->
+            <label for="stock-code">股票代號 (如 2330):</label>
+            <input type="text" id="stock-code" placeholder="輸入股票代號以抓取即時價格">
+            <button onclick="fetchStockPrice()">抓取即時價格</button>
         </div>
 
         <!-- 計算結果 -->
@@ -303,40 +304,7 @@
             return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         }
 
-        // 計算利潤
-        function calculateProfit() {
-            const buyPrice = parseFloat(document.getElementById("buy-price").value) || 0;
-            const sellPrice = parseFloat(document.getElementById("sell-price").value) || 0;
-            const shares = parseFloat(document.getElementById("shares").value) || 0;
-            const discount = parseFloat(document.getElementById("fee-discount").value);
-            const mode = document.getElementById("trade-mode").value;
-            const volume = shares * 1000;
-
-            // 設定手續費率與稅率
-            let buyFeeRate, sellFeeRate, taxRate;
-            switch (mode) {
-                case "台股":
-                    buyFeeRate = 0.001425;
-                    sellFeeRate = 0.001425;
-                    taxRate = 0.003;
-                    break;
-                case "ETF":
-                    buyFeeRate = 0.001;
-                    sellFeeRate = 0.001;
-                    taxRate = 0.001;
-                    break;
-                case "現股當沖":
-                    buyFeeRate = 0.0015;
-                    sellFeeRate = 0.0015;
-                    taxRate = 0.0015;
-                    break;
-                default:
-                    buyFeeRate = 0.001425;
-                    sellFeeRate = 0.001425;
-                    taxRate = 0.003;
-            }
-			
-		// 使用 FinMind API 抓取台股即時價格
+        // 使用 FinMind API 抓取台股即時價格
         function fetchStockPrice() {
             const stockCode = document.getElementById("stock-code").value;
             if (!stockCode) {
@@ -371,6 +339,38 @@
                 });
         }
 
+        // 計算利潤
+        function calculateProfit() {
+            const buyPrice = parseFloat(document.getElementById("buy-price").value) || 0;
+            const sellPrice = parseFloat(document.getElementById("sell-price").value) || 0;
+            const shares = parseFloat(document.getElementById("shares").value) || 0;
+            const discount = parseFloat(document.getElementById("fee-discount").value);
+            const mode = document.getElementById("trade-mode").value;
+            const volume = shares * 1000;
+
+            // 設定手續費率與稅率
+            let buyFeeRate, sellFeeRate, taxRate;
+            switch (mode) {
+                case "台股":
+                    buyFeeRate = 0.001425;
+                    sellFeeRate = 0.001425;
+                    taxRate = 0.003;
+                    break;
+                case "ETF":
+                    buyFeeRate = 0.001;
+                    sellFeeRate = 0.001;
+                    taxRate = 0.001;
+                    break;
+                case "現股當沖":
+                    buyFeeRate = 0.0015;
+                    sellFeeRate = 0.0015;
+                    taxRate = 0.0015;
+                    break;
+                default:
+                    buyFeeRate = 0.001425;
+                    sellFeeRate = 0.001425;
+                    taxRate = 0.003;
+            }
 
             // 計算手續費（最低 20 元）
             let buyFee = Math.max(buyPrice * volume * buyFeeRate * discount, 20);
