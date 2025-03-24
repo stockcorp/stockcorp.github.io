@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>股票利潤計算器 - 支援 Google AdSense</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .header {
+            text-align: center;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .form-section {
+            background-color: #fff;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .result-section {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .ad-space {
+            margin: 20px 0;
+            text-align: center;
+        }
+        .privacy-section {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            text-align: left;
+        }
+        input, select, button {
+            padding: 10px;
+            margin: 5px 0;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 頁面標題 -->
+        <div class="header">
+            <h1>台灣股票利潤計算器</h1>
+            <p>輸入資料以計算您的股票交易利潤</p>
+        </div>
+
+        <!-- Google AdSense 橫幅廣告空間 -->
+        <div class="ad-space" id="banner-ad">
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3440199491716602"
+                    crossorigin="anonymous"></script>
+            <!-- 橫幅廣告單元 -->
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-3440199491716602"
+                 data-ad-slot="1234567890"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+
+        <!-- 輸入表單 -->
+        <div class="form-section">
+            <!-- 股票代號輸入框 -->
+            <label for="stock-code">股票代號 (如 2330):</label>
+            <input type="text" id="stock-code" placeholder="輸入股票代號以抓取即時價格">
+            <button onclick="fetchStockPrice()">抓取即時價格</button>
+
+            <label for="buy-price">買入價格:</label>
+            <input type="number" id="buy-price" step="0.01" placeholder="輸入買入價格">
+
+            <label for="sell-price">賣出價格:</label>
+            <input type="number" id="sell-price" step="0.01" placeholder="輸入賣出價格">
+
+            <label for="shares">股票張數 (零股用小數，如 0.1 = 100股):</label>
+            <input type="number" id="shares" step="0.001" placeholder="輸入張數">
+
+            <label for="fee-discount">券商手續費折扣:</label>
+            <select id="fee-discount">
+                <option value="0.11">1.1 折</option>
+                <option value="0.12">1.2 折</option>
+                <option value="0.13">1.3 折</option>
+                <option value="0.14">1.4 折</option>
+                <option value="0.15">1.5 折</option>
+                <option value="0.16">1.6 折</option>
+                <option value="0.17">1.7 折</option>
+                <option value="0.18">1.8 折</option>
+                <option value="0.19">1.9 折</option>
+                <option value="0.2">2.0 折</option>
+                <option value="0.21">2.1 折</option>
+                <option value="0.22">2.2 折</option>
+                <option value="0.23">2.3 折</option>
+                <option value="0.24">2.4 折</option>
+                <option value="0.25">2.5 折</option>
+                <option value="0.26">2.6 折</option>
+                <option value="0.27">2.7 折</option>
+                <option value="0.28">2.8 折</option>
+                <option value="0.29">2.9 折</option>
+                <option value="0.3">3.0 折</option>
+                <option value="0.31">3.1 折</option>
+                <option value="0.32">3.2 折</option>
+                <option value="0.33">3.3 折</option>
+                <option value="0.34">3.4 折</option>
+                <option value="0.35">3.5 折</option>
+                <option value="0.36">3.6 折</option>
+                <option value="0.37">3.7 折</option>
+                <option value="0.38">3.8 折</option>
+                <option value="0.39">3.9 折</option>
+                <option value="0.4">4.0 折</option>
+                <option value="0.41">4.1 折</option>
+                <option value="0.42">4.2 折</option>
+                <option value="0.43">4.3 折</option>
+                <option value="0.44">4.4 折</option>
+                <option value="0.45">4.5 折</option>
+                <option value="0.46">4.6 折</option>
+                <option value="0.47">4.7 折</option>
+                <option value="0.48">4.8 折</option>
+                <option value="0.49">4.9 折</option>
+                <option value="0.5">5.0 折</option>
+                <option value="0.51">5.1 折</option>
+                <option value="0.52">5.2 折</option>
+                <option value="0.53">5.3 折</option>
+                <option value="0.54">5.4 折</option>
+                <option value="0.55">5.5 折</option>
+                <option value="0.56">5.6 折</option>
+                <option value="0.57">5.7 折</option>
+                <option value="0.58">5.8 折</option>
+                <option value="0.59">5.9 折</option>
+                <option value="0.6">6.0 折</option>
+                <option value="0.61">6.1 折</option>
+                <option value="0.62">6.2 折</option>
+                <option value="0.63">6.3 折</option>
+                <option value="0.64">6.4 折</option>
+                <option value="0.65" selected>6.5 折 (預設)</option>
+                <option value="0.66">6.6 折</option>
+                <option value="0.67">6.7 折</option>
+                <option value="0.68">6.8 折</option>
+                <option value="0.69">6.9 折</option>
+                <option value="0.7">7.0 折</option>
+                <option value="0.71">7.1 折</option>
+                <option value="0.72">7.2 折</option>
+                <option value="0.73">7.3 折</option>
+                <option value="0.74">7.4 折</option>
+                <option value="0.75">7.5 折</option>
+                <option value="0.76">7.6 折</option>
+                <option value="0.77">7.7 折</option>
+                <option value="0.78">7.8 折</option>
+                <option value="0.79">7.9 折</option>
+                <option value="0.8">8.0 折</option>
+                <option value="0.81">8.1 折</option>
+                <option value="0.82">8.2 折</option>
+                <option value="0.83">8.3 折</option>
+                <option value="0.84">8.4 折</option>
+                <option value="0.85">8.5 折</option>
+                <option value="0.86">8.6 折</option>
+                <option value="0.87">8.7 折</option>
+                <option value="0.88">8.8 折</option>
+                <option value="0.89">8.9 折</option>
+                <option value="0.9">9.0 折</option>
+                <option value="0.91">9.1 折</option>
+                <option value="0.92">9.2 折</option>
+                <option value="0.93">9.3 折</option>
+                <option value="0.94">9.4 折</option>
+                <option value="0.95">9.5 折</option>
+                <option value="0.96">9.6 折</option>
+                <option value="0.97">9.7 折</option>
+                <option value="0.98">9.8 折</option>
+                <option value="0.99">9.9 折</option>
+                <option value="1.0">10 折</option>
+            </select>
+
+            <label for="trade-mode">交易模式:</label>
+            <select id="trade-mode">
+                <option value="台股">台股</option>
+                <option value="ETF">ETF</option>
+                <option value="現股當沖">現股當沖</option>
+            </select>
+
+            <button onclick="calculateProfit()">計算利潤</button>
+        </div>
+
+        <!-- 計算結果 -->
+        <div class="result-section" id="result">
+            <h2>分析報告</h2>
+            <p>利潤: <span id="profit">0</span></p>
+            <p>買入總額: <span id="buy-total">0</span></p>
+            <p>賣出總額: <span id="sell-total">0</span></p>
+            <p>買入手續費: <span id="buy-fee">0</span></p>
+            <p>賣出手續費: <span id="sell-fee">0</span></p>
+            <p>證券交易稅: <span id="tax">0</span></p>
+        </div>
+
+        <!-- Google AdSense 自適應廣告空間 -->
+        <div class="ad-space" id="responsive-ad">
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3440199491716602"
+                    crossorigin="anonymous"></script>
+            <!-- 自適應廣告單元 -->
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-3440199491716602"
+                 data-ad-slot="0987654321"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+
+        <!-- 隱私權政策 -->
+        <div class="privacy-section">
+            <h1>隱私權政策</h1>
+            <p>我們的應用程式不會收集個人資訊。</p>
+            <p>理財工具系列作品由吉米理財學堂授權開發</p>
+            <p>如有任何問題，請聯絡我們：<a href="mailto:xbon510@gmail.com">xbon510@gmail.com</a></p>
+        </div>
+
+        <!-- 頁腳 -->
+        <footer>
+            <p>© 2025 吉米理財學堂。保留所有權利。</p>
+        </footer>
+    </div>
+
+    <script>
+        // 格式化數字為千位分隔符
+        function formatNumber(num) {
+            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+
+        // 使用 FinMind API 抓取台股即時價格
+        function fetchStockPrice() {
+            const stockCode = document.getElementById("stock-code").value;
+            if (!stockCode) {
+                alert("請輸入股票代號！");
+                return;
+            }
+
+            const today = new Date().toISOString().split("T")[0]; // 獲取當前日期 (YYYY-MM-DD)
+            const token = ""; // 您的 FinMind Token
+            const url = `https://api.finmind.com/api/v4/data?dataset=TaiwanStockPrice&data_id=${stockCode}&start_date=${today}&token=${token}`;
+
+            fetch(url)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`API 請求失敗，狀態碼：${response.status} - ${response.statusText}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log("API 回應數據:", data); // 在控制台輸出完整回應，方便調試
+                    if (data.data && data.data.length > 0) {
+                        const latestPrice = data.data[data.data.length - 1].close; // 取最新收盤價
+                        document.getElementById("buy-price").value = latestPrice; // 填入買入價格
+                        alert(`已抓取 ${stockCode} 的即時價格：${latestPrice}`);
+                    } else {
+                        alert("無數據返回，可能是股票代號錯誤或當日無交易數據！");
+                    }
+                })
+                .catch(error => {
+                    console.error("抓取價格失敗:", error);
+                    alert(`抓取價格失敗：${error.message}\n請檢查網絡、Token 或股票代號！`);
+                });
+        }
+
+        // 計算利潤
+        function calculateProfit() {
+            const buyPrice = parseFloat(document.getElementById("buy-price").value) || 0;
+            const sellPrice = parseFloat(document.getElementById("sell-price").value) || 0;
+            const shares = parseFloat(document.getElementById("shares").value) || 0;
+            const discount = parseFloat(document.getElementById("fee-discount").value);
+            const mode = document.getElementById("trade-mode").value;
+            const volume = shares * 1000;
+
+            // 設定手續費率與稅率
+            let buyFeeRate, sellFeeRate, taxRate;
+            switch (mode) {
+                case "台股":
+                    buyFeeRate = 0.001425;
+                    sellFeeRate = 0.001425;
+                    taxRate = 0.003;
+                    break;
+                case "ETF":
+                    buyFeeRate = 0.001;
+                    sellFeeRate = 0.001;
+                    taxRate = 0.001;
+                    break;
+                case "現股當沖":
+                    buyFeeRate = 0.0015;
+                    sellFeeRate = 0.0015;
+                    taxRate = 0.0015;
+                    break;
+                default:
+                    buyFeeRate = 0.001425;
+                    sellFeeRate = 0.001425;
+                    taxRate = 0.003;
+            }
+
+            // 計算手續費（最低 20 元）
+            let buyFee = Math.max(buyPrice * volume * buyFeeRate * discount, 20);
+            let sellFee = Math.max(sellPrice * volume * sellFeeRate * discount, 20);
+            if (buyPrice === 0 || shares === 0) buyFee = 0;
+            if (sellPrice === 0 || shares === 0) sellFee = 0;
+
+            // 計算交易稅
+            const tax = sellPrice * volume * taxRate;
+
+            // 計算總額與利潤
+            const buyTotal = buyPrice * volume + buyFee;
+            const sellTotal = sellPrice * volume - sellFee - tax;
+            const profit = sellTotal - buyTotal;
+
+            // 更新結果
+            document.getElementById("profit").innerText = formatNumber(profit.toFixed(0));
+            document.getElementById("buy-total").innerText = formatNumber(buyTotal.toFixed(0));
+            document.getElementById("sell-total").innerText = formatNumber(sellTotal.toFixed(0));
+            document.getElementById("buy-fee").innerText = formatNumber(buyFee.toFixed(0));
+            document.getElementById("sell-fee").innerText = formatNumber(sellFee.toFixed(0));
+            document.getElementById("tax").innerText = formatNumber(tax.toFixed(0));
+        }
+    </script>
+</body>
+</html>
