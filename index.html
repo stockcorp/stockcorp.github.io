@@ -77,7 +77,6 @@
         input, select, button {
             padding: 10px;
             margin: 5px 0;
-            width: 100%;
             box-sizing: border-box;
         }
         button {
@@ -103,6 +102,32 @@
         }
         .row > div {
             flex: 1;
+        }
+        /* 買入價格與賣出價格縮減並並排 */
+        .price-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .price-row input {
+            width: 70%; /* 縮減輸入框寬度 */
+        }
+        .price-row button {
+            width: 20%; /* 互換按鈕寬度 */
+            padding: 10px;
+        }
+        /* 利潤顯示樣式 */
+        .profit-positive {
+            background-color: red;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+        .profit-negative {
+            background-color: green;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
         }
     </style>
 </head>
@@ -132,11 +157,18 @@
 
         <!-- 輸入表單 -->
         <div class="form-section">
-            <label for="buy-price">買入價格:</label>
-            <input type="number" id="buy-price" step="0.01" placeholder="輸入買入價格">
-
-            <label for="sell-price">賣出價格:</label>
-            <input type="number" id="sell-price" step="0.01" placeholder="輸入賣出價格">
+            <!-- 買入價格與賣出價格並排並加互換按鈕 -->
+            <div class="price-row">
+                <div>
+                    <label for="buy-price">買入價格:</label>
+                    <input type="number" id="buy-price" step="0.01" placeholder="輸入買入價格">
+                </div>
+                <button onclick="swapPrices()">互換</button>
+                <div>
+                    <label for="sell-price">賣出價格:</label>
+                    <input type="number" id="sell-price" step="0.01" placeholder="輸入賣出價格">
+                </div>
+            </div>
 
             <!-- 股票張數獨立一排 -->
             <label for="shares">股票張數 (零股用小數，如 0.1 = 100股):</label>
@@ -251,7 +283,7 @@
 
             <button onclick="calculateProfit()">計算利潤</button>
 
-            <!-- 股票代號與抓取按鈕移到計算利潤下方 -->
+            <!-- 股票代號與抓取按鈕 -->
             <label for="stock-code">股票代號 (如 2330):</label>
             <input type="text" id="stock-code" placeholder="輸入股票代號以抓取即時價格">
             <button onclick="fetchStockPrice()">抓取即時價格</button>
@@ -339,6 +371,14 @@
                 });
         }
 
+        // 互換買入價格與賣出價格
+        function swapPrices() {
+            const buyPrice = document.getElementById("buy-price").value;
+            const sellPrice = document.getElementById("sell-price").value;
+            document.getElementById("buy-price").value = sellPrice;
+            document.getElementById("sell-price").value = buyPrice;
+        }
+
         // 計算利潤
         function calculateProfit() {
             const buyPrice = parseFloat(document.getElementById("buy-price").value) || 0;
@@ -386,10 +426,29 @@
             const sellTotal = sellPrice * volume - sellFee - tax;
             const profit = sellTotal - buyTotal;
 
-            // 更新結果
-            document.getElementById("profit").innerText = formatNumber(profit.toFixed(0));
-            document.getElementById("buy-total").innerText = formatNumber(buyTotal.toFixed(0));
-            document.getElementById("sell-total").innerText = formatNumber(sellTotal.toFixed(0));
+            // 更新結果並設置樣式
+            const profitElement = document.getElementById("profit");
+            const buyTotalElement = document.getElementById("buy-total");
+            const sellTotalElement = document.getElementById("sell-total");
+
+            // 格式化數字
+            const formattedProfit = formatNumber(profit.toFixed(0));
+            const formattedBuyTotal = formatNumber(buyTotal.toFixed(0));
+            const formattedSellTotal = formatNumber(sellTotal.toFixed(0));
+
+            // 設置利潤樣式
+            profitElement.innerText = formattedProfit;
+            profitElement.className = profit >= 0 ? "profit-positive" : "profit-negative";
+
+            // 設置買入總額樣式
+            buyTotalElement.innerText = formattedBuyTotal;
+            buyTotalElement.className = buyTotal >= 0 ? "profit-positive" : "profit-negative";
+
+            // 設置賣出總額樣式
+            sellTotalElement.innerText = formattedSellTotal;
+            sellTotalElement.className = sellTotal >= 0 ? "profit-positive" : "profit-negative";
+
+            // 更新其他欄位（無背景樣式）
             document.getElementById("buy-fee").innerText = formatNumber(buyFee.toFixed(0));
             document.getElementById("sell-fee").innerText = formatNumber(sellFee.toFixed(0));
             document.getElementById("tax").innerText = formatNumber(tax.toFixed(0));
