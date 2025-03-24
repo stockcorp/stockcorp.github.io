@@ -12,13 +12,14 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
             margin: 0;
             background: #e0e0e0;
             font-family: Arial, sans-serif;
         }
         #game-container {
             text-align: center;
+            padding: 20px;
         }
         #tetris {
             border: 2px solid #333;
@@ -43,15 +44,55 @@
             max-width: 600px;
             margin: 10px auto;
         }
+        .ad-container {
+            margin: 20px 0;
+            text-align: center;
+        }
+        @media (max-width: 600px) {
+            #tetris {
+                width: 100%;
+                max-width: 240px;
+                height: auto;
+            }
+        }
     </style>
+    <!-- Google AdSense 全局腳本 -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX"
+            crossorigin="anonymous"></script>
 </head>
 <body>
     <div id="game-container">
+        <!-- 頂部橫幅廣告 -->
+        <div class="ad-container">
+            <h2>廣告</h2>
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+                 data-ad-slot="1234567890"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+
         <h1>線上俄羅斯方塊遊戲</h1>
         <p>歡迎體驗免費的網頁版俄羅斯方塊！使用鍵盤控制方塊，挑戰你的極限。支援左右移動、旋轉和加速下落，立即開始玩 Tetris 吧！</p>
         <canvas id="tetris" width="240" height="400"></canvas>
         <div id="score">得分: 0</div>
         <div id="game-over">遊戲結束</div>
+
+        <!-- 底部矩形廣告 -->
+        <div class="ad-container">
+            <h2>廣告</h2>
+            <ins class="adsbygoogle"
+                 style="display:inline-block;width:300px;height:250px"
+                 data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+                 data-ad-slot="0987654321"></ins>
+            <script>
+                (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
     </div>
 
     <script>
