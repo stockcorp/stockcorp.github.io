@@ -2,13 +2,14 @@
 <html lang="zh-TW">
 <head>
     <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-5Y3RVQ83FV"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'G-5Y3RVQ83FV');
-    </script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5Y3RVQ83FV"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-5Y3RVQ83FV');
+</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="台灣股票利潤計算機，支援即時台股價格查詢與券商手續費計算，快速計算您的股票交易利潤。">
@@ -113,14 +114,14 @@
             box-sizing: border-box;
         }
         button {
-            background-color: #1E90FF;
-            color: #FFFFFF;
+            background-color: #1E90FF; /* 調整為更亮的藍色，提高對比度 */
+            color: #FFFFFF; /* 白色文字 */
             border: none;
             cursor: pointer;
-            font-weight: bold;
+            font-weight: bold; /* 加粗文字提升可讀性 */
         }
         button:hover {
-            background-color: #0066CC;
+            background-color: #0066CC; /* 懸停時變暗，但保持高對比度 */
         }
         footer {
             text-align: center;
@@ -128,6 +129,7 @@
             font-size: 14px;
             color: #666;
         }
+        /* 左右並排樣式 */
         .row {
             display: flex;
             justify-content: space-between;
@@ -136,22 +138,24 @@
         .row > div {
             flex: 1;
         }
+        /* 互換按鈕容器 */
         .swap-button-container {
             display: flex;
             justify-content: center;
             margin: 10px 0;
         }
         .swap-button-container button {
-            width: 100px;
+            width: 100px; /* 固定寬度，保持一致性 */
         }
+        /* 利潤顯示樣式 */
         .profit-positive {
-            background-color: #FF0000;
+            background-color: #FF0000; /* 純紅色 */
             color: #FFFFFF;
             padding: 2px 8px;
             border-radius: 4px;
         }
         .profit-negative {
-            background-color: #008000;
+            background-color: #008000; /* 純綠色 */
             color: #FFFFFF;
             padding: 2px 8px;
             border-radius: 4px;
@@ -160,14 +164,17 @@
 </head>
 <body>
     <div class="container">
+        <!-- 頁面標題 -->
         <div class="header">
             <h1>台灣股票利潤計算機</h1>
             <p>輸入資料以計算您的股票交易利潤</p>
         </div>
 
+        <!-- Google AdSense 橫幅廣告空間 -->
         <div class="ad-space" id="banner-ad">
             <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3440199491716602"
                     crossorigin="anonymous"></script>
+            <!-- 橫幅廣告單元 -->
             <ins class="adsbygoogle"
                  style="display:block"
                  data-ad-client="ca-pub-3440199491716602"
@@ -179,27 +186,120 @@
             </script>
         </div>
 
+        <!-- 輸入表單 -->
         <div class="form-section">
+             <!-- 互換按鈕 -->
             <div class="swap-button-container">
                 <button onclick="swapPrices()">價格互換</button>
             </div>
             
+            <!-- 買入價格 -->
             <label for="buy-price">買入價格:</label>
             <input type="number" id="buy-price" step="0.01" placeholder="輸入買入價格">
 
+            <!-- 賣出價格 -->
             <label for="sell-price">賣出價格:</label>
             <input type="number" id="sell-price" step="0.01" placeholder="輸入賣出價格">
 
+            <!-- 股票張數獨立一排 -->
             <label for="shares">股票張數 (零股用小數，如 0.1 = 100股):</label>
             <input type="number" id="shares" step="0.001" placeholder="輸入張數">
 
+            <!-- 券商手續費折扣與交易模式並排 -->
             <div class="row">
                 <div>
                     <label for="fee-discount">券商手續費折扣:</label>
                     <select id="fee-discount">
-                        <!-- 選項保持不變，略過重複列出 -->
+                        <option value="0.11">1.1 折</option>
+                        <option value="0.12">1.2 折</option>
+                        <option value="0.13">1.3 折</option>
+                        <option value="0.14">1.4 折</option>
+                        <option value="0.15">1.5 折</option>
+                        <option value="0.16">1.6 折</option>
+                        <option value="0.17">1.7 折</option>
+                        <option value="0.18">1.8 折</option>
+                        <option value="0.19">1.9 折</option>
+                        <option value="0.2">2.0 折</option>
+                        <option value="0.21">2.1 折</option>
+                        <option value="0.22">2.2 折</option>
+                        <option value="0.23">2.3 折</option>
+                        <option value="0.24">2.4 折</option>
+                        <option value="0.25">2.5 折</option>
+                        <option value="0.26">2.6 折</option>
+                        <option value="0.27">2.7 折</option>
+                        <option value="0.28">2.8 折</option>
+                        <option value="0.29">2.9 折</option>
+                        <option value="0.3">3.0 折</option>
+                        <option value="0.31">3.1 折</option>
+                        <option value="0.32">3.2 折</option>
+                        <option value="0.33">3.3 折</option>
+                        <option value="0.34">3.4 折</option>
+                        <option value="0.35">3.5 折</option>
+                        <option value="0.36">3.6 折</option>
+                        <option value="0.37">3.7 折</option>
+                        <option value="0.38">3.8 折</option>
+                        <option value="0.39">3.9 折</option>
+                        <option value="0.4">4.0 折</option>
+                        <option value="0.41">4.1 折</option>
+                        <option value="0.42">4.2 折</option>
+                        <option value="0.43">4.3 折</option>
+                        <option value="0.44">4.4 折</option>
+                        <option value="0.45">4.5 折</option>
+                        <option value="0.46">4.6 折</option>
+                        <option value="0.47">4.7 折</option>
+                        <option value="0.48">4.8 折</option>
+                        <option value="0.49">4.9 折</option>
+                        <option value="0.5">5.0 折</option>
+                        <option value="0.51">5.1 折</option>
+                        <option value="0.52">5.2 折</option>
+                        <option value="0.53">5.3 折</option>
+                        <option value="0.54">5.4 折</option>
+                        <option value="0.55">5.5 折</option>
+                        <option value="0.56">5.6 折</option>
+                        <option value="0.57">5.7 折</option>
+                        <option value="0.58">5.8 折</option>
+                        <option value="0.59">5.9 折</option>
+                        <option value="0.6">6.0 折</option>
+                        <option value="0.61">6.1 折</option>
+                        <option value="0.62">6.2 折</option>
+                        <option value="0.63">6.3 折</option>
+                        <option value="0.64">6.4 折</option>
                         <option value="0.65" selected>6.5 折 (預設)</option>
-                        <!-- 其他選項省略 -->
+                        <option value="0.66">6.6 折</option>
+                        <option value="0.67">6.7 折</option>
+                        <option value="0.68">6.8 折</option>
+                        <option value="0.69">6.9 折</option>
+                        <option value="0.7">7.0 折</option>
+                        <option value="0.71">7.1 折</option>
+                        <option value="0.72">7.2 折</option>
+                        <option value="0.73">7.3 折</option>
+                        <option value="0.74">7.4 折</option>
+                        <option value="0.75">7.5 折</option>
+                        <option value="0.76">7.6 折</option>
+                        <option value="0.77">7.7 折</option>
+                        <option value="0.78">7.8 折</option>
+                        <option value="0.79">7.9 折</option>
+                        <option value="0.8">8.0 折</option>
+                        <option value="0.81">8.1 折</option>
+                        <option value="0.82">8.2 折</option>
+                        <option value="0.83">8.3 折</option>
+                        <option value="0.84">8.4 折</option>
+                        <option value="0.85">8.5 折</option>
+                        <option value="0.86">8.6 折</option>
+                        <option value="0.87">8.7 折</option>
+                        <option value="0.88">8.8 折</option>
+                        <option value="0.89">8.9 折</option>
+                        <option value="0.9">9.0 折</option>
+                        <option value="0.91">9.1 折</option>
+                        <option value="0.92">9.2 折</option>
+                        <option value="0.93">9.3 折</option>
+                        <option value="0.94">9.4 折</option>
+                        <option value="0.95">9.5 折</option>
+                        <option value="0.96">9.6 折</option>
+                        <option value="0.97">9.7 折</option>
+                        <option value="0.98">9.8 折</option>
+                        <option value="0.99">9.9 折</option>
+                        <option value="1.0">10 折</option>
                     </select>
                 </div>
                 <div>
@@ -214,11 +314,13 @@
 
             <button onclick="calculateProfit()">計算利潤</button>
 
+            <!-- 股票代號與抓取按鈕 -->
             <label for="stock-code">股票代號 (如 2330):</label>
             <input type="text" id="stock-code" placeholder="輸入股票代號以抓取即時價格">
             <button onclick="fetchStockPrice()">抓取即時價格</button>
         </div>
 
+        <!-- 計算結果 -->
         <div class="result-section" id="result">
             <h2>分析報告</h2>
             <p>利潤: <span id="profit">0</span></p>
@@ -229,9 +331,11 @@
             <p>證券交易稅: <span id="tax">0</span></p>
         </div>
 
+        <!-- Google AdSense 自適應廣告空間 -->
         <div class="ad-space" id="responsive-ad">
             <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3440199491716602"
                     crossorigin="anonymous"></script>
+            <!-- 自適應廣告單元 -->
             <ins class="adsbygoogle"
                  style="display:block"
                  data-ad-client="ca-pub-3440199491716602"
@@ -243,10 +347,37 @@
             </script>
         </div>
         
+        <!-- 新增的使用說明區塊 -->
         <div class="guide-section">
-            <!-- 使用說明保持不變，略過重複列出 -->
+            <h1>歡迎體驗「台灣股票利潤計算機」 - 您的台股交易最佳助手！</h1>
+            <p>想知道股票交易能賺多少？還是怕手續費、稅金算不清楚？別擔心！「台灣股票利潤計算機」由<a href="https://www.youtube.com/@吉米理財學堂" target="_blank">吉米理財學堂</a>精心打造，幫您一鍵搞定台股、ETF、現股當沖的利潤分析，還能即時抓取股票價格，省時又省力！無論您是新手還是老手，這款免費工具都能讓您輕鬆掌握交易全貌。以下是使用秘訣，快來試試吧！</p>
+            
+            <h2>Step 1：輸入基本交易資訊</h2>
+            <p><strong>買入價格 & 賣出價格</strong><br>在「買入價格」和「賣出價格」欄位，輸入您的交易價格（支援小數點後兩位）。懶得手動輸入？沒問題！跳到 Step 4，用「抓取即時價格」功能直接填入最新行情。</p>
+            <p><strong>股票張數</strong><br>填入您交易的張數，支援零股計算（例如 0.1 表示 100 股）。精準到小數點後三位，讓您的每一股都算得清清楚楚！</p>
+            <p><strong>價格互換超方便</strong><br>想快速比較買賣順序的利潤？點擊「價格互換」按鈕，買入與賣出價格瞬間對調，靈活又省事。</p>
+            
+            <h2>Step 2：設定交易條件</h2>
+            <p><strong>券商手續費折扣</strong><br>從下拉選單挑選您的手續費折扣（預設 6.5 折，範圍從 1.1 折到 10 折）。無論您跟哪家券商合作，這裡都能精準匹配！</p>
+            <p><strong>交易模式</strong><br>選擇您的交易類型：台股、ETF 或現股當沖。系統會自動調整手續費率與交易稅率（台股 0.3%、ETF 0.1%、當沖 0.15%），讓計算更貼近真實。</p>
+            
+            <h2>Step 3：一鍵計算，結果秒現</h2>
+            <p>點擊「計算利潤」按鈕，馬上看到完整分析報告：</p>
+            <ul>
+                <li><strong>利潤</strong>：紅色代表賺錢，綠色提醒虧損，一目了然。</li>
+                <li><strong>買入總額 / 賣出總額</strong>：包含手續費後的真實成本與收入。</li>
+                <li><strong>手續費 & 交易稅</strong>：細項拆分，透明公開，絕不漏算。</li>
+            </ul>
+            
+            <h2>Step 4：即時價格，掌握先機</h2>
+            <p>1. 在「股票代號」欄輸入想查的股票（例如台積電 2330）。</p>
+            <p>2. 點擊「抓取即時價格」，系統會拉取當日最新收盤價，直接填入「買入價格」。</p>
+            <p><em>小提醒：若抓取失敗，請檢查代號是否正確或網路連線是否穩定。</em></p>
+            
+            <h2>開始吧！</h2>
         </div>
         
+        <!-- 隱私權政策 -->
         <div class="privacy-section">
             <h1>隱私權政策</h1>
             <p>我們的應用程式不會收集個人資訊。</p>
@@ -254,6 +385,7 @@
             <p>如有任何問題，請聯絡我們：<a href="mailto:xbon510@gmail.com">xbon510@gmail.com</a></p>
         </div>
 
+        <!-- 頁腳 -->
         <footer>
             <p>© 2025 <a href="https://www.youtube.com/@吉米理財學堂" target="_blank">吉米理財學堂</a>。保留所有權利。</p>
         </footer>
@@ -265,7 +397,7 @@
             return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         }
 
-        // 抓取股票價格並更新 Google Sheets
+        // 使用 FinMind API 抓取台股即時價格
         function fetchStockPrice() {
             const stockCode = document.getElementById("stock-code").value;
             if (!stockCode) {
@@ -273,30 +405,31 @@
                 return;
             }
 
-            const scriptUrl = "https://script.google.com/macros/s/AKfycbwHiVx4lESoOhJIOzjcbda_1jD25FhV5lATc3MCebtXdDYf0q2tvCXUy4ajCzZ9YTWepA/exec"; // 替換為你的 Apps Script 網址
-            const data = { stockCode: stockCode };
+            const today = new Date().toISOString().split("T")[0]; // 獲取當前日期 (YYYY-MM-DD)
+            const token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJkYXRlIjoiMjAyNS0wMy0yNCAxNzo1NTozOCIsInVzZXJfaWQiOiJkc2FkIiwiaXAiOiIxMTQuMjcuNjcuODMifQ.jlH_7307EVQu7NeqlqebnNm836Xhu4HDASB_y8GrGuQ"; // 您的 FinMind Token
+            const url = `https://api.finmind.com/api/v4/data?dataset=TaiwanStockPrice&data_id=${stockCode}&start_date=${today}&token=${token}`;
 
-            fetch(scriptUrl, {
-                method: "POST",
-                body: JSON.stringify(data),
-                headers: {
-                    "Content-Type": "application/json"
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log("Google Sheets 回傳:", data);
-                if (data.price && data.price !== "無數據") {
-                    document.getElementById("buy-price").value = data.price;
-                    alert(`已抓取 ${stockCode} 的即時價格：${data.price}`);
-                } else {
-                    alert("無法抓取價格，可能是股票代號錯誤或無即時數據！");
-                }
-            })
-            .catch(error => {
-                console.error("抓取價格失敗:", error);
-                alert("抓取價格失敗，請檢查網路或聯繫管理員！");
-            });
+            fetch(url)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`API 請求失敗，狀態碼：${response.status} - ${response.statusText}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log("API 回應數據:", data); // 在控制台輸出完整回應，方便調試
+                    if (data.data && data.data.length > 0) {
+                        const latestPrice = data.data[data.data.length - 1].close; // 取最新收盤價
+                        document.getElementById("buy-price").value = latestPrice; // 填入買入價格
+                        alert(`已抓取 ${stockCode} 的即時價格：${latestPrice}`);
+                    } else {
+                        alert("無數據返回，可能是股票代號錯誤或當日無交易數據！");
+                    }
+                })
+                .catch(error => {
+                    console.error("抓取價格失敗:", error);
+                    alert(`抓取價格失敗：${error.message}\n請檢查網絡、Token 或股票代號！`);
+                });
         }
 
         // 互換買入價格與賣出價格
@@ -316,6 +449,7 @@
             const mode = document.getElementById("trade-mode").value;
             const volume = shares * 1000;
 
+            // 設定手續費率與稅率
             let buyFeeRate, sellFeeRate, taxRate;
             switch (mode) {
                 case "台股":
@@ -339,25 +473,31 @@
                     taxRate = 0.003;
             }
 
+            // 計算手續費（最低 20 元）
             let buyFee = Math.max(buyPrice * volume * buyFeeRate * discount, 20);
             let sellFee = Math.max(sellPrice * volume * sellFeeRate * discount, 20);
             if (buyPrice === 0 || shares === 0) buyFee = 0;
             if (sellPrice === 0 || shares === 0) sellFee = 0;
 
+            // 計算交易稅
             const tax = sellPrice * volume * taxRate;
 
+            // 計算總額與利潤
             const buyTotal = buyPrice * volume + buyFee;
             const sellTotal = sellPrice * volume - sellFee - tax;
             const profit = sellTotal - buyTotal;
 
+            // 更新結果並設置樣式
             const profitElement = document.getElementById("profit");
             const buyTotalElement = document.getElementById("buy-total");
             const sellTotalElement = document.getElementById("sell-total");
 
+            // 格式化數字
             const formattedProfit = formatNumber(profit.toFixed(0));
             const formattedBuyTotal = formatNumber(buyTotal.toFixed(0));
             const formattedSellTotal = formatNumber(sellTotal.toFixed(0));
 
+            // 根據利潤正負統一設置樣式
             const className = profit >= 0 ? "profit-positive" : "profit-negative";
             profitElement.innerText = formattedProfit;
             profitElement.className = className;
@@ -366,6 +506,7 @@
             sellTotalElement.innerText = formattedSellTotal;
             sellTotalElement.className = className;
 
+            // 更新其他欄位（無背景樣式）
             document.getElementById("buy-fee").innerText = formatNumber(buyFee.toFixed(0));
             document.getElementById("sell-fee").innerText = formatNumber(sellFee.toFixed(0));
             document.getElementById("tax").innerText = formatNumber(tax.toFixed(0));
