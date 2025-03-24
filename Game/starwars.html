@@ -1,3 +1,22 @@
+我會在你的「星際大戰」遊戲頁面中預留 Google AdSense 廣告的空間，並加入相關程式碼，讓你後續只需填入你的 AdSense 發布者 ID（ca-pub-XXXXXXXXXXXXXXXX）即可啟用廣告。以下是修改後的程式碼，包含廣告空間和說明：
+
+廣告空間設計
+位置：
+頂部橫幅廣告：放在遊戲上方，尺寸為自適應橫幅（適合 728x90 或 468x60）。
+側邊矩形廣告：放在遊戲說明右側或下方，尺寸為 300x250（中型矩形廣告）。
+程式碼：
+使用 Google AdSense 提供的 <script> 標籤，預留 data-ad-client 和 data-ad-slot。
+目前 data-ad-client 和 data-ad-slot 使用占位符，你需要替換為實際值。
+完整程式碼（含廣告空間）
+html
+
+預覽
+
+收起
+
+換行
+
+複製
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
@@ -24,6 +43,14 @@
             flex-wrap: wrap;
             gap: 20px;
             max-width: 1200px;
+            flex-direction: column;
+            align-items: center;
+        }
+        #game-section {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
         }
         #game-container {
             position: relative;
@@ -98,8 +125,12 @@
         ul {
             padding-left: 20px;
         }
+        .ad-container {
+            margin: 20px 0;
+            text-align: center;
+        }
         @media (max-width: 900px) {
-            #wrapper {
+            #game-section {
                 flex-direction: column;
                 align-items: center;
             }
@@ -109,25 +140,57 @@
             }
         }
     </style>
+    <!-- Google AdSense 全局腳本 -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX"
+            crossorigin="anonymous"></script>
 </head>
 <body>
     <div id="wrapper">
-        <div id="game-container">
-            <div id="player"></div>
-            <div id="score">得分: 0</div>
-            <div id="game-over">遊戲結束</div>
+        <!-- 頂部橫幅廣告 -->
+        <div class="ad-container">
+            <h2>廣告</h2>
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+                 data-ad-slot="1234567890"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
         </div>
-        <div id="instructions">
-            <h1>星際大戰</h1>
-            <p>歡迎體驗這款復古風格的太空射擊遊戲！控制你的太空船，擊落敵人，挑戰最高分。</p>
-            <h2>遊戲說明</h2>
-            <ul>
-                <li><strong>移動太空船</strong>：使用「左箭頭」和「右箭頭」控制太空船左右移動。</li>
-                <li><strong>發射子彈</strong>：按「空白鍵」發射黃色子彈，擊落紅色敵人。</li>
-                <li><strong>得分</strong>：每擊落一個敵人得 10 分。</li>
-                <li><strong>小心</strong>：避開敵人的紫色子彈，被擊中則遊戲結束！</li>
-            </ul>
-            <p>立即開始，享受星際大戰的射擊樂趣吧！</p>
+
+        <h1>星際大戰 - 太空射擊遊戲</h1>
+
+        <div id="game-section">
+            <div id="game-container">
+                <div id="player"></div>
+                <div id="score">得分: 0</div>
+                <div id="game-over">遊戲結束</div>
+            </div>
+            <div id="instructions">
+                <h2>遊戲說明</h2>
+                <p>歡迎體驗這款復古風格的太空射擊遊戲！控制你的太空船，擊落敵人，挑戰最高分。</p>
+                <ul>
+                    <li><strong>移動太空船</strong>：使用「左箭頭」和「右箭頭」控制太空船左右移動。</li>
+                    <li><strong>發射子彈</strong>：按「空白鍵」發射黃色子彈，擊落紅色敵人。</li>
+                    <li><strong>得分</strong>：每擊落一個敵人得 10 分。</li>
+                    <li><strong>小心</strong>：避開敵人的紫色子彈，被擊中則遊戲結束！</li>
+                </ul>
+                <p>立即開始，享受星際大戰的射擊樂趣吧！</p>
+            </div>
+        </div>
+
+        <!-- 側邊或底部矩形廣告 -->
+        <div class="ad-container">
+            <h2>廣告</h2>
+            <ins class="adsbygoogle"
+                 style="display:inline-block;width:300px;height:250px"
+                 data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+                 data-ad-slot="0987654321"></ins>
+            <script>
+                (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
         </div>
     </div>
 
