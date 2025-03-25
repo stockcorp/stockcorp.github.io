@@ -58,33 +58,43 @@
                 return;
             }
 
-            // 使用 Yahoo Finance 非官方查詢端點
-            const url = `https://query1.finance.yahoo.com/v8/finance/chart/${stockCode}?region=TW&lang=zh-Hant-TW&interval=1m&range=1d`;
+            // 使用 Yahoo Finance v7 端點
+            const url = `https://query1.finance.yahoo.com/v7/finance/quote?symbols=${stockCode}&region=TW&lang=zh-Hant-TW`;
 
-            fetch(url)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`查詢失敗，狀態碼：${response.status}`);
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    const meta = data.chart.result[0].meta;
-                    const price = meta.regularMarketPrice.toFixed(2);
-                    const timestamp = new Date(meta.regularMarketTime * 1000).toLocaleString();
+            fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`查詢失敗，狀態碼：${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log("API回應:", data); // 調試用，查看完整回應
+                const quote = data.quoteResponse.result[0];
+                if (quote) {
+                    const price = quote.regularMarketPrice.toFixed(2);
+                    const timestamp = new Date(quote.regularMarketTime * 1000).toLocaleString();
 
                     // 更新頁面內容
                     document.getElementById("stock-symbol").textContent = stockCode;
-                    document.getElementById("stock-price").textContent = `${price} TWD`;
+                    document.getElementById("stock-price").textContent = `${price} ${quote.currency}`;
                     document.getElementById("update-time").textContent = timestamp;
-                })
-                .catch(error => {
-                    console.error("抓取股價失敗:", error);
-                    alert(`抓取股價失敗：${error.message}\n請檢查股票代號或網路連線！`);
-                    document.getElementById("stock-symbol").textContent = stockCode;
-                    document.getElementById("stock-price").textContent = "無法獲取";
-                    document.getElementById("update-time").textContent = "無法獲取";
-                });
+                } else {
+                    throw new Error("無有效數據返回，股票代號可能錯誤！");
+                }
+            })
+            .catch(error => {
+                console.error("抓取股價失敗:", error);
+                alert(`抓取股價失敗：${error.message}\n請檢查股票代號（如 2330.TW）或稍後再試！`);
+                document.getElementById("stock-symbol").textContent = stockCode;
+                document.getElementById("stock-price").textContent = "無法獲取";
+                document.getElementById("update-time").textContent = "無法獲取";
+            });
         }
     </script>
 </body>
