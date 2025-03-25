@@ -43,7 +43,8 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 20px;
-            background-color: #f4f4f4;
+            background-color: #1a1a1a; /* 黑色背景 */
+            color: #ffffff; /* 白色文字 */
         }
         .container {
             max-width: 1200px;
@@ -63,23 +64,23 @@
         .header {
             text-align: center;
             padding: 20px;
-            background-color: #fff;
+            background-color: #2d2d2d; /* 深灰色區塊 */
             border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 5px rgba(255,255,255,0.1);
         }
         .form-section {
-            background-color: #fff;
+            background-color: #2d2d2d;
             padding: 20px;
             margin-top: 20px;
             border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 5px rgba(255,255,255,0.1);
         }
         .result-section {
             margin-top: 20px;
             padding: 20px;
-            background-color: #fff;
+            background-color: #2d2d2d;
             border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 5px rgba(255,255,255,0.1);
         }
         .ad-space {
             margin: 20px 0;
@@ -88,56 +89,68 @@
         .guide-section {
             margin-top: 20px;
             padding: 20px;
-            background-color: #fff;
+            background-color: #2d2d2d;
             border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 5px rgba(255,255,255,0.1);
             text-align: left;
         }
-        .guide-section h1 {
+        .guide-section h1, .privacy-section h1 {
             font-size: 24px;
             margin-bottom: 10px;
+            color: #00ccff; /* 亮藍色標題 */
         }
         .guide-section h2 {
             font-size: 18px;
             margin-top: 20px;
             margin-bottom: 10px;
+            color: #00ccff;
         }
-        .guide-section p {
+        .guide-section p, .privacy-section p {
             line-height: 1.6;
+            color: #e0e0e0; /* 淺灰文字 */
         }
         .guide-section ul {
             margin-left: 20px;
             line-height: 1.6;
+            color: #e0e0e0;
         }
         .privacy-section {
             margin-top: 20px;
             padding: 20px;
-            background-color: #fff;
+            background-color: #2d2d2d;
             border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 5px rgba(255,255,255,0.1);
             text-align: left;
         }
-        input, select, button {
+        input, select {
             padding: 10px;
             margin: 5px 0;
             width: 100%;
             box-sizing: border-box;
+            background-color: #404040; /* 深灰輸入框 */
+            color: #ffffff;
+            border: 1px solid #666;
+            border-radius: 4px;
         }
         button {
-            background-color: #1E90FF;
-            color: #FFFFFF;
+            padding: 10px;
+            margin: 5px 0;
+            width: 100%;
+            background-color: #00ccff; /* 亮藍按鈕 */
+            color: #000000; /* 黑色文字 */
             border: none;
+            border-radius: 4px;
             cursor: pointer;
             font-weight: bold;
         }
         button:hover {
-            background-color: #0066CC;
+            background-color: #0099cc; /* 懸停時稍暗 */
         }
         footer {
             text-align: center;
             margin-top: 20px;
             font-size: 14px;
-            color: #666;
+            color: #999;
         }
         .row {
             display: flex;
@@ -156,16 +169,23 @@
             width: 100px;
         }
         .profit-positive {
-            background-color: #FF0000;
-            color: #FFFFFF;
+            background-color: #ff4444; /* 亮紅色 */
+            color: #ffffff;
             padding: 2px 8px;
             border-radius: 4px;
         }
         .profit-negative {
-            background-color: #008000;
-            color: #FFFFFF;
+            background-color: #00cc00; /* 亮綠色 */
+            color: #ffffff;
             padding: 2px 8px;
             border-radius: 4px;
+        }
+        a {
+            color: #00ccff; /* 連結使用亮藍色 */
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
@@ -269,7 +289,7 @@
                             <option value="0.81">8.1 折</option>
                             <option value="0.82">8.2 折</option>
                             <option value="0.83">8.3 折</option>
-                            <option.gu value="0.84">8.4 折</option>
+                            <option value="0.84">8.4 折</option>
                             <option value="0.85">8.5 折</option>
                             <option value="0.86">8.6 折</option>
                             <option value="0.87">8.7 折</option>
@@ -299,8 +319,9 @@
                 </div>
                 <button onclick="calculateProfit()">計算利潤</button>
                 <label for="stock-code">股票代號 (如 2330):</label>
-                <input type="text" id="stock-code" placeholder="輸入股票代號以抓取即時價格">
-                <button onclick="fetchStockPrice()">抓取即時價格</button>
+                <input type="text" id="stock-code" placeholder="輸入股票代號">
+                <button onclick="fetchStockPrice('buy')">填入買入價格</button>
+                <button onclick="fetchStockPrice('sell')">填入賣出價格</button>
             </div>
 
             <!-- 計算結果 -->
@@ -337,7 +358,7 @@
                 <h1>歡迎體驗「台灣股票利潤計算機」 - 您的台股交易最佳助手！</h1>
                 <p>想知道股票交易能賺多少？還是怕手續費、稅金算不清楚？別擔心！「台灣股票利潤計算機」由<a href="https://www.youtube.com/@吉米理財學堂" target="_blank">吉米理財學堂</a>精心打造，幫您一鍵搞定台股、ETF、現股當沖的利潤分析，還能即時抓取股票價格，省時又省力！無論您是新手還是老手，這款免費工具都能讓您輕鬆掌握交易全貌。以下是使用秘訣，快來試試吧！</p>
                 <h2>Step 1：輸入基本交易資訊</h2>
-                <p><strong>買入價格 & 賣出價格</strong><br>在「買入價格」和「賣出價格」欄位，輸入您的交易價格（支援小數點後兩位）。懶得手動輸入？沒問題！跳到 Step 4，用「抓取即時價格」功能直接填入最新行情。</p>
+                <p><strong>買入價格 & 賣出價格</strong><br>在「買入價格」和「賣出價格」欄位，輸入您的交易價格（支援小數點後兩位）。或點擊「填入買入價格」/「填入賣出價格」按鈕，直接抓取即時股價。</p>
                 <p><strong>股票張數</strong><br>填入您交易的張數，支援零股計算（例如 0.1 表示 100 股）。精準到小數點後三位，讓您的每一股都算得清清楚楚！</p>
                 <p><strong>價格互換超方便</strong><br>想快速比較買賣順序的利潤？點擊「價格互換」按鈕，買入與賣出價格瞬間對調，靈活又省事。</p>
                 <h2>Step 2：設定交易條件</h2>
@@ -350,10 +371,6 @@
                     <li><strong>買入總額 / 賣出總額</strong>：包含手續費後的真實成本與收入。</li>
                     <li><strong>手續費 & 交易稅</strong>：細項拆分，透明公開，絕不漏算。</li>
                 </ul>
-                <h2>Step 4：即時價格，掌握先機</h2>
-                <p>1. 在「股票代號」欄輸入想查的股票（例如台積電 2330）。</p>
-                <p>2. 點擊「抓取即時價格」，系統會拉取當日最新收盤價，直接填入「買入價格」。</p>
-                <p><em>小提醒：若抓取失敗，請檢查代號是否正確或網路連線是否穩定。</em></p>
                 <h2>開始吧！</h2>
             </div>
 
@@ -393,8 +410,8 @@
             return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         }
 
-        // 使用 FinMind API 抓取台股即時價格
-        function fetchStockPrice() {
+        // 使用 FinMind API 抓取台股即時價格並填入指定欄位
+        function fetchStockPrice(target) {
             const stockCode = document.getElementById("stock-code").value;
             if (!stockCode) {
                 alert("請輸入股票代號！");
@@ -408,23 +425,27 @@
             fetch(url)
                 .then(response => {
                     if (!response.ok) {
-                        throw new Error(`API 請求失敗，狀態碼：${response.status} - ${response.statusText}`);
+                        throw new Error(`API 請求失敗，狀態碼：${response.status}`);
                     }
                     return response.json();
                 })
                 .then(data => {
-                    console.log("API 回應數據:", data);
                     if (data.data && data.data.length > 0) {
                         const latestPrice = data.data[data.data.length - 1].close;
-                        document.getElementById("buy-price").value = latestPrice;
-                        alert(`已抓取 ${stockCode} 的即時價格：${latestPrice}`);
+                        if (target === 'buy') {
+                            document.getElementById("buy-price").value = latestPrice;
+                            alert(`已將 ${stockCode} 的即時價格 ${latestPrice} 填入買入價格`);
+                        } else if (target === 'sell') {
+                            document.getElementById("sell-price").value = latestPrice;
+                            alert(`已將 ${stockCode} 的即時價格 ${latestPrice} 填入賣出價格`);
+                        }
                     } else {
                         alert("無數據返回，可能是股票代號錯誤或當日無交易數據！");
                     }
                 })
                 .catch(error => {
                     console.error("抓取價格失敗:", error);
-                    alert(`抓取價格失敗：${error.message}\n請檢查網絡、Token 或股票代號！`);
+                    alert(`抓取價格失敗：${error.message}`);
                 });
         }
 
