@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yahoo Finance 股價展示</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1a1a1a;
+            color: #ffffff;
+            padding: 20px;
+            text-align: center;
+        }
+        .stock-container {
+            background-color: #2d2d2d;
+            padding: 20px;
+            border-radius: 8px;
+            display: inline-block;
+            margin-top: 20px;
+        }
+        #stock-price {
+            font-size: 24px;
+            color: #00ccff;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #00ccff;
+            color: #000000;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0099cc;
+        }
+    </style>
+</head>
+<body>
+    <h1>Yahoo Finance 即時股價展示</h1>
+    <div>
+        <label for="stock-code">輸入股票代號 (如 2330.TW):</label><br>
+        <input type="text" id="stock-code" value="2330.TW" placeholder="輸入股票代號"><br>
+        <button onclick="fetchStockPrice()">查詢股價</button>
+    </div>
+    <div class="stock-container">
+        <h2>股票資訊</h2>
+        <p>股票代號: <span id="stock-symbol">尚未查詢</span></p>
+        <p>即時價格: <span id="stock-price">尚未查詢</span></p>
+        <p>更新時間: <span id="update-time">尚未查詢</span></p>
+    </div>
+
+    <script>
+        function fetchStockPrice() {
+            const stockCode = document.getElementById("stock-code").value.trim();
+            if (!stockCode) {
+                alert("請輸入股票代號！");
+                return;
+            }
+
+            // 使用 Yahoo Finance 非官方查詢端點
+            const url = `https://query1.finance.yahoo.com/v8/finance/chart/${stockCode}?region=TW&lang=zh-Hant-TW&interval=1m&range=1d`;
+
+            fetch(url)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`查詢失敗，狀態碼：${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    const meta = data.chart.result[0].meta;
+                    const price = meta.regularMarketPrice.toFixed(2);
+                    const timestamp = new Date(meta.regularMarketTime * 1000).toLocaleString();
+
+                    // 更新頁面內容
+                    document.getElementById("stock-symbol").textContent = stockCode;
+                    document.getElementById("stock-price").textContent = `${price} TWD`;
+                    document.getElementById("update-time").textContent = timestamp;
+                })
+                .catch(error => {
+                    console.error("抓取股價失敗:", error);
+                    alert(`抓取股價失敗：${error.message}\n請檢查股票代號或網路連線！`);
+                    document.getElementById("stock-symbol").textContent = stockCode;
+                    document.getElementById("stock-price").textContent = "無法獲取";
+                    document.getElementById("update-time").textContent = "無法獲取";
+                });
+        }
+    </script>
+</body>
+</html>
