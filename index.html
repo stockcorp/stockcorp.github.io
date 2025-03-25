@@ -64,7 +64,7 @@
         .header {
             text-align: center;
             padding: 40px 20px;
-            background-image: url('http://www.stockcorp.tw/channels4_banner.jpg'); /* 替換為實際圖片 URL */
+            background-image: url('http://www.stockcorp.tw/channels4_banner.jpg');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -72,7 +72,19 @@
             box-shadow: 0 2px 5px rgba(255,255,255,0.1);
             position: relative;
         }
-        .header h1, .header p {
+        .header h1 {
+            font-size: 36px; /* 增大字體 */
+            font-weight: bold; /* 加粗字體 */
+            color: #ffd700; /* 金色文字，與黑色背景形成強烈對比 */
+            background-color: rgba(0, 0, 0, 0.8); /* 更深的背景透明度 */
+            display: inline-block;
+            padding: 10px 20px; /* 增加內距 */
+            border-radius: 6px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9); /* 更強的陰影效果 */
+            -webkit-text-stroke: 1px #000000; /* 文字描邊，增加對比 */
+            text-stroke: 1px #000000; /* 兼容性 */
+        }
+        .header p {
             background-color: rgba(0, 0, 0, 0.6);
             display: inline-block;
             padding: 5px 10px;
@@ -222,7 +234,7 @@
             <div class="form-section">
                 <label for="sell-price">台灣股票利潤計算機</label> <br />
                 <label for="sell-price">輸入資料以計算您的股票交易利潤</label>
-                <div class="swap-button-container">
+                <div class .swap-button-container">
                     <button onclick="swapPrices()">價格互換</button>
                 </div>
                 <label for="buy-price">買入價格:</label>
