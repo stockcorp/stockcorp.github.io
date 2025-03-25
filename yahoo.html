@@ -58,15 +58,12 @@
                 return;
             }
 
-            // 使用 Yahoo Finance v7 端點
-            const url = `https://query1.finance.yahoo.com/v7/finance/quote?symbols=${stockCode}&region=TW&lang=zh-Hant-TW`;
+            // 使用公開的CORS代理服務繞過CORS限制
+            const proxyUrl = "https://cors-anywhere.herokuapp.com/";
+            const apiUrl = `https://query1.finance.yahoo.com/v7/finance/quote?symbols=${stockCode}®ion=TW&lang=zh-Hant-TW`;
+            const url = proxyUrl + apiUrl;
 
-            fetch(url, {
-                method: 'GET',
-                headers: {
-                    'Accept': 'application/json'
-                }
-            })
+            fetch(url)
             .then(response => {
                 if (!response.ok) {
                     throw new Error(`查詢失敗，狀態碼：${response.status}`);
