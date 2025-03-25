@@ -1,3 +1,19 @@
+我將幫您將「股票研究院」這幾個字從橫幅（Banner）中移出，放在網頁的左上角，並用一個與網頁其他框一致的色調（深灰色背景 #2d2d2d、亮藍色文字 #00ccff）的框來呈現。以下是具體的修改步驟：
+
+移除橫幅中的標題：將 .header 中的 <h1>股票研究院</h1> 移除，僅保留橫幅圖片。
+新增左上角標題框：在 .container 的最上方新增一個新的 <div>，用來放置「股票研究院」標題，並設置與其他框一致的樣式。
+調整佈局：確保新標題框與橫幅不重疊，並讓橫幅圖片佔據剩餘空間。
+以下是修改後的完整程式碼：
+
+html
+
+預覽
+
+收起
+
+換行
+
+複製
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
@@ -61,6 +77,21 @@
             flex: 2;
             min-width: 300px;
         }
+        /* 新增的左上角標題框 */
+        .site-title {
+            background-color: #2d2d2d; /* 與其他框一致的深灰色背景 */
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(255,255,255,0.1);
+            width: fit-content; /* 框寬度適應內容 */
+            margin-bottom: 20px; /* 與橫幅保持間距 */
+        }
+        .site-title h1 {
+            font-size: 28px;
+            margin: 0;
+            color: #00ccff; /* 與其他標題一致的亮藍色 */
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+        }
         .header {
             text-align: center;
             padding: 40px 20px;
@@ -71,25 +102,8 @@
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(255,255,255,0.1);
             position: relative;
-        }
-        .header h1 {
-            font-size: 36px; /* 增大字體 */
-            font-weight: bold; /* 加粗字體 */
-            color: #ffd700; /* 金色文字，與黑色背景形成強烈對比 */
-            background-color: rgba(0, 0, 0, 0.8); /* 更深的背景透明度 */
-            display: inline-block;
-            padding: 10px 20px; /* 增加內距 */
-            border-radius: 6px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9); /* 更強的陰影效果 */
-            -webkit-text-stroke: 1px #000000; /* 文字描邊，增加對比 */
-            text-stroke: 1px #000000; /* 兼容性 */
-        }
-        .header p {
-            background-color: rgba(0, 0, 0, 0.6);
-            display: inline-block;
-            padding: 5px 10px;
-            border-radius: 4px;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+            width: 100%; /* 確保橫幅佔滿寬度 */
+            height: 200px; /* 設置橫幅高度，可根據需要調整 */
         }
         .form-section {
             background-color: #2d2d2d;
@@ -221,11 +235,14 @@
 </head>
 <body>
     <div class="container">
-        <!-- 頁面標題 -->
+        <!-- 左上角標題 -->
+        <div class="site-title">
+            <h1>股票研究院</h1>
+        </div>
+
+        <!-- 橫幅 -->
         <div style="width: 100%;">
-            <div class="header">
-                <h1>股 票 研 究 院</h1>
-            </div>
+            <div class="header"></div>
         </div>
 
         <!-- 左側欄：計算與分析 -->
@@ -234,7 +251,7 @@
             <div class="form-section">
                 <label for="sell-price">台灣股票利潤計算機</label> <br />
                 <label for="sell-price">輸入資料以計算您的股票交易利潤</label>
-                <div class .swap-button-container">
+                <div class="swap-button-container">
                     <button onclick="swapPrices()">價格互換</button>
                 </div>
                 <label for="buy-price">買入價格:</label>
@@ -349,7 +366,7 @@
                     </div>
                 </div>
                 <button onclick="calculateProfit()">計算利潤</button>
-                <label for="stock-code">自動抓取股票代號 (如 2330):</label>
+                <label for="stock-code">股票代號 (如 2330):</label>
                 <input type="text" id="stock-code" placeholder="輸入股票代號">
                 <button onclick="fetchStockPrice('buy')">填入買入價格</button>
                 <button onclick="fetchStockPrice('sell')">填入賣出價格</button>
