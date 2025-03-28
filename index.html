@@ -69,48 +69,19 @@
         }
         /* 標題框 */
         .site-title {
-            background-color: #2d2d2d;
+            background-color: #2d2d2d; /* 與其他框一致的深灰色背景 */
             padding: 15px 20px;
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(255,255,255,0.1);
             width: fit-content; /* 框寬度適應內容 */
-            display: flex;
-            align-items: center;
+            margin-bottom: 20px; /* 與下方內容保持間距 */
         }
         .site-title h1 {
             font-size: 28px;
             margin: 0;
-            color: #ffffff;
+            color: #ffffff; /* 白色 */
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
-            display: inline;
-        }
-        /* 導航方格 */
-        .nav-box {
-            background-color: #2d2d2d;
-            padding: 15px 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(255,255,255,0.1);
-            width: fit-content; /* 與標題框對齊 */
-            margin-top: 10px; /* 與標題框間距 */
-            display: flex;
-            align-items: center;
-        }
-        .nav-buttons {
-            display: flex;
-            gap: 10px;
-        }
-        .nav-buttons button {
-            padding: 8px 16px;
-            background-color: #00ccff;
-            color: #000000;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 14px;
-        }
-        .nav-buttons button:hover {
-            background-color: #0099cc;
+            display: inline; /* 與圖片同行顯示 */
         }
         .header {
             text-align: center;
@@ -122,8 +93,8 @@
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(255,255,255,0.1);
             position: relative;
-            width: 100%;
-            height: 60px;
+            width: 100%; /* 確保橫幅佔滿寬度 */
+            height: 60px; /* 設置橫幅高度，可根據需要調整 */
         }
         .form-section {
             background-color: #2d2d2d;
@@ -160,7 +131,7 @@
         .guide-section h1, .privacy-section h1, .links-section h1 {
             font-size: 24px;
             margin-bottom: 10px;
-            color: #00ccff;
+            color: #00ccff; /* 亮藍色標題 */
         }
         .guide-section h2 {
             font-size: 18px;
@@ -169,23 +140,23 @@
             color: #00ccff;
         }
         .result-section h2 {
-            font-size: 24px;
+            font-size: 24px; /* 與其他標題一致 */
             margin-bottom: 10px;
-            color: #ffffff;
+            color: #ffffff; /* 改為白色 */
         }
         .links-section h1 {
             font-size: 24px;
             margin-bottom: 10px;
-            color: #ffffff;
+            color: #ffffff; /* 改為白色 */
         }
         .section-title {
-            font-size: 24px;
-            color: #ffffff;
+            font-size: 24px; /* 與分析報告一致 */
+            color: #ffffff; /* 改為白色 */
             margin-bottom: 10px;
         }
         .guide-section p, .privacy-section p, .links-section p {
             line-height: 1.6;
-            color: #e0e0e0;
+            color: #e0e0e0; /* 淺灰文字 */
         }
         .guide-section ul, .links-section ul {
             margin-left: 20px;
@@ -205,7 +176,7 @@
             margin: 5px 0;
             width: 100%;
             box-sizing: border-box;
-            background-color: #404040;
+            background-color: #404040; /* 深灰輸入框 */
             color: #ffffff;
             border: 1px solid #666;
             border-radius: 4px;
@@ -214,15 +185,15 @@
             padding: 10px;
             margin: 5px 0;
             width: 100%;
-            background-color: #00ccff;
-            color: #000000;
+            background-color: #00ccff; /* 亮藍按鈕 */
+            color: #000000; /* 黑色文字 */
             border: none;
             border-radius: 4px;
             cursor: pointer;
             font-weight: bold;
         }
         button:hover {
-            background-color: #0099cc;
+            background-color: #0099cc; /* 懸停時稍暗 */
         }
         footer {
             text-align: center;
@@ -247,19 +218,19 @@
             width: 100px;
         }
         .profit-positive {
-            background-color: #ff4444;
+            background-color: #ff4444; /* 亮紅色 */
             color: #ffffff;
             padding: 2px 8px;
             border-radius: 4px;
         }
         .profit-negative {
-            background-color: #00cc00;
+            background-color: #00cc00; /* 亮綠色 */
             color: #ffffff;
             padding: 2px 8px;
             border-radius: 4px;
         }
         a {
-            color: #00ccff;
+            color: #00ccff; /* 連結使用亮藍色 */
             text-decoration: none;
         }
         a:hover {
@@ -276,20 +247,11 @@
 
         <!-- 左側欄：標題與計算區域 -->
         <div class="left-column">
-            <!-- 標題 -->
+            <!-- 標題移到橫幅下方，台灣股票利潤計算機上方 -->
             <div class="site-title">
                 <img src="https://www.stockcorp.tw/img/icon1.jpg" alt="股市企業研究院圖標" style="vertical-align: middle; margin-right: 10px; height: 28px; width: auto;">
                 <h1>股 市 企 業 研 究 院</h1>
             </div>
-            <!-- 導航方格 -->
-            <div class="nav-box">
-                <div class="nav-buttons">
-                    <button onclick="location.href='https://xbon520.github.io/'">首頁</button>
-                    <button onclick="location.href='https://xbon520.github.io/compound.html'">複利計算機</button>
-                    <button onclick="location.href='https://xbon520.github.io/about.html'">關於我們</button>
-                </div>
-            </div>
-            <br>
 
             <!-- 輸入表單 -->
             <div class="form-section">
