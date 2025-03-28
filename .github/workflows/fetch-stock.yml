@@ -1,0 +1,26 @@
+name: Fetch Stock Price
+
+on:
+  schedule:
+    - cron: '*/5 * * * *' # 每5分鐘運行一次
+  workflow_dispatch: # 允許手動觸發
+
+jobs:
+  fetch-stock:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Fetch stock price and save to file
+        run: |
+          curl -o autostockprice/stock_price.txt "https://mis.twse.com.tw/stock/api/getStockInfo.jsp?ex_ch=tse_2330.tw&_=$(date +%s%N | cut -b1-13)"
+          cat autostockprice/stock_price.txt # 檢查內容（可選）
+
+      - name: Commit result
+        run: |
+          git config --global user.name "GitHub Action"
+          git config --global user.email "action@github.com"
+          git add autostockprice/stock_price.txt
+          git commit -m "Update stock price" || echo "No changes to commit"
+          git push
