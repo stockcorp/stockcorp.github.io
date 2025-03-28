@@ -488,7 +488,7 @@
             const username = "xbon520";
             const repo = "xbon520.github.io"; // 你的倉庫名
             const workflowId = "fetch-stock.yml"; // workflow檔案名
-            const token = "你的個人存取令牌"; // 替換為你的PAT，例如 ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+            const token = "sha256:09b268ade688fa6ba20da3b8963934a3c71b31428d587b669213bd7e4c2d80ab"; // 替換為你的PAT，例如 ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
             const dispatchUrl = `https://api.github.com/repos/${username}/${repo}/actions/workflows/${workflowId}/dispatches`;
             const rawUrl = `https://raw.githubusercontent.com/${username}/${repo}/main/autostockprice/stock_price.txt`;
