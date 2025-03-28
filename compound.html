@@ -351,12 +351,12 @@
                 <!-- 進階定期定額表單 -->
                 <div class="advanced-form">
                     <label for="adv-initial-investment">初期本金 (元):</label>
-                    <input type="text" id="adv-initial-investment" placeholder="輸入初期本金" value="20,000">
+                    <input type="text" id="adv-initial-investment" placeholder="輸入初期本金" value="1,000">
                     <label for="monthly-investment">每月投資金額 (元):</label>
-                    <input type="text" id="monthly-investment" placeholder="輸入每月投資金額" value="5,000">
+                    <input type="text" id="monthly-investment" placeholder="輸入每月投資金額" value="1,000">
                     <label for="investment-period">投資期數:</label>
                     <div class="row">
-                        <input type="number" id="investment-period" step="1" placeholder="輸入期數" value="5" style="width: 70%;">
+                        <input type="number" id="investment-period" step="1" placeholder="輸入期數" value="3" style="width: 70%;">
                         <select id="period-unit">
                             <option value="years" selected>年</option>
                             <option value="months">個月</option>
@@ -379,7 +379,6 @@
                         <option value="365">日複利</option>
                     </select>
                     <button onclick="calculateAdvancedCompound()">計算複利</button>
-                    <button class="download-button" onclick="downloadTableAsImage()">下載圖片</button>
                 </div>
             </div>
 
@@ -412,6 +411,7 @@
                     </thead>
                     <tbody></tbody>
                 </table>
+                <button class="download-button" onclick="downloadTableAsImage()">下載圖片</button>
             </div>
 
             <!-- 相關連結區塊 -->
@@ -460,9 +460,9 @@
                 - 逐年表格顯示年份、收益、總額與累計收益率。</p>
                 <h2>進階定期定額計算機使用說明</h2>
                 <p><strong>輸入欄位</strong><br>
-                - 初期本金 (元)：初始投入，例如 20,000 元。<br>
-                - 每月投資金額 (元)：每月定投，例如 5,000 元。<br>
-                - 投資期數：投資時間，例如 5 年。<br>
+                - 初期本金 (元)：初始投入，例如 1,000 元。<br>
+                - 每月投資金額 (元)：每月定投，例如 1,000 元。<br>
+                - 投資期數：投資時間，例如 3 年。<br>
                 - 利率 (%)：年化或月化利率，例如 5%。<br>
                 - 複利方式：年複利、半年複利等，例如年複利。<br>
                 <strong>計算邏輯</strong><br>
@@ -593,9 +593,9 @@
                     const row = document.createElement("tr");
                     row.innerHTML = `
                         <td>${data.year}</td>
-                        <td>${formatNumber(data.principal.toFixed(2))}</td>
-                        <td>+${formatNumber(data.profit.toFixed(2))}</td>
-                        <td>${formatNumber(data.total.toFixed(2))}</td>
+                        <td>${formatNumber(Math.round(data.principal))}</td>
+                        <td>+${formatNumber(Math.round(data.profit))}</td>
+                        <td>${formatNumber(Math.round(data.total))}</td>
                     `;
                     tableBody.appendChild(row);
                 });
@@ -608,9 +608,9 @@
                     const row = document.createElement("tr");
                     row.innerHTML = `
                         <td>${data.month}</td>
-                        <td>${formatNumber(data.principal.toFixed(2))}</td>
-                        <td>+${formatNumber(data.profit.toFixed(2))}</td>
-                        <td>${formatNumber(data.total.toFixed(2))}</td>
+                        <td>${formatNumber(Math.round(data.principal))}</td>
+                        <td>+${formatNumber(Math.round(data.profit))}</td>
+                        <td>${formatNumber(Math.round(data.total))}</td>
                     `;
                     tableBody.appendChild(row);
                 });
@@ -623,11 +623,11 @@
             const years = parseInt(document.getElementById("basic-years").value) || 0;
             const annualRate = (parseFloat(document.getElementById("basic-annual-rate").value) || 0) / 100;
 
-            const futureValue = initialInvestment * Math.pow(1 + annualRate, years);
+            const futureValue = Math.round(initialInvestment * Math.pow(1 + annualRate, years));
             const totalProfit = futureValue - initialInvestment;
 
-            document.getElementById("total-profit").innerText = formatNumber(totalProfit.toFixed(2));
-            document.getElementById("future-value").innerText = formatNumber(futureValue.toFixed(2));
+            document.getElementById("total-profit").innerText = formatNumber(totalProfit);
+            document.getElementById("future-value").innerText = formatNumber(futureValue);
 
             const tableBody = document.querySelector("#compound-table tbody");
             tableBody.innerHTML = "";
@@ -635,15 +635,15 @@
             let currentValue = initialInvestment;
             for (let i = 1; i <= years; i++) {
                 const previousValue = currentValue;
-                currentValue = previousValue * (1 + annualRate);
+                currentValue = Math.round(previousValue * (1 + annualRate));
                 const yearlyProfit = currentValue - previousValue;
                 const cumulativeRate = ((currentValue - initialInvestment) / initialInvestment) * 100;
 
                 const row = document.createElement("tr");
                 row.innerHTML = `
                     <td>${i}</td>
-                    <td>+${formatNumber(yearlyProfit.toFixed(2))}</td>
-                    <td>${formatNumber(currentValue.toFixed(2))}</td>
+                    <td>+${formatNumber(yearlyProfit)}</td>
+                    <td>${formatNumber(currentValue)}</td>
                     <td>${cumulativeRate.toFixed(2)}%</td>
                 `;
                 tableBody.appendChild(row);
@@ -677,7 +677,7 @@
             for (let month = 1; month <= totalMonths; month++) {
                 const previousValue = futureValue;
                 cumulativeInvested += monthlyInvestment;
-                futureValue = previousValue * (1 + monthlyRate) + monthlyInvestment;
+                futureValue = Math.round(previousValue * (1 + monthlyRate)) + monthlyInvestment;
                 const monthlyProfit = futureValue - previousValue - monthlyInvestment;
 
                 monthData.push({
@@ -695,7 +695,7 @@
                 const previousValue = currentValue;
                 const yearMonths = Math.min(12, totalMonths - (year - 1) * 12);
                 cumulativeInvested += monthlyInvestment * yearMonths;
-                currentValue = previousValue * (1 + annualRate) + monthlyInvestment * yearMonths * (1 + annualRate / 2); // 假設年中平均投資
+                currentValue = Math.round(previousValue * (1 + annualRate)) + monthlyInvestment * yearMonths * Math.round(1 + annualRate / 2); // 假設年中平均投資
                 const yearlyProfit = currentValue - previousValue;
 
                 yearData.push({
@@ -709,9 +709,9 @@
             const totalInvested = initialInvestment + monthlyInvestment * totalMonths;
             const totalProfit = futureValue - totalInvested;
 
-            document.getElementById("total-profit").innerText = formatNumber(totalProfit.toFixed(2));
-            document.getElementById("future-value").innerText = formatNumber(futureValue.toFixed(2));
-            document.getElementById("total-invested").innerText = formatNumber(totalInvested.toFixed(0));
+            document.getElementById("total-profit").innerText = formatNumber(totalProfit);
+            document.getElementById("future-value").innerText = formatNumber(futureValue);
+            document.getElementById("total-invested").innerText = formatNumber(totalInvested);
 
             advancedYearData = yearData;
             advancedMonthData = monthData;
