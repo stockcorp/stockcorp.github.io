@@ -16,15 +16,15 @@
     
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="複利計算機，支援基本複利與定期定額計算，幫助您預估投資收益。">
+    <meta name="description" content="複利計算機，計算單筆投資的複利收益，含逐年分析表格。">
     <meta name="image" content="https://www.stockcorp.tw/img/small.jpg">
-    <meta name="keywords" content="複利計算機, 投資收益, 定投計算, 吉米理財學堂">
+    <meta name="keywords" content="複利計算機, 投資收益, 吉米理財學堂">
     <meta name="author" content="吉米理財學堂">
     <meta name="robots" content="index, follow">
     <title>股市企業研究院 - 複利計算機 - 吉米理財學堂</title>
     <!-- Open Graph Meta Tags for Social Media -->
     <meta property="og:title" content="股市企業研究院 - 複利計算機 - 吉米理財學堂">
-    <meta property="og:description" content="快速計算基本複利與定期定額投資收益。">
+    <meta property="og:description" content="計算單筆投資的複利收益，含逐年分析表格。">
     <meta property="og:url" content="https://xbon520.github.io/">
     <meta property="og:type" content="website">
     <!-- Structured Data (JSON-LD) for SEO -->
@@ -34,7 +34,7 @@
         "@type": "WebApplication",
         "name": "複利計算機",
         "url": "https://xbon520.github.io/",
-        "description": "一款免費的複利計算工具，支援基本複利與定期定額投資計算。",
+        "description": "一款免費的複利計算工具，計算單筆投資收益並提供逐年分析。",
         "publisher": {
             "@type": "Organization",
             "name": "吉米理財學堂",
@@ -220,13 +220,20 @@
             font-size: 14px;
             color: #999;
         }
-        .row {
-            display: flex;
-            justify-content: space-between;
-            gap: 20px;
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            color: #e0e0e0;
         }
-        .row > div {
-            flex: 1;
+        th, td {
+            padding: 8px;
+            text-align: right;
+            border-bottom: 1px solid #666;
+        }
+        th {
+            background-color: #3a3a3a;
+            color: #00ccff;
         }
         a {
             color: #00ccff;
@@ -263,28 +270,13 @@
             <div class="form-section">
                 <h2>複利計算機</h2>
                 <hr>
-                <label for="initial-investment">初期投資額 (元):</label>
-                <input type="number" id="initial-investment" step="1" placeholder="輸入初期投資額">
+                <label for="initial-investment">初期本金 (元):</label>
+                <input type="number" id="initial-investment" step="1" placeholder="輸入初期本金">
                 
-                <label for="periodic-investment">定期投資金額 (元):</label>
-                <input type="number" id="periodic-investment" step="1" placeholder="輸入每次投資金額（可為0）">
+                <label for="years">計息期數 (n):</label>
+                <input type="number" id="years" step="1" placeholder="輸入計息期數">
                 
-                <div class="row">
-                    <div>
-                        <label for="investment-frequency">投資頻率:</label>
-                        <select id="investment-frequency">
-                            <option value="12">每月</option>
-                            <option value="4">每季</option>
-                            <option value="1" selected>每年</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label for="years">複利回數 (年):</label>
-                        <input type="number" id="years" step="1" placeholder="輸入年數">
-                    </div>
-                </div>
-                
-                <label for="annual-rate">年化收益率 (%):</label>
+                <label for="annual-rate">收益率 (%):</label>
                 <input type="number" id="annual-rate" step="0.01" placeholder="輸入年化收益率">
                 
                 <button onclick="calculateCompound()">計算複利</button>
@@ -293,9 +285,19 @@
             <!-- 計算結果 -->
             <div class="result-section" id="result">
                 <h2>分析報告</h2>
-                <p>未來總額: <span id="future-value">0</span> 元</p>
-                <p>總投入金額: <span id="total-invested">0</span> 元</p>
                 <p>總收益: <span id="total-profit">0</span> 元</p>
+                <p>最終金額: <span id="future-value">0</span> 元</p>
+                <table id="compound-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>收益 (元)</th>
+                            <th>總額 (元)</th>
+                            <th>收益率</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
             </div>
 
             <!-- 相關連結區塊 -->
@@ -331,62 +333,17 @@
             <!-- 使用說明 -->
             <div class="guide-section">
                 <h1>歡迎體驗「複利計算機」 - 您的投資成長最佳助手！</h1>
-                <h2>1. 基本複利計算機</h2>
-                <p><strong>功能概述</strong><br>基本複利計算機是用來計算單筆投資在指定期間內，透過複利效果所能達到的未來價值的工具。適用於存款、股票、虛擬貨幣等單次投入的投資場景。</p>
-                <p><strong>詳細功能說明</strong><br>
-                <strong>輸入欄位：</strong><br>
-                初期投資額：輸入初始投入的本金（例如 10,000 元）。<br>
-                複利回數：設定複利的次數，通常以年為單位（例如 10 年）。<br>
-                收益率：輸入預期的年化收益率（例如 5%）。<br>
-                <strong>計算邏輯：</strong><br>
-                使用複利公式：未來價值 = 初期投資額 × (1 + 收益率)^複利回數。<br>
-                利息會累加到本金中，每一期都基於新的總額計算下一次利息，呈現等比級數成長。<br>
-                例如：初始 10,000 元，年利率 10%，3 年後的結果為 13,310 元（10,000 × 1.1³）。<br>
-                <strong>輸出結果：</strong><br>
-                未來總額：顯示投資到期後的本金加利息總和。<br>
-                不提供詳細的逐年利息分解，而是直接給出最終結果。<br>
-                <strong>特色與限制：</strong><br>
-                簡單直觀，適合快速預估單筆投資的長期收益。<br>
-                不支援定期追加投資，仅適用於一次性投入。<br>
-                假設收益率固定，不考慮市場波動或通脹影響。<br>
-                <strong>使用場景</strong><br>
-                想知道一筆存款或股票投資在固定收益率下，若不追加資金，多年後能成長到多少。<br>
-                例如：計算 50 萬在 5% 年利率下，10 年後變成多少。</p>
-
-                <h2>2. 定期定額複利計算機</h2>
-                <p><strong>功能概述</strong><br>定期定額複利計算機專為模擬定期投資（如每月定投）設計，計算在固定頻率追加投資的情況下，透過複利效果達到的未來價值。適合用於基金定投、ETF 或其他定期儲蓄計劃。</p>
-                <p><strong>詳細功能說明</strong><br>
-                <strong>輸入欄位：</strong><br>
-                初期投資額：初始投入的本金（可設為 0，若從零開始定投）。<br>
-                定期投資金額：每次追加的投資金額（例如每月 1,000 元）。<br>
-                投資頻率：選擇追加投資的時間間隔（如每月、每季、每年）。<br>
-                複利回數：設定總投資期間（例如 10 年）。<br>
-                收益率：輸入預期的年化收益率（例如 6%）。<br>
-                <strong>計算邏輯：</strong><br>
-                使用定期定額複利公式：未來價值 = 定期投資金額 × [(1 + 收益率/複利頻率)^(複利頻率 × 年數) - 1] / (收益率/複利頻率) + 初期投資額 × (1 + 收益率)^複利回數。<br>
-                每期追加的投資金額會獨立計算複利，並累加到總額中。<br>
-                複利頻率（例如每年、每月）影響利息計算的精確度，網站允許調整此參數。<br>
-                <strong>輸出結果：</strong><br>
-                未來總額：顯示總投資期間結束後的本金、追加金額及複利總和。<br>
-                總投入金額：顯示所有定期投資的累計金額。<br>
-                總收益：顯示複利產生的總利息。<br>
-                <strong>特色與限制：</strong><br>
-                支援靈活的定期投資模擬，能反映真實定投場景。<br>
-                可選擇不同的複利頻率（如每月複利或每年複利），增加計算彈性。<br>
-                假設收益率固定，不考慮實際市場的波動或費用（如手續費）。<br>
-                <strong>使用場景</strong><br>
-                模擬每月定投 3,000 元到 ETF，年化收益率 7%，20 年後的總資產。<br>
-                比較不同定投金額或頻率下的長期收益差異。</p>
-
-                <h2>兩者比較</h2>
-                <ul>
-                    <li><strong>功能項目</strong> | <strong>基本複利計算機</strong> | <strong>定期定額複利計算機</strong></li>
-                    <li>投資方式 | 單筆一次性投資 | 定期追加投資</li>
-                    <li>主要輸入 | 初期金額、回數、收益率 | 初期金額、定投金額、頻率、回數、收益率</li>
-                    <li>計算複雜度 | 簡單 | 較複雜</li>
-                    <li>適用場景 | 長期單筆投資預測 | 定投計劃收益模擬</li>
-                    <li>結果展示 | 僅最終總額 | 總額、投入與收益分解</li>
-                </ul>
+                <p>想知道一筆投資能成長多少？「複利計算機」由<a href="https://www.youtube.com/@吉米理財學堂" target="_blank">吉米理財學堂</a>打造，幫您快速計算單筆投資的複利收益，並提供逐年分析表格。無論您是理財新手還是老手，這款免費工具都能讓您輕鬆掌握投資成長軌跡。快來試試吧！</p>
+                <h2>使用說明</h2>
+                <p><strong>輸入欄位</strong><br>
+                - <strong>初期本金 (元)</strong>：輸入初始投入金額，例如 10,000 元。<br>
+                - <strong>計息期數 (n)</strong>：輸入投資年數，例如 20 年。<br>
+                - <strong>收益率 (%)</strong>：輸入預期年化收益率，例如 5%。<br>
+                <strong>計算邏輯</strong><br>
+                使用複利公式：總額 = 初期本金 × (1 + 收益率)^計息期數，每年收益基於前一年總額計算。<br>
+                <strong>輸出結果</strong><br>
+                - 總收益與最終金額。<br>
+                - 逐年表格顯示年份、收益、總額與累計收益率。</p>
             </div>
 
             <!-- 隱私權政策 -->
@@ -425,36 +382,40 @@
             return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         }
 
-        // 計算複利
+        // 計算複利並生成表格
         function calculateCompound() {
             const initialInvestment = parseFloat(document.getElementById("initial-investment").value) || 0;
-            const periodicInvestment = parseFloat(document.getElementById("periodic-investment").value) || 0;
-            const frequency = parseInt(document.getElementById("investment-frequency").value);
             const years = parseInt(document.getElementById("years").value) || 0;
             const annualRate = (parseFloat(document.getElementById("annual-rate").value) || 0) / 100;
 
-            // 基本複利計算：初期投資額的未來價值
-            const initialFutureValue = initialInvestment * Math.pow(1 + annualRate, years);
+            // 計算最終金額與總收益
+            const futureValue = initialInvestment * Math.pow(1 + annualRate, years);
+            const totalProfit = futureValue - initialInvestment;
 
-            // 定期定額複利計算
-            const periods = frequency * years;
-            const ratePerPeriod = annualRate / frequency;
-            let periodicFutureValue = 0;
-            if (ratePerPeriod > 0) {
-                periodicFutureValue = periodicInvestment * (Math.pow(1 + ratePerPeriod, periods) - 1) / ratePerPeriod;
-            } else {
-                periodicFutureValue = periodicInvestment * periods; // 若利率為0，僅累加本金
-            }
-
-            // 總未來價值
-            const futureValue = initialFutureValue + periodicFutureValue;
-            const totalInvested = initialInvestment + periodicInvestment * periods;
-            const totalProfit = futureValue - totalInvested;
-
-            // 更新結果
-            document.getElementById("future-value").innerText = formatNumber(futureValue.toFixed(0));
-            document.getElementById("total-invested").innerText = formatNumber(totalInvested.toFixed(0));
+            // 更新總收益與最終金額
             document.getElementById("total-profit").innerText = formatNumber(totalProfit.toFixed(0));
+            document.getElementById("future-value").innerText = formatNumber(futureValue.toFixed(0));
+
+            // 生成逐年表格
+            const tableBody = document.querySelector("#compound-table tbody");
+            tableBody.innerHTML = ""; // 清空表格
+
+            let currentValue = initialInvestment;
+            for (let i = 1; i <= years; i++) {
+                const previousValue = currentValue;
+                currentValue = previousValue * (1 + annualRate);
+                const yearlyProfit = currentValue - previousValue;
+                const cumulativeRate = ((currentValue - initialInvestment) / initialInvestment) * 100;
+
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${i}</td>
+                    <td>+${formatNumber(yearlyProfit.toFixed(2))}</td>
+                    <td>${formatNumber(currentValue.toFixed(2))}</td>
+                    <td>${cumulativeRate.toFixed(2)}%</td>
+                `;
+                tableBody.appendChild(row);
+            }
         }
     </script>
 </body>
