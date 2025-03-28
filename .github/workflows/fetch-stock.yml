@@ -1,9 +1,9 @@
-name: Fetch Stock Price
+name: Fetch All Taiwan Stock Prices
 
 on:
   schedule:
-    - cron: '*/5 * * * *'
-  workflow_dispatch:
+    - cron: '*/5 * * * *'  # 每5分鐘執行一次
+  workflow_dispatch:      # 允許手動觸發
 
 jobs:
   fetch-stock:
@@ -17,15 +17,28 @@ jobs:
       - name: Create autostockprice directory
         run: mkdir -p autostockprice
 
-      - name: Fetch stock price and save to file
+      - name: Fetch all stock prices and save to file
         run: |
-          curl -o autostockprice/stock_price.txt "https://mis.twse.com.tw/stock/api/getStockInfo.jsp?ex_ch=tse_2330.tw&_=$(date +%s%N | cut -b1-13)"
-          cat autostockprice/stock_price.txt
+          # 獲取所有上市股票代號列表
+          curl -o stock_list.json "https://openapi.twse.com.tw/v1/exchangeReport/STOCK_DAY_ALL"
+          
+          # 提取股票代號並組成查詢字串
+          STOCK_CODES=$(jq -r '.[] | .Code' stock_list.json | tr '\n' '|' | sed 's/|$//')
+          FORMATTED_CODES=$(echo $STOCK_CODES | sed 's/|/|/g' | sed 's/|/\n/g' | awk '{print "tse_"$1".tw"}' | tr '\n' '|')
+          
+          # 移除最後的"|"符號
+          FINAL_CODES=${FORMATTED_CODES%|}
+          
+          # 獲取所有股票的即時價格
+          curl -o autostockprice/all_stock_prices.json "https://mis.twse.com.tw/stock/api/getStockInfo.jsp?ex_ch=${FINAL_CODES}&_=$(date +%s%N | cut -b1-13)"
+          
+          # 格式化輸出（可選）
+          jq . autostockprice/all_stock_prices.json > autostockprice/all_stock_prices_pretty.json
 
       - name: Commit result
         run: |
           git config --global user.name "GitHub Action"
           git config --global user.email "action@github.com"
-          git add autostockprice/stock_price.txt
-          git commit -m "Update stock price" || echo "No changes to commit"
+          git add autostockprice/all_stock_prices.json autostockprice/all_stock_prices_pretty.json
+          git commit -m "Update all Taiwan stock prices - $(date '+%Y-%m-%d %H:%M:%S')" || echo "No changes to commit"
           git push
