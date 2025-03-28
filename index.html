@@ -68,11 +68,30 @@
             min-width: 300px;
         }
         /* 標題與下拉選單容器 */
-        .title-container {
-            display: flex;
-            align-items: center;
-            gap: 15px; /* 選單與標題間距 */
+        .header-section {
             margin-bottom: 20px;
+        }
+        /* 下拉選單樣式 */
+        .nav-dropdown {
+            background-color: #2d2d2d; /* 與標題框一致 */
+            padding: 8px 12px;
+            font-size: 14px;
+            color: #ffffff;
+            border: 1px solid #666;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+            width: 150px; /* 固定寬度，優雅且不過分佔空間 */
+            margin-bottom: 10px; /* 與標題框間距 */
+        }
+        .nav-dropdown:hover {
+            background-color: #3a3a3a; /* 懸停時略亮 */
+            border-color: #888;
+        }
+        .nav-dropdown:focus {
+            outline: none;
+            border-color: #00ccff; /* 聚焦時亮藍邊框 */
+            box-shadow: 0 0 5px rgba(0, 204, 255, 0.5); /* 微光效果 */
         }
         /* 標題框 */
         .site-title {
@@ -90,25 +109,6 @@
             color: #ffffff;
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
             display: inline;
-        }
-        /* 下拉選單樣式 */
-        .nav-dropdown {
-            background-color: #404040; /* 與輸入框一致的深灰色 */
-            padding: 8px 12px;
-            font-size: 14px;
-            color: #ffffff;
-            border: 1px solid #666;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.3s ease, border-color 0.3s ease;
-        }
-        .nav-dropdown:hover {
-            background-color: #505050; /* 懸停時略亮 */
-            border-color: #888;
-        }
-        .nav-dropdown:focus {
-            outline: none;
-            border-color: #00ccff; /* 聚焦時亮藍邊框 */
         }
         .header {
             text-align: center;
@@ -274,8 +274,8 @@
 
         <!-- 左側欄：標題與計算區域 -->
         <div class="left-column">
-            <!-- 標題與下拉選單 -->
-            <div class="title-container">
+            <!-- 下拉選單與標題 -->
+            <div class="header-section">
                 <select class="nav-dropdown" onchange="if (this.value) window.location.href = this.value;">
                     <option value="">導航</option>
                     <option value="https://xbon520.github.io/">首頁</option>
