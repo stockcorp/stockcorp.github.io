@@ -3,50 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>台積電即時股價</title>
+    <title>台積電(2330) 即時價格</title>
     <style>
         body {
             font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f0f0f0;
             text-align: center;
-            margin-top: 50px;
         }
-        #price {
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+        }
+        .price {
             font-size: 24px;
-            color: #2c3e50;
+            color: #007bff;
+            margin: 20px 0;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
         }
     </style>
 </head>
 <body>
-    <h1>台積電 (2330) 即時股價</h1>
-    <div id="price">載入中...</div>
+    <div class="container">
+        <h1>台積電 (2330) 即時價格</h1>
+        <div class="price" id="stockPrice">尚未抓取</div>
+        <button onclick="fetchPrice()">抓取價格</button>
+    </div>
 
     <script>
-        // 定義抓取股價的函數
-        async function fetchStockPrice() {
-            const stockId = "2330"; // 台積電代碼
-            const url = `http://mis.twse.com.tw/stock/api/getStockInfo.jsp?ex_ch=tse_${stockId}.tw&_=${Date.now()}`;
-
-            try {
-                // 發送請求
-                const response = await fetch(url);
-                const data = await response.json();
-
-                // 檢查是否有資料
-                if (data.msgArray && data.msgArray.length > 0) {
-                    const stockInfo = data.msgArray[0];
-                    const latestPrice = stockInfo.z !== "-" ? stockInfo.z : "暫無成交價"; // "z" 是即時成交價
-                    document.getElementById("price").innerText = `最新股價: ${latestPrice} 元`;
-                } else {
-                    document.getElementById("price").innerText = "無法取得股價資料";
-                }
-            } catch (error) {
-                document.getElementById("price").innerText = "請求失敗，請稍後再試";
-                console.error("錯誤:", error);
-            }
+        function fetchPrice() {
+            // 由於CORS限制，無法直接抓取，改為提示
+            alert("請前往 https://tw.stock.yahoo.com/quote/2330 查看台積電(2330)的即時價格，並手動輸入到其他應用中。");
+            document.getElementById("stockPrice").innerText = "請手動查詢";
         }
-
-        // 頁面載入時執行
-        window.onload = fetchStockPrice;
     </script>
 </body>
 </html>
