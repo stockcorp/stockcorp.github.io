@@ -301,16 +301,15 @@
             <!-- 輸入表單 -->
             <div class="form-section">
                 <h2>複利計算機</h2>
-                 <hr>
+                <hr>
                 <div class="tab-buttons">
                     <button class="tab-button active" onclick="switchTab('basic')">入門</button>
                     <button class="tab-button" onclick="switchTab('advanced')">進階定期定額</button>
                 </div>
-       
                 <!-- 入門表單 -->
                 <div class="basic-form active">
                     <label for="basic-initial-investment">初期本金 (元):</label>
-                    <input type="number" id="basic-initial-investment" step="1" placeholder="輸入初期本金" value="20000">
+                    <input type="text" id="basic-initial-investment" placeholder="輸入初期本金" value="20,000">
                     <label for="basic-years">計息期數 (n):</label>
                     <input type="number" id="basic-years" step="1" placeholder="輸入計息期數" value="20">
                     <label for="basic-annual-rate">收益率 (%):</label>
@@ -320,9 +319,9 @@
                 <!-- 進階定期定額表單 -->
                 <div class="advanced-form">
                     <label for="adv-initial-investment">初期本金 (元):</label>
-                    <input type="number" id="adv-initial-investment" step="1" placeholder="輸入初期本金" value="30000">
+                    <input type="text" id="adv-initial-investment" placeholder="輸入初期本金" value="30,000">
                     <label for="monthly-investment">每月投資金額 (元):</label>
-                    <input type="number" id="monthly-investment" step="1" placeholder="輸入每月投資金額" value="5000">
+                    <input type="text" id="monthly-investment" placeholder="輸入每月投資金額" value="5,000">
                     <label for="investment-period">投資期數:</label>
                     <div class="row">
                         <input type="number" id="investment-period" step="1" placeholder="輸入期數" value="5" style="width: 70%;">
@@ -472,6 +471,34 @@
             return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         }
 
+        // 移除千位分隔符並轉為數字
+        function parseNumber(str) {
+            return parseFloat(str.replace(/,/g, '')) || 0;
+        }
+
+        // 為輸入框添加千位分隔符
+        function addThousandSeparator(input) {
+            let value = input.value.replace(/,/g, ''); // 移除現有逗號
+            if (value) {
+                input.value = formatNumber(parseFloat(value).toFixed(0));
+            }
+        }
+
+        // 初始化輸入框格式
+        document.addEventListener("DOMContentLoaded", function() {
+            const inputs = [
+                document.getElementById("basic-initial-investment"),
+                document.getElementById("adv-initial-investment"),
+                document.getElementById("monthly-investment")
+            ];
+            inputs.forEach(input => {
+                addThousandSeparator(input);
+                input.addEventListener("input", function() {
+                    addThousandSeparator(this);
+                });
+            });
+        });
+
         // 切換標籤
         function switchTab(tab) {
             const basicButton = document.querySelector(".tab-buttons .tab-button:nth-child(1)");
@@ -507,15 +534,15 @@
 
         // 入門複利計算
         function calculateBasicCompound() {
-            const initialInvestment = parseFloat(document.getElementById("basic-initial-investment").value) || 0;
+            const initialInvestment = parseNumber(document.getElementById("basic-initial-investment").value);
             const years = parseInt(document.getElementById("basic-years").value) || 0;
             const annualRate = (parseFloat(document.getElementById("basic-annual-rate").value) || 0) / 100;
 
             const futureValue = initialInvestment * Math.pow(1 + annualRate, years);
             const totalProfit = futureValue - initialInvestment;
 
-            document.getElementById("total-profit").innerText = formatNumber(totalProfit.toFixed(0));
-            document.getElementById("future-value").innerText = formatNumber(futureValue.toFixed(0));
+            document.getElementById("total-profit").innerText = formatNumber(Math.round(totalProfit));
+            document.getElementById("future-value").innerText = formatNumber(Math.round(futureValue));
 
             const tableBody = document.querySelector("#compound-table tbody");
             tableBody.innerHTML = "";
@@ -530,8 +557,8 @@
                 const row = document.createElement("tr");
                 row.innerHTML = `
                     <td>${i}</td>
-                    <td>+${formatNumber(yearlyProfit.toFixed(2))}</td>
-                    <td>${formatNumber(currentValue.toFixed(2))}</td>
+                    <td>+${formatNumber(Math.round(yearlyProfit))}</td>
+                    <td>${formatNumber(Math.round(currentValue))}</td>
                     <td>${cumulativeRate.toFixed(2)}%</td>
                 `;
                 tableBody.appendChild(row);
@@ -540,8 +567,8 @@
 
         // 進階定期定額複利計算
         function calculateAdvancedCompound() {
-            const initialInvestment = parseFloat(document.getElementById("adv-initial-investment").value) || 0;
-            const monthlyInvestment = parseFloat(document.getElementById("monthly-investment").value) || 0;
+            const initialInvestment = parseNumber(document.getElementById("adv-initial-investment").value);
+            const monthlyInvestment = parseNumber(document.getElementById("monthly-investment").value);
             const period = parseInt(document.getElementById("investment-period").value) || 0;
             const periodUnit = document.getElementById("period-unit").value;
             const interestRate = (parseFloat(document.getElementById("interest-rate").value) || 0) / 100;
@@ -574,9 +601,9 @@
             const totalInvested = initialInvestment + monthlyInvestment * monthlyPeriods;
             const totalProfit = futureValue - totalInvested;
 
-            document.getElementById("total-profit").innerText = formatNumber(totalProfit.toFixed(2));
-            document.getElementById("future-value").innerText = formatNumber(futureValue.toFixed(2));
-            document.getElementById("total-invested").innerText = formatNumber(totalInvested.toFixed(0));
+            document.getElementById("total-profit").innerText = formatNumber(Math.round(totalProfit));
+            document.getElementById("future-value").innerText = formatNumber(Math.round(futureValue));
+            document.getElementById("total-invested").innerText = formatNumber(Math.round(totalInvested));
 
             const tableBody = document.querySelector("#compound-table tbody");
             tableBody.innerHTML = "";
@@ -595,9 +622,9 @@
                 const row = document.createElement("tr");
                 row.innerHTML = `
                     <td>${year}</td>
-                    <td>${formatNumber(cumulativeInvested.toFixed(2))}</td>
-                    <td>+${formatNumber(yearlyProfit.toFixed(2))}</td>
-                    <td>${formatNumber(currentValue.toFixed(2))}</td>
+                    <td>${formatNumber(Math.round(cumulativeInvested))}</td>
+                    <td>+${formatNumber(Math.round(yearlyProfit))}</td>
+                    <td>${formatNumber(Math.round(currentValue))}</td>
                 `;
                 tableBody.appendChild(row);
             }
