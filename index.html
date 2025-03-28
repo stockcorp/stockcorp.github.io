@@ -67,14 +67,17 @@
             flex: 2;
             min-width: 300px;
         }
-        /* 標題框 */
+        /* 標題與按鈕框 */
         .site-title {
             background-color: #2d2d2d; /* 與其他框一致的深灰色背景 */
             padding: 15px 20px;
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(255,255,255,0.1);
-            width: fit-content; /* 框寬度適應內容 */
+            width: 100%; /* 調整為滿版 */
             margin-bottom: 20px; /* 與下方內容保持間距 */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         .site-title h1 {
             font-size: 28px;
@@ -82,6 +85,23 @@
             color: #ffffff; /* 白色 */
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
             display: inline; /* 與圖片同行顯示 */
+        }
+        .nav-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        .nav-buttons button {
+            padding: 8px 16px;
+            background-color: #00ccff; /* 亮藍按鈕 */
+            color: #000000; /* 黑色文字 */
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .nav-buttons button:hover {
+            background-color: #0099cc; /* 懸停時稍暗 */
         }
         .header {
             text-align: center;
@@ -247,10 +267,17 @@
 
         <!-- 左側欄：標題與計算區域 -->
         <div class="left-column">
-            <!-- 標題移到橫幅下方，台灣股票利潤計算機上方 -->
+            <!-- 標題與按鈕 -->
             <div class="site-title">
-                <img src="https://www.stockcorp.tw/img/icon1.jpg" alt="股市企業研究院圖標" style="vertical-align: middle; margin-right: 10px; height: 28px; width: auto;">
-                <h1>股 市 企 業 研 究 院</h1>
+                <div style="display: flex; align-items: center;">
+                    <img src="https://www.stockcorp.tw/img/icon1.jpg" alt="股市企業研究院圖標" style="vertical-align: middle; margin-right: 10px; height: 28px; width: auto;">
+                    <h1>股 市 企 業 研 究 院</h1>
+                </div>
+                <div class="nav-buttons">
+                    <button onclick="location.href='https://stockcorp.tw/'">回到首頁</button>
+                    <button onclick="location.href='https://stockcorp.tw/compound.html'">複利計算機</button>
+                    <button onclick="location.href='https://stockcorp.tw/about.html'">關於我們</button>
+                </div>
             </div>
 
             <!-- 輸入表單 -->
