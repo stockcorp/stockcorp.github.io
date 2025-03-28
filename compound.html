@@ -379,13 +379,13 @@
                         <option value="365">日複利</option>
                     </select>
                     <button onclick="calculateAdvancedCompound()">計算複利</button>
+                    <button class="download-button" onclick="downloadTableAsImage()">下載圖片</button>
                 </div>
             </div>
 
             <!-- 計算結果 -->
             <div class="result-section" id="result">
                 <h2>分析報告</h2>
-                <button class="download-button" onclick="downloadTableAsImage()">下載圖片</button>
                 <p>總收益: <span id="total-profit">0</span> 元</p>
                 <p>最終金額: <span id="future-value">0</span> 元</p>
                 <p id="total-invested-p" style="display: none;">總投資額: <span id="total-invested">0</span> 元</p>
