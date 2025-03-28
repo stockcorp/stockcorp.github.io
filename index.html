@@ -477,68 +477,14 @@
             return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         }
 
-        // 觸發GitHub Actions並抓取使用者輸入的股票代號價格
-        async function fetchStockPrice(target) {
+        // 移除PAT相關邏輯，改為提示使用者手動輸入價格
+        function fetchStockPrice(target) {
             const stockCode = document.getElementById("stock-code").value.trim();
             if (!stockCode) {
                 alert("請輸入股票代號！");
                 return;
             }
-
-            const username = "xbon520";
-            const repo = "xbon520.github.io"; // 你的倉庫名
-            const workflowId = "fetch-stock.yml"; // workflow檔案名
-            const token = "sha256:09b268ade688fa6ba20da3b8963934a3c71b31428d587b669213bd7e4c2d80ab"; // 替換為你的PAT，例如 ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-
-            const dispatchUrl = `https://api.github.com/repos/${username}/${repo}/actions/workflows/${workflowId}/dispatches`;
-            const rawUrl = `https://raw.githubusercontent.com/${username}/${repo}/main/autostockprice/stock_price.txt`;
-
-            try {
-                // 步驟 1：觸發GitHub Actions Workflow
-                const response = await fetch(dispatchUrl, {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Accept': 'application/vnd.github.v3+json',
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        ref: 'main',
-                        inputs: { stock_id: stockCode }
-                    })
-                });
-
-                if (!response.ok) {
-                    throw new Error(`觸發Workflow失敗，狀態碼：${response.status}`);
-                }
-
-                // 步驟 2：等待Workflow完成（約10-30秒）
-                alert("正在抓取股價，請稍等約20秒...");
-                await new Promise(resolve => setTimeout(resolve, 20000)); // 等待20秒
-
-                // 步驟 3：讀取結果並解析價格
-                const priceResponse = await fetch(`${rawUrl}?_=${Date.now()}`);
-                const text = await priceResponse.text();
-                const priceMatch = text.match(/"z":"([^"]+)"/);
-                const price = priceMatch ? priceMatch[1] : "無資料";
-
-                if (price === "-" || price === "無資料") {
-                    alert(`股票 ${stockCode} 目前無即時成交價`);
-                    return;
-                }
-
-                // 步驟 4：填入價格
-                if (target === 'buy') {
-                    document.getElementById("buy-price").value = price;
-                    alert(`已將 ${stockCode} 的即時價格 ${price} 填入買入價格`);
-                } else if (target === 'sell') {
-                    document.getElementById("sell-price").value = price;
-                    alert(`已將 ${stockCode} 的即時價格 ${price} 填入賣出價格`);
-                }
-            } catch (error) {
-                console.error("抓取價格失敗:", error);
-                alert(`抓取價格失敗：${error.message}`);
-            }
+            alert(`請自行查詢股票 ${stockCode} 的即時價格，並手動輸入到「買入價格」或「賣出價格」欄位。`);
         }
 
         // 互換買入價格與賣出價格
