@@ -351,12 +351,12 @@
                 <!-- 進階定期定額表單 -->
                 <div class="advanced-form">
                     <label for="adv-initial-investment">初期本金 (元):</label>
-                    <input type="text" id="adv-initial-investment" placeholder="輸入初期本金" value="1,000">
+                    <input type="text" id="adv-initial-investment" placeholder="輸入初期本金" value="20,000">
                     <label for="monthly-investment">每月投資金額 (元):</label>
-                    <input type="text" id="monthly-investment" placeholder="輸入每月投資金額" value="1,000">
+                    <input type="text" id="monthly-investment" placeholder="輸入每月投資金額" value="5,000">
                     <label for="investment-period">投資期數:</label>
                     <div class="row">
-                        <input type="number" id="investment-period" step="1" placeholder="輸入期數" value="3" style="width: 70%;">
+                        <input type="number" id="investment-period" step="1" placeholder="輸入期數" value="5" style="width: 70%;">
                         <select id="period-unit">
                             <option value="years" selected>年</option>
                             <option value="months">個月</option>
@@ -399,7 +399,6 @@
                             <th>收益 (元)</th>
                             <th>總額 (元)</th>
                             <th>收益率</th>
-                            <th><button class="download-button" onclick="downloadTableAsImage()">下載圖片</button></th>
                         </tr>
                     </thead>
                     <thead id="advanced-table-head" style="display: none;">
@@ -408,12 +407,12 @@
                             <th>本金 (元)</th>
                             <th>收益 (元)</th>
                             <th>最終金額 (元)</th>
-                            <th><button class="download-button" onclick="downloadTableAsImage()">下載圖片</button></th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody></tbody>
                 </table>
-
+                <button class="download-button" onclick="downloadTableAsImage()">下載圖片</button>
             </div>
 
             <!-- 相關連結區塊 -->
@@ -462,9 +461,9 @@
                 - 逐年表格顯示年份、收益、總額與累計收益率。</p>
                 <h2>進階定期定額計算機使用說明</h2>
                 <p><strong>輸入欄位</strong><br>
-                - 初期本金 (元)：初始投入，例如 1,000 元。<br>
-                - 每月投資金額 (元)：每月定投，例如 1,000 元。<br>
-                - 投資期數：投資時間，例如 3 年。<br>
+                - 初期本金 (元)：初始投入，例如 20,000 元。<br>
+                - 每月投資金額 (元)：每月定投，例如 5,000 元。<br>
+                - 投資期數：投資時間，例如 5 年。<br>
                 - 利率 (%)：年化或月化利率，例如 5%。<br>
                 - 複利方式：年複利、半年複利等，例如年複利。<br>
                 <strong>計算邏輯</strong><br>
