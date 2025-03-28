@@ -90,10 +90,11 @@
             padding: 15px 20px;
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(255,255,255,0.1);
-            width: fit-content; /* 與標題框對齊 */
+            width: 100%; /* 與 .form-section 一致 */
             margin-top: 10px; /* 與標題框間距 */
             display: flex;
             align-items: center;
+            justify-content: flex-start; /* 左對齊按鈕 */
         }
         .nav-buttons {
             display: flex;
@@ -130,6 +131,7 @@
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(255,255,255,0.1);
+            width: 100%; /* 確保與 .nav-box 一致 */
         }
         .result-section {
             margin-top: 20px;
@@ -289,7 +291,6 @@
                     <button onclick="location.href='https://xbon520.github.io/about.html'">關於我們</button>
                 </div>
             </div>
-            <br>
 
             <!-- 輸入表單 -->
             <div class="form-section">
