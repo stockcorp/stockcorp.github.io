@@ -44,6 +44,8 @@
         "applicationCategory": "Finance"
     }
     </script>
+    <!-- html2canvas 庫用於將表格轉為圖片 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -159,6 +161,28 @@
             background-color: #2d2d2d;
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(255,255,255,0.1);
+            position: relative;
+        }
+        .table-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .table-tab {
+            padding: 6px 12px;
+            background-color: #404040;
+            border: none;
+            border-radius: 4px;
+            color: #ffffff;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .table-tab.active {
+            background-color: #00ccff;
+            color: #000000;
+        }
+        .table-tab:hover {
+            background-color: #0099cc;
         }
         .links-section {
             margin-top: 20px;
@@ -241,6 +265,14 @@
         button:hover {
             background-color: #0099cc;
         }
+        .download-button {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            padding: 8px 16px;
+            width: auto;
+            font-size: 14px;
+        }
         footer {
             text-align: center;
             margin-top: 20px;
@@ -319,15 +351,15 @@
                 <!-- 進階定期定額表單 -->
                 <div class="advanced-form">
                     <label for="adv-initial-investment">初期本金 (元):</label>
-                    <input type="text" id="adv-initial-investment" placeholder="輸入初期本金" value="30,000">
+                    <input type="text" id="adv-initial-investment" placeholder="輸入初期本金" value="1,000">
                     <label for="monthly-investment">每月投資金額 (元):</label>
-                    <input type="text" id="monthly-investment" placeholder="輸入每月投資金額" value="5,000">
+                    <input type="text" id="monthly-investment" placeholder="輸入每月投資金額" value="1,000">
                     <label for="investment-period">投資期數:</label>
                     <div class="row">
-                        <input type="number" id="investment-period" step="1" placeholder="輸入期數" value="5" style="width: 70%;">
+                        <input type="number" id="investment-period" step="1" placeholder="輸入期數" value="3" style="width: 70%;">
                         <select id="period-unit">
                             <option value="years" selected>年</option>
-                            <option value="months">月</option>
+                            <option value="months">個月</option>
                         </select>
                     </div>
                     <label for="interest-rate">利率 (%):</label>
@@ -356,6 +388,10 @@
                 <p>總收益: <span id="total-profit">0</span> 元</p>
                 <p>最終金額: <span id="future-value">0</span> 元</p>
                 <p id="total-invested-p" style="display: none;">總投資額: <span id="total-invested">0</span> 元</p>
+                <div class="table-tabs">
+                    <button class="table-tab active" onclick="switchTableView('year')">年</button>
+                    <button class="table-tab" onclick="switchTableView('month')">月</button>
+                </div>
                 <table id="compound-table">
                     <thead id="basic-table-head">
                         <tr>
@@ -367,7 +403,7 @@
                     </thead>
                     <thead id="advanced-table-head" style="display: none;">
                         <tr>
-                            <th>年</th>
+                            <th id="advanced-period-label">年</th>
                             <th>本金 (元)</th>
                             <th>收益 (元)</th>
                             <th>最終金額 (元)</th>
@@ -375,6 +411,7 @@
                     </thead>
                     <tbody></tbody>
                 </table>
+                <button class="download-button" onclick="downloadTableAsImage()">下載圖片</button>
             </div>
 
             <!-- 相關連結區塊 -->
@@ -432,7 +469,7 @@
                 每月追加投資並按複利方式計算收益。<br>
                 <strong>輸出結果</strong><br>
                 - 總收益、最終金額、總投資額。<br>
-                - 逐年表格顯示年份、本金、收益與最終金額。</p>
+                - 可切換年/月表格顯示本金、收益與最終金額。</p>
             </div>
 
             <!-- 隱私權政策 -->
@@ -478,7 +515,7 @@
 
         // 為輸入框添加千位分隔符
         function addThousandSeparator(input) {
-            let value = input.value.replace(/,/g, ''); // 移除現有逗號
+            let value = input.value.replace(/,/g, '');
             if (value) {
                 input.value = formatNumber(parseFloat(value).toFixed(0));
             }
@@ -499,6 +536,11 @@
             });
         });
 
+        let currentTab = 'basic';
+        let currentTableView = 'year';
+        let advancedYearData = [];
+        let advancedMonthData = [];
+
         // 切換標籤
         function switchTab(tab) {
             const basicButton = document.querySelector(".tab-buttons .tab-button:nth-child(1)");
@@ -508,7 +550,9 @@
             const basicHead = document.getElementById("basic-table-head");
             const advHead = document.getElementById("advanced-table-head");
             const totalInvestedP = document.getElementById("total-invested-p");
+            const tableTabs = document.querySelector(".table-tabs");
 
+            currentTab = tab;
             if (tab === "basic") {
                 basicButton.classList.add("active");
                 advButton.classList.remove("active");
@@ -517,6 +561,8 @@
                 basicHead.style.display = "table-header-group";
                 advHead.style.display = "none";
                 totalInvestedP.style.display = "none";
+                tableTabs.style.display = "none";
+                calculateBasicCompound();
             } else {
                 basicButton.classList.remove("active");
                 advButton.classList.add("active");
@@ -525,11 +571,50 @@
                 basicHead.style.display = "none";
                 advHead.style.display = "table-header-group";
                 totalInvestedP.style.display = "block";
+                tableTabs.style.display = "flex";
+                calculateAdvancedCompound();
             }
-            document.querySelector("#compound-table tbody").innerHTML = ""; // 清空表格
-            document.getElementById("total-profit").innerText = "0";
-            document.getElementById("future-value").innerText = "0";
-            document.getElementById("total-invested").innerText = "0";
+        }
+
+        // 切換表格視圖
+        function switchTableView(view) {
+            const yearTab = document.querySelector(".table-tabs .table-tab:nth-child(1)");
+            const monthTab = document.querySelector(".table-tabs .table-tab:nth-child(2)");
+            const tableBody = document.querySelector("#compound-table tbody");
+            const periodLabel = document.getElementById("advanced-period-label");
+
+            currentTableView = view;
+            if (view === "year") {
+                yearTab.classList.add("active");
+                monthTab.classList.remove("active");
+                periodLabel.textContent = "年";
+                tableBody.innerHTML = "";
+                advancedYearData.forEach(data => {
+                    const row = document.createElement("tr");
+                    row.innerHTML = `
+                        <td>${data.year}</td>
+                        <td>${formatNumber(data.principal.toFixed(2))}</td>
+                        <td>+${formatNumber(data.profit.toFixed(2))}</td>
+                        <td>${formatNumber(data.total.toFixed(2))}</td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            } else {
+                yearTab.classList.remove("active");
+                monthTab.classList.add("active");
+                periodLabel.textContent = "月";
+                tableBody.innerHTML = "";
+                advancedMonthData.forEach(data => {
+                    const row = document.createElement("tr");
+                    row.innerHTML = `
+                        <td>${data.month}</td>
+                        <td>${formatNumber(data.principal.toFixed(2))}</td>
+                        <td>+${formatNumber(data.profit.toFixed(2))}</td>
+                        <td>${formatNumber(data.total.toFixed(2))}</td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            }
         }
 
         // 入門複利計算
@@ -541,8 +626,8 @@
             const futureValue = initialInvestment * Math.pow(1 + annualRate, years);
             const totalProfit = futureValue - initialInvestment;
 
-            document.getElementById("total-profit").innerText = formatNumber(Math.round(totalProfit));
-            document.getElementById("future-value").innerText = formatNumber(Math.round(futureValue));
+            document.getElementById("total-profit").innerText = formatNumber(totalProfit.toFixed(2));
+            document.getElementById("future-value").innerText = formatNumber(futureValue.toFixed(2));
 
             const tableBody = document.querySelector("#compound-table tbody");
             tableBody.innerHTML = "";
@@ -557,8 +642,8 @@
                 const row = document.createElement("tr");
                 row.innerHTML = `
                     <td>${i}</td>
-                    <td>+${formatNumber(Math.round(yearlyProfit))}</td>
-                    <td>${formatNumber(Math.round(currentValue))}</td>
+                    <td>+${formatNumber(yearlyProfit.toFixed(2))}</td>
+                    <td>${formatNumber(currentValue.toFixed(2))}</td>
                     <td>${cumulativeRate.toFixed(2)}%</td>
                 `;
                 tableBody.appendChild(row);
@@ -580,54 +665,68 @@
 
             // 轉換利率為年化利率
             const annualRate = rateUnit === "month" ? interestRate * 12 : interestRate;
+            const monthlyRate = annualRate / 12;
 
-            // 每月複利次數
-            const periodsPerYear = compoundFrequency;
-            const ratePerPeriod = annualRate / periodsPerYear;
-            const totalPeriods = totalMonths / (12 / periodsPerYear);
+            // 計算總額
+            let futureValue = initialInvestment;
+            let monthData = [];
+            let yearData = [];
+            let cumulativeInvested = initialInvestment;
 
-            // 計算初期本金的複利
-            let futureValue = initialInvestment * Math.pow(1 + ratePerPeriod, totalPeriods);
+            // 月表格數據
+            for (let month = 1; month <= totalMonths; month++) {
+                const previousValue = futureValue;
+                cumulativeInvested += monthlyInvestment;
+                futureValue = previousValue * (1 + monthlyRate) + monthlyInvestment;
+                const monthlyProfit = futureValue - previousValue - monthlyInvestment;
 
-            // 計算每月定投的複利
-            const monthlyPeriods = totalMonths;
-            let periodicValue = 0;
-            for (let i = 0; i < monthlyPeriods; i++) {
-                const remainingPeriods = totalPeriods - (i * periodsPerYear / 12);
-                periodicValue += monthlyInvestment * Math.pow(1 + ratePerPeriod, remainingPeriods);
+                monthData.push({
+                    month: month,
+                    principal: cumulativeInvested,
+                    profit: monthlyProfit,
+                    total: futureValue
+                });
             }
 
-            futureValue += periodicValue;
-            const totalInvested = initialInvestment + monthlyInvestment * monthlyPeriods;
-            const totalProfit = futureValue - totalInvested;
-
-            document.getElementById("total-profit").innerText = formatNumber(Math.round(totalProfit));
-            document.getElementById("future-value").innerText = formatNumber(Math.round(futureValue));
-            document.getElementById("total-invested").innerText = formatNumber(Math.round(totalInvested));
-
-            const tableBody = document.querySelector("#compound-table tbody");
-            tableBody.innerHTML = "";
-
+            // 年表格數據
             let currentValue = initialInvestment;
-            let cumulativeInvested = initialInvestment;
+            cumulativeInvested = initialInvestment;
             for (let year = 1; year <= (periodUnit === "years" ? period : Math.ceil(period / 12)); year++) {
                 const previousValue = currentValue;
                 const yearMonths = Math.min(12, totalMonths - (year - 1) * 12);
                 cumulativeInvested += monthlyInvestment * yearMonths;
-
-                // 年複利計算
                 currentValue = previousValue * (1 + annualRate) + monthlyInvestment * yearMonths * (1 + annualRate / 2); // 假設年中平均投資
                 const yearlyProfit = currentValue - previousValue;
 
-                const row = document.createElement("tr");
-                row.innerHTML = `
-                    <td>${year}</td>
-                    <td>${formatNumber(Math.round(cumulativeInvested))}</td>
-                    <td>+${formatNumber(Math.round(yearlyProfit))}</td>
-                    <td>${formatNumber(Math.round(currentValue))}</td>
-                `;
-                tableBody.appendChild(row);
+                yearData.push({
+                    year: year,
+                    principal: cumulativeInvested,
+                    profit: yearlyProfit,
+                    total: currentValue
+                });
             }
+
+            const totalInvested = initialInvestment + monthlyInvestment * totalMonths;
+            const totalProfit = futureValue - totalInvested;
+
+            document.getElementById("total-profit").innerText = formatNumber(totalProfit.toFixed(2));
+            document.getElementById("future-value").innerText = formatNumber(futureValue.toFixed(2));
+            document.getElementById("total-invested").innerText = formatNumber(totalInvested.toFixed(0));
+
+            advancedYearData = yearData;
+            advancedMonthData = monthData;
+            switchTableView(currentTableView);
+        }
+
+        // 下載表格為圖片
+        function downloadTableAsImage() {
+            const table = document.getElementById("compound-table");
+            html2canvas(table).then(canvas => {
+                const link = document.createElement("a");
+                link.download = `compound_table_${currentTab}_${currentTableView}.png`;
+                link.href = canvas.toDataURL("image/png");
+                link.click();
+            });
         }
     </script>
 </body>
