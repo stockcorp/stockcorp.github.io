@@ -44,6 +44,8 @@
         "applicationCategory": "Finance"
     }
     </script>
+    <!-- html2canvas 庫用於將分析報告轉為圖片 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -135,6 +137,15 @@
             background-color: #2d2d2d;
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(255,255,255,0.1);
+            position: relative;
+        }
+        .button-container {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
         }
         .links-section {
             margin-top: 20px;
@@ -222,6 +233,27 @@
         button:hover {
             background-color: #0099cc;
         }
+        .download-button {
+            padding: 8px 16px;
+            width: auto;
+            font-size: 14px;
+        }
+        .line-button, .facebook-button {
+            width: 32px;
+            height: 32px;
+            background-size: cover;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            margin: 0;
+            border-radius: 4px;
+        }
+        .line-button {
+            background-image: url('https://upload.wikimedia.org/wikipedia/commons/4/41/LINE_logo.svg');
+        }
+        .facebook-button {
+            background-image: url('https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg');
+        }
         footer {
             text-align: center;
             margin-top: 20px;
@@ -277,7 +309,7 @@
             <!-- 下拉選單與標題 -->
             <div class="header-section">
                 <select class="nav-dropdown" onchange="if (this.value) window.location.href = this.value;">
-                    <option value="https://xbon520.github.io/">首頁</option>
+                    <option value="https://xbon520.github.io/" selected>首頁</option>
                     <option value="https://xbon520.github.io/compound.html">複利計算機</option>
                     <option value="https://xbon520.github.io/about.html">關於我們</option>
                 </select>
@@ -411,6 +443,11 @@
             <!-- 計算結果 -->
             <div class="result-section" id="result">
                 <h2>分析報告</h2>
+                <div class="button-container">
+                    <button class="download-button" onclick="downloadResultAsImage()">下載圖片</button>
+                    <button class="line-button" onclick="shareToLine()" title="分享到 Line"></button>
+                    <button class="facebook-button" onclick="shareToFacebook()" title="分享到 Facebook"></button>
+                </div>
                 <p>利潤: <span id="profit">0</span> 元</p>
                 <p>買入總額: <span id="buy-total">0</span> 元</p>
                 <p>賣出總額: <span id="sell-total">0</span> 元</p>
@@ -575,6 +612,46 @@
             document.getElementById("buy-fee").innerText = formatNumber(buyFee.toFixed(0));
             document.getElementById("sell-fee").innerText = formatNumber(sellFee.toFixed(0));
             document.getElementById("tax").innerText = formatNumber(tax.toFixed(0));
+        }
+
+        // 下載分析報告為圖片
+        function downloadResultAsImage() {
+            const result = document.getElementById("result");
+            html2canvas(result).then(canvas => {
+                const link = document.createElement("a");
+                link.download = "stock_profit_result.png";
+                link.href = canvas.toDataURL("image/png");
+                link.click();
+            });
+        }
+
+        // 分享到 Line
+        function shareToLine() {
+            const result = document.getElementById("result");
+            html2canvas(result).then(canvas => {
+                const imageData = canvas.toDataURL("image/png");
+                const url = "https://xbon520.github.io/";
+                const text = `我的股票利潤計算結果圖表，請查看：${url}`;
+                const encodedText = encodeURIComponent(text);
+                const lineUrl = `https://line.me/R/msg/text/?${encodedText}`;
+                window.open(lineUrl, '_blank');
+                alert("Line 不支援直接分享圖片，請下載圖片後手動分享至 Line。圖片已自動下載。");
+                downloadResultAsImage();
+            });
+        }
+
+        // 分享到 Facebook
+        function shareToFacebook() {
+            const result = document.getElementById("result");
+            html2canvas(result).then(canvas => {
+                const imageData = canvas.toDataURL("image/png");
+                const url = "https://xbon520.github.io/";
+                const encodedUrl = encodeURIComponent(url);
+                const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`;
+                window.open(facebookUrl, '_blank');
+                alert("Facebook 不支援直接分享圖片，請下載圖片後手動上傳至 Facebook。圖片已自動下載。");
+                downloadResultAsImage();
+            });
         }
     </script>
 </body>
