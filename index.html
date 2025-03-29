@@ -626,8 +626,9 @@
             document.getElementById("tax").innerText = formatNumber(tax.toFixed(0));
         }
 
-        // 截取輸入表單和分析報告並生成圖片
+        // 截取包含網站標識、輸入表單和分析報告的完整圖片
         function captureFullResult(callback) {
+            const siteTitle = document.querySelector(".site-title");
             const formSection = document.querySelector(".form-section");
             const resultSection = document.getElementById("result");
             
@@ -641,8 +642,10 @@
             
             // 複製內容到臨時容器
             tempContainer.innerHTML = "";
+            const siteTitleClone = siteTitle.cloneNode(true);
             const formClone = formSection.cloneNode(true);
             const resultClone = resultSection.cloneNode(true);
+            tempContainer.appendChild(siteTitleClone);
             tempContainer.appendChild(formClone);
             tempContainer.appendChild(resultClone);
 
@@ -658,7 +661,7 @@
             });
         }
 
-        // 下載分析報告為圖片（包含輸入表單）
+        // 下載完整圖片（包含網站標識、輸入表單和分析報告）
         function downloadResultAsImage() {
             captureFullResult(canvas => {
                 const link = document.createElement("a");
@@ -668,7 +671,7 @@
             });
         }
 
-        // 分享到 Line（包含輸入表單）
+        // 分享到 Line（包含網站標識、輸入表單和分析報告）
         function shareToLine() {
             captureFullResult(canvas => {
                 const imageData = canvas.toDataURL("image/png");
@@ -685,7 +688,7 @@
             });
         }
 
-        // 分享到 Facebook（包含輸入表單）
+        // 分享到 Facebook（包含網站標識、輸入表單和分析報告）
         function shareToFacebook() {
             captureFullResult(canvas => {
                 const imageData = canvas.toDataURL("image/png");
