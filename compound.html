@@ -338,6 +338,20 @@
             border-radius: 4px;
             display: inline-block;
         }
+        /* 調整後的下載按鈕樣式 */
+        .button-with-text {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 5px; /* 圖案與文字間距 */
+            cursor: pointer;
+        }
+        .button-with-text span {
+            color: #ffffff;
+            font-size: 12px;
+            line-height: 1;
+        }
         /* 隱藏的臨時容器樣式 */
         #screenshot-container {
             position: absolute;
@@ -430,7 +444,7 @@
             <div class="result-section" id="result">
                 <h2>分析報告</h2>
                 <div class="button-container">
-                    <div class="button-with-text" onclick="downloadResultAsImage()">
+                    <div class="button-with-text" onclick="downloadTableAsImage()">
                         <button class="download-button"></button>
                         <span>下載報告</span>
                     </div>
