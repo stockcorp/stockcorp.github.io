@@ -234,9 +234,22 @@
             background-color: #0099cc;
         }
         .download-button {
-            padding: 8px 16px;
-            width: auto;
-            font-size: 14px;
+            padding: 0;
+            width: 32px;
+            height: 32px;
+            background-image: url('img/download.jpg');
+            background-size: cover;
+            background-color: transparent;
+            border-radius: 4px;
+        }
+        .swap-button {
+            padding: 0;
+            width: 32px;
+            height: 32px;
+            background-image: url('img/price_replace.jpg');
+            background-size: cover;
+            background-color: transparent;
+            border-radius: 4px;
         }
         .line-button, .facebook-button {
             width: 32px;
@@ -274,7 +287,8 @@
             margin: 10px 0;
         }
         .swap-button-container button {
-            width: 100px;
+            width: 32px; /* 調整為圖片大小 */
+            height: 32px;
         }
         .profit-positive {
             background-color: #ff4444;
@@ -338,7 +352,7 @@
                 <label for="buy-price">買入價格:</label>
                 <input type="number" id="buy-price" step="0.01" placeholder="輸入買入價格" value='23'>
                 <div class="swap-button-container">
-                    <button onclick="swapPrices()">價格互換</button>
+                    <button class="swap-button" onclick="swapPrices()"></button>
                 </div>
                 <label for="sell-price">賣出價格:</label>
                 <input type="number" id="sell-price" step="0.01" placeholder="輸入賣出價格" value='52'>
@@ -456,7 +470,7 @@
             <div class="result-section" id="result">
                 <h2>分析報告</h2>
                 <div class="button-container">
-                    <button class="download-button" onclick="downloadResultAsImage()">下載圖片</button>
+                    <button class="download-button" onclick="downloadResultAsImage()"></button>
                     <button class="line-button" onclick="shareToLine()" title="分享到 Line"></button>
                     <button class="facebook-button" onclick="shareToFacebook()" title="分享到 Facebook"></button>
                 </div>
