@@ -100,6 +100,7 @@
             box-shadow: 0 2px 5px rgba(255,255,255,0.1);
             width: fit-content;
             display: flex;
+           Competition Rules
             align-items: center;
         }
         .site-title h1 {
@@ -162,6 +163,13 @@
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(255,255,255,0.1);
             position: relative;
+        }
+        .button-container {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            display: flex;
+            gap: 10px;
         }
         .table-tabs {
             display: flex;
@@ -265,10 +273,7 @@
         button:hover {
             background-color: #0099cc;
         }
-        .download-button {
-            position: absolute;
-            bottom: 10px;
-            right: 10px;
+        .download-button, .share-button {
             padding: 8px 16px;
             width: auto;
             font-size: 14px;
@@ -343,7 +348,7 @@
                     <label for="basic-initial-investment">初期本金 (元):</label>
                     <input type="text" id="basic-initial-investment" placeholder="輸入初期本金" value="20,000">
                     <label for="basic-years">計息期數 (n):</label>
-                    <input type="number" id="basic-years" step="1" placeholder="輸入計息期數" value="20">
+                    <input type="number" id="basic-years" step="1" min="0" max="200" placeholder="輸入計息期數" value="20">
                     <label for="basic-annual-rate">收益率 (%):</label>
                     <input type="number" id="basic-annual-rate" step="0.01" placeholder="輸入年化收益率" value="5">
                     <button onclick="calculateBasicCompound()">計算複利</button>
@@ -356,7 +361,7 @@
                     <input type="text" id="monthly-investment" placeholder="輸入每月投資金額" value="5,000">
                     <label for="investment-period">投資期數:</label>
                     <div class="row">
-                        <input type="number" id="investment-period" step="1" placeholder="輸入期數" value="5" style="width: 70%;">
+                        <input type="number" id="investment-period" step="1" min="0" max="200" placeholder="輸入期數" value="5" style="width: 70%;">
                         <select id="period-unit">
                             <option value="years" selected>年</option>
                             <option value="months">個月</option>
@@ -385,6 +390,10 @@
             <!-- 計算結果 -->
             <div class="result-section" id="result">
                 <h2>分析報告</h2>
+                <div class="button-container">
+                    <button class="download-button" onclick="downloadTableAsImage()">下載圖片</button>
+                    <button class="share-button" onclick="shareResult()">分享</button>
+                </div>
                 <p>總收益: <span id="total-profit">0</span> 元</p>
                 <p>最終金額: <span id="future-value">0</span> 元</p>
                 <p id="total-invested-p" style="display: none;">總投資額: <span id="total-invested">0</span> 元</p>
@@ -412,7 +421,6 @@
                     </thead>
                     <tbody></tbody>
                 </table>
-                <button class="download-button" onclick="downloadTableAsImage()">下載圖片</button>
             </div>
 
             <!-- 相關連結區塊 -->
@@ -676,7 +684,7 @@
 
             // 月表格數據
             for (let month = 1; month <= totalMonths; month++) {
-                const previousValue = futureValue;
+                const previousValue = future;
                 cumulativeInvested += monthlyInvestment;
                 futureValue = Math.round(previousValue * (1 + monthlyRate)) + monthlyInvestment;
                 const monthlyProfit = futureValue - previousValue - monthlyInvestment;
@@ -728,6 +736,23 @@
                 link.href = canvas.toDataURL("image/png");
                 link.click();
             });
+        }
+
+        // 分享功能
+        function shareResult() {
+            const totalProfit = document.getElementById("total-profit").innerText;
+            const futureValue = document.getElementById("future-value").innerText;
+            const totalInvested = document.getElementById("total-invested").innerText;
+            const text = `我的複利計算結果：\n總收益: ${totalProfit} 元\n最終金額: ${futureValue} 元${currentTab === 'advanced' ? `\n總投資額: ${totalInvested} 元` : ''}\n查看更多: https://xbon520.github.io/compound.html`;
+            if (navigator.share) {
+                navigator.share({
+                    title: '複利計算結果',
+                    text: text,
+                    url: 'https://xbon520.github.io/compound.html'
+                }).catch(err => console.log('分享失敗:', err));
+            } else {
+                alert('您的瀏覽器不支援分享功能，請手動複製以下內容：\n\n' + text);
+            }
         }
     </script>
 </body>
