@@ -274,9 +274,13 @@
             background-color: #0099cc;
         }
         .download-button {
-            padding: 8px 16px;
-            width: auto;
-            font-size: 14px;
+            padding: 0;
+            width: 32px;
+            height: 32px;
+            background-image: url('img/download.jpg');
+            background-size: cover;
+            background-color: transparent;
+            border-radius: 4px;
         }
         .line-button, .facebook-button {
             width: 32px;
@@ -426,7 +430,7 @@
             <div class="result-section" id="result">
                 <h2>分析報告</h2>
                 <div class="button-container">
-                    <button class="download-button" onclick="downloadTableAsImage()">下載圖片</button>
+                    <button class="download-button" onclick="downloadTableAsImage()"></button>
                     <button class="line-button" onclick="shareToLine()" title="分享到 Line"></button>
                     <button class="facebook-button" onclick="shareToFacebook()" title="分享到 Facebook"></button>
                 </div>
