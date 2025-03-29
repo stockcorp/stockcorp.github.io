@@ -169,6 +169,7 @@
             right: 10px;
             display: flex;
             gap: 10px;
+            align-items: center;
         }
         .table-tabs {
             display: flex;
@@ -272,10 +273,26 @@
         button:hover {
             background-color: #0099cc;
         }
-        .download-button, .share-button {
+        .download-button {
             padding: 8px 16px;
             width: auto;
             font-size: 14px;
+        }
+        .line-button, .facebook-button {
+            width: 32px;
+            height: 32px;
+            background-size: cover;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            margin: 0;
+            border-radius: 4px;
+        }
+        .line-button {
+            background-image: url('https://upload.wikimedia.org/wikipedia/commons/4/41/LINE_logo.svg');
+        }
+        .facebook-button {
+            background-image: url('https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg');
         }
         footer {
             text-align: center;
@@ -398,7 +415,8 @@
                 <h2>分析報告</h2>
                 <div class="button-container">
                     <button class="download-button" onclick="downloadTableAsImage()">下載圖片</button>
-                    <button class="share-button" onclick="shareResult()">分享</button>
+                    <button class="line-button" onclick="shareToLine()" title="分享到 Line"></button>
+                    <button class="facebook-button" onclick="shareToFacebook()" title="分享到 Facebook"></button>
                 </div>
                 <p>總收益: <span id="total-profit" class="highlight-red">0</span> 元</p>
                 <p>最終金額: <span id="future-value" class="highlight-red">0</span> 元</p>
@@ -766,15 +784,35 @@
             });
         }
 
-        // 分享到 Instagram
-        function shareResult() {
-            const totalProfit = document.getElementById("total-profit").innerText;
-            const futureValue = document.getElementById("future-value").innerText;
-            const totalInvested = document.getElementById("total-invested").innerText;
-            const text = `我的複利計算結果：\n總收益: ${totalProfit} 元\n最終金額: ${futureValue} 元${currentTab === 'advanced' ? `\n總投資額: ${totalInvested} 元` : ''}\n查看更多: https://xbon520.github.io/compound.html`;
-            const encodedText = encodeURIComponent(text);
-            const instagramUrl = `https://www.instagram.com/?text=${encodedText}`;
-            window.open(instagramUrl, '_blank');
+        // 分享到 Line
+        function shareToLine() {
+            const table = document.getElementById("compound-table");
+            html2canvas(table).then(canvas => {
+                const imageData = canvas.toDataURL("image/png");
+                const url = "https://xbon520.github.io/compound.html";
+                const text = `我的複利計算結果圖表，請查看：${url}`;
+                const encodedText = encodeURIComponent(text);
+                const lineUrl = `https://line.me/R/msg/text/?${encodedText}`;
+                window.open(lineUrl, '_blank');
+                // Line 不支援直接分享圖片，建議用戶下載後手動上傳
+                alert("Line 不支援直接分享圖片，請下載圖片後手動分享至 Line。圖片已自動下載。");
+                downloadTableAsImage();
+            });
+        }
+
+        // 分享到 Facebook
+        function shareToFacebook() {
+            const table = document.getElementById("compound-table");
+            html2canvas(table).then(canvas => {
+                const imageData = canvas.toDataURL("image/png");
+                const url = "https://xbon520.github.io/compound.html";
+                const encodedUrl = encodeURIComponent(url);
+                const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`;
+                window.open(facebookUrl, '_blank');
+                // Facebook 不支援直接分享圖片，提示用戶手動上傳
+                alert("Facebook 不支援直接分享圖片，請下載圖片後手動上傳至 Facebook。圖片已自動下載。");
+                downloadTableAsImage();
+            });
         }
     </script>
 </body>
