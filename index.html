@@ -295,6 +295,18 @@
         a:hover {
             text-decoration: underline;
         }
+        /* 隱藏的臨時容器樣式 */
+        #screenshot-container {
+            position: absolute;
+            top: -9999px;
+            left: -9999px;
+            background-color: #1a1a1a;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            width: 300px; /* 與左側欄寬度一致 */
+        }
     </style>
 </head>
 <body>
@@ -614,21 +626,51 @@
             document.getElementById("tax").innerText = formatNumber(tax.toFixed(0));
         }
 
-        // 下載分析報告為圖片
+        // 截取輸入表單和分析報告並生成圖片
+        function captureFullResult(callback) {
+            const formSection = document.querySelector(".form-section");
+            const resultSection = document.getElementById("result");
+            
+            // 創建臨時容器
+            let tempContainer = document.getElementById("screenshot-container");
+            if (!tempContainer) {
+                tempContainer = document.createElement("div");
+                tempContainer.id = "screenshot-container";
+                document.body.appendChild(tempContainer);
+            }
+            
+            // 複製內容到臨時容器
+            tempContainer.innerHTML = "";
+            const formClone = formSection.cloneNode(true);
+            const resultClone = resultSection.cloneNode(true);
+            tempContainer.appendChild(formClone);
+            tempContainer.appendChild(resultClone);
+
+            // 移除複製區域中的按鈕容器，避免截圖包含按鈕
+            const buttonContainer = tempContainer.querySelector(".button-container");
+            if (buttonContainer) buttonContainer.remove();
+
+            // 使用 html2canvas 截圖並回傳 canvas
+            html2canvas(tempContainer).then(canvas => {
+                callback(canvas);
+                // 清理臨時容器
+                tempContainer.innerHTML = "";
+            });
+        }
+
+        // 下載分析報告為圖片（包含輸入表單）
         function downloadResultAsImage() {
-            const result = document.getElementById("result");
-            html2canvas(result).then(canvas => {
+            captureFullResult(canvas => {
                 const link = document.createElement("a");
-                link.download = "stock_profit_result.png";
+                link.download = "stock_profit_full_result.png";
                 link.href = canvas.toDataURL("image/png");
                 link.click();
             });
         }
 
-        // 分享到 Line
+        // 分享到 Line（包含輸入表單）
         function shareToLine() {
-            const result = document.getElementById("result");
-            html2canvas(result).then(canvas => {
+            captureFullResult(canvas => {
                 const imageData = canvas.toDataURL("image/png");
                 const url = "https://xbon520.github.io/";
                 const text = `我的股票利潤計算結果圖表，請查看：${url}`;
@@ -636,21 +678,26 @@
                 const lineUrl = `https://line.me/R/msg/text/?${encodedText}`;
                 window.open(lineUrl, '_blank');
                 alert("Line 不支援直接分享圖片，請下載圖片後手動分享至 Line。圖片已自動下載。");
-                downloadResultAsImage();
+                const link = document.createElement("a");
+                link.download = "stock_profit_full_result.png";
+                link.href = imageData;
+                link.click();
             });
         }
 
-        // 分享到 Facebook
+        // 分享到 Facebook（包含輸入表單）
         function shareToFacebook() {
-            const result = document.getElementById("result");
-            html2canvas(result).then(canvas => {
+            captureFullResult(canvas => {
                 const imageData = canvas.toDataURL("image/png");
                 const url = "https://xbon520.github.io/";
                 const encodedUrl = encodeURIComponent(url);
                 const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`;
                 window.open(facebookUrl, '_blank');
                 alert("Facebook 不支援直接分享圖片，請下載圖片後手動上傳至 Facebook。圖片已自動下載。");
-                downloadResultAsImage();
+                const link = document.createElement("a");
+                link.download = "stock_profit_full_result.png";
+                link.href = imageData;
+                link.click();
             });
         }
     </script>
