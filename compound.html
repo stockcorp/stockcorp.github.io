@@ -334,6 +334,18 @@
             border-radius: 4px;
             display: inline-block;
         }
+        /* 隱藏的臨時容器樣式 */
+        #screenshot-container {
+            position: absolute;
+            top: -9999px;
+            left: -9999px;
+            background-color: #1a1a1a;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            width: 300px; /* 與左側欄寬度一致 */
+        }
     </style>
 </head>
 <body>
@@ -773,45 +785,78 @@
             switchTableView(currentTableView);
         }
 
-        // 下載表格為圖片
+        // 截取輸入表單和分析報告並生成圖片
+        function captureFullResult(callback) {
+            const formSection = document.querySelector(".form-section");
+            const resultSection = document.getElementById("result");
+            
+            // 創建臨時容器
+            let tempContainer = document.getElementById("screenshot-container");
+            if (!tempContainer) {
+                tempContainer = document.createElement("div");
+                tempContainer.id = "screenshot-container";
+                document.body.appendChild(tempContainer);
+            }
+            
+            // 複製內容到臨時容器
+            tempContainer.innerHTML = "";
+            const formClone = formSection.cloneNode(true);
+            const resultClone = resultSection.cloneNode(true);
+            tempContainer.appendChild(formClone);
+            tempContainer.appendChild(resultClone);
+
+            // 移除複製區域中的按鈕容器，避免截圖包含按鈕
+            const buttonContainer = tempContainer.querySelector(".button-container");
+            if (buttonContainer) buttonContainer.remove();
+
+            // 使用 html2canvas 截圖並回傳 canvas
+            html2canvas(tempContainer).then(canvas => {
+                callback(canvas);
+                // 清理臨時容器
+                tempContainer.innerHTML = "";
+            });
+        }
+
+        // 下載完整圖片（包含輸入表單和分析報告）
         function downloadTableAsImage() {
-            const table = document.getElementById("compound-table");
-            html2canvas(table).then(canvas => {
+            captureFullResult(canvas => {
                 const link = document.createElement("a");
-                link.download = `compound_table_${currentTab}_${currentTableView}.png`;
+                link.download = `compound_full_result_${currentTab}_${currentTableView}.png`;
                 link.href = canvas.toDataURL("image/png");
                 link.click();
             });
         }
 
-        // 分享到 Line
+        // 分享到 Line（包含輸入表單和分析報告）
         function shareToLine() {
-            const table = document.getElementById("compound-table");
-            html2canvas(table).then(canvas => {
+            captureFullResult(canvas => {
                 const imageData = canvas.toDataURL("image/png");
                 const url = "https://xbon520.github.io/compound.html";
                 const text = `我的複利計算結果圖表，請查看：${url}`;
                 const encodedText = encodeURIComponent(text);
                 const lineUrl = `https://line.me/R/msg/text/?${encodedText}`;
                 window.open(lineUrl, '_blank');
-                // Line 不支援直接分享圖片，建議用戶下載後手動上傳
                 alert("Line 不支援直接分享圖片，請下載圖片後手動分享至 Line。圖片已自動下載。");
-                downloadTableAsImage();
+                const link = document.createElement("a");
+                link.download = `compound_full_result_${currentTab}_${currentTableView}.png`;
+                link.href = imageData;
+                link.click();
             });
         }
 
-        // 分享到 Facebook
+        // 分享到 Facebook（包含輸入表單和分析報告）
         function shareToFacebook() {
-            const table = document.getElementById("compound-table");
-            html2canvas(table).then(canvas => {
+            captureFullResult(canvas => {
                 const imageData = canvas.toDataURL("image/png");
                 const url = "https://xbon520.github.io/compound.html";
                 const encodedUrl = encodeURIComponent(url);
                 const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`;
                 window.open(facebookUrl, '_blank');
-                // Facebook 不支援直接分享圖片，提示用戶手動上傳
                 alert("Facebook 不支援直接分享圖片，請下載圖片後手動上傳至 Facebook。圖片已自動下載。");
-                downloadTableAsImage();
+                const link = document.createElement("a");
+                link.download = `compound_full_result_${currentTab}_${currentTableView}.png`;
+                link.href = imageData;
+                link.click();
             });
         }
     </script>
