@@ -356,7 +356,7 @@
                     <label for="basic-years">計息期數 (n):</label>
                     <input type="number" id="basic-years" step="1" min="0" max="200" placeholder="輸入計息期數" value="20">
                     <label for="basic-annual-rate">收益率 (%):</label>
-                    <input type="number" id="basic-annual-rate" step="0.01" placeholder="輸入年化收益率" value="5">
+                    <input type="number" id="basic-annual-rate" step="0.01" min="0" max="100" placeholder="輸入年化收益率" value="5">
                     <button onclick="calculateBasicCompound()">計算複利</button>
                 </div>
                 <!-- 進階定期定額表單 -->
@@ -375,7 +375,7 @@
                     </div>
                     <label for="interest-rate">利率 (%):</label>
                     <div class="row">
-                        <input type="number" id="interest-rate" step="0.01" placeholder="輸入利率" value="5" style="width: 70%;">
+                        <input type="number" id="interest-rate" step="0.01" min="0" max="100" placeholder="輸入利率" value="5" style="width: 70%;">
                         <select id="rate-unit">
                             <option value="year" selected>年</option>
                             <option value="month">月</option>
@@ -563,6 +563,20 @@
                 if (this.value > 200) this.value = 200;
                 if (this.value < 0) this.value = 0;
             });
+
+            // 限制入門收益率不超過100%
+            const basicAnnualRate = document.getElementById("basic-annual-rate");
+            basicAnnualRate.addEventListener("input", function() {
+                if (this.value > 100) this.value = 100;
+                if (this.value < 0) this.value = 0;
+            });
+
+            // 限制進階利率不超過100%
+            const interestRate = document.getElementById("interest-rate");
+            interestRate.addEventListener("input", function() {
+                if (this.value > 100) this.value = 100;
+                if (this.value < 0) this.value = 0;
+            });
         });
 
         let currentTab = 'basic';
@@ -649,8 +663,8 @@
         // 入門複利計算
         function calculateBasicCompound() {
             const initialInvestment = parseNumber(document.getElementById("basic-initial-investment").value);
-            const years = Math.min(parseInt(document.getElementById("basic-years").value) || 0, 200); // 限制最大200
-            const annualRate = (parseFloat(document.getElementById("basic-annual-rate").value) || 0) / 100;
+            const years = Math.min(parseInt(document.getElementById("basic-years").value) || 0, 200);
+            const annualRate = Math.min((parseFloat(document.getElementById("basic-annual-rate").value) || 0), 100) / 100;
 
             const futureValue = Math.round(initialInvestment * Math.pow(1 + annualRate, years));
             const totalProfit = futureValue - initialInvestment;
@@ -683,9 +697,9 @@
         function calculateAdvancedCompound() {
             const initialInvestment = parseNumber(document.getElementById("adv-initial-investment").value);
             const monthlyInvestment = parseNumber(document.getElementById("monthly-investment").value);
-            const period = Math.min(parseInt(document.getElementById("investment-period").value) || 0, 200); // 限制最大200
+            const period = Math.min(parseInt(document.getElementById("investment-period").value) || 0, 200);
             const periodUnit = document.getElementById("period-unit").value;
-            const interestRate = (parseFloat(document.getElementById("interest-rate").value) || 0) / 100;
+            const interestRate = Math.min((parseFloat(document.getElementById("interest-rate").value) || 0), 100) / 100;
             const rateUnit = document.getElementById("rate-unit").value;
             const compoundFrequency = parseInt(document.getElementById("compound-frequency").value);
 
