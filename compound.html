@@ -100,7 +100,6 @@
             box-shadow: 0 2px 5px rgba(255,255,255,0.1);
             width: fit-content;
             display: flex;
-           Competition Rules
             align-items: center;
         }
         .site-title h1 {
@@ -311,6 +310,13 @@
         a:hover {
             text-decoration: underline;
         }
+        .highlight-red {
+            background-color: #ff4444;
+            color: #ffffff;
+            padding: 2px 8px;
+            border-radius: 4px;
+            display: inline-block;
+        }
     </style>
 </head>
 <body>
@@ -394,9 +400,9 @@
                     <button class="download-button" onclick="downloadTableAsImage()">下載圖片</button>
                     <button class="share-button" onclick="shareResult()">分享</button>
                 </div>
-                <p>總收益: <span id="total-profit">0</span> 元</p>
-                <p>最終金額: <span id="future-value">0</span> 元</p>
-                <p id="total-invested-p" style="display: none;">總投資額: <span id="total-invested">0</span> 元</p>
+                <p>總收益: <span id="total-profit" class="highlight-red">0</span> 元</p>
+                <p>最終金額: <span id="future-value" class="highlight-red">0</span> 元</p>
+                <p id="total-invested-p" style="display: none;">總投資額: <span id="total-invested" class="highlight-red">0</span> 元</p>
                 <div class="table-tabs">
                     <button class="table-tab active" onclick="switchTableView('year')">年</button>
                     <button class="table-tab" onclick="switchTableView('month')">月</button>
@@ -530,7 +536,7 @@
             }
         }
 
-        // 初始化輸入框格式
+        // 初始化輸入框格式並限制最大值
         document.addEventListener("DOMContentLoaded", function() {
             const inputs = [
                 document.getElementById("basic-initial-investment"),
@@ -542,6 +548,20 @@
                 input.addEventListener("input", function() {
                     addThousandSeparator(this);
                 });
+            });
+
+            // 限制計息期數不超過200
+            const basicYears = document.getElementById("basic-years");
+            basicYears.addEventListener("input", function() {
+                if (this.value > 200) this.value = 200;
+                if (this.value < 0) this.value = 0;
+            });
+
+            // 限制投資期數不超過200
+            const investmentPeriod = document.getElementById("investment-period");
+            investmentPeriod.addEventListener("input", function() {
+                if (this.value > 200) this.value = 200;
+                if (this.value < 0) this.value = 0;
             });
         });
 
@@ -629,7 +649,7 @@
         // 入門複利計算
         function calculateBasicCompound() {
             const initialInvestment = parseNumber(document.getElementById("basic-initial-investment").value);
-            const years = parseInt(document.getElementById("basic-years").value) || 0;
+            const years = Math.min(parseInt(document.getElementById("basic-years").value) || 0, 200); // 限制最大200
             const annualRate = (parseFloat(document.getElementById("basic-annual-rate").value) || 0) / 100;
 
             const futureValue = Math.round(initialInvestment * Math.pow(1 + annualRate, years));
@@ -663,28 +683,23 @@
         function calculateAdvancedCompound() {
             const initialInvestment = parseNumber(document.getElementById("adv-initial-investment").value);
             const monthlyInvestment = parseNumber(document.getElementById("monthly-investment").value);
-            const period = parseInt(document.getElementById("investment-period").value) || 0;
+            const period = Math.min(parseInt(document.getElementById("investment-period").value) || 0, 200); // 限制最大200
             const periodUnit = document.getElementById("period-unit").value;
             const interestRate = (parseFloat(document.getElementById("interest-rate").value) || 0) / 100;
             const rateUnit = document.getElementById("rate-unit").value;
             const compoundFrequency = parseInt(document.getElementById("compound-frequency").value);
 
-            // 轉換投資期數為月數
             const totalMonths = periodUnit === "years" ? period * 12 : period;
-
-            // 轉換利率為年化利率
             const annualRate = rateUnit === "month" ? interestRate * 12 : interestRate;
             const monthlyRate = annualRate / 12;
 
-            // 計算總額
             let futureValue = initialInvestment;
             let monthData = [];
             let yearData = [];
             let cumulativeInvested = initialInvestment;
 
-            // 月表格數據
             for (let month = 1; month <= totalMonths; month++) {
-                const previousValue = future;
+                const previousValue = futureValue;
                 cumulativeInvested += monthlyInvestment;
                 futureValue = Math.round(previousValue * (1 + monthlyRate)) + monthlyInvestment;
                 const monthlyProfit = futureValue - previousValue - monthlyInvestment;
@@ -697,14 +712,13 @@
                 });
             }
 
-            // 年表格數據
             let currentValue = initialInvestment;
             cumulativeInvested = initialInvestment;
             for (let year = 1; year <= (periodUnit === "years" ? period : Math.ceil(period / 12)); year++) {
                 const previousValue = currentValue;
                 const yearMonths = Math.min(12, totalMonths - (year - 1) * 12);
                 cumulativeInvested += monthlyInvestment * yearMonths;
-                currentValue = Math.round(previousValue * (1 + annualRate)) + monthlyInvestment * yearMonths * Math.round(1 + annualRate / 2); // 假設年中平均投資
+                currentValue = Math.round(previousValue * (1 + annualRate)) + monthlyInvestment * yearMonths * Math.round(1 + annualRate / 2);
                 const yearlyProfit = currentValue - previousValue;
 
                 yearData.push({
@@ -738,21 +752,15 @@
             });
         }
 
-        // 分享功能
+        // 分享到 Instagram
         function shareResult() {
             const totalProfit = document.getElementById("total-profit").innerText;
             const futureValue = document.getElementById("future-value").innerText;
             const totalInvested = document.getElementById("total-invested").innerText;
             const text = `我的複利計算結果：\n總收益: ${totalProfit} 元\n最終金額: ${futureValue} 元${currentTab === 'advanced' ? `\n總投資額: ${totalInvested} 元` : ''}\n查看更多: https://xbon520.github.io/compound.html`;
-            if (navigator.share) {
-                navigator.share({
-                    title: '複利計算結果',
-                    text: text,
-                    url: 'https://xbon520.github.io/compound.html'
-                }).catch(err => console.log('分享失敗:', err));
-            } else {
-                alert('您的瀏覽器不支援分享功能，請手動複製以下內容：\n\n' + text);
-            }
+            const encodedText = encodeURIComponent(text);
+            const instagramUrl = `https://www.instagram.com/?text=${encodedText}`;
+            window.open(instagramUrl, '_blank');
         }
     </script>
 </body>
