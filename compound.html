@@ -2,7 +2,7 @@
 <html lang="zh-TW">
 <head>
     <!-- Google tag (gtag.js) -->
-    <script defer src="https://www.googletagmanager.com/gtag/js?id=G-Q32FFR42XT"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-Q32FFR42XT"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
@@ -11,7 +11,8 @@
     </script>
     
     <!-- Google adsense -->
-    <script defer src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3440199491716602" crossorigin="anonymous"></script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3440199491716602"
+     crossorigin="anonymous"></script>
     
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -44,7 +45,7 @@
     }
     </script>
     <!-- html2canvas 庫用於將表格轉為圖片 -->
-    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -292,10 +293,10 @@
             border-radius: 4px;
         }
         .line-button {
-            background-image: url('img/line_logo.svg'); /* 假設已下載至本地 */
+            background-image: url('https://upload.wikimedia.org/wikipedia/commons/4/41/LINE_logo.svg');
         }
         .facebook-button {
-            background-image: url('img/facebook_logo.svg'); /* 假設已下載至本地 */
+            background-image: url('https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg');
         }
         footer {
             text-align: center;
@@ -349,17 +350,6 @@
             gap: 20px;
             width: 300px; /* 與左側欄寬度一致 */
         }
-        /* 隱藏 label 給螢幕閱讀器使用 */
-        .sr-only {
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            padding: 0;
-            margin: -1px;
-            overflow: hidden;
-            clip: rect(0, 0, 0, 0);
-            border: 0;
-        }
     </style>
 </head>
 <body>
@@ -373,8 +363,7 @@
         <div class="left-column">
             <!-- 下拉選單與標題 -->
             <div class="header-section">
-                <label for="nav-select" class="sr-only">選擇頁面</label>
-                <select id="nav-select" class="nav-dropdown" onchange="if (this.value) window.location.href = this.value;">
+                <select class="nav-dropdown" onchange="if (this.value) window.location.href = this.value;">
                     <option value="https://xbon520.github.io/">首頁</option>
                     <option value="https://xbon520.github.io/compound.html" selected>複利計算機</option>
                     <option value="https://xbon520.github.io/about.html">關於我們</option>
@@ -491,6 +480,8 @@
         <div class="right-column">
             <!-- Google AdSense 橫幅廣告空間 -->
             <div class="ad-space" id="banner-ad">
+                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3440199491716602"
+                        crossorigin="anonymous"></script>
                 <ins class="adsbygoogle"
                      style="display:block"
                      data-ad-client="ca-pub-3440199491716602"
@@ -540,6 +531,8 @@
 
             <!-- Google AdSense 自適應廣告空間 -->
             <div class="ad-space" id="responsive-ad">
+                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3440199491716602"
+                        crossorigin="anonymous"></script>
                 <ins class="adsbygoogle"
                      style="display:block"
                      data-ad-client="ca-pub-3440199491716602"
