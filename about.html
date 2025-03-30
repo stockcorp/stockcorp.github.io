@@ -10,10 +10,6 @@
       gtag('config', 'G-Q32FFR42XT');
     </script>
     
-    <!-- Google adsense -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3440199491716602"
-     crossorigin="anonymous"></script>
-    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="吉米理財學堂 - 提供投資、理財、資產配置等實用工具與知識。">
@@ -59,27 +55,6 @@
         }
         .header-section {
             margin-bottom: 20px;
-        }
-        .nav-dropdown {
-            background-color: #2d2d2d;
-            padding: 8px 12px;
-            font-size: 14px;
-            color: #ffffff;
-            border: 1px solid #666;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.3s ease, border-color 0.3s ease;
-            width: 150px;
-            margin-bottom: 10px;
-        }
-        .nav-dropdown:hover {
-            background-color: #3a3a3a;
-            border-color: #888;
-        }
-        .nav-dropdown:focus {
-            outline: none;
-            border-color: #00ccff;
-            box-shadow: 0 0 5px rgba(0, 204, 255, 0.5);
         }
         .site-title {
             background-color: #2d2d2d;
@@ -143,12 +118,12 @@
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(255,255,255,0.1);
             flex: 1;
-            min-height: 200px; /* 確保左右高度一致 */
+            min-height: 200px;
         }
         .links-section h1 {
             font-size: 24px;
             margin-bottom: 10px;
-            color: #ffffff; /* 將"相關連結"設為白色 */
+            color: #ffffff;
         }
         .privacy-section h1 {
             font-size: 24px;
@@ -184,6 +159,39 @@
             color: #999;
             width: 100%;
         }
+        /* 與 index.html 一致的導航按鈕樣式 */
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        .nav-button {
+            display: flex;
+            align-items: center;
+            background-color: #2d2d2d;
+            padding: 8px 12px;
+            border: 1px solid #666;
+            border-radius: 6px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            width: 120px;
+            justify-content: center;
+        }
+        .nav-button:hover {
+            background-color: #3a3a3a;
+            border-color: #888;
+            box-shadow: 0 2px 4px rgba(255, 255, 255, 0.1);
+        }
+        .nav-button img {
+            width: 24px;
+            height: 24px;
+            margin-right: 8px;
+        }
+        .nav-button span {
+            color: #ffffff;
+            font-size: 14px;
+            font-weight: 500;
+        }
     </style>
 </head>
 <body>
@@ -196,11 +204,20 @@
         <!-- 左側欄：標題 -->
         <div style="width: 100%;">
             <div class="header-section">
-                <select class="nav-dropdown" onchange="if (this.value) window.location.href = this.value;">
-                    <option value="https://xbon520.github.io/">首頁</option>
-                    <option value="https://xbon520.github.io/compound.html">複利計算機</option>
-                    <option value="https://xbon520.github.io/about.html" selected>關於我們</option>
-                </select>
+                <div class="nav-buttons">
+                    <a href="https://xbon520.github.io/" class="nav-button">
+                        <img src="/img/home_button.jpg" alt="首頁圖標">
+                        <span>首頁</span>
+                    </a>
+                    <a href="https://xbon520.github.io/compound.html" class="nav-button">
+                        <img src="/img/compound_button.jpg" alt="複利計算機圖標">
+                        <span>複利<br>計算機</span>
+                    </a>
+                    <a href="https://xbon520.github.io/about.html" class="nav-button">
+                        <img src="/img/about_button.jpg" alt="關於圖標">
+                        <span>關於</span>
+                    </a>
+                </div>
                 <div class="site-title">
                     <img src="https://www.stockcorp.tw/img/icon1.jpg" alt="股市企業研究院圖標" style="vertical-align: middle; margin-right: 10px; height: 28px; width: auto;">
                     <h1>股 市 企 業 研 究 院</h1>
