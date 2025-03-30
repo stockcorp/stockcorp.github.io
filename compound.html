@@ -1,30 +1,370 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-    <!-- 原有 head 內容保持不變 -->
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-Q32FFR42XT"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-Q32FFR42XT');
+    </script>
+    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="複利計算機，支援入門與進階定期定額計算，含逐年分析表格。">
+    <meta name="image" content="https://www.stockcorp.tw/img/small.jpg">
+    <meta name="keywords" content="複利計算機, 投資收益, 定投計算, 吉米理財學堂">
+    <meta name="author" content="吉米理財學堂">
+    <meta name="robots" content="index, follow">
     <title>股市企業研究院 - 複利計算機 - 吉米理財學堂</title>
-    <!-- 原有 meta tags, scripts, 和 styles 保持不變 -->
+    <!-- Open Graph Meta Tags for Social Media -->
+    <meta property="og:title" content="股市企業研究院 - 複利計算機 - 吉米理財學堂">
+    <meta property="og:description" content="支援入門與進階定期定額複利計算，含逐年分析表格。">
+    <meta property="og:url" content="https://xbon520.github.io/">
+    <meta property="og:type" content="website">
+    <!-- Structured Data (JSON-LD) for SEO -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "複利計算機",
+        "url": "https://xbon520.github.io/",
+        "description": "一款免費的複利計算工具，支援入門與進階定期定額計算。",
+        "publisher": {
+            "@type": "Organization",
+            "name": "吉米理財學堂",
+            "url": "https://www.youtube.com/@吉米理財學堂",
+            "email": "xbon510@gmail.com"
+        },
+        "applicationCategory": "Finance"
+    }
+    </script>
+    <!-- html2canvas 庫用於將表格轉為圖片 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
-        /* 原有樣式保持不變，僅新增或調整以下部分 */
-        .right-column .nav-buttons {
-            margin-bottom: 20px; /* 與下方歡迎區塊保持間距 */
-            justify-content: flex-start; /* 左對齊導航按鈕 */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #1a1a1a;
+            color: #ffffff;
         }
-        .nav-button {
-            /* 原有樣式保持，微調外觀 */
-            box-shadow: 0 2px 4px rgba(255, 255, 255, 0.1);
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .left-column {
+            flex: 1;
+            min-width: 300px;
         }
         .right-column {
+            flex: 2;
+            min-width: 300px;
+        }
+        .header-section {
+            margin-bottom: 20px;
+        }
+        .site-title {
+            background-color: #2d2d2d;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(255,255,255,0.1);
+            width: fit-content;
+            display: flex;
+            align-items: center;
+        }
+        .site-title h1 {
+            font-size: 28px;
+            margin: 0;
+            color: #ffffff;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+            display: inline;
+        }
+        .header {
+            text-align: center;
+            padding: 40px 20px;
+            background-image: url('https://www.stockcorp.tw/img/channels4_banner.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(255,255,255,0.1);
+            position: relative;
+            width: 100%;
+            height: 60px;
+        }
+        .form-section {
+            background-color: #2d2d2d;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(255,255,255,0.1);
+        }
+        .tab-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .tab-button {
+            padding: 8px 16px;
+            background-color: #404040;
+            border: none;
+            border-radius: 4px;
+            color: #ffffff;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .tab-button.active {
+            background-color: #00ccff;
+            color: #000000;
+        }
+        .tab-button:hover {
+            background-color: #0099cc;
+        }
+        .basic-form, .advanced-form {
+            display: none;
+        }
+        .basic-form.active, .advanced-form.active {
+            display: block;
+        }
+        .result-section {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #2d2d2d;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(255,255,255,0.1);
+            position: relative;
+        }
+        .button-container {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .table-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .table-tab {
+            padding: 6px 12px;
+            background-color: #404040;
+            border: none;
+            border-radius: 4px;
+            color: #ffffff;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .table-tab.active {
+            background-color: #00ccff;
+            color: #000000;
+        }
+        .table-tab:hover {
+            background-color: #0099cc;
+        }
+        .links-section {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #2d2d2d;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(255,255,255,0.1);
+        }
+        .guide-section {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #2d2d2d;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(255,255,255,0.1);
+            text-align: left;
+        }
+        .guide-section h1, .privacy-section h1, .links-section h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #00ccff;
+        }
+        .guide-section h2 {
+            font-size: 18px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            color: #00ccff;
+        }
+        .result-section h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #ffffff;
+        }
+        .links-section h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #ffffff;
+        }
+        .guide-section p, .privacy-section p, .links-section p {
+            line-height: 1.6;
+            color: #e0e0e0;
+        }
+        .guide-section ul, .links-section ul {
+            margin-left: 20px;
+            line-height: 1.6;
+            color: #e0e0e0;
+        }
+        .privacy-section {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #2d2d2d;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(255,255,255,0.1);
+            text-align: left;
+        }
+        input, select {
+            padding: 10px;
+            margin: 5px 0;
+            width: 100%;
+            box-sizing: border-box;
+            background-color: #404040;
+            color: #ffffff;
+            border: 1px solid #666;
+            border-radius: 4px;
+        }
+        button {
+            padding: 10px;
+            margin: 5px 0;
+            width: 100%;
+            background-color: #00ccff;
+            color: #000000;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        button:hover {
+            background-color: #0099cc;
+        }
+        .download-button {
+            padding: 0;
+            width: 32px;
+            height: 32px;
+            background-image: url('img/download.jpg');
+            background-size: cover;
+            background-color: transparent;
+            border-radius: 4px;
+        }
+        .line-button, .facebook-button {
+            width: 32px;
+            height: 32px;
+            background-size: cover;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            margin: 0;
+            border-radius: 4px;
+        }
+        .line-button {
+            background-image: url('https://upload.wikimedia.org/wikipedia/commons/4/41/LINE_logo.svg');
+        }
+        .facebook-button {
+            background-image: url('https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg');
+        }
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #999;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            color: #e0e0e0;
+        }
+        th, td {
+            padding: 8px;
+            text-align: right;
+            border-bottom: 1px solid #666;
+        }
+        th {
+            background-color: #3a3a3a;
+            color: #00ccff;
+        }
+        .row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        a {
+            color: #00ccff;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .highlight-red {
+            background-color: #ff4444;
+            color: #ffffff;
+            padding: 2px 8px;
+            border-radius: 4px;
+            display: inline-block;
+        }
+        .button-with-text {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 5px;
+            cursor: pointer;
+        }
+        .button-with-text span {
+            color: #ffffff;
+            font-size: 12px;
+            line-height: 1;
+        }
+        #screenshot-container {
+            position: absolute;
+            top: -9999px;
+            left: -9999px;
+            background-color: #1a1a1a;
+            padding: 20px;
             display: flex;
             flex-direction: column;
             gap: 20px;
+            width: 300px;
         }
-        @media (max-width: 768px) {
-            .right-column .nav-buttons {
-                justify-content: center; /* 手機版居中 */
-            }
+        /* 與 index.html 一致的導航按鈕樣式 */
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        .nav-button {
+            display: flex;
+            align-items: center;
+            background-color: #2d2d2d;
+            padding: 8px 12px;
+            border: 1px solid #666;
+            border-radius: 6px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            width: 120px;
+            justify-content: center;
+        }
+        .nav-button:hover {
+            background-color: #3a3a3a;
+            border-color: #888;
+            box-shadow: 0 2px 4px rgba(255, 255, 255, 0.1);
+        }
+        .nav-button img {
+            width: 24px;
+            height: 24px;
+            margin-right: 8px;
+        }
+        .nav-button span {
+            color: #ffffff;
+            font-size: 14px;
+            font-weight: 500;
         }
     </style>
 </head>
@@ -37,8 +377,22 @@
 
         <!-- 左側欄：標題與計算區域 -->
         <div class="left-column">
-            <!-- 僅保留標題，移除導航按鈕 -->
+            <!-- 導航按鈕與標題 -->
             <div class="header-section">
+                <div class="nav-buttons">
+                    <a href="https://xbon520.github.io/" class="nav-button">
+                        <img src="/img/home_button.jpg" alt="首頁圖標">
+                        <span>首頁</span>
+                    </a>
+                    <a href="https://xbon520.github.io/compound.html" class="nav-button">
+                        <img src="/img/compound_button.jpg" alt="複利計算機圖標">
+                        <span>複利<br>計算機</span>
+                    </a>
+                    <a href="https://xbon520.github.io/about.html" class="nav-button">
+                        <img src="/img/about_button.jpg" alt="關於圖標">
+                        <span>關於</span>
+                    </a>
+                </div>
                 <div class="site-title">
                     <img src="https://www.stockcorp.tw/img/icon1.jpg" alt="股市企業研究院圖標" style="vertical-align: middle; margin-right: 10px; height: 28px; width: auto;">
                     <h1>股 市 企 業 研 究 院</h1>
@@ -53,7 +407,7 @@
                     <button class="tab-button active" onclick="switchTab('basic')">入門</button>
                     <button class="tab-button" onclick="switchTab('advanced')">進階定期定額</button>
                 </div>
-                <!-- 原有表單內容保持不變 -->
+                <!-- 入門表單 -->
                 <div class="basic-form active">
                     <label for="basic-initial-investment">初期本金:</label>
                     <input type="text" id="basic-initial-investment" placeholder="輸入初期本金" value="20,000">
@@ -63,14 +417,78 @@
                     <input type="number" id="basic-annual-rate" step="0.01" min="0" max="100" placeholder="輸入年化收益率" value="5">
                     <button onclick="calculateBasicCompound()">計算複利</button>
                 </div>
+                <!-- 進階定期定額表單 -->
                 <div class="advanced-form">
-                    <!-- 原有進階表單內容保持不變 -->
+                    <label for="adv-initial-investment">初期本金:</label>
+                    <input type="text" id="adv-initial-investment" placeholder="輸入初期本金" value="20,000">
+                    <label for="monthly-investment">每月投資金額:</label>
+                    <input type="text" id="monthly-investment" placeholder="輸入每月投資金額" value="5,000">
+                    <label for="investment-period">投資期數:</label>
+                    <div class="row">
+                        <input type="number" id="investment-period" step="1" min="0" max="200" placeholder="輸入期數" value="5" style="width: 70%;">
+                        <select id="period-unit">
+                            <option value="years" selected>年</option>
+                            <option value="months">個月</option>
+                        </select>
+                    </div>
+                    <label for="interest-rate">利率 (%):</label>
+                    <div class="row">
+                        <input type="number" id="interest-rate" step="0.01" min="0" max="100" placeholder="輸入利率" value="5" style="width: 70%;">
+                        <select id="rate-unit">
+                            <option value="year" selected>年</option>
+                            <option value="month">月</option>
+                        </select>
+                    </div>
+                    <label for="compound-frequency">複利方式:</label>
+                    <select id="compound-frequency">
+                        <option value="1" selected>年複利</option>
+                        <option value="2">半年複利</option>
+                        <option value="4">每季度複利</option>
+                        <option value="12">月複利</option>
+                        <option value="365">日複利</option>
+                    </select>
+                    <button onclick="calculateAdvancedCompound()">計算複利</button>
                 </div>
             </div>
 
             <!-- 計算結果 -->
             <div class="result-section" id="result">
-                <!-- 原有結果區塊內容保持不變 -->
+                <h2>分析報告</h2>
+                <div class="button-container">
+                    <div class="button-with-text" onclick="downloadTableAsImage()">
+                        <button class="download-button"></button>
+                        <span>下載報告</span>
+                    </div>
+                    <button class="line-button" onclick="shareToLine()" title="分享到 Line"></button>
+                    <button class="facebook-button" onclick="shareToFacebook()" title="分享到 Facebook"></button>
+                </div>
+                <p>總收益: <span id="total-profit" class="highlight-red">0</span> 元</p>
+                <p>最終金額: <span id="future-value" class="highlight-red">0</span> 元</p>
+                <p id="total-invested-p" style="display: none;">總投資額: <span id="total-invested" class="highlight-red">0</span> 元</p>
+                <div class="table-tabs">
+                    <button class="table-tab active" onclick="switchTableView('year')">年</button>
+                    <button class="table-tab" onclick="switchTableView('month')">月</button>
+                </div>
+                <table id="compound-table">
+                    <thead id="basic-table-head">
+                        <tr>
+                            <th>#</th>
+                            <th>收益</th>
+                            <th>總額</th>
+                            <th>收益率</th>
+                        </tr>
+                    </thead>
+                    <thead id="advanced-table-head" style="display: none;">
+                        <tr>
+                            <th id="advanced-period-label">年</th>
+                            <th>本金</th>
+                            <th>收益</th>
+                            <th>最終金額</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
             </div>
 
             <!-- 相關連結區塊 -->
@@ -86,30 +504,34 @@
             </div>
         </div>
 
-        <!-- 右側欄：導航按鈕與說明內容 -->
+        <!-- 右側欄：說明與其他內容 -->
         <div class="right-column">
-            <!-- 移動導航按鈕至此 -->
-            <div class="nav-buttons">
-                <a href="https://xbon520.github.io/" class="nav-button">
-                    <img src="/img/home_button.jpg" alt="首頁圖標">
-                    <span>首頁</span>
-                </a>
-                <a href="https://xbon520.github.io/compound.html" class="nav-button">
-                    <img src="/img/compound_button.jpg" alt="複利計算機圖標">
-                    <span>複利<br>計算機</span>
-                </a>
-                <a href="https://xbon520.github.io/about.html" class="nav-button">
-                    <img src="/img/about_button.jpg" alt="關於圖標">
-                    <span>關於</span>
-                </a>
-            </div>
-
             <!-- 使用說明 -->
             <div class="guide-section">
                 <h1>歡迎體驗「複利計算機」 - 您的投資成長最佳助手！</h1>
                 <p>想知道投資能成長多少？「複利計算機」由<a href="https://www.youtube.com/@吉米理財學堂" target="_blank">吉米理財學堂</a>打造，提供「入門」與「進階定期定額」兩種模式，幫您計算複利收益並提供分析表格。快來試試吧！</p>
                 <h2>入門計算機使用說明</h2>
-                <!-- 原有說明內容保持不變 -->
+                <p><strong>輸入欄位</strong><br>
+                - 初期本金：初始投入金額，例如 20,000 元。<br>
+                - 計息期數 (n)：投資年數，例如 20 年。<br>
+                - 收益率 (%)：年化收益率，例如 5%。<br>
+                <strong>計算邏輯</strong><br>
+                總額 = 初期本金 × (1 + 收益率)^計息期數，每年收益基於前一年總額計算。<br>
+                <strong>輸出結果</strong><br>
+                - 總收益與最終金額。<br>
+                - 逐年表格顯示年份、收益、總額與累計收益率。</p>
+                <h2>進階定期定額計算機使用說明</h2>
+                <p><strong>輸入欄位</strong><br>
+                - 初期本金：初始投入，例如 20,000 元。<br>
+                - 每月投資金額：每月定投，例如 5,000 元。<br>
+                - 投資期數：投資時間，例如 5 年。<br>
+                - 利率 (%)：年化或月化利率，例如 5%。<br>
+                - 複利方式：年複利、半年複利等，例如年複利。<br>
+                <strong>計算邏輯</strong><br>
+                每月追加投資並按複利方式計算收益。<br>
+                <strong>輸出結果</strong><br>
+                - 總收益、最終金額、總投資額。<br>
+                - 可切換年/月表格顯示本金、收益與最終金額。</p>
             </div>
 
             <!-- 隱私權政策 -->
@@ -128,7 +550,315 @@
     </div>
 
     <script>
-        // 原有 JavaScript 內容保持不變
+        // 格式化數字為千位分隔符
+        function formatNumber(num) {
+            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+
+        // 移除千位分隔符並轉為數字
+        function parseNumber(str) {
+            return parseFloat(str.replace(/,/g, '')) || 0;
+        }
+
+        // 為輸入框添加千位分隔符
+        function addThousandSeparator(input) {
+            let value = input.value.replace(/,/g, '');
+            if (value) {
+                input.value = formatNumber(parseFloat(value).toFixed(0));
+            }
+        }
+
+        // 初始化輸入框格式並限制最大值
+        document.addEventListener("DOMContentLoaded", function() {
+            const inputs = [
+                document.getElementById("basic-initial-investment"),
+                document.getElementById("adv-initial-investment"),
+                document.getElementById("monthly-investment")
+            ];
+            inputs.forEach(input => {
+                addThousandSeparator(input);
+                input.addEventListener("input", function() {
+                    addThousandSeparator(this);
+                });
+            });
+
+            // 限制計息期數不超過200
+            const basicYears = document.getElementById("basic-years");
+            basicYears.addEventListener("input", function() {
+                if (this.value > 200) this.value = 200;
+                if (this.value < 0) this.value = 0;
+            });
+
+            // 限制投資期數不超過200
+            const investmentPeriod = document.getElementById("investment-period");
+            investmentPeriod.addEventListener("input", function() {
+                if (this.value > 200) this.value = 200;
+                if (this.value < 0) this.value = 0;
+            });
+
+            // 限制入門收益率不超過100%
+            const basicAnnualRate = document.getElementById("basic-annual-rate");
+            basicAnnualRate.addEventListener("input", function() {
+                if (this.value > 100) this.value = 100;
+                if (this.value < 0) this.value = 0;
+            });
+
+            // 限制進階利率不超過100%
+            const interestRate = document.getElementById("interest-rate");
+            interestRate.addEventListener("input", function() {
+                if (this.value > 100) this.value = 100;
+                if (this.value < 0) this.value = 0;
+            });
+        });
+
+        let currentTab = 'basic';
+        let currentTableView = 'year';
+        let advancedYearData = [];
+        let advancedMonthData = [];
+
+        // 切換標籤
+        function switchTab(tab) {
+            const basicButton = document.querySelector(".tab-buttons .tab-button:nth-child(1)");
+            const advButton = document.querySelector(".tab-buttons .tab-button:nth-child(2)");
+            const basicForm = document.querySelector(".basic-form");
+            const advForm = document.querySelector(".advanced-form");
+            const basicHead = document.getElementById("basic-table-head");
+            const advHead = document.getElementById("advanced-table-head");
+            const totalInvestedP = document.getElementById("total-invested-p");
+            const tableTabs = document.querySelector(".table-tabs");
+
+            currentTab = tab;
+            if (tab === "basic") {
+                basicButton.classList.add("active");
+                advButton.classList.remove("active");
+                basicForm.classList.add("active");
+                advForm.classList.remove("active");
+                basicHead.style.display = "table-header-group";
+                advHead.style.display = "none";
+                totalInvestedP.style.display = "none";
+                tableTabs.style.display = "none";
+                calculateBasicCompound();
+            } else {
+                basicButton.classList.remove("active");
+                advButton.classList.add("active");
+                basicForm.classList.remove("active");
+                advForm.classList.add("active");
+                basicHead.style.display = "none";
+                advHead.style.display = "table-header-group";
+                totalInvestedP.style.display = "block";
+                tableTabs.style.display = "flex";
+                calculateAdvancedCompound();
+            }
+        }
+
+        // 切換表格視圖
+        function switchTableView(view) {
+            const yearTab = document.querySelector(".table-tabs .table-tab:nth-child(1)");
+            const monthTab = document.querySelector(".table-tabs .table-tab:nth-child(2)");
+            const tableBody = document.querySelector("#compound-table tbody");
+            const periodLabel = document.getElementById("advanced-period-label");
+
+            currentTableView = view;
+            if (view === "year") {
+                yearTab.classList.add("active");
+                monthTab.classList.remove("active");
+                periodLabel.textContent = "年";
+                tableBody.innerHTML = "";
+                advancedYearData.forEach(data => {
+                    const row = document.createElement("tr");
+                    row.innerHTML = `
+                        <td>${data.year}</td>
+                        <td>${formatNumber(Math.round(data.principal))}</td>
+                        <td>+${formatNumber(Math.round(data.profit))}</td>
+                        <td>${formatNumber(Math.round(data.total))}</td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            } else {
+                yearTab.classList.remove("active");
+                monthTab.classList.add("active");
+                periodLabel.textContent = "月";
+                tableBody.innerHTML = "";
+                advancedMonthData.forEach(data => {
+                    const row = document.createElement("tr");
+                    row.innerHTML = `
+                        <td>${data.month}</td>
+                        <td>${formatNumber(Math.round(data.principal))}</td>
+                        <td>+${formatNumber(Math.round(data.profit))}</td>
+                        <td>${formatNumber(Math.round(data.total))}</td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            }
+        }
+
+        // 入門複利計算
+        function calculateBasicCompound() {
+            const initialInvestment = parseNumber(document.getElementById("basic-initial-investment").value);
+            const years = Math.min(parseInt(document.getElementById("basic-years").value) || 0, 200);
+            const annualRate = Math.min((parseFloat(document.getElementById("basic-annual-rate").value) || 0), 100) / 100;
+
+            const futureValue = Math.round(initialInvestment * Math.pow(1 + annualRate, years));
+            const totalProfit = futureValue - initialInvestment;
+
+            document.getElementById("total-profit").innerText = formatNumber(totalProfit);
+            document.getElementById("future-value").innerText = formatNumber(futureValue);
+
+            const tableBody = document.querySelector("#compound-table tbody");
+            tableBody.innerHTML = "";
+
+            let currentValue = initialInvestment;
+            for (let i = 1; i <= years; i++) {
+                const previousValue = currentValue;
+                currentValue = Math.round(previousValue * (1 + annualRate));
+                const yearlyProfit = currentValue - previousValue;
+                const cumulativeRate = ((currentValue - initialInvestment) / initialInvestment) * 100;
+
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${i}</td>
+                    <td>+${formatNumber(yearlyProfit)}</td>
+                    <td>${formatNumber(currentValue)}</td>
+                    <td>${cumulativeRate.toFixed(2)}%</td>
+                `;
+                tableBody.appendChild(row);
+            }
+        }
+
+        // 進階定期定額複利計算
+        function calculateAdvancedCompound() {
+            const initialInvestment = parseNumber(document.getElementById("adv-initial-investment").value);
+            const monthlyInvestment = parseNumber(document.getElementById("monthly-investment").value);
+            const period = Math.min(parseInt(document.getElementById("investment-period").value) || 0, 200);
+            const periodUnit = document.getElementById("period-unit").value;
+            const interestRate = Math.min((parseFloat(document.getElementById("interest-rate").value) || 0), 100) / 100;
+            const rateUnit = document.getElementById("rate-unit").value;
+            const compoundFrequency = parseInt(document.getElementById("compound-frequency").value);
+
+            const totalMonths = periodUnit === "years" ? period * 12 : period;
+            const annualRate = rateUnit === "month" ? interestRate * 12 : interestRate;
+            const monthlyRate = annualRate / 12;
+
+            let futureValue = initialInvestment;
+            let monthData = [];
+            let yearData = [];
+            let cumulativeInvested = initialInvestment;
+
+            for (let month = 1; month <= totalMonths; month++) {
+                const previousValue = futureValue;
+                cumulativeInvested += monthlyInvestment;
+                futureValue = Math.round(previousValue * (1 + monthlyRate)) + monthlyInvestment;
+                const monthlyProfit = futureValue - previousValue - monthlyInvestment;
+
+                monthData.push({
+                    month: month,
+                    principal: cumulativeInvested,
+                    profit: monthlyProfit,
+                    total: futureValue
+                });
+            }
+
+            let currentValue = initialInvestment;
+            cumulativeInvested = initialInvestment;
+            for (let year = 1; year <= (periodUnit === "years" ? period : Math.ceil(period / 12)); year++) {
+                const previousValue = currentValue;
+                const yearMonths = Math.min(12, totalMonths - (year - 1) * 12);
+                cumulativeInvested += monthlyInvestment * yearMonths;
+                currentValue = Math.round(previousValue * (1 + annualRate)) + monthlyInvestment * yearMonths * Math.round(1 + annualRate / 2);
+                const yearlyProfit = currentValue - previousValue;
+
+                yearData.push({
+                    year: year,
+                    principal: cumulativeInvested,
+                    profit: yearlyProfit,
+                    total: currentValue
+                });
+            }
+
+            const totalInvested = initialInvestment + monthlyInvestment * totalMonths;
+            const totalProfit = futureValue - totalInvested;
+
+            document.getElementById("total-profit").innerText = formatNumber(totalProfit);
+            document.getElementById("future-value").innerText = formatNumber(futureValue);
+            document.getElementById("total-invested").innerText = formatNumber(totalInvested);
+
+            advancedYearData = yearData;
+            advancedMonthData = monthData;
+            switchTableView(currentTableView);
+        }
+
+        // 截取包含網站標識、輸入表單和分析報告的完整圖片
+        function captureFullResult(callback) {
+            const siteTitle = document.querySelector(".site-title");
+            const formSection = document.querySelector(".form-section");
+            const resultSection = document.getElementById("result");
+            
+            let tempContainer = document.getElementById("screenshot-container");
+            if (!tempContainer) {
+                tempContainer = document.createElement("div");
+                tempContainer.id = "screenshot-container";
+                document.body.appendChild(tempContainer);
+            }
+            
+            tempContainer.innerHTML = "";
+            const siteTitleClone = siteTitle.cloneNode(true);
+            const formClone = formSection.cloneNode(true);
+            const resultClone = resultSection.cloneNode(true);
+            tempContainer.appendChild(siteTitleClone);
+            tempContainer.appendChild(formClone);
+            tempContainer.appendChild(resultClone);
+
+            const buttonContainer = tempContainer.querySelector(".button-container");
+            if (buttonContainer) buttonContainer.remove();
+
+            html2canvas(tempContainer).then(canvas => {
+                callback(canvas);
+                tempContainer.innerHTML = "";
+            });
+        }
+
+        // 下載完整圖片
+        function downloadTableAsImage() {
+            captureFullResult(canvas => {
+                const link = document.createElement("a");
+                link.download = `compound_full_result_${currentTab}_${currentTableView}.png`;
+                link.href = canvas.toDataURL("image/png");
+                link.click();
+            });
+        }
+
+        // 分享到 Line
+        function shareToLine() {
+            captureFullResult(canvas => {
+                const imageData = canvas.toDataURL("image/png");
+                const url = "https://xbon520.github.io/compound.html";
+                const text = `我的複利計算結果圖表，請查看：${url}`;
+                const encodedText = encodeURIComponent(text);
+                const lineUrl = `https://line.me/R/msg/text/?${encodedText}`;
+                window.open(lineUrl, '_blank');
+                alert("Line 不支援直接分享圖片，請下載圖片後手動分享至 Line。圖片已自動下載。");
+                const link = document.createElement("a");
+                link.download = `compound_full_result_${currentTab}_${currentTableView}.png`;
+                link.href = imageData;
+                link.click();
+            });
+        }
+
+        // 分享到 Facebook
+        function shareToFacebook() {
+            captureFullResult(canvas => {
+                const imageData = canvas.toDataURL("image/png");
+                const url = "https://xbon520.github.io/compound.html";
+                const encodedUrl = encodeURIComponent(url);
+                const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`;
+                window.open(facebookUrl, '_blank');
+                alert("Facebook 不支援直接分享圖片，請下載圖片後手動上傳至 Facebook。圖片已自動下載。");
+                const link = document.createElement("a");
+                link.download = `compound_full_result_${currentTab}_${currentTableView}.png`;
+                link.href = imageData;
+                link.click();
+            });
+        }
     </script>
 </body>
 </html>
