@@ -376,7 +376,7 @@
                 <input type="number" id="buy-price" step="0.01" placeholder="輸入買入價格" value='23'>
                 <div class="swap-button-container">
                     <div class="button-with-text" onclick="swapPrices()">
-                        <button class="swap-button"></button>
+                        <button class="swap-button" aria-label="價格切換"></button>
                         <span>價格切換</span>
                     </div>
                 </div>
@@ -433,7 +433,7 @@
                             <option value="0.53">5.3 折</option>
                             <option value="0.54">5.4 折</option>
                             <option value="0.55">5.5 折</option>
-                            <多样 value="0.56">5.6 折</option>
+                            <option value="0.56">5.6 折</option>
                             <option value="0.57">5.7 折</option>
                             <option value="0.58">5.8 折</option>
                             <option value="0.59">5.9 折</option>
@@ -464,7 +464,7 @@
                             <option value="0.84">8.4 折</option>
                             <option value="0.85">8.5 折</option>
                             <option value="0.86">8.6 折</option>
-                            <option value="0.87">8.7 折</option>
+                            <option value="0.87">7 折</option>
                             <option value="0.88">8.8 折</option>
                             <option value="0.89">8.9 折</option>
                             <option value="0.9">9.0 折</option>
@@ -497,11 +497,11 @@
                 <h2>分析報告</h2>
                 <div class="button-container">
                     <div class="button-with-text" onclick="downloadResultAsImage()">
-                        <button class="download-button"></button>
+                        <button class="download-button" aria-label="下載報告"></button>
                         <span>下載報告</span>
                     </div>
-                    <button class="line-button" onclick="shareToLine()" title="分享到 Line"></button>
-                    <button class="facebook-button" onclick="shareToFacebook()" title="分享到 Facebook"></button>
+                    <button class="line-button" onclick="shareToLine()" title="分享到 Line" aria-label="分享到 Line"></button>
+                    <button class="facebook-button" onclick="shareToFacebook()" title="分享到 Facebook" aria-label="分享到 Facebook"></button>
                 </div>
                 <p>利潤: <span id="profit">0</span> 元</p>
                 <p>買入總額: <span id="buy-total">0</span> 元</p>
