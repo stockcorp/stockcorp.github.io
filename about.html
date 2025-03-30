@@ -55,6 +55,7 @@
         }
         .header-section {
             margin-bottom: 20px;
+            width: 100%;
         }
         .site-title {
             background-color: #2d2d2d;
@@ -147,10 +148,16 @@
         }
         a {
             color: #00ccff;
-            text-decoration: none;
+            text-decoration: underline;
+            transition: color 0.3s ease;
         }
         a:hover {
+            color: #66e6ff;
             text-decoration: underline;
+        }
+        a:focus {
+            outline: 2px solid #ffffff;
+            outline-offset: 2px;
         }
         footer {
             text-align: center;
@@ -159,7 +166,6 @@
             color: #999;
             width: 100%;
         }
-        /* 與 index.html 一致的導航按鈕樣式 */
         .nav-buttons {
             display: flex;
             gap: 15px;
@@ -182,6 +188,10 @@
             border-color: #888;
             box-shadow: 0 2px 4px rgba(255, 255, 255, 0.1);
         }
+        .nav-button:focus {
+            outline: 2px solid #ffffff;
+            outline-offset: 2px;
+        }
         .nav-button img {
             width: 24px;
             height: 24px;
@@ -192,70 +202,81 @@
             font-size: 14px;
             font-weight: 500;
         }
+        /* 無障礙隱藏文字 */
+        .visually-hidden {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            border: 0;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <!-- 橫幅 -->
         <div style="width: 100%;">
-            <div class="header"></div>
+            <div class="header" role="banner" aria-label="網站橫幅"></div>
         </div>
 
         <!-- 左側欄：標題 -->
-        <div style="width: 100%;">
-            <div class="header-section">
-                <div class="nav-buttons">
-                    <a href="https://xbon520.github.io/" class="nav-button">
-                        <img src="/img/home_button.jpg" alt="首頁圖標">
-                        <span>首頁</span>
-                    </a>
-                    <a href="https://xbon520.github.io/compound.html" class="nav-button">
-                        <img src="/img/compound_button.jpg" alt="複利計算機圖標">
-                        <span>複利<br>計算機</span>
-                    </a>
-                    <a href="https://xbon520.github.io/about.html" class="nav-button">
-                        <img src="/img/about_button.jpg" alt="關於圖標">
-                        <span>關於</span>
-                    </a>
-                </div>
-                <div class="site-title">
-                    <img src="https://www.stockcorp.tw/img/icon1.jpg" alt="股市企業研究院圖標" style="vertical-align: middle; margin-right: 10px; height: 28px; width: auto;">
-                    <h1>www.stockcorp.tw</h1>
-                </div>
+        <header class="header-section">
+            <nav class="nav-buttons" aria-label="主要導航">
+                <a href="https://xbon520.github.io/" class="nav-button">
+                    <img src="/img/home_button.jpg" alt="">
+                    <span>首頁</span>
+                </a>
+                <a href="https://xbon520.github.io/compound.html" class="nav-button">
+                    <img src="/img/compound_button.jpg" alt="">
+                    <span>複利<br>計算機</span>
+                </a>
+                <a href="https://xbon520.github.io/about.html" class="nav-button">
+                    <img src="/img/about_button.jpg" alt="">
+                    <span>關於</span>
+                </a>
+            </nav>
+            <div class="site-title">
+                <img src="https://www.stockcorp.tw/img/icon1.jpg" alt="股市企業研究院標誌">
+                <h1>www.stockcorp.tw</h1>
             </div>
-        </div>
+        </header>
 
         <!-- 置中：關於我們 -->
-        <div class="about-section">
-            <h1>關於我們</h1>
-            <p>吉米理財學堂致力於深入剖析投資、理財與資產配置的奧秘，涵蓋ETF、股票、債券、比特幣等多面向的財經知識。我們不僅是一個知識分享頻道，更是一個實踐平台，透過精心設計的理財工具網站，幫助您將理論轉化為行動。無論您是理財新手還是經驗豐富的投資者，我們的目標是提供簡單易用、高效實用的工具，讓您在財富管理的旅程中事半功倍，輕鬆掌握財務自由的關鍵！</p>
-        </div>
-        
-        <!-- 關於我們圖案 -->
-        <img src="/img/about.jpg" alt="吉米理財學堂關於我們圖" class="marketing-image">
-        
-        <!-- 下方左右區塊 -->
-        <div class="row">
-            <!-- 相關連結 -->
-            <div class="links-section">
-                <h1>相關連結</h1>
-                <ul>
-                    <li><a href="https://www.youtube.com/@吉米理財學堂" target="_blank">吉米理財學堂</a></li>
-                    <li><a href="https://www.udemy.com/user/xie-rui-qun/?srsltid=AfmBOorXUnB2_pNqickzLwE9CRYyluNpW_SaJzjy9S0yhen53U8oRKMf" target="_blank">Udemy線上課程</a></li>
-                    <li><a href="https://instagram.com/jimbtcusdt" target="_blank">Instagram</a></li>
-                    <li><a href="https://max.maicoin.com/signup?r=7e3853cc" target="_blank">MAX交易所註冊</a></li>
-                    <li><a href="https://binance.com/zh-TC/futures/ref?code=567613191" target="_blank">幣安交易所註冊</a></li>
-                </ul>
-            </div>
+        <main>
+            <section class="about-section" aria-label="關於我們">
+                <h1>關於我們</h1>
+                <p>吉米理財學堂致力於深入剖析投資、理財與資產配置的奧秘，涵蓋ETF、股票、債券、比特幣等多面向的財經知識。我們不僅是一個知識分享頻道，更是一個實踐平台，透過精心設計的理財工具網站，幫助您將理論轉化為行動。無論您是理財新手還是經驗豐富的投資者，我們的目標是提供簡單易用、高效實用的工具，讓您在財富管理的旅程中事半功倍，輕鬆掌握財務自由的關鍵！</p>
+            </section>
+            
+            <!-- 關於我們圖案 -->
+            <img src="/img/about.jpg" alt="吉米理財學堂介紹圖片" class="marketing-image">
+            
+            <!-- 下方左右區塊 -->
+            <div class="row">
+                <!-- 相關連結 -->
+                <section class="links-section" aria-label="相關連結">
+                    <h1>相關連結</h1>
+                    <ul>
+                        <li><a href="https://www.youtube.com/@吉米理財學堂" target="_blank">吉米理財學堂</a></li>
+                        <li><a href="https://www.udemy.com/user/xie-rui-qun/?srsltid=AfmBOorXUnB2_pNqickzLwE9CRYyluNpW_SaJzjy9S0yhen53U8oRKMf" target="_blank">Udemy線上課程</a></li>
+                        <li><a href="https://instagram.com/jimbtcusdt" target="_blank">Instagram</a></li>
+                        <li><a href="https://max.maicoin.com/signup?r=7e3853cc" target="_blank">MAX交易所註冊</a></li>
+                        <li><a href="https://binance.com/zh-TC/futures/ref?code=567613191" target="_blank">幣安交易所註冊</a></li>
+                    </ul>
+                </section>
 
-            <!-- 隱私權政策 -->
-            <div class="privacy-section">
-                <h1>隱私權政策</h1>
-                <p>我們的應用程式不會收集個人資訊。</p>
-                <p>理財工具系列作品由 <a href="https://www.youtube.com/@吉米理財學堂" target="_blank">吉米理財學堂</a> 授權開發</p>
-                <p>如有任何問題，請聯絡我們：<a href="mailto:xbon510@gmail.com">xbon510@gmail.com</a></p>
+                <!-- 隱私權政策 -->
+                <section class="privacy-section" aria-label="隱私權政策">
+                    <h1>隱私權政策</h1>
+                    <p>我們的應用程式不會收集個人資訊。</p>
+                    <p>理財工具系列作品由 <a href="https://www.youtube.com/@吉米理財學堂" target="_blank">吉米理財學堂</a> 授權開發</p>
+                    <p>如有任何問題，請聯絡我們：<a href="mailto:xbon510@gmail.com">xbon510@gmail.com</a></p>
+                </section>
             </div>
-        </div>
+        </main>
 
         <!-- 頁腳 -->
         <footer>
