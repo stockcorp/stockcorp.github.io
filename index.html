@@ -273,10 +273,16 @@
         }
         a {
             color: #00ccff;
-            text-decoration: none;
+            text-decoration: underline; /* 預設底線，不依賴顏色 */
+            transition: color 0.3s ease;
         }
         a:hover {
+            color: #66e6ff; /* 懸停時更亮的顏色，對比度更高 */
             text-decoration: underline;
+        }
+        a:focus {
+            outline: 2px solid #ffffff; /* 鍵盤焦點時顯示明顯邊框 */
+            outline-offset: 2px;
         }
         #screenshot-container {
             position: absolute;
@@ -464,7 +470,7 @@
                             <option value="0.84">8.4 折</option>
                             <option value="0.85">8.5 折</option>
                             <option value="0.86">8.6 折</option>
-                            <option value="0.87">7 折</option>
+                            <option value="0.87">8.7 折</option>
                             <option value="0.88">8.8 折</option>
                             <option value="0.89">8.9 折</option>
                             <option value="0.9">9.0 折</option>
