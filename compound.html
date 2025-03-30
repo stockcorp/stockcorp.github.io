@@ -10,10 +10,6 @@
       gtag('config', 'G-Q32FFR42XT');
     </script>
     
-    <!-- Google adsense -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3440199491716602"
-     crossorigin="anonymous"></script>
-    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="複利計算機，支援入門與進階定期定額計算，含逐年分析表格。">
@@ -71,27 +67,6 @@
         }
         .header-section {
             margin-bottom: 20px;
-        }
-        .nav-dropdown {
-            background-color: #2d2d2d;
-            padding: 8px 12px;
-            font-size: 14px;
-            color: #ffffff;
-            border: 1px solid #666;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.3s ease, border-color 0.3s ease;
-            width: 150px;
-            margin-bottom: 10px;
-        }
-        .nav-dropdown:hover {
-            background-color: #3a3a3a;
-            border-color: #888;
-        }
-        .nav-dropdown:focus {
-            outline: none;
-            border-color: #00ccff;
-            box-shadow: 0 0 5px rgba(0, 204, 255, 0.5);
         }
         .site-title {
             background-color: #2d2d2d;
@@ -198,10 +173,6 @@
             background-color: #2d2d2d;
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(255,255,255,0.1);
-        }
-        .ad-space {
-            margin: 20px 0;
-            text-align: center;
         }
         .guide-section {
             margin-top: 20px;
@@ -338,13 +309,12 @@
             border-radius: 4px;
             display: inline-block;
         }
-        /* 調整後的下載按鈕樣式 */
         .button-with-text {
             display: flex;
             flex-direction: column;
             align-items: center;
             text-align: center;
-            gap: 5px; /* 圖案與文字間距 */
+            gap: 5px;
             cursor: pointer;
         }
         .button-with-text span {
@@ -352,7 +322,6 @@
             font-size: 12px;
             line-height: 1;
         }
-        /* 隱藏的臨時容器樣式 */
         #screenshot-container {
             position: absolute;
             top: -9999px;
@@ -362,7 +331,40 @@
             display: flex;
             flex-direction: column;
             gap: 20px;
-            width: 300px; /* 與左側欄寬度一致 */
+            width: 300px;
+        }
+        /* 與 index.html 一致的導航按鈕樣式 */
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        .nav-button {
+            display: flex;
+            align-items: center;
+            background-color: #2d2d2d;
+            padding: 8px 12px;
+            border: 1px solid #666;
+            border-radius: 6px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            width: 120px;
+            justify-content: center;
+        }
+        .nav-button:hover {
+            background-color: #3a3a3a;
+            border-color: #888;
+            box-shadow: 0 2px 4px rgba(255, 255, 255, 0.1);
+        }
+        .nav-button img {
+            width: 24px;
+            height: 24px;
+            margin-right: 8px;
+        }
+        .nav-button span {
+            color: #ffffff;
+            font-size: 14px;
+            font-weight: 500;
         }
     </style>
 </head>
@@ -375,13 +377,22 @@
 
         <!-- 左側欄：標題與計算區域 -->
         <div class="left-column">
-            <!-- 下拉選單與標題 -->
+            <!-- 導航按鈕與標題 -->
             <div class="header-section">
-                <select class="nav-dropdown" onchange="if (this.value) window.location.href = this.value;">
-                    <option value="https://xbon520.github.io/">首頁</option>
-                    <option value="https://xbon520.github.io/compound.html" selected>複利計算機</option>
-                    <option value="https://xbon520.github.io/about.html">關於我們</option>
-                </select>
+                <div class="nav-buttons">
+                    <a href="https://xbon520.github.io/" class="nav-button">
+                        <img src="/img/home_button.jpg" alt="首頁圖標">
+                        <span>首頁</span>
+                    </a>
+                    <a href="https://xbon520.github.io/compound.html" class="nav-button">
+                        <img src="/img/compound_button.jpg" alt="複利計算機圖標">
+                        <span>複利計算機</span>
+                    </a>
+                    <a href="https://xbon520.github.io/about.html" class="nav-button">
+                        <img src="/img/about_button.jpg" alt="關於圖標">
+                        <span>關於</span>
+                    </a>
+                </div>
                 <div class="site-title">
                     <img src="https://www.stockcorp.tw/img/icon1.jpg" alt="股市企業研究院圖標" style="vertical-align: middle; margin-right: 10px; height: 28px; width: auto;">
                     <h1>股 市 企 業 研 究 院</h1>
@@ -495,21 +506,6 @@
 
         <!-- 右側欄：說明與其他內容 -->
         <div class="right-column">
-            <!-- Google AdSense 橫幅廣告空間 -->
-            <div class="ad-space" id="banner-ad">
-                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3440199491716602"
-                        crossorigin="anonymous"></script>
-                <ins class="adsbygoogle"
-                     style="display:block"
-                     data-ad-client="ca-pub-3440199491716602"
-                     data-ad-slot="1234567890"
-                     data-ad-format="auto"
-                     data-full-width-responsive="true"></ins>
-                <script>
-                    (adsbygoogle = window.adsbygoogle || []).push({});
-                </script>
-            </div>
-
             <!-- 使用說明 -->
             <div class="guide-section">
                 <h1>歡迎體驗「複利計算機」 - 您的投資成長最佳助手！</h1>
@@ -544,21 +540,6 @@
                 <p>我們的應用程式不會收集個人資訊。</p>
                 <p>理財工具系列作品由 <a href="https://www.youtube.com/@吉米理財學堂" target="_blank">吉米理財學堂</a> 授權開發</p>
                 <p>如有任何問題，請聯絡我們：<a href="mailto:xbon510@gmail.com">xbon510@gmail.com</a></p>
-            </div>
-
-            <!-- Google AdSense 自適應廣告空間 -->
-            <div class="ad-space" id="responsive-ad">
-                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3440199491716602"
-                        crossorigin="anonymous"></script>
-                <ins class="adsbygoogle"
-                     style="display:block"
-                     data-ad-client="ca-pub-3440199491716602"
-                     data-ad-slot="0987654321"
-                     data-ad-format="auto"
-                     data-full-width-responsive="true"></ins>
-                <script>
-                    (adsbygoogle = window.adsbygoogle || []).push({});
-                </script>
             </div>
         </div>
 
@@ -812,7 +793,6 @@
             const formSection = document.querySelector(".form-section");
             const resultSection = document.getElementById("result");
             
-            // 創建臨時容器
             let tempContainer = document.getElementById("screenshot-container");
             if (!tempContainer) {
                 tempContainer = document.createElement("div");
@@ -820,7 +800,6 @@
                 document.body.appendChild(tempContainer);
             }
             
-            // 複製內容到臨時容器
             tempContainer.innerHTML = "";
             const siteTitleClone = siteTitle.cloneNode(true);
             const formClone = formSection.cloneNode(true);
@@ -829,19 +808,16 @@
             tempContainer.appendChild(formClone);
             tempContainer.appendChild(resultClone);
 
-            // 移除複製區域中的按鈕容器，避免截圖包含按鈕
             const buttonContainer = tempContainer.querySelector(".button-container");
             if (buttonContainer) buttonContainer.remove();
 
-            // 使用 html2canvas 截圖並回傳 canvas
             html2canvas(tempContainer).then(canvas => {
                 callback(canvas);
-                // 清理臨時容器
                 tempContainer.innerHTML = "";
             });
         }
 
-        // 下載完整圖片（包含網站標識、輸入表單和分析報告）
+        // 下載完整圖片
         function downloadTableAsImage() {
             captureFullResult(canvas => {
                 const link = document.createElement("a");
@@ -851,7 +827,7 @@
             });
         }
 
-        // 分享到 Line（包含網站標識、輸入表單和分析報告）
+        // 分享到 Line
         function shareToLine() {
             captureFullResult(canvas => {
                 const imageData = canvas.toDataURL("image/png");
@@ -868,7 +844,7 @@
             });
         }
 
-        // 分享到 Facebook（包含網站標識、輸入表單和分析報告）
+        // 分享到 Facebook
         function shareToFacebook() {
             captureFullResult(canvas => {
                 const imageData = canvas.toDataURL("image/png");
