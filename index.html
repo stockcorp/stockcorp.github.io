@@ -112,6 +112,9 @@
             position: relative;
         }
         .button-container {
+            position: absolute;
+            top: 10px;
+            right: 10px;
             display: flex;
             gap: 10px;
             align-items: center;
@@ -163,7 +166,7 @@
         }
         .guide-section ul, .links-section ul {
             margin-left: 20px;
-            line-height>'1.6;
+            line-height: 1.6;
             color: #e0e0e0;
         }
         .privacy-section {
@@ -299,32 +302,38 @@
             font-size: 12px;
             line-height: 1;
         }
-        /* 新增的導航按鈕樣式 */
-        .button {
-            width: 100px;
-            height: 40px;
-            background-size: cover;
-            background-position: center;
-            border: 1px solid #666;
-            border-radius: 4px;
+        /* 重新設計導航按鈕 */
+        .nav-buttons {
             display: flex;
-            justify-content: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        .nav-button {
+            display: flex;
             align-items: center;
+            background-color: #2d2d2d;
+            padding: 8px 12px;
+            border: 1px solid #666;
+            border-radius: 6px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            width: 120px;
+            justify-content: center;
+        }
+        .nav-button:hover {
+            background-color: #3a3a3a;
+            border-color: #888;
+            box-shadow: 0 2px 4px rgba(255, 255, 255, 0.1);
+        }
+        .nav-button img {
+            width: 24px;
+            height: 24px;
+            margin-right: 8px;
+        }
+        .nav-button span {
             color: #ffffff;
             font-size: 14px;
-            transition: background-color 0.3s ease, border-color 0.3s ease;
-        }
-        .button:hover {
-            border-color: #888;
-        }
-        .home-button {
-            background-image: url('/img/home_button.jpg');
-        }
-        .compound-button {
-            background-image: url('/img/compound_button.jpg');
-        }
-        .about-button {
-            background-image: url('/img/about_button.jpg');
+            font-weight: 500;
         }
     </style>
 </head>
@@ -339,10 +348,19 @@
         <div class="left-column">
             <!-- 導航按鈕與標題 -->
             <div class="header-section">
-                <div class="button-container">
-                    <a href="https://xbon520.github.io/"><div class="button home-button"><span>首頁</span></div></a>
-                    <a href="https://xbon520.github.io/compound.html"><div class="button compound-button"><span>複利計算機</span></div></a>
-                    <a href="https://xbon520.github.io/about.html"><div class="button about-button"><span>關於</span></div></a>
+                <div class="nav-buttons">
+                    <a href="https://xbon520.github.io/" class="nav-button">
+                        <img src="/img/home_button.jpg" alt="首頁圖標">
+                        <span>首頁</span>
+                    </a>
+                    <a href="https://xbon520.github.io/compound.html" class="nav-button">
+                        <img src="/img/compound_button.jpg" alt="複利計算機圖標">
+                        <span>複利計算機</span>
+                    </a>
+                    <a href="https://xbon520.github.io/about.html" class="nav-button">
+                        <img src="/img/about_button.jpg" alt="關於圖標">
+                        <span>關於</span>
+                    </a>
                 </div>
                 <div class="site-title">
                     <img src="https://www.stockcorp.tw/img/icon1.jpg" alt="股市企業研究院圖標" style="vertical-align: middle; margin-right: 10px; height: 28px; width: auto;">
@@ -415,7 +433,7 @@
                             <option value="0.53">5.3 折</option>
                             <option value="0.54">5.4 折</option>
                             <option value="0.55">5.5 折</option>
-                            <option value="0.56">5.6 折</option>
+                            <多样 value="0.56">5.6 折</option>
                             <option value="0.57">5.7 折</option>
                             <option value="0.58">5.8 折</option>
                             <option value="0.59">5.9 折</option>
@@ -446,7 +464,7 @@
                             <option value="0.84">8.4 折</option>
                             <option value="0.85">8.5 折</option>
                             <option value="0.86">8.6 折</option>
-                            <option value="0.87">7.7 折</option>
+                            <option value="0.87">8.7 折</option>
                             <option value="0.88">8.8 折</option>
                             <option value="0.89">8.9 折</option>
                             <option value="0.9">9.0 折</option>
