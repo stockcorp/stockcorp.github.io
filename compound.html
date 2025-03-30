@@ -116,6 +116,7 @@
             color: #ffffff;
             cursor: pointer;
             font-size: 16px;
+            transition: background-color 0.3s ease;
         }
         .tab-button.active {
             background-color: #00ccff;
@@ -123,6 +124,10 @@
         }
         .tab-button:hover {
             background-color: #0099cc;
+        }
+        .tab-button:focus {
+            outline: 2px solid #ffffff;
+            outline-offset: 2px;
         }
         .basic-form, .advanced-form {
             display: none;
@@ -159,6 +164,7 @@
             color: #ffffff;
             cursor: pointer;
             font-size: 14px;
+            transition: background-color 0.3s ease;
         }
         .table-tab.active {
             background-color: #00ccff;
@@ -166,6 +172,10 @@
         }
         .table-tab:hover {
             background-color: #0099cc;
+        }
+        .table-tab:focus {
+            outline: 2px solid #ffffff;
+            outline-offset: 2px;
         }
         .links-section {
             margin-top: 20px;
@@ -229,6 +239,11 @@
             color: #ffffff;
             border: 1px solid #666;
             border-radius: 4px;
+            transition: border-color 0.3s ease;
+        }
+        input:focus, select:focus {
+            border-color: #00ccff;
+            outline: none;
         }
         button {
             padding: 10px;
@@ -240,9 +255,14 @@
             border-radius: 4px;
             cursor: pointer;
             font-weight: bold;
+            transition: background-color 0.3s ease;
         }
         button:hover {
             background-color: #0099cc;
+        }
+        button:focus {
+            outline: 2px solid #ffffff;
+            outline-offset: 2px;
         }
         .download-button {
             padding: 0;
@@ -262,6 +282,14 @@
             padding: 0;
             margin: 0;
             border-radius: 4px;
+            transition: opacity 0.3s ease;
+        }
+        .line-button:hover, .facebook-button:hover {
+            opacity: 0.8;
+        }
+        .line-button:focus, .facebook-button:focus {
+            outline: 2px solid #ffffff;
+            outline-offset: 2px;
         }
         .line-button {
             background-image: url('https://upload.wikimedia.org/wikipedia/commons/4/41/LINE_logo.svg');
@@ -297,10 +325,16 @@
         }
         a {
             color: #00ccff;
-            text-decoration: none;
+            text-decoration: underline;
+            transition: color 0.3s ease;
         }
         a:hover {
+            color: #66e6ff;
             text-decoration: underline;
+        }
+        a:focus {
+            outline: 2px solid #ffffff;
+            outline-offset: 2px;
         }
         .highlight-red {
             background-color: #ff4444;
@@ -333,7 +367,6 @@
             gap: 20px;
             width: 300px;
         }
-        /* 與 index.html 一致的導航按鈕樣式 */
         .nav-buttons {
             display: flex;
             gap: 15px;
@@ -356,6 +389,10 @@
             border-color: #888;
             box-shadow: 0 2px 4px rgba(255, 255, 255, 0.1);
         }
+        .nav-button:focus {
+            outline: 2px solid #ffffff;
+            outline-offset: 2px;
+        }
         .nav-button img {
             width: 24px;
             height: 24px;
@@ -366,81 +403,93 @@
             font-size: 14px;
             font-weight: 500;
         }
+        /* 提升對比度 */
+        :root {
+            --link-color: #00ccff;
+            --link-hover-color: #66e6ff;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <!-- 橫幅 -->
         <div style="width: 100%;">
-            <div class="header"></div>
+            <div class="header" role="banner" aria-label="網站橫幅"></div>
         </div>
 
         <!-- 左側欄：標題與計算區域 -->
         <div class="left-column">
             <!-- 導航按鈕與標題 -->
-            <div class="header-section">
-                <div class="nav-buttons">
+            <header class="header-section">
+                <nav class="nav-buttons" aria-label="主要導航">
                     <a href="https://xbon520.github.io/" class="nav-button">
-                        <img src="/img/home_button.jpg" alt="首頁圖標">
+                        <img src="/img/home_button.jpg" alt="">
                         <span>首頁</span>
                     </a>
                     <a href="https://xbon520.github.io/compound.html" class="nav-button">
-                        <img src="/img/compound_button.jpg" alt="複利計算機圖標">
+                        <img src="/img/compound_button.jpg" alt="">
                         <span>複利<br>計算機</span>
                     </a>
                     <a href="https://xbon520.github.io/about.html" class="nav-button">
-                        <img src="/img/about_button.jpg" alt="關於圖標">
+                        <img src="/img/about_button.jpg" alt="">
                         <span>關於</span>
                     </a>
-                </div>
+                </nav>
                 <div class="site-title">
-                    <img src="https://www.stockcorp.tw/img/icon1.jpg" alt="股市企業研究院圖標" style="vertical-align: middle; margin-right: 10px; height: 28px; width: auto;">
+                    <img src="https://www.stockcorp.tw/img/icon1.jpg" alt="股市企業研究院標誌">
                     <h1>www.stockcorp.tw</h1>
                 </div>
-            </div>
+            </header>
 
             <!-- 輸入表單 -->
-            <div class="form-section">
+            <section class="form-section" aria-label="複利計算機表單">
                 <h2>複利計算機</h2>
                 <hr>
-                <div class="tab-buttons">
-                    <button class="tab-button active" onclick="switchTab('basic')">入門</button>
-                    <button class="tab-button" onclick="switchTab('advanced')">進階定期定額</button>
-                </div>
+                <nav class="tab-buttons" role="tablist" aria-label="計算模式選擇">
+                    <button role="tab" class="tab-button active" aria-selected="true" aria-controls="basic-form" onclick="switchTab('basic')">入門</button>
+                    <button role="tab" class="tab-button" aria-selected="false" aria-controls="advanced-form" onclick="switchTab('advanced')">進階定期定額</button>
+                </nav>
                 <!-- 入門表單 -->
-                <div class="basic-form active">
+                <div class="basic-form active" id="basic-form" role="tabpanel" aria-labelledby="basic-tab">
                     <label for="basic-initial-investment">初期本金:</label>
-                    <input type="text" id="basic-initial-investment" placeholder="輸入初期本金" value="20,000">
+                    <input type="text" id="basic-initial-investment" placeholder="輸入初期本金" value="20,000" aria-describedby="basic-initial-desc">
+                    <span id="basic-initial-desc" class="visually-hidden">請輸入您的初始投資金額，例如 20,000 元。</span>
                     <label for="basic-years">計息期數 (n):</label>
-                    <input type="number" id="basic-years" step="1" min="0" max="200" placeholder="輸入計息期數" value="20">
+                    <input type="number" id="basic-years" step="1" min="0" max="200" placeholder="輸入計息期數" value="20" aria-describedby="basic-years-desc">
+                    <span id="basic-years-desc" class="visually-hidden">請輸入投資年數，範圍 0 至 200 年。</span>
                     <label for="basic-annual-rate">收益率 (%):</label>
-                    <input type="number" id="basic-annual-rate" step="0.01" min="0" max="100" placeholder="輸入年化收益率" value="5">
+                    <input type="number" id="basic-annual-rate" step="0.01" min="0" max="100" placeholder="輸入年化收益率" value="5" aria-describedby="basic-rate-desc">
+                    <span id="basic-rate-desc" class="visually-hidden">請輸入年化收益率，範圍 0% 至 100%。</span>
                     <button onclick="calculateBasicCompound()">計算複利</button>
                 </div>
                 <!-- 進階定期定額表單 -->
-                <div class="advanced-form">
+                <div class="advanced-form" id="advanced-form" role="tabpanel" aria-labelledby="advanced-tab">
                     <label for="adv-initial-investment">初期本金:</label>
-                    <input type="text" id="adv-initial-investment" placeholder="輸入初期本金" value="20,000">
+                    <input type="text" id="adv-initial-investment" placeholder="輸入初期本金" value="20,000" aria-describedby="adv-initial-desc">
+                    <span id="adv-initial-desc" class="visually-hidden">請輸入您的初始投資金額，例如 20,000 元。</span>
                     <label for="monthly-investment">每月投資金額:</label>
-                    <input type="text" id="monthly-investment" placeholder="輸入每月投資金額" value="5,000">
+                    <input type="text" id="monthly-investment" placeholder="輸入每月投資金額" value="5,000" aria-describedby="monthly-desc">
+                    <span id="monthly-desc" class="visually-hidden">請輸入每月定期投資金額，例如 5,000 元。</span>
                     <label for="investment-period">投資期數:</label>
                     <div class="row">
-                        <input type="number" id="investment-period" step="1" min="0" max="200" placeholder="輸入期數" value="5" style="width: 70%;">
-                        <select id="period-unit">
+                        <input type="number" id="investment-period" step="1" min="0" max="200" placeholder="輸入期數" value="5" style="width: 70%;" aria-describedby="period-desc">
+                        <select id="period-unit" aria-label="投資期數單位">
                             <option value="years" selected>年</option>
                             <option value="months">個月</option>
                         </select>
                     </div>
+                    <span id="period-desc" class="visually-hidden">請輸入投資期數，範圍 0 至 200，並選擇年或月作為單位。</span>
                     <label for="interest-rate">利率 (%):</label>
                     <div class="row">
-                        <input type="number" id="interest-rate" step="0.01" min="0" max="100" placeholder="輸入利率" value="5" style="width: 70%;">
-                        <select id="rate-unit">
+                        <input type="number" id="interest-rate" step="0.01" min="0" max="100" placeholder="輸入利率" value="5" style="width: 70%;" aria-describedby="rate-desc">
+                        <select id="rate-unit" aria-label="利率單位">
                             <option value="year" selected>年</option>
                             <option value="month">月</option>
                         </select>
                     </div>
+                    <span id="rate-desc" class="visually-hidden">請輸入利率，範圍 0% 至 100%，並選擇年或月作為單位。</span>
                     <label for="compound-frequency">複利方式:</label>
-                    <select id="compound-frequency">
+                    <select id="compound-frequency" aria-label="複利頻率">
                         <option value="1" selected>年複利</option>
                         <option value="2">半年複利</option>
                         <option value="4">每季度複利</option>
@@ -449,50 +498,50 @@
                     </select>
                     <button onclick="calculateAdvancedCompound()">計算複利</button>
                 </div>
-            </div>
+            </section>
 
             <!-- 計算結果 -->
-            <div class="result-section" id="result">
+            <section class="result-section" id="result" aria-label="計算結果">
                 <h2>分析報告</h2>
                 <div class="button-container">
                     <div class="button-with-text" onclick="downloadTableAsImage()">
-                        <button class="download-button"></button>
+                        <button class="download-button" aria-label="下載報告"></button>
                         <span>下載報告</span>
                     </div>
-                    <button class="line-button" onclick="shareToLine()" title="分享到 Line"></button>
-                    <button class="facebook-button" onclick="shareToFacebook()" title="分享到 Facebook"></button>
+                    <button class="line-button" onclick="shareToLine()" aria-label="分享到 Line"></button>
+                    <button class="facebook-button" onclick="shareToFacebook()" aria-label="分享到 Facebook"></button>
                 </div>
                 <p>總收益: <span id="total-profit" class="highlight-red">0</span> 元</p>
                 <p>最終金額: <span id="future-value" class="highlight-red">0</span> 元</p>
                 <p id="total-invested-p" style="display: none;">總投資額: <span id="total-invested" class="highlight-red">0</span> 元</p>
-                <div class="table-tabs">
-                    <button class="table-tab active" onclick="switchTableView('year')">年</button>
-                    <button class="table-tab" onclick="switchTableView('month')">月</button>
-                </div>
-                <table id="compound-table">
+                <nav class="table-tabs" role="tablist" aria-label="表格視圖選擇">
+                    <button role="tab" class="table-tab active" aria-selected="true" aria-controls="year-table" onclick="switchTableView('year')">年</button>
+                    <button role="tab" class="table-tab" aria-selected="false" aria-controls="month-table" onclick="switchTableView('month')">月</button>
+                </nav>
+                <table id="compound-table" aria-label="複利計算結果表格">
                     <thead id="basic-table-head">
                         <tr>
-                            <th>#</th>
-                            <th>收益</th>
-                            <th>總額</th>
-                            <th>收益率</th>
+                            <th scope="col">年份</th>
+                            <th scope="col">收益</th>
+                            <th scope="col">總額</th>
+                            <th scope="col">收益率</th>
                         </tr>
                     </thead>
                     <thead id="advanced-table-head" style="display: none;">
                         <tr>
-                            <th id="advanced-period-label">年</th>
-                            <th>本金</th>
-                            <th>收益</th>
-                            <th>最終金額</th>
-                            <th></th>
+                            <th scope="col" id="advanced-period-label">年</th>
+                            <th scope="col">本金</th>
+                            <th scope="col">收益</th>
+                            <th scope="col">最終金額</th>
+                            <th scope="col" class="visually-hidden">空白</th>
                         </tr>
                     </thead>
                     <tbody></tbody>
                 </table>
-            </div>
+            </section>
 
             <!-- 相關連結區塊 -->
-            <div class="links-section">
+            <section class="links-section" aria-label="相關連結">
                 <h1>相關連結</h1>
                 <ul>
                     <li><a href="https://www.youtube.com/@吉米理財學堂" target="_blank">吉米理財學堂</a></li>
@@ -501,13 +550,13 @@
                     <li><a href="https://max.maicoin.com/signup?r=7e3853cc" target="_blank">MAX交易所註冊</a></li>
                     <li><a href="https://binance.com/zh-TC/futures/ref?code=567613191" target="_blank">幣安交易所註冊</a></li>
                 </ul>
-            </div>
+            </section>
         </div>
 
         <!-- 右側欄：說明與其他內容 -->
         <div class="right-column">
             <!-- 使用說明 -->
-            <div class="guide-section">
+            <section class="guide-section" aria-label="使用說明">
                 <h1>歡迎體驗「複利計算機」 - 您的投資成長最佳助手！</h1>
                 <p>想知道投資能成長多少？「複利計算機」由<a href="https://www.youtube.com/@吉米理財學堂" target="_blank">吉米理財學堂</a>打造，提供「入門」與「進階定期定額」兩種模式，幫您計算複利收益並提供分析表格。快來試試吧！</p>
                 <h2>入門計算機使用說明</h2>
@@ -532,15 +581,15 @@
                 <strong>輸出結果</strong><br>
                 - 總收益、最終金額、總投資額。<br>
                 - 可切換年/月表格顯示本金、收益與最終金額。</p>
-            </div>
+            </section>
 
             <!-- 隱私權政策 -->
-            <div class="privacy-section">
+            <section class="privacy-section" aria-label="隱私權政策">
                 <h1>隱私權政策</h1>
                 <p>我們的應用程式不會收集個人資訊。</p>
                 <p>理財工具系列作品由 <a href="https://www.youtube.com/@吉米理財學堂" target="_blank">吉米理財學堂</a> 授權開發</p>
                 <p>如有任何問題，請聯絡我們：<a href="mailto:xbon510@gmail.com">xbon510@gmail.com</a></p>
-            </div>
+            </section>
         </div>
 
         <!-- 頁腳 -->
@@ -582,28 +631,24 @@
                 });
             });
 
-            // 限制計息期數不超過200
             const basicYears = document.getElementById("basic-years");
             basicYears.addEventListener("input", function() {
                 if (this.value > 200) this.value = 200;
                 if (this.value < 0) this.value = 0;
             });
 
-            // 限制投資期數不超過200
             const investmentPeriod = document.getElementById("investment-period");
             investmentPeriod.addEventListener("input", function() {
                 if (this.value > 200) this.value = 200;
                 if (this.value < 0) this.value = 0;
             });
 
-            // 限制入門收益率不超過100%
             const basicAnnualRate = document.getElementById("basic-annual-rate");
             basicAnnualRate.addEventListener("input", function() {
                 if (this.value > 100) this.value = 100;
                 if (this.value < 0) this.value = 0;
             });
 
-            // 限制進階利率不超過100%
             const interestRate = document.getElementById("interest-rate");
             interestRate.addEventListener("input", function() {
                 if (this.value > 100) this.value = 100;
@@ -637,6 +682,8 @@
                 advHead.style.display = "none";
                 totalInvestedP.style.display = "none";
                 tableTabs.style.display = "none";
+                basicButton.setAttribute("aria-selected", "true");
+                advButton.setAttribute("aria-selected", "false");
                 calculateBasicCompound();
             } else {
                 basicButton.classList.remove("active");
@@ -647,6 +694,8 @@
                 advHead.style.display = "table-header-group";
                 totalInvestedP.style.display = "block";
                 tableTabs.style.display = "flex";
+                basicButton.setAttribute("aria-selected", "false");
+                advButton.setAttribute("aria-selected", "true");
                 calculateAdvancedCompound();
             }
         }
@@ -674,6 +723,8 @@
                     `;
                     tableBody.appendChild(row);
                 });
+                yearTab.setAttribute("aria-selected", "true");
+                monthTab.setAttribute("aria-selected", "false");
             } else {
                 yearTab.classList.remove("active");
                 monthTab.classList.add("active");
@@ -689,6 +740,8 @@
                     `;
                     tableBody.appendChild(row);
                 });
+                yearTab.setAttribute("aria-selected", "false");
+                monthTab.setAttribute("aria-selected", "true");
             }
         }
 
