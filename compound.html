@@ -522,13 +522,74 @@
                 - 每月投資金額：每月定投，例如 5,000 元。<br>
                 - 投資期數：投資時間，例如 5 年。<br>
                 - 利率 (%)：年化或月化利率，例如 5%。<br>
-                - 複利方式：年複利或月複利。<br>
+                - 複利方式：年複利、月複利等，例如年複利。<br>
                 <strong>計算邏輯</strong><br>
-                - 月複利：一個月的利息用於計算下一個月的利息。<br>
-                - 年複利：一年的利息用於計算下一年的利息。<br>
+                每月追加投資並按複利方式計算收益。<br>
                 <strong>輸出結果</strong><br>
                 - 總收益、最終金額、總投資額。<br>
-                - 可切換年/月表格顯示本金、收益與最終金額。</p>
+                - 可切換年/月表格顯示本金、收益與最終金額。<br>
+                <strong>月複利計算公式</strong><br>
+                <strong>公式</strong><br>
+                futureValue = previousValue * (1 + monthlyRate) + monthlyInvestment<br>
+                <strong>變數說明</strong><br>
+                - futureValue：當前月份的未來價值（最終金額）。<br>
+                - previousValue：上個月的總額（本金加利息）。<br>
+                - monthlyRate：月利率，通常是年化利率 (annualRate) 除以12，即 monthlyRate = annualRate / 12。<br>
+                - monthlyInvestment：每個月追加的投資金額。<br>
+                <strong>原理</strong><br>
+                月複利的特點是每個月計算一次利息，並將該利息加入本金，作為下個月計算利息的基礎。公式分為兩部分：<br>
+                - previousValue * (1 + monthlyRate)：計算上個月總額的利息並加到本金上。<br>
+                - + monthlyInvestment：加上當月新投入的金額。<br>
+                這種方式模擬了現實中每月定投的情況，例如定期存款或基金定投，且利息每月結算並滾入本金。<br>
+                <strong>逐步計算範例</strong><br>
+                假設：初期本金20,000，每月投資5,000，5%年利率，月複利，計算前3個月：<br>
+                <strong>初始條件</strong>：<br>
+                - annualRate = 0.05（5%）<br>
+                - monthlyRate = 0.05 / 12 ≈ 0.0041667<br>
+                - previousValue = 20,000<br>
+                <strong>第1個月</strong>：<br>
+                - futureValue = 20,000 * (1 + 0.0041667) + 5,000<br>
+                - = 20,000 * 1.0041667 + 5,000<br>
+                - = 20,083.33 + 5,000 ≈ 25,083.33<br>
+                <strong>第2個月</strong>：<br>
+                - previousValue = 25,083.33<br>
+                - futureValue = 25,083.33 * (1 + 0.0041667) + 5,000<br>
+                - = 25,083.33 * 1.0041667 + 5,000<br>
+                - = 25,187.81 + 5,000 ≈ 30,187.81<br>
+                <strong>第3個月</strong>：<br>
+                - previousValue = 30,187.81<br>
+                - futureValue = 30,187.81 * (1 + 0.0041667) + 5,000<br>
+                - = 30,187.81 * 1.0041667 + 5,000<br>
+                - = 30,313.59 + 5,000 ≈ 35,313.59<br>
+                <strong>年複利計算公式</strong><br>
+                <strong>公式</strong><br>
+                currentValue = (previousValue + monthlyInvestment * yearMonths) * (1 + annualRate)<br>
+                <strong>變數說明</strong><br>
+                - currentValue：當前年份的總額（最終金額）。<br>
+                - previousValue：上一年的總額。<br>
+                - monthlyInvestment：每個月追加的投資金額。<br>
+                - yearMonths：當年的月數（通常為12，若是最後一年可能少於12）。<br>
+                - annualRate：年化利率，例如5%則為0.05。<br>
+                <strong>原理</strong><br>
+                年複利的特點是每年計算一次利息，將全年累積的本金和利息作為下一年計算的基礎。公式分為兩部分：<br>
+                - previousValue + monthlyInvestment * yearMonths：計算當年結束時的總本金（上一年總額加上當年每月投入）。<br>
+                - * (1 + annualRate)：對全年總本金計算一次年利息，並加入本金。<br>
+                這模擬了每年結算一次利息的情況，例如某些年度定投產品。<br>
+                <strong>逐步計算範例</strong><br>
+                假設：初期本金20,000，每月投資5,000，5%年利率，年複利，計算前2年：<br>
+                <strong>初始條件</strong>：<br>
+                - annualRate = 0.05<br>
+                - yearMonths = 12<br>
+                - previousValue = 20,000<br>
+                <strong>第1年</strong>：<br>
+                - currentValue = (20,000 + 5,000 * 12) * (1 + 0.05)<br>
+                - = (20,000 + 60,000) * 1.05<br>
+                - = 80,000 * 1.05 = 84,000<br>
+                <strong>第2年</strong>：<br>
+                - previousValue = 84,000<br>
+                - currentValue = (84,000 + 5,000 * 12) * (1 + 0.05)<br>
+                - = (84,000 + 60,000) * 1.05<br>
+                - = 144,000 * 1.05 = 151,200</p>
             </div>
 
             <!-- 隱私權政策 -->
