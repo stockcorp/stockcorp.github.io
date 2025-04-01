@@ -530,12 +530,12 @@
                 - 可切換年/月表格顯示本金、收益與最終金額。<br><br>
                 <strong style="font-size: 18px; color: #00ccff;">月複利計算公式</strong><br>
                 <strong>公式</strong><br>
-                futureValue = previousValue * (1 + monthlyRate) + monthlyInvestment<br>
+                futureValue = previousValue * (1 + monthlyRate) + monthlyInvestment<br><br>
                 <strong>變數說明</strong><br>
                 - futureValue：當前月份的未來價值（最終金額）。<br>
                 - previousValue：上個月的總額（本金加利息）。<br>
                 - monthlyRate：月利率，通常是年化利率 (annualRate) 除以12，即 monthlyRate = annualRate / 12。<br>
-                - monthlyInvestment：每個月追加的投資金額。<br>
+                - monthlyInvestment：每個月追加的投資金額。<br><br>
                 <strong>原理</strong><br>
                 月複利的特點是每個月計算一次利息，並將該利息加入本金，作為下個月計算利息的基礎。公式分為兩部分：<br>
                 - previousValue * (1 + monthlyRate)：計算上個月總額的利息並加到本金上。<br>
@@ -563,13 +563,13 @@
                 - = 30,313.59 + 5,000 ≈ 35,313.59<br><br>
                 <strong style="font-size: 18px; color: #00ccff;">年複利計算公式</strong><br>
                 <strong>公式</strong><br>
-                currentValue = (previousValue + monthlyInvestment * yearMonths) * (1 + annualRate)<br>
+                currentValue = (previousValue + monthlyInvestment * yearMonths) * (1 + annualRate)<br><br>
                 <strong>變數說明</strong><br>
                 - currentValue：當前年份的總額（最終金額）。<br>
                 - previousValue：上一年的總額。<br>
                 - monthlyInvestment：每個月追加的投資金額。<br>
                 - yearMonths：當年的月數（通常為12，若是最後一年可能少於12）。<br>
-                - annualRate：年化利率，例如5%則為0.05。<br>
+                - annualRate：年化利率，例如5%則為0.05。<br><br>
                 <strong>原理</strong><br>
                 年複利的特點是每年計算一次利息，將全年累積的本金和利息作為下一年計算的基礎。公式分為兩部分：<br>
                 - previousValue + monthlyInvestment * yearMonths：計算當年結束時的總本金（上一年總額加上當年每月投入）。<br>
