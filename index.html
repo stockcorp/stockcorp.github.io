@@ -22,7 +22,7 @@
     <!-- Open Graph Meta Tags for Social Media -->
     <meta property="og:title" content="股市企業研究院 - 台灣股票利潤計算機 - 吉米理財學堂">
     <meta property="og:description" content="快速計算台股交易利潤，支援手續費折扣計算。">
-    <meta property="og:url" content="https://xbon520.github.io/">
+    <meta property="og:url" content="https://www.stockcorp.tw">
     <meta property="og:type" content="website">
     <!-- Structured Data (JSON-LD) for SEO -->
     <script type="application/ld+json">
@@ -30,7 +30,7 @@
         "@context": "https://schema.org",
         "@type": "WebApplication",
         "name": "台灣股票利潤計算機",
-        "url": "https://xbon520.github.io/",
+        "url": "https://www.stockcorp.tw",
         "description": "一款免費的台灣股票利潤計算工具，支援券商手續費折扣計算。",
         "publisher": {
             "@type": "Organization",
@@ -356,15 +356,15 @@
             <!-- 導航按鈕與標題 -->
             <div class="header-section">
                 <div class="nav-buttons">
-                    <a href="https://xbon520.github.io/" class="nav-button">
+                    <a href="https://www.stockcorp.tw" class="nav-button">
                         <img src="/img/home_button.jpg" alt="首頁圖標">
                         <span>首頁</span>
                     </a>
-                    <a href="https://xbon520.github.io/compound.html" class="nav-button">
+                    <a href="https://www.stockcorp.twcompound.html" class="nav-button">
                         <img src="/img/compound_button.jpg" alt="複利計算機圖標">
                         <span>複利<br>計算機</span>
                     </a>
-                    <a href="https://xbon520.github.io/about.html" class="nav-button">
+                    <a href="https://www.stockcorp.twabout.html" class="nav-button">
                         <img src="/img/about_button.jpg" alt="關於圖標">
                         <span>關於</span>
                     </a>
@@ -685,7 +685,7 @@
         function shareToLine() {
             captureFullResult(canvas => {
                 const imageData = canvas.toDataURL("image/png");
-                const url = "https://xbon520.github.io/";
+                const url = "https://www.stockcorp.tw";
                 const text = `我的股票利潤計算結果圖表，請查看：${url}`;
                 const encodedText = encodeURIComponent(text);
                 const lineUrl = `https://line.me/R/msg/text/?${encodedText}`;
@@ -702,7 +702,7 @@
         function shareToFacebook() {
             captureFullResult(canvas => {
                 const imageData = canvas.toDataURL("image/png");
-                const url = "https://xbon520.github.io/";
+                const url = "https://www.stockcorp.tw";
                 const encodedUrl = encodeURIComponent(url);
                 const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`;
                 window.open(facebookUrl, '_blank');
