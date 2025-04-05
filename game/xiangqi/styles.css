@@ -76,7 +76,7 @@ h1 {
 }
 
 #xiangqi-board {
-    background: #f0d9b5;
+    background: #f0d9b5; /* 木紋底色 */
     border: 5px solid #8b5a2b;
     border-radius: 10px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
@@ -90,11 +90,14 @@ h1 {
     width: 180px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
     text-align: left;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
 .scoreboard h2 {
     font-size: 1.3em;
-    margin: 0 0 10px 0;
+    margin: 0;
     text-align: center;
     color: #ecf0f1;
 }
@@ -103,7 +106,6 @@ h1 {
     display: flex;
     justify-content: space-between;
     padding: 8px;
-    margin: 5px 0;
     background: rgba(255, 255, 255, 0.1);
     border-radius: 5px;
     font-size: 1.1em;
@@ -122,4 +124,30 @@ h1 {
     background: #e74c3c;
     padding: 5px 10px;
     border-radius: 5px;
+}
+
+.captured-pieces {
+    margin-top: 10px;
+}
+
+.captured-pieces h3 {
+    font-size: 1.1em;
+    margin: 0 0 5px 0;
+    text-align: center;
+    color: #ecf0f1;
+}
+
+.captured-list {
+    background: rgba(255, 255, 255, 0.15);
+    padding: 5px;
+    border-radius: 5px;
+    font-size: 0.9em;
+    color: #ecf0f1;
+    word-wrap: break-word;
+    max-height: 100px;
+    overflow-y: auto;
+}
+
+.captured-list span {
+    margin-left: 5px;
 }
