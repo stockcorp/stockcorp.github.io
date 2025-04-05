@@ -151,3 +151,26 @@ h1 {
 .captured-list span {
     margin-left: 5px;
 }
+
+.difficulty-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+#easy-btn, #hard-btn {
+    padding: 8px 16px;
+    font-size: 1em;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    width: 48%;
+}
+
+#easy-btn:hover, #hard-btn:hover {
+    background-color: #2980b9;
+    transform: scale(1.05);
+}
