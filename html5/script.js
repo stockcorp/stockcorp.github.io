@@ -1,7 +1,7 @@
 const canvas = document.getElementById('go-board');
 const ctx = canvas.getContext('2d');
 const gridSize = 19;
-const cellSize = canvas.width / gridSize;
+const cellSize = canvas.width / gridSize; // 更新為 500 / 19
 let board = Array(gridSize).fill().map(() => Array(gridSize).fill(0)); // 0: 空, 1: 黑棋, 2: 白棋
 let currentPlayer = 1; // 1: 黑棋 (玩家), 2: 白棋 (AI)
 let blackScore = 0;
@@ -60,13 +60,13 @@ function drawStone(x, y, color, opacity = 1) {
 // 動畫落子
 function animateStone(x, y, color, callback) {
     let opacity = 0;
-    const duration = 300; // 動畫時間（毫秒）
+    const duration = 300;
     const startTime = performance.now();
 
     function step(timestamp) {
         const elapsed = timestamp - startTime;
         opacity = Math.min(elapsed / duration, 1);
-        drawBoard(); // 重繪棋盤
+        drawBoard();
         drawStone(x, y, color, opacity);
 
         if (elapsed < duration) {
@@ -76,7 +76,6 @@ function animateStone(x, y, color, callback) {
         }
     }
 
-    // 播放音效
     if (stoneSound) {
         stoneSound.currentTime = 0;
         stoneSound.play().catch(error => {
