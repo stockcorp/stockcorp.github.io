@@ -1,3 +1,28 @@
+感謝你的回饋！看來棋盤邊框在之前的精美化過程中因為背景覆蓋或尺寸計算問題而消失了。我會重新調整棋盤與邊框的大小，確保邊框可見，並保持整體精美設計。以下是修正後的程式碼：
+
+檔案結構
+text
+
+收起
+
+換行
+
+複製
+xiangqi-game/
+├── index.html       # 主頁面
+├── styles.css      # 樣式設計
+├── script.js       # 遊戲邏輯與動畫
+├── stone-drop.mp3  # 落子音效檔案
+1. index.html（保持不變）
+html
+
+預覽
+
+收起
+
+換行
+
+複製
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
@@ -17,7 +42,7 @@
                     <p>當前玩家：<span id="current-player">紅方</span></p>
                     <button id="reset-btn">重新開始</button>
                 </div>
-                <canvas id="xiangqi-board" width="450" height="500"></canvas>
+                <canvas id="xiangqi-board" width="480" height="540"></canvas>
             </div>
             <div class="scoreboard">
                 <h2>計分板</h2>
