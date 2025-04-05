@@ -1,80 +1,110 @@
-const canvas = document.getElementById('go-board');
-const ctx = canvas.getContext('2d');
-const gridSize = 19; // 19x19 標準圍棋棋盤
-const cellSize = canvas.width / gridSize;
-let board = Array(gridSize).fill().map(() => Array(gridSize).fill(0)); // 0: 空, 1: 黑棋, 2: 白棋
-let currentPlayer = 1; // 1: 黑棋, 2: 白棋
-
-// 繪製棋盤
-function drawBoard() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = '#d9b382';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    // 畫格線
-    ctx.strokeStyle = '#333';
-    ctx.lineWidth = 1;
-    for (let i = 0; i < gridSize; i++) {
-        ctx.beginPath();
-        ctx.moveTo(i * cellSize + cellSize / 2, cellSize / 2);
-        ctx.lineTo(i * cellSize + cellSize / 2, canvas.height - cellSize / 2);
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.moveTo(cellSize / 2, i * cellSize + cellSize / 2);
-        ctx.lineTo(canvas.width - cellSize / 2, i * cellSize + cellSize / 2);
-        ctx.stroke();
-    }
-
-    // 畫星點（天元等）
-    const starPoints = [[3, 3], [3, 9], [3, 15], [9, 3], [9, 9], [9, 15], [15, 3], [15, 9], [15, 15]];
-    ctx.fillStyle = '#333';
-    starPoints.forEach(([x, y]) => {
-        ctx.beginPath();
-        ctx.arc(x * cellSize + cellSize / 2, y * cellSize + cellSize / 2, 4, 0, Math.PI * 2);
-        ctx.fill();
-    });
-
-    // 畫棋子
-    for (let y = 0; y < gridSize; y++) {
-        for (let x = 0; x < gridSize; x++) {
-            if (board[y][x] === 1) drawStone(x, y, '#000'); // 黑棋
-            if (board[y][x] === 2) drawStone(x, y, '#fff'); // 白棋
-        }
-    }
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(to bottom, #f0e4c8, #d9c9a3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
 }
 
-// 繪製棋子
-function drawStone(x, y, color) {
-    ctx.beginPath();
-    ctx.arc(x * cellSize + cellSize / 2, y * cellSize + cellSize / 2, cellSize / 2 - 2, 0, Math.PI * 2);
-    ctx.fillStyle = color;
-    ctx.fill();
-    ctx.strokeStyle = '#333';
-    ctx.lineWidth = 1;
-    ctx.stroke();
+.container {
+    text-align: center;
+    background: #fff;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
 }
 
-// 處理點擊落子
-canvas.addEventListener('click', (e) => {
-    const rect = canvas.getBoundingClientRect();
-    const x = Math.floor((e.clientX - rect.left) / cellSize);
-    const y = Math.floor((e.clientY - rect.top) / cellSize);
+h1 {
+    color: #333;
+    font-size: 2.5em;
+    margin-bottom: 10px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
 
-    if (board[y][x] === 0) {
-        board[y][x] = currentPlayer;
-        currentPlayer = currentPlayer === 1 ? 2 : 1;
-        document.getElementById('current-player').textContent = currentPlayer === 1 ? '黑棋' : '白棋';
-        drawBoard();
-    }
-});
+.game-area {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
 
-// 重置遊戲
-document.getElementById('reset-btn').addEventListener('click', () => {
-    board = Array(gridSize).fill().map(() => Array(gridSize).fill(0));
-    currentPlayer = 1;
-    document.getElementById('current-player').textContent = '黑棋';
-    drawBoard();
-});
+.board-container {
+    margin-right: 20px;
+}
 
-// 初始化
-drawBoard();
+.game-info {
+    margin: 10px 0;
+    font-size: 1.2em;
+}
+
+#current-player {
+    font-weight: bold;
+    color: #e74c3c;
+}
+
+#reset-btn, #ai-btn {
+    padding: 10px 20px;
+    font-size: 1em;
+    margin: 0 10px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#reset-btn:hover, #ai-btn:hover {
+    background-color: #2980b9;
+}
+
+#go-board {
+    background: #d9b382;
+    border: 5px solid #8b5a2b;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* 計分板樣式 */
+.scoreboard {
+    background: #2c3e50;
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+    width: 200px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    text-align: left;
+}
+
+.scoreboard h2 {
+    font-size: 1.5em;
+    margin: 0 0 15px 0;
+    text-align: center;
+    color: #ecf0f1;
+}
+
+.score-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    margin: 5px 0;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
+    font-size: 1.2em;
+    transition: transform 0.2s;
+}
+
+.score-item:hover {
+    transform: scale(1.05);
+}
+
+.score-item .player {
+    font-weight: bold;
+}
+
+.score-item .score {
+    background: #e74c3c;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
