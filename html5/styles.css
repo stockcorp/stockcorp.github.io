@@ -3,7 +3,7 @@ const ctx = canvas.getContext('2d');
 const gridSize = 19;
 const cellSize = canvas.width / gridSize;
 let board = Array(gridSize).fill().map(() => Array(gridSize).fill(0)); // 0: 空, 1: 黑棋, 2: 白棋
-let currentPlayer = 1; // 1: 黑棋, 2: 白棋
+let currentPlayer = 1; // 1: 黑棋 (玩家), 2: 白棋 (AI)
 let blackScore = 0;
 let whiteScore = 0;
 
@@ -61,24 +61,9 @@ function updateScoreboard() {
     document.getElementById('white-score').textContent = whiteScore;
 }
 
-// 玩家落子
-canvas.addEventListener('click', (e) => {
-    const rect = canvas.getBoundingClientRect();
-    const x = Math.floor((e.clientX - rect.left) / cellSize);
-    const y = Math.floor((e.clientY - rect.top) / cellSize);
-
-    if (board[y][x] === 0) {
-        board[y][x] = currentPlayer;
-        currentPlayer = currentPlayer === 1 ? 2 : 1;
-        document.getElementById('current-player').textContent = currentPlayer === 1 ? '黑棋' : '白棋';
-        drawBoard();
-        updateScoreboard();
-    }
-});
-
 // AI 落子（隨機模式）
 function aiMove() {
-    if (currentPlayer === 2) { // 假設白棋為 AI
+    if (currentPlayer === 2) {
         let emptyCells = [];
         for (let y = 0; y < gridSize; y++) {
             for (let x = 0; x < gridSize; x++) {
@@ -96,8 +81,25 @@ function aiMove() {
     }
 }
 
-// AI 下一步按鈕
-document.getElementById('ai-btn').addEventListener('click', aiMove);
+// 玩家落子後觸發 AI
+canvas.addEventListener('click', (e) => {
+    const rect = canvas.getBoundingClientRect();
+    const x = Math.floor((e.clientX - rect.left) / cellSize);
+    const y = Math.floor((e.clientY - rect.top) / cellSize);
+
+    if (board[y][x] === 0 && currentPlayer === 1) {
+        board[y][x] = 1; // 玩家落黑棋
+        currentPlayer = 2;
+        document.getElementById('current-player').textContent = '白棋';
+        drawBoard();
+        updateScoreboard();
+
+        // 延遲 0.5 秒讓 AI 落子，模擬思考
+        setTimeout(() => {
+            aiMove();
+        }, 500);
+    }
+});
 
 // 重置遊戲
 document.getElementById('reset-btn').addEventListener('click', () => {
