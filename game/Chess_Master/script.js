@@ -7,7 +7,7 @@ let currentPlayer = 'white'; // 'white' 或 'black'
 let whiteScore = 16;
 let blackScore = 16;
 const stoneSound = document.getElementById('stone-sound');
-let selectedPiece = null; // 選中的棋子位置
+let selectedPiece = null; // 選中的棋子位置 {x, y}
 
 // 初始化棋盤
 function initializeBoard() {
@@ -21,6 +21,8 @@ function initializeBoard() {
         ['wp', 'wp', 'wp', 'wp', 'wp', 'wp', 'wp', 'wp'], // 白棋兵
         ['wr', 'wn', 'wb', 'wq', 'wk', 'wb', 'wn', 'wr']  // 白棋後排
     ];
+    whiteScore = 16;
+    blackScore = 16;
 }
 
 // 繪製棋盤
@@ -101,8 +103,61 @@ function updateScoreboard() {
     document.getElementById('black-score').textContent = blackScore;
 }
 
+// 簡單的移動合法性檢查（僅示例，未實現完整西洋棋規則）
+function isValidMove(fromX, fromY, toX, toY) {
+    const piece = board[fromY][fromX];
+    if (!piece) return false;
+    const isWhitePiece = piece.startsWith('w');
+    if ((currentPlayer === 'white' && !isWhitePiece) || (currentPlayer === 'black' && isWhitePiece)) return false;
+    return true; // 簡化版，實際需檢查每種棋子的移動規則
+}
+
 // 處理點擊
 canvas.addEventListener('click', (e) => {
     const rect = canvas.getBoundingClientRect();
     const x = Math.floor((e.clientX - rect.left) / cellSize);
-    const y = Math.floor((e.clientY - rect
+    const y = Math.floor((e.clientY - rect.top) / cellSize);
+
+    if (!selectedPiece && board[y][x]) {
+        // 選擇棋子
+        if ((currentPlayer === 'white' && board[y][x].startsWith('w')) || 
+            (currentPlayer === 'black' && board[y][x].startsWith('b'))) {
+            selectedPiece = { x, y };
+            drawBoard();
+        }
+    } else if (selectedPiece) {
+        // 移動棋子
+        if (isValidMove(selectedPiece.x, selectedPiece.y, x, y)) {
+            const piece = board[selectedPiece.y][selectedPiece.x];
+            const target = board[y][x];
+            board[selectedPiece.y][selectedPiece.x] = '';
+            board[y][x] = piece;
+
+            animatePiece(selectedPiece.x, selectedPiece.y, x, y, piece, () => {
+                if (target) updateScoreboard(); // 如果吃子，更新分數
+                currentPlayer = currentPlayer === 'white' ? 'black' : 'white';
+                document.getElementById('current-player').textContent = currentPlayer === 'white' ? '白棋' : '黑棋';
+                selectedPiece = null;
+                drawBoard();
+            });
+        } else {
+            selectedPiece = null;
+            drawBoard();
+        }
+    }
+});
+
+// 重置遊戲
+document.getElementById('reset-btn').addEventListener('click', () => {
+    initializeBoard();
+    currentPlayer = 'white';
+    document.getElementById('current-player').textContent = '白棋';
+    selectedPiece = null;
+    drawBoard();
+    updateScoreboard();
+});
+
+// 初始化
+initializeBoard();
+drawBoard();
+updateScoreboard();
