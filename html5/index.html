@@ -9,11 +9,27 @@
 <body>
     <div class="container">
         <h1>線上圍棋 - Go Master</h1>
-        <div class="game-info">
-            <p>當前玩家：<span id="current-player">黑棋</span></p>
-            <button id="reset-btn">重新開始</button>
+        <div class="game-area">
+            <div class="board-container">
+                <div class="game-info">
+                    <p>當前玩家：<span id="current-player">黑棋</span></p>
+                    <button id="reset-btn">重新開始</button>
+                    <button id="ai-btn">AI 下一步</button>
+                </div>
+                <canvas id="go-board" width="600" height="600"></canvas>
+            </div>
+            <div class="scoreboard">
+                <h2>計分板</h2>
+                <div class="score-item">
+                    <span class="player">黑棋</span>
+                    <span class="score" id="black-score">0</span>
+                </div>
+                <div class="score-item">
+                    <span class="player">白棋</span>
+                    <span class="score" id="white-score">0</span>
+                </div>
+            </div>
         </div>
-        <canvas id="go-board" width="600" height="600"></canvas>
     </div>
     <script src="script.js"></script>
 </body>
