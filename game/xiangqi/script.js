@@ -2,8 +2,8 @@ const canvas = document.getElementById('xiangqi-board');
 const ctx = canvas.getContext('2d');
 const gridWidth = 9;  // 寬 9 列（0-8）
 const gridHeight = 10; // 高 10 行（0-9）
-const cellWidth = canvas.width / (gridWidth - 1);
-const cellHeight = canvas.height / (gridHeight - 1);
+const cellWidth = (canvas.width - 16) / (gridWidth - 1); // 扣除邊框寬度
+const cellHeight = (canvas.height - 16) / (gridHeight - 1); // 扣除邊框高度
 let board = [];
 let currentPlayer = 'red';
 let redScore = 16;
@@ -37,7 +37,7 @@ function initializeBoard() {
 function drawBoard() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // 繪製木紋背景（簡單漸層模擬）
+    // 繪製木紋背景
     const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
     gradient.addColorStop(0, '#f0d9b5');
     gradient.addColorStop(1, '#d9b382');
@@ -47,42 +47,43 @@ function drawBoard() {
     ctx.strokeStyle = '#5a3e2b';
     ctx.lineWidth = 2;
 
-    // 繪製垂直線
+    // 繪製垂直線（考慮邊框偏移）
+    const offset = 8; // 邊框寬度
     for (let x = 0; x < gridWidth; x++) {
         ctx.beginPath();
-        ctx.moveTo(x * cellWidth, 0);
-        ctx.lineTo(x * cellWidth, 4 * cellHeight);
-        ctx.moveTo(x * cellWidth, 5 * cellHeight);
-        ctx.lineTo(x * cellWidth, canvas.height);
+        ctx.moveTo(x * cellWidth + offset, offset);
+        ctx.lineTo(x * cellWidth + offset, 4 * cellHeight + offset);
+        ctx.moveTo(x * cellWidth + offset, 5 * cellHeight + offset);
+        ctx.lineTo(x * cellWidth + offset, canvas.height - offset);
         ctx.stroke();
     }
 
     // 繪製水平線
     for (let y = 0; y < gridHeight; y++) {
         ctx.beginPath();
-        ctx.moveTo(0, y * cellHeight);
-        ctx.lineTo(canvas.width, y * cellHeight);
+        ctx.moveTo(offset, y * cellHeight + offset);
+        ctx.lineTo(canvas.width - offset, y * cellHeight + offset);
         ctx.stroke();
     }
 
     // 繪製楚河漢界
     ctx.fillStyle = '#f5f5f5';
-    ctx.fillRect(0, 4 * cellHeight, canvas.width, cellHeight);
+    ctx.fillRect(offset, 4 * cellHeight + offset, canvas.width - 2 * offset, cellHeight);
     ctx.fillStyle = '#8b5a2b';
-    ctx.font = 'bold 24px "KaiTi", serif'; // 使用楷體模擬手寫風
+    ctx.font = 'bold 24px "KaiTi", serif';
     ctx.textAlign = 'center';
-    ctx.fillText('楚河          漢界', canvas.width / 2, 4.5 * cellHeight);
+    ctx.fillText('楚河          漢界', canvas.width / 2, 4.5 * cellHeight + offset);
 
     // 繪製宮格斜線
     ctx.beginPath();
-    ctx.moveTo(3 * cellWidth, 0);
-    ctx.lineTo(5 * cellWidth, 2 * cellHeight);
-    ctx.moveTo(5 * cellWidth, 0);
-    ctx.lineTo(3 * cellWidth, 2 * cellHeight);
-    ctx.moveTo(3 * cellWidth, 7 * cellHeight);
-    ctx.lineTo(5 * cellWidth, 9 * cellHeight);
-    ctx.moveTo(5 * cellWidth, 7 * cellHeight);
-    ctx.lineTo(3 * cellWidth, 9 * cellHeight);
+    ctx.moveTo(3 * cellWidth + offset, offset);
+    ctx.lineTo(5 * cellWidth + offset, 2 * cellHeight + offset);
+    ctx.moveTo(5 * cellWidth + offset, offset);
+    ctx.lineTo(3 * cellWidth + offset, 2 * cellHeight + offset);
+    ctx.moveTo(3 * cellWidth + offset, 7 * cellHeight + offset);
+    ctx.lineTo(5 * cellWidth + offset, 9 * cellHeight + offset);
+    ctx.moveTo(5 * cellWidth + offset, 7 * cellHeight + offset);
+    ctx.lineTo(3 * cellWidth + offset, 9 * cellHeight + offset);
     ctx.stroke();
 
     // 繪製炮與兵的起點標記
@@ -94,7 +95,7 @@ function drawBoard() {
     ctx.fillStyle = '#5a3e2b';
     markers.forEach(([x, y]) => {
         ctx.beginPath();
-        ctx.arc(x * cellWidth, y * cellHeight, 5, 0, Math.PI * 2);
+        ctx.arc(x * cellWidth + offset, y * cellHeight + offset, 5, 0, Math.PI * 2);
         ctx.fill();
     });
 
@@ -110,40 +111,34 @@ function drawBoard() {
     if (selectedPiece) {
         ctx.strokeStyle = '#e74c3c';
         ctx.lineWidth = 3;
-        ctx.strokeRect(selectedPiece.x * cellWidth - cellWidth / 2, selectedPiece.y * cellHeight - cellHeight / 2, cellWidth, cellHeight);
+        ctx.strokeRect(selectedPiece.x * cellWidth + offset - cellWidth / 2, selectedPiece.y * cellHeight + offset - cellHeight / 2, cellWidth, cellHeight);
     }
 }
 
-// 繪製精美棋子（圓形）
+// 繪製精美棋子
 function drawPiece(x, y, piece, opacity = 1) {
     ctx.save();
     const radius = cellWidth * 0.4;
-    const centerX = x * cellWidth;
-    const centerY = y * cellHeight;
+    const centerX = x * cellWidth + 8; // 考慮邊框偏移
+    const centerY = y * cellHeight + 8;
 
-    // 繪製圓形棋子底
     ctx.beginPath();
     ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
-    ctx.fillStyle = piece.startsWith('r') ? '#f9d5bb' : '#d9d9d9'; // 紅方淺紅，黑方灰白
+    ctx.fillStyle = piece.startsWith('r') ? '#f9d5bb' : '#d9d9d9';
     ctx.globalAlpha = opacity;
     ctx.fill();
 
-    // 繪製邊框
     ctx.lineWidth = 2;
     ctx.strokeStyle = piece.startsWith('r') ? '#e74c3c' : '#333';
     ctx.stroke();
 
-    // 繪製陰影（模擬立體感）
-    ctx.beginPath();
-    ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
     const shadowGradient = ctx.createRadialGradient(centerX - 5, centerY - 5, 0, centerX, centerY, radius);
     shadowGradient.addColorStop(0, 'rgba(0, 0, 0, 0.2)');
     shadowGradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
     ctx.fillStyle = shadowGradient;
     ctx.fill();
 
-    // 繪製文字
-    ctx.font = 'bold 28px "KaiTi", serif'; // 使用楷體增加質感
+    ctx.font = 'bold 28px "KaiTi", serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillStyle = piece.startsWith('r') ? '#e74c3c' : '#000';
@@ -414,8 +409,8 @@ canvas.addEventListener('click', (e) => {
     if (gameOver) return;
 
     const rect = canvas.getBoundingClientRect();
-    const x = Math.round((e.clientX - rect.left) / cellWidth);
-    const y = Math.round((e.clientY - rect.top) / cellHeight);
+    const x = Math.round((e.clientX - rect.left - 8) / cellWidth); // 考慮邊框偏移
+    const y = Math.round((e.clientY - rect.top - 8) / cellHeight);
 
     if (currentPlayer !== 'red') return;
 
