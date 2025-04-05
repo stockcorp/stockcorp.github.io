@@ -2,8 +2,9 @@ const canvas = document.getElementById('xiangqi-board');
 const ctx = canvas.getContext('2d');
 const gridWidth = 9;  // 寬 9 列（0-8）
 const gridHeight = 10; // 高 10 行（0-9）
-const cellWidth = (canvas.width - 16) / (gridWidth - 1); // 扣除邊框寬度
-const cellHeight = (canvas.height - 16) / (gridHeight - 1); // 扣除邊框高度
+const borderWidth = 8; // 邊框寬度
+const cellWidth = (canvas.width - 2 * borderWidth) / (gridWidth - 1);
+const cellHeight = (canvas.height - 2 * borderWidth) / (gridHeight - 1);
 let board = [];
 let currentPlayer = 'red';
 let redScore = 16;
@@ -47,43 +48,42 @@ function drawBoard() {
     ctx.strokeStyle = '#5a3e2b';
     ctx.lineWidth = 2;
 
-    // 繪製垂直線（考慮邊框偏移）
-    const offset = 8; // 邊框寬度
+    // 繪製垂直線
     for (let x = 0; x < gridWidth; x++) {
         ctx.beginPath();
-        ctx.moveTo(x * cellWidth + offset, offset);
-        ctx.lineTo(x * cellWidth + offset, 4 * cellHeight + offset);
-        ctx.moveTo(x * cellWidth + offset, 5 * cellHeight + offset);
-        ctx.lineTo(x * cellWidth + offset, canvas.height - offset);
+        ctx.moveTo(x * cellWidth + borderWidth, borderWidth);
+        ctx.lineTo(x * cellWidth + borderWidth, 4 * cellHeight + borderWidth);
+        ctx.moveTo(x * cellWidth + borderWidth, 5 * cellHeight + borderWidth);
+        ctx.lineTo(x * cellWidth + borderWidth, canvas.height - borderWidth);
         ctx.stroke();
     }
 
     // 繪製水平線
     for (let y = 0; y < gridHeight; y++) {
         ctx.beginPath();
-        ctx.moveTo(offset, y * cellHeight + offset);
-        ctx.lineTo(canvas.width - offset, y * cellHeight + offset);
+        ctx.moveTo(borderWidth, y * cellHeight + borderWidth);
+        ctx.lineTo(canvas.width - borderWidth, y * cellHeight + borderWidth);
         ctx.stroke();
     }
 
     // 繪製楚河漢界
     ctx.fillStyle = '#f5f5f5';
-    ctx.fillRect(offset, 4 * cellHeight + offset, canvas.width - 2 * offset, cellHeight);
+    ctx.fillRect(borderWidth, 4 * cellHeight + borderWidth, canvas.width - 2 * borderWidth, cellHeight);
     ctx.fillStyle = '#8b5a2b';
     ctx.font = 'bold 24px "KaiTi", serif';
     ctx.textAlign = 'center';
-    ctx.fillText('楚河          漢界', canvas.width / 2, 4.5 * cellHeight + offset);
+    ctx.fillText('楚河          漢界', canvas.width / 2, 4.5 * cellHeight + borderWidth);
 
     // 繪製宮格斜線
     ctx.beginPath();
-    ctx.moveTo(3 * cellWidth + offset, offset);
-    ctx.lineTo(5 * cellWidth + offset, 2 * cellHeight + offset);
-    ctx.moveTo(5 * cellWidth + offset, offset);
-    ctx.lineTo(3 * cellWidth + offset, 2 * cellHeight + offset);
-    ctx.moveTo(3 * cellWidth + offset, 7 * cellHeight + offset);
-    ctx.lineTo(5 * cellWidth + offset, 9 * cellHeight + offset);
-    ctx.moveTo(5 * cellWidth + offset, 7 * cellHeight + offset);
-    ctx.lineTo(3 * cellWidth + offset, 9 * cellHeight + offset);
+    ctx.moveTo(3 * cellWidth + borderWidth, borderWidth);
+    ctx.lineTo(5 * cellWidth + borderWidth, 2 * cellHeight + borderWidth);
+    ctx.moveTo(5 * cellWidth + borderWidth, borderWidth);
+    ctx.lineTo(3 * cellWidth + borderWidth, 2 * cellHeight + borderWidth);
+    ctx.moveTo(3 * cellWidth + borderWidth, 7 * cellHeight + borderWidth);
+    ctx.lineTo(5 * cellWidth + borderWidth, 9 * cellHeight + borderWidth);
+    ctx.moveTo(5 * cellWidth + borderWidth, 7 * cellHeight + borderWidth);
+    ctx.lineTo(3 * cellWidth + borderWidth, 9 * cellHeight + borderWidth);
     ctx.stroke();
 
     // 繪製炮與兵的起點標記
@@ -95,7 +95,7 @@ function drawBoard() {
     ctx.fillStyle = '#5a3e2b';
     markers.forEach(([x, y]) => {
         ctx.beginPath();
-        ctx.arc(x * cellWidth + offset, y * cellHeight + offset, 5, 0, Math.PI * 2);
+        ctx.arc(x * cellWidth + borderWidth, y * cellHeight + borderWidth, 5, 0, Math.PI * 2);
         ctx.fill();
     });
 
@@ -111,7 +111,7 @@ function drawBoard() {
     if (selectedPiece) {
         ctx.strokeStyle = '#e74c3c';
         ctx.lineWidth = 3;
-        ctx.strokeRect(selectedPiece.x * cellWidth + offset - cellWidth / 2, selectedPiece.y * cellHeight + offset - cellHeight / 2, cellWidth, cellHeight);
+        ctx.strokeRect(selectedPiece.x * cellWidth + borderWidth - cellWidth / 2, selectedPiece.y * cellHeight + borderWidth - cellHeight / 2, cellWidth, cellHeight);
     }
 }
 
@@ -119,8 +119,8 @@ function drawBoard() {
 function drawPiece(x, y, piece, opacity = 1) {
     ctx.save();
     const radius = cellWidth * 0.4;
-    const centerX = x * cellWidth + 8; // 考慮邊框偏移
-    const centerY = y * cellHeight + 8;
+    const centerX = x * cellWidth + borderWidth;
+    const centerY = y * cellHeight + borderWidth;
 
     ctx.beginPath();
     ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
@@ -304,12 +304,27 @@ function countPiecesBetween(fromX, fromY, toX, toY) {
     return count;
 }
 
-// AI 移動
+// 評估棋子價值
+function getPieceValue(piece) {
+    const values = {
+        'c': 9, // 車
+        'n': 4, // 馬
+        'b': 2, // 象
+        'a': 2, // 士
+        'k': 100, // 將
+        'p': 4.5, // 炮
+        's': 1  // 兵
+    };
+    return piece ? values[piece[1]] || 0 : 0;
+}
+
+// AI 移動（增強版）
 function aiMove() {
     if (currentPlayer === 'black' && !gameOver) {
         let blackPieces = [];
         let validMoves = [];
 
+        // 收集所有黑方棋子與合法移動
         for (let y = 0; y < gridHeight; y++) {
             for (let x = 0; x < gridWidth; x++) {
                 if (board[y][x] && board[y][x].startsWith('b')) {
@@ -317,7 +332,9 @@ function aiMove() {
                     for (let ty = 0; ty < gridHeight; ty++) {
                         for (let tx = 0; tx < gridWidth; tx++) {
                             if (isValidMoveForAI(x, y, tx, ty)) {
-                                validMoves.push({ fromX: x, fromY: y, toX: tx, toY: ty });
+                                const target = board[ty][tx];
+                                const value = target ? getPieceValue(target) : 0;
+                                validMoves.push({ fromX: x, fromY: y, toX: tx, toY: ty, value });
                             }
                         }
                     }
@@ -326,7 +343,11 @@ function aiMove() {
         }
 
         if (validMoves.length > 0) {
-            const move = validMoves[Math.floor(Math.random() * validMoves.length)];
+            // 優先選擇吃高價值棋子的移動
+            validMoves.sort((a, b) => b.value - a.value);
+            const topMoves = validMoves.slice(0, Math.min(5, validMoves.length)); // 選擇前 5 個最佳移動
+            const move = topMoves[Math.floor(Math.random() * topMoves.length)]; // 從最佳中隨機選一個
+
             const piece = board[move.fromY][move.fromX];
             const target = board[move.toY][move.toX];
 
@@ -409,8 +430,8 @@ canvas.addEventListener('click', (e) => {
     if (gameOver) return;
 
     const rect = canvas.getBoundingClientRect();
-    const x = Math.round((e.clientX - rect.left - 8) / cellWidth); // 考慮邊框偏移
-    const y = Math.round((e.clientY - rect.top - 8) / cellHeight);
+    const x = Math.round((e.clientX - rect.left - borderWidth) / cellWidth);
+    const y = Math.round((e.clientY - rect.top - borderWidth) / cellHeight);
 
     if (currentPlayer !== 'red') return;
 
