@@ -43,10 +43,9 @@ h1 {
     color: #e74c3c;
 }
 
-#reset-btn, #ai-btn {
+#reset-btn {
     padding: 10px 20px;
     font-size: 1em;
-    margin: 0 10px;
     background-color: #3498db;
     color: white;
     border: none;
@@ -55,7 +54,7 @@ h1 {
     transition: background-color 0.3s;
 }
 
-#reset-btn:hover, #ai-btn:hover {
+#reset-btn:hover {
     background-color: #2980b9;
 }
 
