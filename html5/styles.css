@@ -6,7 +6,7 @@ body {
     align-items: center;
     height: 100vh;
     margin: 0;
-    position: relative; /* 為計分板定位提供參考 */
+    position: relative;
 }
 
 .container {
@@ -16,7 +16,7 @@ body {
     padding: 20px;
     border-radius: 15px;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-    width: 650px; /* 適應棋盤大小 */
+    width: 650px;
     height: 650px;
     display: flex;
     flex-direction: column;
@@ -69,7 +69,6 @@ h1 {
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
 
-/* 計分板樣式 */
 .scoreboard {
     position: absolute;
     top: 20px;
