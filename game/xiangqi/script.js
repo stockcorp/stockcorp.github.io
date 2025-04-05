@@ -33,6 +33,7 @@ function initializeBoard() {
     redCaptured = [];
     blackCaptured = [];
     updateCapturedList();
+    updateDifficultyDisplay();
 }
 
 // 繪製棋盤
@@ -187,6 +188,11 @@ function updateCapturedList() {
     document.getElementById('black-captured').innerHTML = `黑方被吃：<span>${blackCaptured.map(p => symbols[p[1]]).join(', ')}</span>`;
 }
 
+// 更新模式顯示
+function updateDifficultyDisplay() {
+    document.getElementById('difficulty-display').textContent = `模式：${difficulty === 'easy' ? '簡單' : '困難'}`;
+}
+
 // 檢查遊戲是否結束
 function checkGameOver() {
     let redKing = false;
@@ -312,7 +318,7 @@ function getPositionValue(x, y, isHard = false) {
     const distanceToKing = Math.abs(x - redKingPos.x) + Math.abs(y - redKingPos.y);
     const centerValue = Math.abs(x - 4) + Math.abs(y - 4.5);
     let value = 10 - distanceToKing * 0.5 - centerValue * 0.3;
-    if (isHard && y < 5) value += 5; // 困難模式鼓勵進攻紅方區域
+    if (isHard && y < 5) value += 5;
     return value;
 }
 
@@ -391,11 +397,11 @@ function aiMoveHard() {
                                 let moveValue = captureValue + positionValue;
 
                                 // 困難模式加強策略
-                                if (piece[1] === 'c' || piece[1] === 'p') moveValue += 10; // 更積極使用車與炮
-                                if (piece[1] === 's' && ty < 5) moveValue += 5; // 兵過河更高優先級
-                                if (piece[1] === 'k' && Math.abs(tx - 4) <= 1 && ty >= 7) moveValue += 20; // 超級防守黑方將
-                                if (captureValue > 0 && target === 'rk') moveValue += 1000; // 優先吃紅方將
-                                if (ty <= 2) moveValue += 15; // 積極進攻紅方宮區
+                                if (piece[1] === 'c' || piece[1] === 'p') moveValue += 10;
+                                if (piece[1] === 's' && ty < 5) moveValue += 5;
+                                if (piece[1] === 'k' && Math.abs(tx - 4) <= 1 && ty >= 7) moveValue += 20;
+                                if (captureValue > 0 && target === 'rk') moveValue += 1000;
+                                if (ty <= 2) moveValue += 15;
 
                                 validMoves.push({ fromX: x, fromY: y, toX: tx, toY: ty, value: moveValue });
                             }
@@ -406,7 +412,6 @@ function aiMoveHard() {
         }
 
         if (validMoves.length > 0) {
-            // Minimax 模擬紅方回應
             let bestMove = null;
             let bestScore = -Infinity;
 
@@ -426,7 +431,6 @@ function aiMoveHard() {
                                         const redTarget = tempBoard[ty][tx];
                                         const redValue = redTarget ? getPieceValue(redTarget) : 0;
                                         redResponseValue = Math.max(redResponseValue, redValue);
-                                        // 若紅方可吃黑方將，給予極高懲罰
                                         if (redTarget === 'bk') redResponseValue += 1000;
                                     }
                                 }
@@ -435,7 +439,7 @@ function aiMoveHard() {
                     }
                 }
 
-                const moveScore = move.value - redResponseValue * 2; // 更重視防守
+                const moveScore = move.value - redResponseValue * 2;
                 if (moveScore > bestScore) {
                     bestScore = moveScore;
                     bestMove = move;
@@ -591,6 +595,7 @@ document.getElementById('easy-btn').addEventListener('click', () => {
     drawBoard();
     updateScoreboard();
     updateCapturedList();
+    updateDifficultyDisplay();
 });
 
 document.getElementById('hard-btn').addEventListener('click', () => {
@@ -602,6 +607,7 @@ document.getElementById('hard-btn').addEventListener('click', () => {
     drawBoard();
     updateScoreboard();
     updateCapturedList();
+    updateDifficultyDisplay();
 });
 
 // 初始化
@@ -609,3 +615,4 @@ initializeBoard();
 drawBoard();
 updateScoreboard();
 updateCapturedList();
+updateDifficultyDisplay();
