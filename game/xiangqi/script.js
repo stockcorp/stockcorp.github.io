@@ -1,8 +1,8 @@
 const canvas = document.getElementById('xiangqi-board');
 const ctx = canvas.getContext('2d');
-const gridWidth = 9;  // 寬 9 列（0-8）
-const gridHeight = 10; // 高 10 行（0-9）
-const borderWidth = 8; // 邊框寬度
+const gridWidth = 9;
+const gridHeight = 10;
+const borderWidth = 20;
 const cellWidth = (canvas.width - 2 * borderWidth) / (gridWidth - 1);
 const cellHeight = (canvas.height - 2 * borderWidth) / (gridHeight - 1);
 let board = [];
@@ -38,7 +38,6 @@ function initializeBoard() {
 function drawBoard() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // 繪製木紋背景
     const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
     gradient.addColorStop(0, '#f0d9b5');
     gradient.addColorStop(1, '#d9b382');
@@ -48,7 +47,6 @@ function drawBoard() {
     ctx.strokeStyle = '#5a3e2b';
     ctx.lineWidth = 2;
 
-    // 繪製垂直線
     for (let x = 0; x < gridWidth; x++) {
         ctx.beginPath();
         ctx.moveTo(x * cellWidth + borderWidth, borderWidth);
@@ -58,7 +56,6 @@ function drawBoard() {
         ctx.stroke();
     }
 
-    // 繪製水平線
     for (let y = 0; y < gridHeight; y++) {
         ctx.beginPath();
         ctx.moveTo(borderWidth, y * cellHeight + borderWidth);
@@ -66,7 +63,6 @@ function drawBoard() {
         ctx.stroke();
     }
 
-    // 繪製楚河漢界
     ctx.fillStyle = '#f5f5f5';
     ctx.fillRect(borderWidth, 4 * cellHeight + borderWidth, canvas.width - 2 * borderWidth, cellHeight);
     ctx.fillStyle = '#8b5a2b';
@@ -74,7 +70,6 @@ function drawBoard() {
     ctx.textAlign = 'center';
     ctx.fillText('楚河          漢界', canvas.width / 2, 4.5 * cellHeight + borderWidth);
 
-    // 繪製宮格斜線
     ctx.beginPath();
     ctx.moveTo(3 * cellWidth + borderWidth, borderWidth);
     ctx.lineTo(5 * cellWidth + borderWidth, 2 * cellHeight + borderWidth);
@@ -86,7 +81,6 @@ function drawBoard() {
     ctx.lineTo(3 * cellWidth + borderWidth, 9 * cellHeight + borderWidth);
     ctx.stroke();
 
-    // 繪製炮與兵的起點標記
     const markers = [
         [1, 2], [7, 2], [1, 7], [7, 7],
         [0, 3], [2, 3], [4, 3], [6, 3], [8, 3],
@@ -99,7 +93,6 @@ function drawBoard() {
         ctx.fill();
     });
 
-    // 繪製棋子
     for (let y = 0; y < gridHeight; y++) {
         for (let x = 0; x < gridWidth; x++) {
             if (board[y][x]) {
@@ -118,7 +111,7 @@ function drawBoard() {
 // 繪製精美棋子
 function drawPiece(x, y, piece, opacity = 1) {
     ctx.save();
-    const radius = cellWidth * 0.4;
+    const radius = Math.min(cellWidth, cellHeight) * 0.35;
     const centerX = x * cellWidth + borderWidth;
     const centerY = y * cellHeight + borderWidth;
 
@@ -138,7 +131,7 @@ function drawPiece(x, y, piece, opacity = 1) {
     ctx.fillStyle = shadowGradient;
     ctx.fill();
 
-    ctx.font = 'bold 28px "KaiTi", serif';
+    ctx.font = 'bold 24px "KaiTi", serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillStyle = piece.startsWith('r') ? '#e74c3c' : '#000';
@@ -213,7 +206,7 @@ function checkGameOver() {
     return gameOver;
 }
 
-// 檢查移動合法性
+// 檢查移動合法性（紅方）
 function isValidMove(fromX, fromY, toX, toY) {
     const piece = board[fromY][fromX];
     if (!piece || !piece.startsWith('r')) return false;
@@ -307,34 +300,45 @@ function countPiecesBetween(fromX, fromY, toX, toY) {
 // 評估棋子價值
 function getPieceValue(piece) {
     const values = {
-        'c': 9, // 車
-        'n': 4, // 馬
-        'b': 2, // 象
-        'a': 2, // 士
-        'k': 100, // 將
-        'p': 4.5, // 炮
-        's': 1  // 兵
+        'c': 9, 'n': 4, 'b': 2, 'a': 2, 'k': 100, 'p': 4.5, 's': 1
     };
     return piece ? values[piece[1]] || 0 : 0;
+}
+
+// 評估位置價值（靠近紅方將或中心）
+function getPositionValue(x, y) {
+    const redKingPos = { x: 4, y: 0 }; // 假設紅方將初始位置
+    const distanceToKing = Math.abs(x - redKingPos.x) + Math.abs(y - redKingPos.y);
+    const centerValue = Math.abs(x - 4) + Math.abs(y - 4.5); // 中心點 (4, 4.5)
+    return 10 - distanceToKing * 0.5 - centerValue * 0.3; // 靠近將與中心得分更高
 }
 
 // AI 移動（增強版）
 function aiMove() {
     if (currentPlayer === 'black' && !gameOver) {
-        let blackPieces = [];
         let validMoves = [];
 
         // 收集所有黑方棋子與合法移動
         for (let y = 0; y < gridHeight; y++) {
             for (let x = 0; x < gridWidth; x++) {
                 if (board[y][x] && board[y][x].startsWith('b')) {
-                    blackPieces.push({ x, y });
                     for (let ty = 0; ty < gridHeight; ty++) {
                         for (let tx = 0; tx < gridWidth; tx++) {
                             if (isValidMoveForAI(x, y, tx, ty)) {
                                 const target = board[ty][tx];
-                                const value = target ? getPieceValue(target) : 0;
-                                validMoves.push({ fromX: x, fromY: y, toX: tx, toY: ty, value });
+                                const captureValue = target ? getPieceValue(target) : 0;
+                                const positionValue = getPositionValue(tx, ty);
+                                const piece = board[y][x];
+                                let moveValue = captureValue + positionValue;
+
+                                // 優先使用車與炮
+                                if (piece[1] === 'c' || piece[1] === 'p') moveValue += 5;
+                                // 兵過河加分
+                                if (piece[1] === 's' && ty < 5) moveValue += 2;
+                                // 保護黑方將
+                                if (piece[1] === 'k' && Math.abs(tx - 4) <= 1 && ty >= 7) moveValue += 10;
+
+                                validMoves.push({ fromX: x, fromY: y, toX: tx, toY: ty, value: moveValue });
                             }
                         }
                     }
@@ -343,22 +347,51 @@ function aiMove() {
         }
 
         if (validMoves.length > 0) {
-            // 優先選擇吃高價值棋子的移動
-            validMoves.sort((a, b) => b.value - a.value);
-            const topMoves = validMoves.slice(0, Math.min(5, validMoves.length)); // 選擇前 5 個最佳移動
-            const move = topMoves[Math.floor(Math.random() * topMoves.length)]; // 從最佳中隨機選一個
+            // 模擬紅方回應，選擇損失最小的移動
+            let bestMove = null;
+            let bestScore = -Infinity;
 
-            const piece = board[move.fromY][move.fromX];
-            const target = board[move.toY][move.toX];
+            for (const move of validMoves) {
+                const tempBoard = board.map(row => [...row]);
+                tempBoard[move.fromY][move.fromX] = '';
+                const target = tempBoard[move.toY][move.toX];
+                tempBoard[move.toY][move.toX] = board[move.fromY][move.fromX];
 
-            board[move.fromY][move.fromX] = '';
-            board[move.toY][move.toX] = piece;
+                // 簡單評估紅方最佳回應
+                let redResponseValue = 0;
+                for (let ry = 0; ry < gridHeight; ry++) {
+                    for (let rx = 0; rx < gridWidth; rx++) {
+                        if (tempBoard[ry][rx] && tempBoard[ry][rx].startsWith('r')) {
+                            for (let ty = 0; ty < gridHeight; ty++) {
+                                for (let tx = 0; tx < gridWidth; tx++) {
+                                    if (isValidMove(rx, ry, tx, ty)) {
+                                        const redTarget = tempBoard[ty][tx];
+                                        redResponseValue = Math.max(redResponseValue, redTarget ? getPieceValue(redTarget) : 0);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                const moveScore = move.value - redResponseValue;
+                if (moveScore > bestScore) {
+                    bestScore = moveScore;
+                    bestMove = move;
+                }
+            }
+
+            const piece = board[bestMove.fromY][bestMove.fromX];
+            const target = board[bestMove.toY][bestMove.toX];
+
+            board[bestMove.fromY][bestMove.fromX] = '';
+            board[bestMove.toY][bestMove.toX] = piece;
 
             if (target && target.startsWith('r')) {
                 redCaptured.push(target);
             }
 
-            animatePiece(move.fromX, move.fromY, move.toX, move.toY, piece, () => {
+            animatePiece(bestMove.fromX, bestMove.fromY, bestMove.toX, bestMove.toY, piece, () => {
                 updateScoreboard();
                 updateCapturedList();
                 if (!checkGameOver()) {
