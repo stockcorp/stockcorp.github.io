@@ -37,15 +37,15 @@ function drawBoard() {
 
     for (let y = 0; y < gridSize; y++) {
         for (let x = 0; x < gridSize; x++) {
-            if (board[y][x] === 1 || board[y][x] === 2) {
-                drawStone(x, y, board[y][x] === 1 ? '#000' : '#fff', 1);
-            }
+            if (board[y][x] === 1) drawStone(x, y, '#000', 1);
+            if (board[y][x] === 2) drawStone(x, y, '#fff', 1);
         }
     }
 }
 
-// 繪製棋子（帶透明度參數以實現動畫）
+// 繪製棋子（帶透明度參數）
 function drawStone(x, y, color, opacity = 1) {
+    ctx.save();
     ctx.beginPath();
     ctx.arc(x * cellSize + cellSize / 2, y * cellSize + cellSize / 2, cellSize / 2 - 2, 0, Math.PI * 2);
     ctx.fillStyle = color;
@@ -54,19 +54,19 @@ function drawStone(x, y, color, opacity = 1) {
     ctx.strokeStyle = '#333';
     ctx.lineWidth = 1;
     ctx.stroke();
-    ctx.globalAlpha = 1;
+    ctx.restore();
 }
 
 // 動畫落子
 function animateStone(x, y, color, callback) {
     let opacity = 0;
-    const duration = 300;
+    const duration = 300; // 動畫時間（毫秒）
     const startTime = performance.now();
 
     function step(timestamp) {
         const elapsed = timestamp - startTime;
         opacity = Math.min(elapsed / duration, 1);
-        drawBoard();
+        drawBoard(); // 重繪棋盤
         drawStone(x, y, color, opacity);
 
         if (elapsed < duration) {
@@ -76,8 +76,16 @@ function animateStone(x, y, color, callback) {
         }
     }
 
-    stoneSound.currentTime = 0;
-    stoneSound.play();
+    // 播放音效
+    if (stoneSound) {
+        stoneSound.currentTime = 0;
+        stoneSound.play().catch(error => {
+            console.error('音效播放失敗:', error);
+        });
+    } else {
+        console.error('音效元素未找到');
+    }
+
     requestAnimationFrame(step);
 }
 
