@@ -9,17 +9,6 @@
 <body>
     <div class="container">
         <h1>線上圍棋 - Go Master</h1>
-        <div class="scoreboard">
-            <h2>計分板</h2>
-            <div class="score-item">
-                <span class="player">黑棋</span>
-                <span class="score" id="black-score">0</span>
-            </div>
-            <div class="score-item">
-                <span class="player">白棋</span>
-                <span class="score" id="white-score">0</span>
-            </div>
-        </div>
         <div class="board-container">
             <div class="game-info">
                 <p>當前玩家：<span id="current-player">黑棋</span></p>
@@ -29,6 +18,17 @@
         </div>
         <!-- 音效元素 -->
         <audio id="stone-sound" src="stone-drop.mp3" preload="auto"></audio>
+    </div>
+    <div class="scoreboard">
+        <h2>計分板</h2>
+        <div class="score-item">
+            <span class="player">黑棋</span>
+            <span class="score" id="black-score">0</span>
+        </div>
+        <div class="score-item">
+            <span class="player">白棋</span>
+            <span class="score" id="white-score">0</span>
+        </div>
     </div>
     <script src="script.js"></script>
 </body>
