@@ -3,7 +3,7 @@ const ctx = canvas.getContext('2d');
 const gridSize = 8;
 const cellSize = canvas.width / gridSize;
 let board = [];
-let currentPlayer = 'white'; // 'white' 或 'black'
+let currentPlayer = 'white'; // 'white' (玩家), 'black' (AI)
 let whiteScore = 16;
 let blackScore = 16;
 const stoneSound = document.getElementById('stone-sound');
@@ -32,7 +32,7 @@ function drawBoard() {
     // 繪製格子
     for (let y = 0; y < gridSize; y++) {
         for (let x = 0; x < gridSize; x++) {
-            ctx.fillStyle = (x + y) % 2 === 0 ? '#f0d9b5' : '#b58863'; // 淺色與深色格
+            ctx.fillStyle = (x + y) % 2 === 0 ? '#f0d9b5' : '#b58863';
             ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
         }
     }
@@ -103,30 +103,64 @@ function updateScoreboard() {
     document.getElementById('black-score').textContent = blackScore;
 }
 
-// 簡單的移動合法性檢查（僅示例，未實現完整西洋棋規則）
+// 簡單的移動合法性檢查（僅示例）
 function isValidMove(fromX, fromY, toX, toY) {
     const piece = board[fromY][fromX];
-    if (!piece) return false;
-    const isWhitePiece = piece.startsWith('w');
-    if ((currentPlayer === 'white' && !isWhitePiece) || (currentPlayer === 'black' && isWhitePiece)) return false;
-    return true; // 簡化版，實際需檢查每種棋子的移動規則
+    if (!piece || !piece.startsWith('w')) return false; // 玩家只能移動白棋
+    return true; // 簡化版，實際需檢查西洋棋規則
 }
 
-// 處理點擊
+// AI 移動（隨機選擇黑棋移動）
+function aiMove() {
+    if (currentPlayer === 'black') {
+        let blackPieces = [];
+        let emptyOrWhiteCells = [];
+
+        // 收集黑棋位置
+        for (let y = 0; y < gridSize; y++) {
+            for (let x = 0; x < gridSize; x++) {
+                if (board[y][x] && board[y][x].startsWith('b')) {
+                    blackPieces.push({ x, y });
+                }
+                if (!board[y][x] || board[y][x].startsWith('w')) {
+                    emptyOrWhiteCells.push({ x, y });
+                }
+            }
+        }
+
+        if (blackPieces.length > 0 && emptyOrWhiteCells.length > 0) {
+            const from = blackPieces[Math.floor(Math.random() * blackPieces.length)];
+            const to = emptyOrWhiteCells[Math.floor(Math.random() * emptyOrWhiteCells.length)];
+            const piece = board[from.y][from.x];
+            const target = board[to.y][to.x];
+
+            board[from.y][from.x] = '';
+            board[to.y][to.x] = piece;
+
+            animatePiece(from.x, from.y, to.x, to.y, piece, () => {
+                if (target) updateScoreboard(); // 如果吃子，更新分數
+                currentPlayer = 'white';
+                document.getElementById('current-player').textContent = '白棋';
+                drawBoard();
+            });
+        }
+    }
+}
+
+// 玩家移動後觸發 AI
 canvas.addEventListener('click', (e) => {
     const rect = canvas.getBoundingClientRect();
     const x = Math.floor((e.clientX - rect.left) / cellSize);
     const y = Math.floor((e.clientY - rect.top) / cellSize);
 
-    if (!selectedPiece && board[y][x]) {
-        // 選擇棋子
-        if ((currentPlayer === 'white' && board[y][x].startsWith('w')) || 
-            (currentPlayer === 'black' && board[y][x].startsWith('b'))) {
-            selectedPiece = { x, y };
-            drawBoard();
-        }
+    if (currentPlayer !== 'white') return; // 限制玩家只能在白棋回合操作
+
+    if (!selectedPiece && board[y][x] && board[y][x].startsWith('w')) {
+        // 選擇白棋
+        selectedPiece = { x, y };
+        drawBoard();
     } else if (selectedPiece) {
-        // 移動棋子
+        // 移動白棋
         if (isValidMove(selectedPiece.x, selectedPiece.y, x, y)) {
             const piece = board[selectedPiece.y][selectedPiece.x];
             const target = board[y][x];
@@ -134,11 +168,12 @@ canvas.addEventListener('click', (e) => {
             board[y][x] = piece;
 
             animatePiece(selectedPiece.x, selectedPiece.y, x, y, piece, () => {
-                if (target) updateScoreboard(); // 如果吃子，更新分數
-                currentPlayer = currentPlayer === 'white' ? 'black' : 'white';
-                document.getElementById('current-player').textContent = currentPlayer === 'white' ? '白棋' : '黑棋';
+                if (target) updateScoreboard();
+                currentPlayer = 'black';
+                document.getElementById('current-player').textContent = '黑棋';
                 selectedPiece = null;
                 drawBoard();
+                setTimeout(aiMove, 500); // AI 延遲 0.5 秒移動
             });
         } else {
             selectedPiece = null;
