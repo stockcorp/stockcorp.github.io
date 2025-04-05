@@ -14,6 +14,7 @@ let selectedPiece = null;
 let gameOver = false;
 let redCaptured = [];
 let blackCaptured = [];
+let difficulty = 'easy'; // 預設簡單模式
 
 // 初始化棋盤
 function initializeBoard() {
@@ -305,20 +306,21 @@ function getPieceValue(piece) {
     return piece ? values[piece[1]] || 0 : 0;
 }
 
-// 評估位置價值（靠近紅方將或中心）
-function getPositionValue(x, y) {
-    const redKingPos = { x: 4, y: 0 }; // 假設紅方將初始位置
+// 評估位置價值
+function getPositionValue(x, y, isHard = false) {
+    const redKingPos = { x: 4, y: 0 };
     const distanceToKing = Math.abs(x - redKingPos.x) + Math.abs(y - redKingPos.y);
-    const centerValue = Math.abs(x - 4) + Math.abs(y - 4.5); // 中心點 (4, 4.5)
-    return 10 - distanceToKing * 0.5 - centerValue * 0.3; // 靠近將與中心得分更高
+    const centerValue = Math.abs(x - 4) + Math.abs(y - 4.5);
+    let value = 10 - distanceToKing * 0.5 - centerValue * 0.3;
+    if (isHard && y < 5) value += 5; // 困難模式鼓勵進攻紅方區域
+    return value;
 }
 
-// AI 移動（增強版）
-function aiMove() {
+// AI 移動（簡單模式）
+function aiMoveEasy() {
     if (currentPlayer === 'black' && !gameOver) {
         let validMoves = [];
 
-        // 收集所有黑方棋子與合法移動
         for (let y = 0; y < gridHeight; y++) {
             for (let x = 0; x < gridWidth; x++) {
                 if (board[y][x] && board[y][x].startsWith('b')) {
@@ -331,11 +333,8 @@ function aiMove() {
                                 const piece = board[y][x];
                                 let moveValue = captureValue + positionValue;
 
-                                // 優先使用車與炮
                                 if (piece[1] === 'c' || piece[1] === 'p') moveValue += 5;
-                                // 兵過河加分
                                 if (piece[1] === 's' && ty < 5) moveValue += 2;
-                                // 保護黑方將
                                 if (piece[1] === 'k' && Math.abs(tx - 4) <= 1 && ty >= 7) moveValue += 10;
 
                                 validMoves.push({ fromX: x, fromY: y, toX: tx, toY: ty, value: moveValue });
@@ -347,7 +346,67 @@ function aiMove() {
         }
 
         if (validMoves.length > 0) {
-            // 模擬紅方回應，選擇損失最小的移動
+            validMoves.sort((a, b) => b.value - a.value);
+            const topMoves = validMoves.slice(0, Math.min(5, validMoves.length));
+            const move = topMoves[Math.floor(Math.random() * topMoves.length)];
+
+            const piece = board[move.fromY][move.fromX];
+            const target = board[move.toY][move.toX];
+
+            board[move.fromY][move.fromX] = '';
+            board[move.toY][move.toX] = piece;
+
+            if (target && target.startsWith('r')) {
+                redCaptured.push(target);
+            }
+
+            animatePiece(move.fromX, move.fromY, move.toX, move.toY, piece, () => {
+                updateScoreboard();
+                updateCapturedList();
+                if (!checkGameOver()) {
+                    currentPlayer = 'red';
+                    document.getElementById('current-player').textContent = '紅方';
+                    drawBoard();
+                }
+            });
+        }
+    }
+}
+
+// AI 移動（困難模式）
+function aiMoveHard() {
+    if (currentPlayer === 'black' && !gameOver) {
+        let validMoves = [];
+
+        for (let y = 0; y < gridHeight; y++) {
+            for (let x = 0; x < gridWidth; x++) {
+                if (board[y][x] && board[y][x].startsWith('b')) {
+                    for (let ty = 0; ty < gridHeight; ty++) {
+                        for (let tx = 0; tx < gridWidth; tx++) {
+                            if (isValidMoveForAI(x, y, tx, ty)) {
+                                const target = board[ty][tx];
+                                const captureValue = target ? getPieceValue(target) : 0;
+                                const positionValue = getPositionValue(tx, ty, true);
+                                const piece = board[y][x];
+                                let moveValue = captureValue + positionValue;
+
+                                // 困難模式加強策略
+                                if (piece[1] === 'c' || piece[1] === 'p') moveValue += 10; // 更積極使用車與炮
+                                if (piece[1] === 's' && ty < 5) moveValue += 5; // 兵過河更高優先級
+                                if (piece[1] === 'k' && Math.abs(tx - 4) <= 1 && ty >= 7) moveValue += 20; // 超級防守黑方將
+                                if (captureValue > 0 && target === 'rk') moveValue += 1000; // 優先吃紅方將
+                                if (ty <= 2) moveValue += 15; // 積極進攻紅方宮區
+
+                                validMoves.push({ fromX: x, fromY: y, toX: tx, toY: ty, value: moveValue });
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        if (validMoves.length > 0) {
+            // Minimax 模擬紅方回應
             let bestMove = null;
             let bestScore = -Infinity;
 
@@ -357,7 +416,6 @@ function aiMove() {
                 const target = tempBoard[move.toY][move.toX];
                 tempBoard[move.toY][move.toX] = board[move.fromY][move.fromX];
 
-                // 簡單評估紅方最佳回應
                 let redResponseValue = 0;
                 for (let ry = 0; ry < gridHeight; ry++) {
                     for (let rx = 0; rx < gridWidth; rx++) {
@@ -366,7 +424,10 @@ function aiMove() {
                                 for (let tx = 0; tx < gridWidth; tx++) {
                                     if (isValidMove(rx, ry, tx, ty)) {
                                         const redTarget = tempBoard[ty][tx];
-                                        redResponseValue = Math.max(redResponseValue, redTarget ? getPieceValue(redTarget) : 0);
+                                        const redValue = redTarget ? getPieceValue(redTarget) : 0;
+                                        redResponseValue = Math.max(redResponseValue, redValue);
+                                        // 若紅方可吃黑方將，給予極高懲罰
+                                        if (redTarget === 'bk') redResponseValue += 1000;
                                     }
                                 }
                             }
@@ -374,7 +435,7 @@ function aiMove() {
                     }
                 }
 
-                const moveScore = move.value - redResponseValue;
+                const moveScore = move.value - redResponseValue * 2; // 更重視防守
                 if (moveScore > bestScore) {
                     bestScore = moveScore;
                     bestMove = move;
@@ -404,7 +465,7 @@ function aiMove() {
     }
 }
 
-// AI 的移動合法性
+// AI 的移動合法性（黑方）
 function isValidMoveForAI(fromX, fromY, toX, toY) {
     const piece = board[fromY][fromX];
     if (!piece || !piece.startsWith('b')) return false;
@@ -458,6 +519,15 @@ function isValidMoveForAI(fromX, fromY, toX, toY) {
     }
 }
 
+// 通用 AI 移動函數（根據難度選擇）
+function aiMove() {
+    if (difficulty === 'easy') {
+        aiMoveEasy();
+    } else {
+        aiMoveHard();
+    }
+}
+
 // 玩家移動後觸發 AI
 canvas.addEventListener('click', (e) => {
     if (gameOver) return;
@@ -502,6 +572,29 @@ canvas.addEventListener('click', (e) => {
 
 // 重置遊戲
 document.getElementById('reset-btn').addEventListener('click', () => {
+    initializeBoard();
+    currentPlayer = 'red';
+    document.getElementById('current-player').textContent = '紅方';
+    selectedPiece = null;
+    drawBoard();
+    updateScoreboard();
+    updateCapturedList();
+});
+
+// 難度選擇按鈕
+document.getElementById('easy-btn').addEventListener('click', () => {
+    difficulty = 'easy';
+    initializeBoard();
+    currentPlayer = 'red';
+    document.getElementById('current-player').textContent = '紅方';
+    selectedPiece = null;
+    drawBoard();
+    updateScoreboard();
+    updateCapturedList();
+});
+
+document.getElementById('hard-btn').addEventListener('click', () => {
+    difficulty = 'hard';
     initializeBoard();
     currentPlayer = 'red';
     document.getElementById('current-player').textContent = '紅方';
