@@ -1,0 +1,126 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(to bottom, #e0d8b0, #c9b78a);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.container {
+    background: #fff;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    width: 800px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow: hidden;
+}
+
+header {
+    margin-bottom: 15px;
+}
+
+h1 {
+    color: #333;
+    font-size: 2em;
+    margin: 0;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+    font-weight: bold;
+}
+
+.game-wrapper {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    align-items: flex-start;
+}
+
+.board-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.game-info {
+    margin-bottom: 10px;
+    font-size: 1.2em;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+#current-player {
+    font-weight: bold;
+    color: #e74c3c;
+}
+
+#reset-btn {
+    padding: 8px 16px;
+    font-size: 1em;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+#reset-btn:hover {
+    background-color: #2980b9;
+    transform: scale(1.05);
+}
+
+#chess-board {
+    background: #fff; /* 西洋棋盤底色 */
+    border: 5px solid #5a3e2b;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* 計分板樣式 */
+.scoreboard {
+    background: #2c3e50;
+    color: white;
+    padding: 15px;
+    border-radius: 10px;
+    width: 180px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    text-align: left;
+}
+
+.scoreboard h2 {
+    font-size: 1.3em;
+    margin: 0 0 10px 0;
+    text-align: center;
+    color: #ecf0f1;
+}
+
+.score-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px;
+    margin: 5px 0;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
+    font-size: 1.1em;
+    transition: transform 0.2s;
+}
+
+.score-item:hover {
+    transform: scale(1.05);
+}
+
+.score-item .player {
+    font-weight: bold;
+}
+
+.score-item .score {
+    background: #e74c3c;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
