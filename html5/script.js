@@ -6,6 +6,7 @@ let board = Array(gridSize).fill().map(() => Array(gridSize).fill(0)); // 0: 空
 let currentPlayer = 1; // 1: 黑棋 (玩家), 2: 白棋 (AI)
 let blackScore = 0;
 let whiteScore = 0;
+const stoneSound = document.getElementById('stone-sound');
 
 // 繪製棋盤
 function drawBoard() {
@@ -36,21 +37,48 @@ function drawBoard() {
 
     for (let y = 0; y < gridSize; y++) {
         for (let x = 0; x < gridSize; x++) {
-            if (board[y][x] === 1) drawStone(x, y, '#000');
-            if (board[y][x] === 2) drawStone(x, y, '#fff');
+            if (board[y][x] === 1 || board[y][x] === 2) {
+                drawStone(x, y, board[y][x] === 1 ? '#000' : '#fff', 1);
+            }
         }
     }
 }
 
-// 繪製棋子
-function drawStone(x, y, color) {
+// 繪製棋子（帶透明度參數以實現動畫）
+function drawStone(x, y, color, opacity = 1) {
     ctx.beginPath();
     ctx.arc(x * cellSize + cellSize / 2, y * cellSize + cellSize / 2, cellSize / 2 - 2, 0, Math.PI * 2);
     ctx.fillStyle = color;
+    ctx.globalAlpha = opacity;
     ctx.fill();
     ctx.strokeStyle = '#333';
     ctx.lineWidth = 1;
     ctx.stroke();
+    ctx.globalAlpha = 1;
+}
+
+// 動畫落子
+function animateStone(x, y, color, callback) {
+    let opacity = 0;
+    const duration = 300;
+    const startTime = performance.now();
+
+    function step(timestamp) {
+        const elapsed = timestamp - startTime;
+        opacity = Math.min(elapsed / duration, 1);
+        drawBoard();
+        drawStone(x, y, color, opacity);
+
+        if (elapsed < duration) {
+            requestAnimationFrame(step);
+        } else if (callback) {
+            callback();
+        }
+    }
+
+    stoneSound.currentTime = 0;
+    stoneSound.play();
+    requestAnimationFrame(step);
 }
 
 // 更新計分板
@@ -73,10 +101,11 @@ function aiMove() {
         if (emptyCells.length > 0) {
             const [x, y] = emptyCells[Math.floor(Math.random() * emptyCells.length)];
             board[y][x] = 2;
-            currentPlayer = 1;
-            document.getElementById('current-player').textContent = '黑棋';
-            drawBoard();
-            updateScoreboard();
+            animateStone(x, y, '#fff', () => {
+                currentPlayer = 1;
+                document.getElementById('current-player').textContent = '黑棋';
+                updateScoreboard();
+            });
         }
     }
 }
@@ -88,16 +117,13 @@ canvas.addEventListener('click', (e) => {
     const y = Math.floor((e.clientY - rect.top) / cellSize);
 
     if (board[y][x] === 0 && currentPlayer === 1) {
-        board[y][x] = 1; // 玩家落黑棋
-        currentPlayer = 2;
-        document.getElementById('current-player').textContent = '白棋';
-        drawBoard();
-        updateScoreboard();
-
-        // 延遲 0.5 秒讓 AI 落子，模擬思考
-        setTimeout(() => {
-            aiMove();
-        }, 500);
+        board[y][x] = 1;
+        animateStone(x, y, '#000', () => {
+            currentPlayer = 2;
+            document.getElementById('current-player').textContent = '白棋';
+            updateScoreboard();
+            setTimeout(aiMove, 500);
+        });
     }
 });
 
