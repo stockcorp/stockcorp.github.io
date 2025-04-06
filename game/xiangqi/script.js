@@ -14,7 +14,7 @@ let redCaptured = [];
 let blackCaptured = [];
 let difficulty = 'easy';
 const EASY_DEPTH = 3; // 簡單模式深度，可手動調整
-const HARD_DEPTH = 5; // 困難模式深度，可手動調整
+const HARD_DEPTH = 4.5; // 困難模式深度，可手動調整
 
 // 動態調整Canvas大小
 function resizeCanvas() {
