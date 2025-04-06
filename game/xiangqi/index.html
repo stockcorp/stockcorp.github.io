@@ -3,46 +3,149 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>象棋 - Xiangqi Master</title>
-    <link rel="stylesheet" href="styles.css">
+    <meta name="description" content="免費線上棋牌遊戲網 (78PlayGame) 提供象棋 Xiangqi、暗棋 Dark Pool Chess、西洋棋 Chess、圍棋 Go、五子棋 Gomoku、國際跳棋 Draughts 等多款經典遊戲，立即線上對戰，無需下載！">
+    <meta name="keywords" content="免費線上象棋 Xiangqi, 免費線上暗棋(象棋) Dark Pool Chess, 免費線上西洋棋 Chess, 免費線上圍棋 Go, 免費線上五子棋 Gomoku, 免費線上國際跳棋 Draughts, 棋牌遊戲">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="78PlayGame Team">
+    <!-- Open Graph for Social Media -->
+    <meta property="og:title" content="免費線上棋牌遊戲網 (78PlayGame) - 象棋 Xiangqi">
+    <meta property="og:description" content="免費線上玩象棋 Xiangqi，挑戰 AI 或學習玩法，還有暗棋、圍棋、五子棋等多款遊戲等你體驗！">
+    <meta property="og:image" content="https://78playgame.com/img/banner.jpg">
+    <meta property="og:url" content="https://78playgame.com/">
+    <meta property="og:type" content="website">
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="免費線上棋牌遊戲網 (78PlayGame) - 象棋 Xiangqi">
+    <meta name="twitter:description" content="免費線上玩象棋 Xiangqi，挑戰 AI 或學習玩法，還有暗棋、圍棋、五子棋等多款遊戲等你體驗！">
+    <meta name="twitter:image" content="https://78playgame.com/img/banner.jpg">
+    <title>免費線上棋牌遊戲網 (78PlayGame) - 象棋 Xiangqi</title>
+    <link rel="stylesheet" href="/styles.css">
+    <!-- Structured Data (Schema.org) -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "免費線上棋牌遊戲網 (78PlayGame)",
+        "url": "https://78playgame.com/",
+        "potentialAction": {
+            "@type": "SearchAction",
+            "target": "https://78playgame.com/search?q={search_term_string}",
+            "query-input": "required name=search_term_string"
+        }
+    }
+    </script>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>象棋 - Xiangqi Master</h1>
+            <img src="/img/banner.jpg" alt="78PlayGame Banner" class="banner">
+            <h1>免費線上棋牌遊戲網 (78PlayGame)</h1>
+            <nav class="menu">
+                <a href="/index.html" class="menu-btn active">象棋 Xiangqi</a>
+                <a href="/Dark_Pool_Chess/index.html" class="menu-btn">暗棋(象棋) Dark Pool Chess</a>
+                <a href="/Go/index.html" class="menu-btn">圍棋 Go</a>
+                <a href="/Gomoku/index.html" class="menu-btn">五子棋 Gomoku</a>
+                <a href="/Draughts/index.html" class="menu-btn">國際跳棋 Draughts</a>
+            </nav>
         </header>
-        <div class="scoreboard">
-            <div class="score-columns">
-                <div class="score-column captured-pieces">
-                    <h3 class="section-title">計分板</h3>
-                    <div class="captured-list" id="current-player">當前玩家：紅方</div>
-                    <div class="captured-list" id="ai-player">AI玩家：黑方</div>
-                </div>
-                <div class="score-column captured-pieces">
-                    <h3 class="section-title">場上棋數</h3>
-                    <div class="captured-list" id="red-score">紅方：16</div>
-                    <div class="captured-list" id="black-score">黑方：16</div>
-                </div>
-                <div class="score-column captured-pieces">
-                    <h3 class="section-title">被吃棋數</h3>
-                    <div class="captured-list" id="red-captured">紅方被吃：<span></span></div>
-                    <div class="captured-list" id="black-captured">黑方被吃：<span></span></div>
-                </div>
-                <div class="score-column controls">
-                    <div class="difficulty-buttons">
-                        <button id="easy-btn">簡單</button>
-                        <button id="hard-btn">困難</button>
+        <div class="game-section">
+            <div class="ad-left">
+                <!-- Google AdSense 左側廣告 -->
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="你的 AdSense ID"
+                     data-ad-slot="你的廣告位 ID"
+                     data-ad-format="auto"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            </div>
+            <div class="game-content">
+                <div class="scoreboard">
+                    <div class="score-columns">
+                        <div class="score-column captured-pieces">
+                            <h3 class="section-title">計分板</h3>
+                            <div class="captured-list" id="current-player">當前玩家：紅方</div>
+                            <div class="captured-list" id="ai-player">AI玩家：黑方</div>
+                        </div>
+                        <div class="score-column captured-pieces">
+                            <h3 class="section-title">場上棋數</h3>
+                            <div class="captured-list" id="red-score">紅方：16</div>
+                            <div class="captured-list" id="black-score">黑方：16</div>
+                        </div>
+                        <div class="score-column captured-pieces">
+                            <h3 class="section-title">被吃棋數</h3>
+                            <div class="captured-list" id="red-captured">紅方被吃：<span></span></div>
+                            <div class="captured-list" id="black-captured">黑方被吃：<span></span></div>
+                        </div>
+                        <div class="score-column controls">
+                            <div class="difficulty-buttons">
+                                <button id="easy-btn">簡單</button>
+                                <button id="hard-btn">困難</button>
+                            </div>
+                            <div class="difficulty-display" id="difficulty-display">模式：簡單</div>
+                            <button id="reset-btn">重新開始</button>
+                        </div>
                     </div>
-                    <div class="difficulty-display" id="difficulty-display">模式：簡單</div>
-                    <button id="reset-btn">重新開始</button>
+                </div>
+                <div class="board-section">
+                    <canvas id="xiangqi-board"></canvas>
                 </div>
             </div>
+            <div class="ad-right">
+                <!-- Google AdSense 右側廣告 -->
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="你的 AdSense ID"
+                     data-ad-slot="你的廣告位 ID"
+                     data-ad-format="auto"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            </div>
         </div>
-        <div class="board-section">
-            <canvas id="xiangqi-board"></canvas>
+        <div class="rules-section">
+            <h2>中國象棋玩法說明</h2>
+            <p><strong>棋盤</strong><br>
+            大小：9 列（橫線）× 10 行（豎線），共 90 個交叉點。<br>
+            分區：<br>
+            - 中間有「楚河漢界」，將棋盤分成紅方（上半部）和黑方（下半部）。<br>
+            - 兩端各有九宮格（3×3），紅方為第 0-2 行、列 3-5，黑方為第 7-9 行、列 3-5。<br>
+            標記：<br>
+            - 兵/卒和炮的起始位置有小圓點（例如紅方第 3 行，黑方第 6 行）。</p>
+            <p><strong>棋子</strong><br>
+            總數：每方 16 個棋子，共 32 個。<br>
+            紅方（玩家）：<br>
+            將（1個）、士（2個）、象（2個）、馬（2個）、車（2個）、炮（2個）、兵（5個）。<br>
+            黑方（AI）：<br>
+            帥（1個）、士（2個）、相（2個）、馬（2個）、車（2個）、炮（2個）、卒（5個）。<br>
+            初始位置：<br>
+            - 紅方：第 0 行（車 馬 象 士 將 士 象 馬 車），第 2 行（_ 炮 _ _ _ _ _ 炮 _），第 3 行（兵 _ 兵 _ 兵 _ 兵 _ 兵）。<br>
+            - 黑方：第 9 行（車 馬 相 士 帥 士 相 馬 車），第 7 行（_ 炮 _ _ _ _ _ 炮 _），第 6 行（卒 _ 卒 _ 卒 _ 卒 _ 卒）。</p>
+            <p><strong>移動規則</strong><br>
+            將/帥：<br>
+            - 移動：直線（上下左右）走 1 格。<br>
+            - 限制：只能在九宮格內（紅方 0-2 行、列 3-5，黑方 7-9 行、列 3-5）。<br>
+            - 特殊：若雙方將/帥在同一列且中間無棋子，可直接對面（「將軍」）。<br>
+            士：<br>
+            - 移動：斜線走 1 格（45 度）。<br>
+            - 限制：只能在九宮格內。<br>
+            象/相：<br>
+            - 移動：斜線走 2 格（田字形）。<br>
+            - 限制：紅方不能過河（≤ 4 行），黑方不能過河（≥ 5 行），中間點若有棋子（「塞象眼」），不能移動。<br>
+            馬：<br>
+            - 移動：走「日」字形（直走 1 格再斜走 1 格，或斜走 1 格再直走 1 格）。<br>
+            - 限制：若直走方向有棋子（「蹩馬腿」），不能移動。<br>
+            車：<br>
+            - 移動：直線（上下左右）走任意格數。<br>
+            - 限制：無距離限制，但不能跳過其他棋子。<br>
+            炮：<br>
+            - 移動：直線走任意格數。<br>
+            - 吃子：需隔 1 個棋子（己方或對方皆可），跳過該子吃目標。<br>
+            - 限制：不吃子時自由移動，吃子時需「架炮」。<br>
+            兵/卒：<br>
+            - 移動：過河前（紅方 ≤ 4 行，黑方 ≥ 5 行）只能向前走 1 格，過河後（紅方 > 4 行，黑方 < 5 行）可向前、左、右走 1 格。<br>
+            - 限制：不能後退。</p>
         </div>
-        <audio id="stone-sound" src="stone-drop.mp3" preload="auto"></audio>
+        <audio id="stone-sound" src="/img/stone-drop.mp3" preload="auto"></audio>
     </div>
-    <script src="script.js"></script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script src="/script.js"></script>
 </body>
 </html>
