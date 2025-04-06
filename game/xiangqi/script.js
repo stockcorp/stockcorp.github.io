@@ -276,12 +276,12 @@ function getPieceValue(piece) {
 }
 
 // 評估位置價值
-function getPositionValue(x, y, isHard = false) {
+function getPositionValue(x, y) {
     const redKingPos = { x: 4, y: 0 };
     const distanceToKing = Math.abs(x - redKingPos.x) + Math.abs(y - redKingPos.y);
     const centerValue = Math.abs(x - 4) + Math.abs(y - 4.5);
     let value = 10 - distanceToKing * 0.5 - centerValue * 0.3;
-    if (isHard && y < 5) value += 10;
+    if (difficulty === 'hard' && y < 5) value += 10;
     return value;
 }
 
@@ -296,7 +296,7 @@ function evaluateBoard(boardState) {
             const piece = boardState[y][x];
             if (piece) {
                 const value = getPieceValue(piece);
-                const posValue = getPositionValue(x, y, true);
+                const posValue = getPositionValue(x, y);
                 if (piece.startsWith('b')) {
                     score += value + posValue;
                     if (piece === 'bk') blackKingPos = { x, y };
@@ -400,36 +400,56 @@ function aiMove() {
     }
 
     if (validMoves.length > 0) {
-        let bestMove = null;
-        let bestScore = -Infinity;
+        if (difficulty === 'easy') {
+            const move = validMoves[Math.floor(Math.random() * validMoves.length)];
+            const piece = board[move.fromY][move.fromX];
+            const target = board[move.toY][move.toX];
+            board[move.fromY][move.fromX] = '';
+            board[move.toY][move.toX] = piece;
 
-        for (const move of validMoves) {
-            const tempBoard = board.map(row => [...row]);
-            tempBoard[move.fromY][move.fromX] = '';
-            tempBoard[move.toY][move.toX] = board[move.fromY][move.fromX];
-            const evalScore = minimax(tempBoard, depth - 1, -Infinity, Infinity, false);
-            if (evalScore > bestScore) {
-                bestScore = evalScore;
-                bestMove = move;
+            if (target && target.startsWith('r')) redCaptured.push(target);
+
+            animatePiece(move.fromX, move.fromY, move.toX, move.toY, piece, () => {
+                updateScoreboard();
+                updateCapturedList();
+                if (!checkGameOver()) {
+                    currentPlayer = 'red';
+                    document.getElementById('current-player').textContent = '紅方';
+                    drawBoard();
+                }
+            });
+        } else {
+            let bestMove = null;
+            let bestScore = -Infinity;
+
+            for (const move of validMoves) {
+                const tempBoard = board.map(row => [...row]);
+                tempBoard[move.fromY][move.fromX] = '';
+                tempBoard[move.toY][move.toX] = board[move.fromY][move.fromX];
+                const evalScore = minimax(tempBoard, depth - 1, -Infinity, Infinity, false);
+                if (evalScore > bestScore) {
+                    bestScore = evalScore;
+                    bestMove = move;
+                }
             }
+
+            const piece = board[bestMove.fromY][bestMove.fromX];
+            const target = board[bestMove.toY][bestMove.toX];
+            board[bestMove.fromY][bestMove.fromX] = '';
+            board[bestMove.toY][bestMove.toX] = piece;
+
+            if (target && target.startsWith('r')) redCaptured.push(target);
+
+            animatePiece(bestMove.fromX, bestMove.fromY, bestMove.toX, bestMove.toY, piece, () => {
+                updateScoreboard();
+                updateCapturedList();
+                if (!checkGameOver()) {
+                    currentPlayer = 'red';
+                    document.getElementById('current-player').textContent = '紅方';
+                    drawBoard();
+                }
+            });
         }
-
-        const piece = board[bestMove.fromY][bestMove.fromX];
-        const target = board[bestMove.toY][bestMove.toX];
-        board[bestMove.fromY][bestMove.fromX] = '';
-        board[bestMove.toY][bestMove.toX] = piece;
-
-        if (target && target.startsWith('r')) redCaptured.push(target);
-
-        animatePiece(bestMove.fromX, bestMove.fromY, bestMove.toX, bestMove.toY, piece, () => {
-            updateScoreboard();
-            updateCapturedList();
-            if (!checkGameOver()) {
-                currentPlayer = 'red';
-                document.getElementById('current-player').textContent = '紅方';
-                drawBoard();
-            }
-        });
     }
 }
 
