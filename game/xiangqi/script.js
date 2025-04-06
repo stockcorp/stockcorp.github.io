@@ -14,7 +14,7 @@ let redCaptured = [];
 let blackCaptured = [];
 let difficulty = 'easy';
 const EASY_DEPTH = 4; // 簡單模式深度，可手動調整
-const HARD_DEPTH = 7; // 困難模式深度，可手動調整
+const HARD_DEPTH = 6; // 困難模式深度，可手動調整
 
 // 動態調整Canvas大小
 function resizeCanvas() {
@@ -191,9 +191,8 @@ function updateScoreboard() {
     document.getElementById('black-score').textContent = `黑方：${blackScore}`;
     const currentPlayerElement = document.getElementById('current-player');
     currentPlayerElement.textContent = `當前玩家：${currentPlayer === 'red' ? '紅方' : '黑方'}`;
-    // 動態切換類別，確保紅方紅底，黑方黑底
     currentPlayerElement.classList.remove('red', 'black');
-    currentPlayerElement.classList.add(currentPlayer === 'red' ? 'red' : 'black');
+    currentPlayerElement.classList.add(currentPlayer === 'red' ? 'black' : 'red'); // 反轉類別
 }
 
 // 更新被吃棋子記錄
