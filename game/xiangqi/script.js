@@ -46,6 +46,7 @@ function initializeBoard() {
     blackCaptured = [];
     updateCapturedList();
     updateDifficultyDisplay();
+    updateScoreboard(); // 初始化時更新計分板
     resizeCanvas();
 }
 
@@ -186,8 +187,9 @@ function animatePiece(fromX, fromY, toX, toY, piece, callback) {
 function updateScoreboard() {
     redScore = board.flat().filter(cell => cell.startsWith('r')).length;
     blackScore = board.flat().filter(cell => cell.startsWith('b')).length;
-    document.getElementById('red-score').textContent = redScore;
-    document.getElementById('black-score').textContent = blackScore;
+    document.getElementById('red-score').textContent = `紅方：${redScore}`;
+    document.getElementById('black-score').textContent = `黑方：${blackScore}`;
+    document.getElementById('current-player').textContent = `當前玩家：${currentPlayer === 'red' ? '紅方' : '黑方'}`;
 }
 
 // 更新被吃棋子記錄
@@ -414,7 +416,7 @@ function aiMove() {
                 updateCapturedList();
                 if (!checkGameOver()) {
                     currentPlayer = 'red';
-                    document.getElementById('current-player').textContent = '紅方';
+                    document.getElementById('current-player').textContent = '當前玩家：紅方';
                     drawBoard();
                 }
             });
@@ -445,7 +447,7 @@ function aiMove() {
                 updateCapturedList();
                 if (!checkGameOver()) {
                     currentPlayer = 'red';
-                    document.getElementById('current-player').textContent = '紅方';
+                    document.getElementById('current-player').textContent = '當前玩家：紅方';
                     drawBoard();
                 }
             });
@@ -503,7 +505,7 @@ function handleMove(e) {
                 selectedPiece = null;
                 if (!checkGameOver()) {
                     currentPlayer = 'black';
-                    document.getElementById('current-player').textContent = '黑方';
+                    document.getElementById('current-player').textContent = '當前玩家：黑方';
                     drawBoard();
                     setTimeout(aiMove, 500);
                 }
@@ -527,7 +529,7 @@ canvas.addEventListener('touchstart', (e) => {
 document.getElementById('reset-btn').addEventListener('click', () => {
     initializeBoard();
     currentPlayer = 'red';
-    document.getElementById('current-player').textContent = '紅方';
+    document.getElementById('current-player').textContent = '當前玩家：紅方';
     selectedPiece = null;
     drawBoard();
     updateScoreboard();
@@ -539,7 +541,7 @@ document.getElementById('easy-btn').addEventListener('click', () => {
     difficulty = 'easy';
     initializeBoard();
     currentPlayer = 'red';
-    document.getElementById('current-player').textContent = '紅方';
+    document.getElementById('current-player').textContent = '當前玩家：紅方';
     selectedPiece = null;
     drawBoard();
     updateScoreboard();
@@ -551,7 +553,7 @@ document.getElementById('hard-btn').addEventListener('click', () => {
     difficulty = 'hard';
     initializeBoard();
     currentPlayer = 'red';
-    document.getElementById('current-player').textContent = '紅方';
+    document.getElementById('current-player').textContent = '當前玩家：紅方';
     selectedPiece = null;
     drawBoard();
     updateScoreboard();
