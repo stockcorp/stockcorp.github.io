@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="免費線上國際跳棋 Draughts，挑戰 AI 或學習玩法，享受經典策略遊戲樂趣！">
+    <meta name="keywords" content="免費線上國際跳棋 Draughts, 線上棋類遊戲, 國際跳棋 AI, 免費棋牌遊戲">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="78PlayGame Team">
+    <meta property="og:title" content="免費線上棋牌遊戲網 (78PlayGame) - 國際跳棋 Draughts">
+    <meta property="og:description" content="免費線上玩國際跳棋 Draughts，挑戰 AI 或學習玩法，享受經典策略遊戲樂趣！">
+    <meta property="og:image" content="https://xbon520.github.io/game/Draughts/img/banner.jpg">
+    <meta property="og:url" content="https://xbon520.github.io/game/Draughts/">
+    <meta property="og:type" content="website">
+    <title>免費線上棋牌遊戲網 (78PlayGame) - 國際跳棋 Draughts</title>
+    <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <img src="./img/banner.jpg" alt="78PlayGame Banner" class="banner">
+            <h1>免費線上棋牌遊戲網 (78PlayGame)</h1>
+            <nav class="menu">
+                <a href="../index.html" class="menu-btn">象棋 Xiangqi</a>
+                <a href="../Dark_Pool_Chess/index.html" class="menu-btn">暗棋(象棋) Dark Pool Chess</a>
+                <a href="../Chess/index.html" class="menu-btn">西洋棋 Chess</a>
+                <a href="../Go/index.html" class="menu-btn">圍棋 Go</a>
+                <a href="../Gomoku/index.html" class="menu-btn">五子棋 Gomoku</a>
+                <a href="./index.html" class="menu-btn active">國際跳棋 Draughts</a>
+                <a href="../about.html" class="menu-btn">關於</a>
+            </nav>
+        </header>
+        <div class="game-section">
+            <div class="ad-left">
+                <!-- Google AdSense 左側廣告 -->
+                <ins class="adsbygoogle" style="display:block" data-ad-client="你的 AdSense ID" data-ad-slot="你的廣告位 ID" data-ad-format="auto"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            </div>
+            <div class="game-content">
+                <div class="scoreboard">
+                    <div class="score-columns">
+                        <div class="score-column captured-pieces">
+                            <h3 class="section-title">計分板</h3>
+                            <div class="captured-list" id="current-player">當前玩家：白方</div>
+                            <div class="captured-list" id="ai-player">AI玩家：黑方</div>
+                        </div>
+                        <div class="score-column captured-pieces">
+                            <h3 class="section-title">場上棋數</h3>
+                            <div class="captured-list" id="white-score">白方：20</div>
+                            <div class="captured-list" id="black-score">黑方：20</div>
+                        </div>
+                        <div class="score-column captured-pieces">
+                            <h3 class="section-title">被吃棋數</h3>
+                            <div class="captured-list" id="white-captured">白方被吃：<span>0</span></div>
+                            <div class="captured-list" id="black-captured">黑方被吃：<span>0</span></div>
+                        </div>
+                        <div class="score-column controls">
+                            <div class="difficulty-buttons">
+                                <button id="easy-btn">簡單</button>
+                                <button id="hard-btn">困難</button>
+                            </div>
+                            <div class="difficulty-display" id="difficulty-display">模式：簡單</div>
+                            <button id="reset-btn">重新開始</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="board-section">
+                    <canvas id="draughts-board"></canvas>
+                </div>
+            </div>
+            <div class="ad-right">
+                <!-- Google AdSense 右側廣告 -->
+                <ins class="adsbygoogle" style="display:block" data-ad-client="你的 AdSense ID" data-ad-slot="你的廣告位 ID" data-ad-format="auto"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            </div>
+        </div>
+        <div class="rules-box">
+            <h2>國際跳棋玩法說明</h2>
+            <p><strong>棋盤</strong></p>
+            <p>大小：10x10 格，共 100 個方格，僅使用 50 個深色格（編號 1-50）。</p>
+            <p><strong>棋子</strong></p>
+            <p>白方：20 個普通棋子（Man），玩家控制，白色。</p>
+            <p>黑方：20 個普通棋子（Man），AI 控制，黑色。</p>
+            <p><strong>初始位置</strong></p>
+            <p>白方：佔據編號 31-50 的深色格（底部 4 行）。</p>
+            <p>黑方：佔據編號 1-20 的深色格（頂部 4 行）。</p>
+            <p><strong>移動規則</strong></p>
+            <p>普通棋子：僅向前斜走 1 格（左前或右前）。</p>
+            <p>王：沿對角線任意距離移動（前後均可，稱為「飛王」）。</p>
+            <p><strong>吃子規則</strong></p>
+            <p>必須吃子：若可吃子，必須執行。</p>
+            <p>普通棋子：可前後吃子，跳過對方棋子到空位。</p>
+            <p>王：沿對角線遠程吃子，可連續跳吃。</p>
+            <p>最大吃子規則：若有多個吃子選項，必須選擇吃子最多的路徑。</p>
+            <p><strong>升變</strong></p>
+            <p>普通棋子到達對方底線（白方 1-5，黑方 46-50）升為王。</p>
+            <p><strong>勝利條件</strong></p>
+            <p>吃掉對方所有棋子或使對方無法移動即勝。</p>
+        </div>
+        <footer class="footer">
+            <p>© 2025 78PlayGame.com。保留所有權利。</p>
+        </footer>
+        <audio id="stone-sound" src="./img/stone-drop.mp3" preload="auto"></audio>
+    </div>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script src="./script.js"></script>
+</body>
+</html>

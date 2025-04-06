@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="免費線上西洋棋 Chess，挑戰 AI 或學習玩法，享受經典策略遊戲樂趣！">
+    <meta name="keywords" content="免費線上西洋棋 Chess, 線上棋類遊戲, 西洋棋 AI, 免費棋牌遊戲">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="78PlayGame Team">
+    <meta property="og:title" content="免費線上棋牌遊戲網 (78PlayGame) - 西洋棋 Chess">
+    <meta property="og:description" content="免費線上玩西洋棋 Chess，挑戰 AI 或學習玩法，享受經典策略遊戲樂趣！">
+    <meta property="og:image" content="https://xbon520.github.io/game/Chess/img/banner.jpg">
+    <meta property="og:url" content="https://xbon520.github.io/game/Chess/">
+    <meta property="og:type" content="website">
+    <title>免費線上棋牌遊戲網 (78PlayGame) - 西洋棋 Chess</title>
+    <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <img src="./img/banner.jpg" alt="78PlayGame Banner" class="banner">
+            <h1>免費線上棋牌遊戲網 (78PlayGame)</h1>
+            <nav class="menu">
+                <a href="../index.html" class="menu-btn">象棋 Xiangqi</a>
+                <a href="../Dark_Pool_Chess/index.html" class="menu-btn">暗棋(象棋) Dark Pool Chess</a>
+                <a href="./index.html" class="menu-btn active">西洋棋 Chess</a>
+                <a href="../Go/index.html" class="menu-btn">圍棋 Go</a>
+                <a href="../Gomoku/index.html" class="menu-btn">五子棋 Gomoku</a>
+                <a href="../Draughts/index.html" class="menu-btn">國際跳棋 Draughts</a>
+                <a href="../about.html" class="menu-btn">關於</a>
+            </nav>
+        </header>
+        <div class="game-section">
+            <div class="ad-left">
+                <!-- Google AdSense 左側廣告 -->
+                <ins class="adsbygoogle" style="display:block" data-ad-client="你的 AdSense ID" data-ad-slot="你的廣告位 ID" data-ad-format="auto"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            </div>
+            <div class="game-content">
+                <div class="scoreboard">
+                    <div class="score-columns">
+                        <div class="score-column captured-pieces">
+                            <h3 class="section-title">計分板</h3>
+                            <div class="captured-list" id="current-player">當前玩家：白方</div>
+                            <div class="captured-list" id="ai-player">AI玩家：黑方</div>
+                        </div>
+                        <div class="score-column captured-pieces">
+                            <h3 class="section-title">場上棋數</h3>
+                            <div class="captured-list" id="white-score">白方：16</div>
+                            <div class="captured-list" id="black-score">黑方：16</div>
+                        </div>
+                        <div class="score-column captured-pieces">
+                            <h3 class="section-title">被吃棋數</h3>
+                            <div class="captured-list" id="white-captured">白方被吃：<span></span></div>
+                            <div class="captured-list" id="black-captured">黑方被吃：<span></span></div>
+                        </div>
+                        <div class="score-column controls">
+                            <div class="difficulty-buttons">
+                                <button id="easy-btn">簡單</button>
+                                <button id="hard-btn">困難</button>
+                            </div>
+                            <div class="difficulty-display" id="difficulty-display">模式：簡單</div>
+                            <button id="reset-btn">重新開始</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="board-section">
+                    <canvas id="chess-board"></canvas>
+                </div>
+            </div>
+            <div class="ad-right">
+                <!-- Google AdSense 右側廣告 -->
+                <ins class="adsbygoogle" style="display:block" data-ad-client="你的 AdSense ID" data-ad-slot="你的廣告位 ID" data-ad-format="auto"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            </div>
+        </div>
+        <div class="rules-box">
+            <h2>西洋棋玩法說明</h2>
+            <p><strong>棋盤</strong></p>
+            <p>大小：8x8 格，共 64 個方格，交替黑白，右下角為白方格 (h1)。</p>
+            <p><strong>棋子</strong></p>
+            <p>總數：每方 16 個棋子。</p>
+            <p><strong>白方（玩家）：</strong></p>
+            <p>國王 (K) x1、皇后 (Q) x1、車 (R) x2、主教 (B) x2、騎士 (N) x2、兵 (P) x8。</p>
+            <p><strong>黑方（AI）：</strong></p>
+            <p>國王 (k) x1、皇后 (q) x1、車 (r) x2、主教 (b) x2、騎士 (n) x2、兵 (p) x8。</p>
+            <p><strong>初始位置：</strong></p>
+            <p>白方：第 1 行 (Ra1, Nb1, Bc1, Qd1, Ke1, Bf1, Ng1, Rh1)，第 2 行 (Pa2-h2)。</p>
+            <p>黑方：第 8 行 (ra8, nb8, bc8, qd8, ke8, bf8, ng8, rh8)，第 7 行 (pa7-h7)。</p>
+            <p><strong>移動規則</strong></p>
+            <p><strong>國王 (K/k)：</strong></p>
+            <p>移動：上下左右或斜走 1 格，不能移至被攻擊格。</p>
+            <p><strong>皇后 (Q/q)：</strong></p>
+            <p>移動：直線或斜線走任意格，不能跳過棋子。</p>
+            <p><strong>車 (R/r)：</strong></p>
+            <p>移動：直線走任意格，不能跳過棋子。</p>
+            <p><strong>主教 (B/b)：</strong></p>
+            <p>移動：斜線走任意格，不能跳過棋子。</p>
+            <p><strong>騎士 (N/n)：</strong></p>
+            <p>移動：L 形（2+1 或 1+2），可跳過棋子。</p>
+            <p><strong>兵 (P/p)：</strong></p>
+            <p>移動：向前 1 格，初始可走 2 格，吃子斜前 1 格。</p>
+            <p>特殊：升變（到達對方底線）、吃過路兵（對方兵初次走 2 格時可吃）。</p>
+            <p><strong>特殊移動：</strong></p>
+            <p>王車易位：國王與車同時移動，條件為未移動、無阻礙、不被將軍。</p>
+        </div>
+        <footer class="footer">
+            <p>© 2025 78PlayGame.com。保留所有權利。</p>
+        </footer>
+        <audio id="stone-sound" src="./img/stone-drop.mp3" preload="auto"></audio>
+    </div>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script src="./script.js"></script>
+</body>
+</html>
+Chess/styles.css
+css
+
+收起
+
+換行
+
+複製
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(to bottom, #f8e1b5, #d4a576);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+}
+
+.container {
+    background: #fffcf7;
+    padding: 25px;
+    border-radius: 20px;
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+    width: 90vw;
+    max-width: 1200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow: auto;
+}
+
+header {
+    margin-bottom: 20px;
+    text-align: center;
+    width: 100%;
+}
+
+.banner {
+    width: 100%;
+    max-height: 150px;
+    object-fit: cover;
+    border-radius: 15px;
+    border: 2px solid #a67c00;
+}
+
+h1 {
+    color: #4a2c00;
+    font-size: clamp(1.8em, 4vw, 2.5em);
+    margin: 10px 0;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+    font-weight: bold;
+}
+
+.menu {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.menu-btn {
+    padding: 10px 20px;
+    font-size: 1.1em;
+    background-color: #b8860b;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.menu-btn:hover {
+    background-color: #d4a017;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.menu-btn.active {
+    background-color: #8b5a2b;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.game-section {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    gap: 20px;
+}
+
+.ad-left, .ad-right {
+    width: 160px;
+    height: 600px;
+    background: #e0e0e0;
+    border-radius: 10px;
+}
+
+.game-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.scoreboard {
+    background: #3c2f2f;
+    color: #f5e6cc;
+    padding: 20px;
+    border-radius: 15px;
+    width: 100%;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    margin-bottom: 20px;
+}
+
+.score-columns {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.score-column {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    flex: 1;
+    min-width: 0;
+}
+
+.section-title {
+    font-size: 1.2em;
+    margin: 0 0 12px 0;
+    color: #f5e6cc;
+    font-weight: bold;
+}
+
+.captured-list {
+    background: rgba(245, 230, 204, 0.2);
+    padding: 8px;
+    border-radius: 8px;
+    font-size: 0.95em;
+    color: #f5e6cc;
+    word-wrap: break-word;
+    width: 100%;
+    overflow-x: auto;
+    white-space: nowrap;
+    margin-bottom: 8px;
+    border: 1px solid #8b5a2b;
+}
+
+.captured-list span {
+    margin-left: 5px;
+}
+
+#current-player.white {
+    background: #ffffff;
+    border-color: #d9d9d9;
+    color: #4a2c00;
+}
+
+#current-player.black, #ai-player {
+    background: #2f2f2f;
+    border-color: #1a1a1a;
+}
+
+.difficulty-buttons {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+#easy-btn, #hard-btn {
+    padding: 10px 20px;
+    font-size: 1em;
+    background-color: #d4a017;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#easy-btn:hover, #hard-btn:hover {
+    background-color: #e6b923;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.difficulty-display {
+    padding: 10px;
+    background: rgba(245, 230, 204, 0.2);
+    border-radius: 8px;
+    font-size: 1em;
+    color: #f5e6cc;
+    margin-bottom: 12px;
+    text-align: center;
+    border: 1px solid #8b5a2b;
+}
+
+#reset-btn {
+    padding: 10px 20px;
+    font-size: 1em;
+    background-color: #a67c00;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
+    width: 100%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#reset-btn:hover {
+    background-color: #c79400;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.board-section {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    background: #f0d9b5;
+    padding: 15px;
+    border-radius: 15px;
+    box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+#chess-board {
+    background: #f0d9b5;
+    border: 10px solid #8b5a2b;
+    border-radius: 15px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 480px;
+    height: auto;
+}
+
+.rules-box {
+    padding: 20px;
+    background: #fdf6e3;
+    border-radius: 15px;
+    width: 100%;
+    max-width: 780px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    border: 2px solid #d4a576;
+    margin-top: 20px;
+}
+
+.rules-box h2 {
+    font-size: 1.6em;
+    margin-bottom: 15px;
+    color: #4a2c00;
+    text-align: center;
+}
+
+.rules-box p {
+    font-size: 1em;
+    line-height: 1.8;
+    color: #6b4e31;
+    margin: 5px 0;
+}
+
+.footer {
+    margin-top: 20px;
+    padding: 15px;
+    text-align: center;
+    background: #fdf6e3;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 780px;
+}
+
+.footer p {
+    font-size: 0.9em;
+    color: #6b4e31;
+    margin: 0;
+}
+
+@media (max-width: 768px) {
+    .game-section {
+        flex-direction: column;
+        align-items: center;
+    }
+    .ad-left, .ad-right {
+        width: 100%;
+        height: 100px;
+        margin: 15px 0;
+    }
+    .score-columns {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .score-column {
+        width: 100%;
+    }
+    .menu {
+        flex-direction: column;
+        gap: 8px;
+    }
+    .menu-btn {
+        width: 100%;
+        text-align: center;
+    }
+    .rules-box p, .footer p {
+        font-size: 0.9em;
+    }
+}
