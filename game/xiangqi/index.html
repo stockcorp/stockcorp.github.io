@@ -11,35 +11,38 @@
         <header>
             <h1>象棋 - Xiangqi Master</h1>
         </header>
-        <div class="game-wrapper">
-            <div class="board-section">
-                <div class="game-info">
-                    <p>當前玩家：<span id="current-player">紅方</span></p>
-                    <button id="reset-btn">重新開始</button>
-                </div>
-                <canvas id="xiangqi-board" width="480" height="540"></canvas>
+        <div class="game-info">
+            <p>當前玩家：<span id="current-player">紅方</span></p>
+        </div>
+        <div class="scoreboard">
+            <span class="label">計分板</span>
+            <div class="score-item">
+                <span class="player">紅方</span>
+                <span class="score" id="red-score">16</span>
             </div>
-            <div class="scoreboard">
-                <h2>計分板</h2>
-                <div class="score-item">
-                    <span class="player">紅方</span>
-                    <span class="score" id="red-score">16</span>
-                </div>
-                <div class="score-item">
-                    <span class="player">黑方</span>
-                    <span class="score" id="black-score">16</span>
-                </div>
-                <div class="captured-pieces">
-                    <h3>被吃棋子</h3>
-                    <div class="captured-list" id="red-captured">紅方被吃：<span></span></div>
-                    <div class="captured-list" id="black-captured">黑方被吃：<span></span></div>
-                </div>
-                <div class="difficulty-buttons">
-                    <button id="easy-btn">簡單</button>
-                    <button id="hard-btn">困難</button>
-                </div>
-                <div class="difficulty-display" id="difficulty-display">模式：簡單</div>
+            <div class="score-item">
+                <span class="player">黑方</span>
+                <span class="score" id="black-score">16</span>
             </div>
+            <span class="separator">→被吃棋子</span>
+            <div class="score-item captured-pieces">
+                <span class="player">紅方被吃：</span>
+                <span class="captured" id="red-captured"></span>
+            </div>
+            <div class="score-item captured-pieces">
+                <span class="player">黑方被吃：</span>
+                <span class="captured" id="black-captured"></span>
+            </div>
+            <span class="separator">→</span>
+            <div class="score-item difficulty-buttons">
+                <button id="easy-btn">簡單</button>
+                <button id="hard-btn">困難</button>
+                <span class="difficulty-display" id="difficulty-display">模式：簡單</span>
+            </div>
+            <button id="reset-btn">重新開始</button>
+        </div>
+        <div class="board-section">
+            <canvas id="xiangqi-board"></canvas>
         </div>
         <audio id="stone-sound" src="stone-drop.mp3" preload="auto"></audio>
     </div>
