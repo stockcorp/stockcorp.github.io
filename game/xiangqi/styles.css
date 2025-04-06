@@ -81,6 +81,19 @@ h1 {
     margin-left: 5px;
 }
 
+/* 動態底部顏色 */
+#current-player.red {
+    background: #e74c3c; /* 紅方時底部紅色 */
+}
+
+#current-player.black {
+    background: #333; /* 黑方時底部黑色 */
+}
+
+#ai-player {
+    background: #333; /* AI玩家固定黑色 */
+}
+
 .difficulty-buttons {
     display: flex;
     gap: 10px;
