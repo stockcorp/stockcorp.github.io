@@ -55,9 +55,9 @@ h1 {
     flex-wrap: wrap;
 }
 
-.score-row .label {
+.score-row h2 {
     font-size: 1.3em;
-    font-weight: bold;
+    margin: 0;
     color: #ecf0f1;
 }
 
@@ -118,7 +118,6 @@ h1 {
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s, transform 0.2s;
-    width: auto;
 }
 
 #easy-btn:hover, #hard-btn:hover {
