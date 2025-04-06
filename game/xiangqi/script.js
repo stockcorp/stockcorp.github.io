@@ -384,8 +384,7 @@ function checkGameOverBoard(boardState) {
 }
 
 // AI 移動
-function aiMove() {
-    if (currentPlayer !== 'black' || gameOver) return;
+if (currentPlayer !== 'black' || gameOver) return;
 
     let validMoves = [];
     const depth = difficulty === 'easy' ? EASY_DEPTH : HARD_DEPTH;
@@ -405,56 +404,36 @@ function aiMove() {
     }
 
     if (validMoves.length > 0) {
-        if (difficulty === 'easy') {
-            const move = validMoves[Math.floor(Math.random() * validMoves.length)];
-            const piece = board[move.fromY][move.fromX];
-            const target = board[move.toY][move.toX];
-            board[move.fromY][move.fromX] = '';
-            board[move.toY][move.toX] = piece;
+        let bestMove = null;
+        let bestScore = -Infinity;
 
-            if (target && target.startsWith('r')) redCaptured.push(target);
-
-            animatePiece(move.fromX, move.fromY, move.toX, move.toY, piece, () => {
-                updateScoreboard();
-                updateCapturedList();
-                if (!checkGameOver()) {
-                    currentPlayer = 'red';
-                    document.getElementById('current-player').textContent = '當前玩家：紅方';
-                    drawBoard();
-                }
-            });
-        } else {
-            let bestMove = null;
-            let bestScore = -Infinity;
-
-            for (const move of validMoves) {
-                const tempBoard = board.map(row => [...row]);
-                tempBoard[move.fromY][move.fromX] = '';
-                tempBoard[move.toY][move.toX] = board[move.fromY][move.fromX];
-                const evalScore = minimax(tempBoard, depth - 1, -Infinity, Infinity, false);
-                if (evalScore > bestScore) {
-                    bestScore = evalScore;
-                    bestMove = move;
-                }
+        for (const move of validMoves) {
+            const tempBoard = board.map(row => [...row]);
+            tempBoard[move.fromY][move.fromX] = '';
+            tempBoard[move.toY][move.toX] = board[move.fromY][move.fromX];
+            const evalScore = minimax(tempBoard, depth - 1, -Infinity, Infinity, false);
+            if (evalScore > bestScore) {
+                bestScore = evalScore;
+                bestMove = move;
             }
-
-            const piece = board[bestMove.fromY][bestMove.fromX];
-            const target = board[bestMove.toY][bestMove.toX];
-            board[bestMove.fromY][bestMove.fromX] = '';
-            board[bestMove.toY][bestMove.toX] = piece;
-
-            if (target && target.startsWith('r')) redCaptured.push(target);
-
-            animatePiece(bestMove.fromX, bestMove.fromY, bestMove.toX, bestMove.toY, piece, () => {
-                updateScoreboard();
-                updateCapturedList();
-                if (!checkGameOver()) {
-                    currentPlayer = 'red';
-                    document.getElementById('current-player').textContent = '當前玩家：紅方';
-                    drawBoard();
-                }
-            });
         }
+
+        const piece = board[bestMove.fromY][bestMove.fromX];
+        const target = board[bestMove.toY][bestMove.toX];
+        board[bestMove.fromY][bestMove.fromX] = '';
+        board[bestMove.toY][bestMove.toX] = piece;
+
+        if (target && target.startsWith('r')) redCaptured.push(target);
+
+        animatePiece(bestMove.fromX, bestMove.fromY, bestMove.toX, bestMove.toY, piece, () => {
+            updateScoreboard();
+            updateCapturedList();
+            if (!checkGameOver()) {
+                currentPlayer = 'red';
+                document.getElementById('current-player').textContent = '當前玩家：紅方';
+                drawBoard();
+            }
+        });
     }
 }
 
