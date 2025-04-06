@@ -287,3 +287,53 @@ h1 {
         font-size: 0.9em; /* 手機上稍減小字體 */
     }
 }
+.footer {
+    margin-top: 20px;
+    padding: 15px;
+    text-align: center;
+    background: #fdf6e3; /* 與規則框一致的淺米色 */
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 780px;
+}
+
+.footer p {
+    font-size: 0.9em;
+    color: #6b4e31; /* 與規則文字一致的柔和棕色 */
+    margin: 0;
+}
+
+/* 手機適配 */
+@media (max-width: 768px) {
+    .game-section {
+        flex-direction: column;
+        align-items: center;
+    }
+    .ad-left, .ad-right {
+        width: 100%;
+        height: 100px;
+        margin: 15px 0;
+    }
+    .score-columns {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .score-column {
+        width: 100%;
+    }
+    .menu {
+        flex-direction: column;
+        gap: 8px;
+    }
+    .menu-btn {
+        width: 100%;
+        text-align: center;
+    }
+    .rules-box p {
+        font-size: 0.9em;
+    }
+    .footer p {
+        font-size: 0.8em; /* 手機上稍減小字體 */
+    }
+}
