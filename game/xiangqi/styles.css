@@ -44,13 +44,6 @@ h1 {
     margin-bottom: 15px;
 }
 
-.scoreboard-title {
-    font-size: 1.3em;
-    margin: 0 0 10px 0;
-    color: #ecf0f1;
-    text-align: center;
-}
-
 .score-columns {
     display: flex;
     justify-content: space-between;
@@ -68,6 +61,13 @@ h1 {
 .score-column .label {
     font-size: 1em;
     margin: 5px 0;
+}
+
+.scoreboard-title {
+    font-size: 1em; /* 調整為與其他文字一致，避免過高 */
+    font-weight: bold;
+    color: #ecf0f1;
+    margin-right: 10px; /* 與「當前玩家」保持適當間距 */
 }
 
 #current-player {
