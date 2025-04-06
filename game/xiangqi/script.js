@@ -13,11 +13,13 @@ let gameOver = false;
 let redCaptured = [];
 let blackCaptured = [];
 let difficulty = 'easy';
+const EASY_DEPTH = 3; // 簡單模式深度，可手動調整
+const HARD_DEPTH = 4; // 困難模式深度，可手動調整
 
 // 動態調整Canvas大小
 function resizeCanvas() {
     const containerWidth = document.querySelector('.board-section').offsetWidth;
-    const maxWidth = Math.min(containerWidth, 540);
+    const maxWidth = Math.min(containerWidth, 480);
     canvas.width = maxWidth;
     canvas.height = maxWidth * (gridHeight / gridWidth);
     borderWidth = canvas.width * 0.04;
@@ -191,8 +193,8 @@ function updateScoreboard() {
 // 更新被吃棋子記錄
 function updateCapturedList() {
     const symbols = { 'c': '車', 'n': '馬', 'b': '象', 'a': '士', 'k': '將', 'p': '炮', 's': '兵' };
-    document.getElementById('red-captured').textContent = redCaptured.map(p => symbols[p[1]]).join(', ');
-    document.getElementById('black-captured').textContent = blackCaptured.map(p => symbols[p[1]]).join(', ');
+    document.getElementById('red-captured').innerHTML = `紅方被吃：<span>${redCaptured.map(p => symbols[p[1]]).join(', ')}</span>`;
+    document.getElementById('black-captured').innerHTML = `黑方被吃：<span>${blackCaptured.map(p => symbols[p[1]]).join(', ')}</span>`;
 }
 
 // 更新模式顯示
@@ -376,98 +378,58 @@ function checkGameOverBoard(boardState) {
     return !redKing || !blackKing;
 }
 
-// AI 移動（困難模式）
-function aiMoveHard() {
-    if (currentPlayer === 'black' && !gameOver) {
-        let validMoves = [];
-        const DEPTH = 4;
+// AI 移動
+function aiMove() {
+    if (currentPlayer !== 'black' || gameOver) return;
 
-        for (let y = 0; y < gridHeight; y++) {
-            for (let x = 0; x < gridWidth; x++) {
-                if (board[y][x] && board[y][x].startsWith('b')) {
-                    for (let ty = 0; ty < gridHeight; ty++) {
-                        for (let tx = 0; tx < gridWidth; tx++) {
-                            if (isValidMoveForAI(x, y, tx, ty)) {
-                                validMoves.push({ fromX: x, fromY: y, toX: tx, toY: ty });
-                            }
+    let validMoves = [];
+    const depth = difficulty === 'easy' ? EASY_DEPTH : HARD_DEPTH;
+
+    for (let y = 0; y < gridHeight; y++) {
+        for (let x = 0; x < gridWidth; x++) {
+            if (board[y][x] && board[y][x].startsWith('b')) {
+                for (let ty = 0; ty < gridHeight; ty++) {
+                    for (let tx = 0; tx < gridWidth; tx++) {
+                        if (isValidMoveForAI(x, y, tx, ty)) {
+                            validMoves.push({ fromX: x, fromY: y, toX: tx, toY: ty });
                         }
                     }
                 }
             }
-        }
-
-        if (validMoves.length > 0) {
-            let bestMove = null;
-            let bestScore = -Infinity;
-
-            for (const move of validMoves) {
-                const tempBoard = board.map(row => [...row]);
-                tempBoard[move.fromY][move.fromX] = '';
-                tempBoard[move.toY][move.toX] = board[move.fromY][move.fromX];
-                const evalScore = minimax(tempBoard, DEPTH - 1, -Infinity, Infinity, false);
-                if (evalScore > bestScore) {
-                    bestScore = evalScore;
-                    bestMove = move;
-                }
-            }
-
-            const piece = board[bestMove.fromY][bestMove.fromX];
-            const target = board[bestMove.toY][bestMove.toX];
-            board[bestMove.fromY][bestMove.fromX] = '';
-            board[bestMove.toY][bestMove.toX] = piece;
-
-            if (target && target.startsWith('r')) redCaptured.push(target);
-
-            animatePiece(bestMove.fromX, bestMove.fromY, bestMove.toX, bestMove.toY, piece, () => {
-                updateScoreboard();
-                updateCapturedList();
-                if (!checkGameOver()) {
-                    currentPlayer = 'red';
-                    document.getElementById('current-player').textContent = '紅方';
-                    drawBoard();
-                }
-            });
         }
     }
-}
 
-// AI 移動（簡單模式）
-function aiMoveEasy() {
-    if (currentPlayer === 'black' && !gameOver) {
-        let validMoves = [];
-        for (let y = 0; y < gridHeight; y++) {
-            for (let x = 0; x < gridWidth; x++) {
-                if (board[y][x] && board[y][x].startsWith('b')) {
-                    for (let ty = 0; ty < gridHeight; ty++) {
-                        for (let tx = 0; tx < gridWidth; tx++) {
-                            if (isValidMoveForAI(x, y, tx, ty)) {
-                                validMoves.push({ fromX: x, fromY: y, toX: tx, toY: ty });
-                            }
-                        }
-                    }
-                }
+    if (validMoves.length > 0) {
+        let bestMove = null;
+        let bestScore = -Infinity;
+
+        for (const move of validMoves) {
+            const tempBoard = board.map(row => [...row]);
+            tempBoard[move.fromY][move.fromX] = '';
+            tempBoard[move.toY][move.toX] = board[move.fromY][move.fromX];
+            const evalScore = minimax(tempBoard, depth - 1, -Infinity, Infinity, false);
+            if (evalScore > bestScore) {
+                bestScore = evalScore;
+                bestMove = move;
             }
         }
 
-        if (validMoves.length > 0) {
-            const move = validMoves[Math.floor(Math.random() * validMoves.length)];
-            const piece = board[move.fromY][move.fromX];
-            const target = board[move.toY][move.toX];
-            board[move.fromY][move.fromX] = '';
-            board[move.toY][move.toX] = piece;
+        const piece = board[bestMove.fromY][bestMove.fromX];
+        const target = board[bestMove.toY][bestMove.toX];
+        board[bestMove.fromY][bestMove.fromX] = '';
+        board[bestMove.toY][bestMove.toX] = piece;
 
-            if (target && target.startsWith('r')) redCaptured.push(target);
+        if (target && target.startsWith('r')) redCaptured.push(target);
 
-            animatePiece(move.fromX, move.fromY, move.toX, move.toY, piece, () => {
-                updateScoreboard();
-                updateCapturedList();
-                if (!checkGameOver()) {
-                    currentPlayer = 'red';
-                    document.getElementById('current-player').textContent = '紅方';
-                    drawBoard();
-                }
-            });
-        }
+        animatePiece(bestMove.fromX, bestMove.fromY, bestMove.toX, bestMove.toY, piece, () => {
+            updateScoreboard();
+            updateCapturedList();
+            if (!checkGameOver()) {
+                currentPlayer = 'red';
+                document.getElementById('current-player').textContent = '紅方';
+                drawBoard();
+            }
+        });
     }
 }
 
@@ -491,12 +453,6 @@ function isValidMoveForAI(fromX, fromY, toX, toY) {
         case 's': return fromY >= 5 ? (dx === 0 && toY === fromY - 1) : ((dx === 0 && toY === fromY - 1) || (dy === 0 && dx === 1));
         default: return false;
     }
-}
-
-// 通用 AI 移動
-function aiMove() {
-    if (difficulty === 'easy') aiMoveEasy();
-    else aiMoveHard();
 }
 
 // 處理移動事件
