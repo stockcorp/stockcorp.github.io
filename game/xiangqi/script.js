@@ -190,7 +190,8 @@ function updateScoreboard() {
     document.getElementById('red-score').textContent = `紅方：${redScore}`;
     document.getElementById('black-score').textContent = `黑方：${blackScore}`;
     const currentPlayerElement = document.getElementById('current-player');
-    currentPlayerElement.textContent = `當前玩家：${currentPlayer === 'red' ? '紅方' : '黑方'}`;
+    const playerText = currentPlayer === 'red' ? '紅方' : '黑方';
+    currentPlayerElement.textContent = `當前玩家：${playerText}`;
     // 動態切換類別，確保紅方紅底，黑方黑底
     currentPlayerElement.classList.remove('red', 'black');
     currentPlayerElement.classList.add(currentPlayer === 'red' ? 'red' : 'black');
