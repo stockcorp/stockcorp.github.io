@@ -64,37 +64,6 @@ h1 {
     color: #ecf0f1;
 }
 
-.score-item {
-    display: flex;
-    justify-content: space-between;
-    padding: 8px;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 5px;
-    font-size: 1em;
-    width: 100%;
-    margin-bottom: 5px;
-    transition: transform 0.2s;
-}
-
-.score-item:hover {
-    transform: scale(1.05);
-}
-
-.score-item .player {
-    font-weight: bold;
-}
-
-.score-item .score {
-    background: #e74c3c;
-    padding: 5px 10px;
-    border-radius: 5px;
-}
-
-.score-item .ai-player {
-    background: #333; /* AI玩家使用黑色背景，白色文字 */
-    color: #fff;
-}
-
 .captured-list {
     background: rgba(255, 255, 255, 0.15);
     padding: 5px;
@@ -193,7 +162,7 @@ h1 {
         width: 100%;
     }
 
-    .score-item, .captured-list {
+    .captured-list {
         width: 100%;
     }
 
