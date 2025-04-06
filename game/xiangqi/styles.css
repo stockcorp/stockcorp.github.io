@@ -234,7 +234,7 @@ h1 {
 
 .rules-box {
     padding: 20px;
-    background: #fdf6e3;
+    background: #fdf6e3; /* 恢復淺米色背景 */
     border-radius: 15px;
     width: 100%;
     max-width: 780px;
@@ -250,14 +250,11 @@ h1 {
     text-align: center;
 }
 
-.rules-box .rules-text {
+.rules-box p {
     font-size: 1em;
     line-height: 1.8;
-    color: #fff; /* 白字 */
-    background: #2f2f2f; /* 黑底 */
-    padding: 15px;
-    border-radius: 10px;
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+    color: #6b4e31; /* 恢復柔和棕色文字 */
+    margin: 5px 0; /* 增加段落間距，分行更清晰 */
 }
 
 /* 手機適配 */
@@ -286,7 +283,7 @@ h1 {
         width: 100%;
         text-align: center;
     }
-    .rules-box .rules-text {
+    .rules-box p {
         font-size: 0.9em; /* 手機上稍減小字體 */
     }
 }
