@@ -2,9 +2,7 @@ const canvas = document.getElementById('xiangqi-board');
 const ctx = canvas.getContext('2d');
 const gridWidth = 9;
 const gridHeight = 10;
-const borderWidth = 20;
-const cellWidth = (canvas.width - 2 * borderWidth) / (gridWidth - 1);
-const cellHeight = (canvas.height - 2 * borderWidth) / (gridHeight - 1);
+let borderWidth, cellWidth, cellHeight;
 let board = [];
 let currentPlayer = 'red';
 let redScore = 16;
@@ -14,7 +12,19 @@ let selectedPiece = null;
 let gameOver = false;
 let redCaptured = [];
 let blackCaptured = [];
-let difficulty = 'easy'; // 預設簡單模式
+let difficulty = 'easy';
+
+// 動態調整Canvas大小
+function resizeCanvas() {
+    const containerWidth = document.querySelector('.board-section').offsetWidth;
+    const maxWidth = Math.min(containerWidth, 540);
+    canvas.width = maxWidth;
+    canvas.height = maxWidth * (gridHeight / gridWidth);
+    borderWidth = canvas.width * 0.04;
+    cellWidth = (canvas.width - 2 * borderWidth) / (gridWidth - 1);
+    cellHeight = (canvas.height - 2 * borderWidth) / (gridHeight - 1);
+    drawBoard();
+}
 
 // 初始化棋盤
 function initializeBoard() {
@@ -34,6 +44,7 @@ function initializeBoard() {
     blackCaptured = [];
     updateCapturedList();
     updateDifficultyDisplay();
+    resizeCanvas();
 }
 
 // 繪製棋盤
@@ -68,7 +79,7 @@ function drawBoard() {
     ctx.fillStyle = '#f5f5f5';
     ctx.fillRect(borderWidth, 4 * cellHeight + borderWidth, canvas.width - 2 * borderWidth, cellHeight);
     ctx.fillStyle = '#8b5a2b';
-    ctx.font = 'bold 24px "KaiTi", serif';
+    ctx.font = `bold ${canvas.width * 0.04}px "KaiTi", serif`;
     ctx.textAlign = 'center';
     ctx.fillText('楚河          漢界', canvas.width / 2, 4.5 * cellHeight + borderWidth);
 
@@ -91,7 +102,7 @@ function drawBoard() {
     ctx.fillStyle = '#5a3e2b';
     markers.forEach(([x, y]) => {
         ctx.beginPath();
-        ctx.arc(x * cellWidth + borderWidth, y * cellHeight + borderWidth, 5, 0, Math.PI * 2);
+        ctx.arc(x * cellWidth + borderWidth, y * cellHeight + borderWidth, canvas.width * 0.01, 0, Math.PI * 2);
         ctx.fill();
     });
 
@@ -110,7 +121,7 @@ function drawBoard() {
     }
 }
 
-// 繪製精美棋子
+// 繪製棋子
 function drawPiece(x, y, piece, opacity = 1) {
     ctx.save();
     const radius = Math.min(cellWidth, cellHeight) * 0.35;
@@ -133,13 +144,11 @@ function drawPiece(x, y, piece, opacity = 1) {
     ctx.fillStyle = shadowGradient;
     ctx.fill();
 
-    ctx.font = 'bold 24px "KaiTi", serif';
+    ctx.font = `bold ${canvas.width * 0.045}px "KaiTi", serif`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillStyle = piece.startsWith('r') ? '#e74c3c' : '#000';
-    const symbols = {
-        'c': '車', 'n': '馬', 'b': '象', 'a': '士', 'k': '將', 'p': '炮', 's': '兵'
-    };
+    const symbols = { 'c': '車', 'n': '馬', 'b': '象', 'a': '士', 'k': '將', 'p': '炮', 's': '兵' };
     ctx.fillText(symbols[piece[1]], centerX, centerY);
 
     ctx.restore();
@@ -181,11 +190,9 @@ function updateScoreboard() {
 
 // 更新被吃棋子記錄
 function updateCapturedList() {
-    const symbols = {
-        'c': '車', 'n': '馬', 'b': '象', 'a': '士', 'k': '將', 'p': '炮', 's': '兵'
-    };
-    document.getElementById('red-captured').innerHTML = `紅方被吃：<span>${redCaptured.map(p => symbols[p[1]]).join(', ')}</span>`;
-    document.getElementById('black-captured').innerHTML = `黑方被吃：<span>${blackCaptured.map(p => symbols[p[1]]).join(', ')}</span>`;
+    const symbols = { 'c': '車', 'n': '馬', 'b': '象', 'a': '士', 'k': '將', 'p': '炮', 's': '兵' };
+    document.getElementById('red-captured').textContent = redCaptured.map(p => symbols[p[1]]).join(', ');
+    document.getElementById('black-captured').textContent = blackCaptured.map(p => symbols[p[1]]).join(', ');
 }
 
 // 更新模式顯示
@@ -224,63 +231,25 @@ function isValidMove(fromX, fromY, toX, toY) {
     if (target && target.startsWith('r')) return false;
 
     switch (piece[1]) {
-        case 'c':
-            if (dx !== 0 && dy !== 0) return false;
-            return isPathClear(fromX, fromY, toX, toY);
-        case 'n':
-            if ((dx === 2 && dy === 1) || (dx === 1 && dy === 2)) {
-                const blockX = dx === 2 ? fromX + (toX > fromX ? 1 : -1) : fromX;
-                const blockY = dy === 2 ? fromY + (toY > fromY ? 1 : -1) : fromY;
-                return !board[blockY][blockX];
-            }
-            return false;
-        case 'b':
-            if (dx === 2 && dy === 2 && toY <= 4) {
-                const midX = (fromX + toX) / 2;
-                const midY = (fromY + toY) / 2;
-                return !board[midY][midX];
-            }
-            return false;
-        case 'a':
-            if (dx === 1 && dy === 1 && toX >= 3 && toX <= 5 && toY >= 0 && toY <= 2) {
-                return true;
-            }
-            return false;
-        case 'k':
-            if (dx === 0 && dy === 1 || dx === 1 && dy === 0) {
-                return toX >= 3 && toX <= 5 && toY >= 0 && toY <= 2;
-            }
-            return false;
-        case 'p':
-            if (dx !== 0 && dy !== 0) return false;
-            if (!target) return isPathClear(fromX, fromY, toX, toY);
-            const piecesBetween = countPiecesBetween(fromX, fromY, toX, toY);
-            return piecesBetween === 1;
-        case 's':
-            if (fromY <= 4) {
-                return dx === 0 && toY === fromY + 1;
-            } else {
-                return (dx === 0 && toY === fromY + 1) || (dy === 0 && dx === 1);
-            }
-        default:
-            return false;
+        case 'c': return (dx === 0 || dy === 0) && isPathClear(fromX, fromY, toX, toY);
+        case 'n': return ((dx === 2 && dy === 1) || (dx === 1 && dy === 2)) && !board[dx === 2 ? fromY + (toY > fromY ? 1 : -1) : fromY][dx === 2 ? fromX : fromX + (toX > fromX ? 1 : -1)];
+        case 'b': return dx === 2 && dy === 2 && toY <= 4 && !board[(fromY + toY) / 2][(fromX + toX) / 2];
+        case 'a': return dx === 1 && dy === 1 && toX >= 3 && toX <= 5 && toY >= 0 && toY <= 2;
+        case 'k': return (dx === 0 && dy === 1 || dx === 1 && dy === 0) && toX >= 3 && toX <= 5 && toY >= 0 && toY <= 2;
+        case 'p': return (dx === 0 || dy === 0) && (!target ? isPathClear(fromX, fromY, toX, toY) : countPiecesBetween(fromX, fromY, toX, toY) === 1);
+        case 's': return fromY <= 4 ? (dx === 0 && toY === fromY + 1) : ((dx === 0 && toY === fromY + 1) || (dy === 0 && dx === 1));
+        default: return false;
     }
 }
 
 // 檢查路徑是否暢通
 function isPathClear(fromX, fromY, toX, toY) {
     if (fromX === toX) {
-        const minY = Math.min(fromY, toY);
-        const maxY = Math.max(fromY, toY);
-        for (let y = minY + 1; y < maxY; y++) {
-            if (board[y][fromX]) return false;
-        }
+        const [minY, maxY] = [Math.min(fromY, toY), Math.max(fromY, toY)];
+        for (let y = minY + 1; y < maxY; y++) if (board[y][fromX]) return false;
     } else if (fromY === toY) {
-        const minX = Math.min(fromX, toX);
-        const maxX = Math.max(fromX, toX);
-        for (let x = minX + 1; x < maxX; x++) {
-            if (board[fromY][x]) return false;
-        }
+        const [minX, maxX] = [Math.min(fromX, toX), Math.max(fromX, toX)];
+        for (let x = minX + 1; x < maxX; x++) if (board[fromY][x]) return false;
     }
     return true;
 }
@@ -289,26 +258,18 @@ function isPathClear(fromX, fromY, toX, toY) {
 function countPiecesBetween(fromX, fromY, toX, toY) {
     let count = 0;
     if (fromX === toX) {
-        const minY = Math.min(fromY, toY);
-        const maxY = Math.max(fromY, toY);
-        for (let y = minY + 1; y < maxY; y++) {
-            if (board[y][fromX]) count++;
-        }
+        const [minY, maxY] = [Math.min(fromY, toY), Math.max(fromY, toY)];
+        for (let y = minY + 1; y < maxY; y++) if (board[y][fromX]) count++;
     } else if (fromY === toY) {
-        const minX = Math.min(fromX, toX);
-        const maxX = Math.max(fromX, toX);
-        for (let x = minX + 1; x < maxX; x++) {
-            if (board[fromY][x]) count++;
-        }
+        const [minX, maxX] = [Math.min(fromX, toX), Math.max(fromX, toX)];
+        for (let x = minX + 1; x < maxX; x++) if (board[fromY][x]) count++;
     }
     return count;
 }
 
 // 評估棋子價值
 function getPieceValue(piece) {
-    const values = {
-        'c': 9, 'n': 4, 'b': 2, 'a': 2, 'k': 1000, 'p': 4.5, 's': 1
-    };
+    const values = { 'c': 9, 'n': 4, 'b': 2, 'a': 2, 'k': 1000, 'p': 4.5, 's': 1 };
     return piece ? values[piece[1]] || 0 : 0;
 }
 
@@ -318,11 +279,11 @@ function getPositionValue(x, y, isHard = false) {
     const distanceToKing = Math.abs(x - redKingPos.x) + Math.abs(y - redKingPos.y);
     const centerValue = Math.abs(x - 4) + Math.abs(y - 4.5);
     let value = 10 - distanceToKing * 0.5 - centerValue * 0.3;
-    if (isHard && y < 5) value += 10; // 困難模式鼓勵進攻紅方區域
+    if (isHard && y < 5) value += 10;
     return value;
 }
 
-// 評估局面（困難模式專用）
+// 評估局面
 function evaluateBoard(boardState) {
     let score = 0;
     let redKingPos = null;
@@ -345,79 +306,15 @@ function evaluateBoard(boardState) {
         }
     }
 
-    // 將帥安全評估
-    if (redKingPos) {
-        score += 50 - (Math.abs(redKingPos.x - 4) + redKingPos.y) * 5; // 紅方將暴露減分
-    }
-    if (blackKingPos) {
-        score += (Math.abs(blackKingPos.x - 4) + (9 - blackKingPos.y)) * 10; // 黑方將安全加分
-    }
+    if (redKingPos) score += 50 - (Math.abs(redKingPos.x - 4) + redKingPos.y) * 5;
+    if (blackKingPos) score += (Math.abs(blackKingPos.x - 4) + (9 - blackKingPos.y)) * 10;
 
     return score;
 }
 
-// AI 移動（簡單模式）
-function aiMoveEasy() {
-    if (currentPlayer === 'black' && !gameOver) {
-        let validMoves = [];
-
-        for (let y = 0; y < gridHeight; y++) {
-            for (let x = 0; x < gridWidth; x++) {
-                if (board[y][x] && board[y][x].startsWith('b')) {
-                    for (let ty = 0; ty < gridHeight; ty++) {
-                        for (let tx = 0; tx < gridWidth; tx++) {
-                            if (isValidMoveForAI(x, y, tx, ty)) {
-                                const target = board[ty][tx];
-                                const captureValue = target ? getPieceValue(target) : 0;
-                                const positionValue = getPositionValue(tx, ty);
-                                const piece = board[y][x];
-                                let moveValue = captureValue + positionValue;
-
-                                if (piece[1] === 'c' || piece[1] === 'p') moveValue += 5;
-                                if (piece[1] === 's' && ty < 5) moveValue += 2;
-                                if (piece[1] === 'k' && Math.abs(tx - 4) <= 1 && ty >= 7) moveValue += 10;
-
-                                validMoves.push({ fromX: x, fromY: y, toX: tx, toY: ty, value: moveValue });
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        if (validMoves.length > 0) {
-            validMoves.sort((a, b) => b.value - a.value);
-            const topMoves = validMoves.slice(0, Math.min(5, validMoves.length));
-            const move = topMoves[Math.floor(Math.random() * topMoves.length)];
-
-            const piece = board[move.fromY][move.fromX];
-            const target = board[move.toY][move.toX];
-
-            board[move.fromY][move.fromX] = '';
-            board[move.toY][move.toX] = piece;
-
-            if (target && target.startsWith('r')) {
-                redCaptured.push(target);
-            }
-
-            animatePiece(move.fromX, move.fromY, move.toX, move.toY, piece, () => {
-                updateScoreboard();
-                updateCapturedList();
-                if (!checkGameOver()) {
-                    currentPlayer = 'red';
-                    document.getElementById('current-player').textContent = '紅方';
-                    drawBoard();
-                }
-            });
-        }
-    }
-}
-
-// Minimax 與 Alpha-Beta 剪枝（困難模式）
+// Minimax 與 Alpha-Beta 剪枝
 function minimax(boardState, depth, alpha, beta, maximizingPlayer) {
-    if (depth === 0 || checkGameOverBoard(boardState)) {
-        return evaluateBoard(boardState);
-    }
+    if (depth === 0 || checkGameOverBoard(boardState)) return evaluateBoard(boardState);
 
     if (maximizingPlayer) {
         let maxEval = -Infinity;
@@ -479,11 +376,11 @@ function checkGameOverBoard(boardState) {
     return !redKing || !blackKing;
 }
 
-// AI 移動（困難模式 - 世界最困難）
+// AI 移動（困難模式）
 function aiMoveHard() {
     if (currentPlayer === 'black' && !gameOver) {
         let validMoves = [];
-        const DEPTH = 4; // 搜索深度
+        const DEPTH = 4;
 
         for (let y = 0; y < gridHeight; y++) {
             for (let x = 0; x < gridWidth; x++) {
@@ -491,19 +388,7 @@ function aiMoveHard() {
                     for (let ty = 0; ty < gridHeight; ty++) {
                         for (let tx = 0; tx < gridWidth; tx++) {
                             if (isValidMoveForAI(x, y, tx, ty)) {
-                                const target = board[ty][tx];
-                                const captureValue = target ? getPieceValue(target) : 0;
-                                const positionValue = getPositionValue(tx, ty, true);
-                                const piece = board[y][x];
-                                let moveValue = captureValue + positionValue;
-
-                                if (piece[1] === 'c' || piece[1] === 'p') moveValue += 20;
-                                if (piece[1] === 's' && ty < 5) moveValue += 10;
-                                if (piece[1] === 'k' && Math.abs(tx - 4) <= 1 && ty >= 7) moveValue += 50;
-                                if (captureValue > 0 && target === 'rk') moveValue += 10000;
-                                if (ty <= 2) moveValue += 30;
-
-                                validMoves.push({ fromX: x, fromY: y, toX: tx, toY: ty, value: moveValue });
+                                validMoves.push({ fromX: x, fromY: y, toX: tx, toY: ty });
                             }
                         }
                     }
@@ -519,7 +404,6 @@ function aiMoveHard() {
                 const tempBoard = board.map(row => [...row]);
                 tempBoard[move.fromY][move.fromX] = '';
                 tempBoard[move.toY][move.toX] = board[move.fromY][move.fromX];
-
                 const evalScore = minimax(tempBoard, DEPTH - 1, -Infinity, Infinity, false);
                 if (evalScore > bestScore) {
                     bestScore = evalScore;
@@ -529,13 +413,10 @@ function aiMoveHard() {
 
             const piece = board[bestMove.fromY][bestMove.fromX];
             const target = board[bestMove.toY][bestMove.toX];
-
             board[bestMove.fromY][bestMove.fromX] = '';
             board[bestMove.toY][bestMove.toX] = piece;
 
-            if (target && target.startsWith('r')) {
-                redCaptured.push(target);
-            }
+            if (target && target.startsWith('r')) redCaptured.push(target);
 
             animatePiece(bestMove.fromX, bestMove.fromY, bestMove.toX, bestMove.toY, piece, () => {
                 updateScoreboard();
@@ -550,91 +431,17 @@ function aiMoveHard() {
     }
 }
 
-// AI 的移動合法性（黑方）
-function isValidMoveForAI(fromX, fromY, toX, toY) {
-    const piece = board[fromY][fromX];
-    if (!piece || !piece.startsWith('b')) return false;
-    const dx = Math.abs(toX - fromX);
-    const dy = Math.abs(toY - fromY);
-    const target = board[toY][toX];
-
-    if (target && target.startsWith('b')) return false;
-
-    switch (piece[1]) {
-        case 'c':
-            if (dx !== 0 && dy !== 0) return false;
-            return isPathClear(fromX, fromY, toX, toY);
-        case 'n':
-            if ((dx === 2 && dy === 1) || (dx === 1 && dy === 2)) {
-                const blockX = dx === 2 ? fromX + (toX > fromX ? 1 : -1) : fromX;
-                const blockY = dy === 2 ? fromY + (toY > fromY ? 1 : -1) : fromY;
-                return !board[blockY][blockX];
-            }
-            return false;
-        case 'b':
-            if (dx === 2 && dy === 2 && toY >= 5) {
-                const midX = (fromX + toX) / 2;
-                const midY = (fromY + toY) / 2;
-                return !board[midY][midX];
-            }
-            return false;
-        case 'a':
-            if (dx === 1 && dy === 1 && toX >= 3 && toX <= 5 && toY >= 7 && toY <= 9) {
-                return true;
-            }
-            return false;
-        case 'k':
-            if (dx === 0 && dy === 1 || dx === 1 && dy === 0) {
-                return toX >= 3 && toX <= 5 && toY >= 7 && toY <= 9;
-            }
-            return false;
-        case 'p':
-            if (dx !== 0 && dy !== 0) return false;
-            if (!target) return isPathClear(fromX, fromY, toX, toY);
-            const piecesBetween = countPiecesBetween(fromX, fromY, toX, toY);
-            return piecesBetween === 1;
-        case 's':
-            if (fromY >= 5) {
-                return dx === 0 && toY === fromY - 1;
-            } else {
-                return (dx === 0 && toY === fromY - 1) || (dy === 0 && dx === 1);
-            }
-        default:
-            return false;
-    }
-}
-
-// 通用 AI 移動函數（根據難度選擇）
-function aiMove() {
-    if (difficulty === 'easy') {
-        aiMoveEasy();
-    } else {
-        aiMoveHard();
-    }
-}
-
 // AI 移動（簡單模式）
 function aiMoveEasy() {
     if (currentPlayer === 'black' && !gameOver) {
         let validMoves = [];
-
         for (let y = 0; y < gridHeight; y++) {
             for (let x = 0; x < gridWidth; x++) {
                 if (board[y][x] && board[y][x].startsWith('b')) {
                     for (let ty = 0; ty < gridHeight; ty++) {
                         for (let tx = 0; tx < gridWidth; tx++) {
                             if (isValidMoveForAI(x, y, tx, ty)) {
-                                const target = board[ty][tx];
-                                const captureValue = target ? getPieceValue(target) : 0;
-                                const positionValue = getPositionValue(tx, ty);
-                                const piece = board[y][x];
-                                let moveValue = captureValue + positionValue;
-
-                                if (piece[1] === 'c' || piece[1] === 'p') moveValue += 5;
-                                if (piece[1] === 's' && ty < 5) moveValue += 2;
-                                if (piece[1] === 'k' && Math.abs(tx - 4) <= 1 && ty >= 7) moveValue += 10;
-
-                                validMoves.push({ fromX: x, fromY: y, toX: tx, toY: ty, value: moveValue });
+                                validMoves.push({ fromX: x, fromY: y, toX: tx, toY: ty });
                             }
                         }
                     }
@@ -643,19 +450,13 @@ function aiMoveEasy() {
         }
 
         if (validMoves.length > 0) {
-            validMoves.sort((a, b) => b.value - a.value);
-            const topMoves = validMoves.slice(0, Math.min(5, validMoves.length));
-            const move = topMoves[Math.floor(Math.random() * topMoves.length)];
-
+            const move = validMoves[Math.floor(Math.random() * validMoves.length)];
             const piece = board[move.fromY][move.fromX];
             const target = board[move.toY][move.toX];
-
             board[move.fromY][move.fromX] = '';
             board[move.toY][move.toX] = piece;
 
-            if (target && target.startsWith('r')) {
-                redCaptured.push(target);
-            }
+            if (target && target.startsWith('r')) redCaptured.push(target);
 
             animatePiece(move.fromX, move.fromY, move.toX, move.toY, piece, () => {
                 updateScoreboard();
@@ -670,15 +471,43 @@ function aiMoveEasy() {
     }
 }
 
-// 玩家移動後觸發 AI
-canvas.addEventListener('click', (e) => {
-    if (gameOver) return;
+// AI 移動合法性（黑方）
+function isValidMoveForAI(fromX, fromY, toX, toY) {
+    const piece = board[fromY][fromX];
+    if (!piece || !piece.startsWith('b')) return false;
+    const dx = Math.abs(toX - fromX);
+    const dy = Math.abs(toY - fromY);
+    const target = board[toY][toX];
+
+    if (target && target.startsWith('b')) return false;
+
+    switch (piece[1]) {
+        case 'c': return (dx === 0 || dy === 0) && isPathClear(fromX, fromY, toX, toY);
+        case 'n': return ((dx === 2 && dy === 1) || (dx === 1 && dy === 2)) && !board[dx === 2 ? fromY + (toY > fromY ? 1 : -1) : fromY][dx === 2 ? fromX : fromX + (toX > fromX ? 1 : -1)];
+        case 'b': return dx === 2 && dy === 2 && toY >= 5 && !board[(fromY + toY) / 2][(fromX + toX) / 2];
+        case 'a': return dx === 1 && dy === 1 && toX >= 3 && toX <= 5 && toY >= 7 && toY <= 9;
+        case 'k': return (dx === 0 && dy === 1 || dx === 1 && dy === 0) && toX >= 3 && toX <= 5 && toY >= 7 && toY <= 9;
+        case 'p': return (dx === 0 || dy === 0) && (!target ? isPathClear(fromX, fromY, toX, toY) : countPiecesBetween(fromX, fromY, toX, toY) === 1);
+        case 's': return fromY >= 5 ? (dx === 0 && toY === fromY - 1) : ((dx === 0 && toY === fromY - 1) || (dy === 0 && dx === 1));
+        default: return false;
+    }
+}
+
+// 通用 AI 移動
+function aiMove() {
+    if (difficulty === 'easy') aiMoveEasy();
+    else aiMoveHard();
+}
+
+// 處理移動事件
+function handleMove(e) {
+    if (gameOver || currentPlayer !== 'red') return;
 
     const rect = canvas.getBoundingClientRect();
-    const x = Math.round((e.clientX - rect.left - borderWidth) / cellWidth);
-    const y = Math.round((e.clientY - rect.top - borderWidth) / cellHeight);
+    const x = Math.round((e.x - rect.left - borderWidth) / cellWidth);
+    const y = Math.round((e.y - rect.top - borderWidth) / cellHeight);
 
-    if (currentPlayer !== 'red') return;
+    if (x < 0 || x >= gridWidth || y < 0 || y >= gridHeight) return;
 
     if (!selectedPiece && board[y][x] && board[y][x].startsWith('r')) {
         selectedPiece = { x, y };
@@ -690,9 +519,7 @@ canvas.addEventListener('click', (e) => {
             board[selectedPiece.y][selectedPiece.x] = '';
             board[y][x] = piece;
 
-            if (target && target.startsWith('b')) {
-                blackCaptured.push(target);
-            }
+            if (target && target.startsWith('b')) blackCaptured.push(target);
 
             animatePiece(selectedPiece.x, selectedPiece.y, x, y, piece, () => {
                 updateScoreboard();
@@ -710,7 +537,15 @@ canvas.addEventListener('click', (e) => {
             drawBoard();
         }
     }
-});
+}
+
+// 滑鼠和觸控事件
+canvas.addEventListener('click', (e) => handleMove({ x: e.clientX, y: e.clientY }));
+canvas.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    const touch = e.touches[0];
+    handleMove({ x: touch.clientX, y: touch.clientY });
+}, { passive: false });
 
 // 重置遊戲
 document.getElementById('reset-btn').addEventListener('click', () => {
@@ -723,7 +558,7 @@ document.getElementById('reset-btn').addEventListener('click', () => {
     updateCapturedList();
 });
 
-// 難度選擇按鈕
+// 難度選擇
 document.getElementById('easy-btn').addEventListener('click', () => {
     difficulty = 'easy';
     initializeBoard();
@@ -747,6 +582,9 @@ document.getElementById('hard-btn').addEventListener('click', () => {
     updateCapturedList();
     updateDifficultyDisplay();
 });
+
+// 視窗大小變化
+window.addEventListener('resize', resizeCanvas);
 
 // 初始化
 initializeBoard();
