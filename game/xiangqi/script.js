@@ -16,6 +16,18 @@ let redCaptured = [];
 let blackCaptured = [];
 let difficulty = 'easy'; // 預設簡單模式
 
+// 動態調整Canvas大小
+function resizeCanvas() {
+    const containerWidth = document.querySelector('.board-section').offsetWidth;
+    const maxWidth = Math.min(containerWidth, 480); // 限制最大寬度
+    canvas.width = maxWidth;
+    canvas.height = maxWidth * (gridHeight / gridWidth); // 保持9:10比例
+    borderWidth = canvas.width * 0.04; // 邊框相對調整
+    cellWidth = (canvas.width - 2 * borderWidth) / (gridWidth - 1);
+    cellHeight = (canvas.height - 2 * borderWidth) / (gridHeight - 1);
+    drawBoard(); // 重新繪製棋盤
+}
+
 // 初始化棋盤
 function initializeBoard() {
     board = Array(gridHeight).fill().map(() => Array(gridWidth).fill(''));
@@ -35,6 +47,16 @@ function initializeBoard() {
     updateCapturedList();
     updateDifficultyDisplay();
 }
+
+// 監聽視窗大小變化
+window.addEventListener('resize', resizeCanvas);
+
+// 初始化
+initializeBoard();
+drawBoard();
+updateScoreboard();
+updateCapturedList();
+updateDifficultyDisplay();
 
 // 繪製棋盤
 function drawBoard() {
