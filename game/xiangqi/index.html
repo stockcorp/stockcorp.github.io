@@ -12,8 +12,13 @@
             <h1>象棋 - Xiangqi Master</h1>
         </header>
         <div class="scoreboard">
-            <div class="score-row">
+            <div class="score-column">
                 <h2>計分板</h2>
+                <p>當前玩家：<span id="current-player">紅方</span></p>
+                <p>AI玩家：<span id="ai-player" class="ai-player">黑方</span></p>
+            </div>
+            <div class="score-column">
+                <h3>場上棋數</h3>
                 <div class="score-item">
                     <span class="player">紅方</span>
                     <span class="score" id="red-score">16</span>
@@ -23,18 +28,17 @@
                     <span class="score" id="black-score">16</span>
                 </div>
             </div>
-            <div class="score-row captured-pieces">
+            <div class="score-column captured-pieces">
+                <h3>被吃棋數</h3>
                 <div class="captured-list" id="red-captured">紅方被吃：<span></span></div>
                 <div class="captured-list" id="black-captured">黑方被吃：<span></span></div>
             </div>
-            <div class="score-row difficulty-buttons">
-                <button id="easy-btn">簡單</button>
-                <button id="hard-btn">困難</button>
+            <div class="score-column controls">
+                <div class="difficulty-buttons">
+                    <button id="easy-btn">簡單</button>
+                    <button id="hard-btn">困難</button>
+                </div>
                 <div class="difficulty-display" id="difficulty-display">模式：簡單</div>
-            </div>
-            <div class="score-row game-info">
-                <p>當前玩家：<span id="current-player">紅方</span></p>
-                <p>AI玩家：<span id="ai-player">黑方</span></p>
                 <button id="reset-btn">重新開始</button>
             </div>
         </div>
