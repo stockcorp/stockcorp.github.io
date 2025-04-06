@@ -46,7 +46,7 @@ function initializeBoard() {
     blackCaptured = [];
     updateCapturedList();
     updateDifficultyDisplay();
-    updateScoreboard(); // 初始化時更新計分板
+    updateScoreboard();
     resizeCanvas();
 }
 
@@ -191,8 +191,9 @@ function updateScoreboard() {
     document.getElementById('black-score').textContent = `黑方：${blackScore}`;
     const currentPlayerElement = document.getElementById('current-player');
     currentPlayerElement.textContent = `當前玩家：${currentPlayer === 'red' ? '紅方' : '黑方'}`;
+    // 動態切換類別，確保紅方紅底，黑方黑底
     currentPlayerElement.classList.remove('red', 'black');
-    currentPlayerElement.classList.add(currentPlayer === 'red' ? 'black' : 'red'); // 反轉類別
+    currentPlayerElement.classList.add(currentPlayer === 'red' ? 'red' : 'black');
 }
 
 // 更新被吃棋子記錄
@@ -384,7 +385,8 @@ function checkGameOverBoard(boardState) {
 }
 
 // AI 移動
-if (currentPlayer !== 'black' || gameOver) return;
+function aiMove() {
+    if (currentPlayer !== 'black' || gameOver) return;
 
     let validMoves = [];
     const depth = difficulty === 'easy' ? EASY_DEPTH : HARD_DEPTH;
