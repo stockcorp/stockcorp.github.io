@@ -234,12 +234,13 @@ h1 {
 
 .rules-box {
     padding: 20px;
-    background: #fdf6e3; /* 淺米色，溫暖且獨立 */
+    background: #fdf6e3;
     border-radius: 15px;
     width: 100%;
     max-width: 780px;
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
-    border: 2px solid #d4a576; /* 淡木色邊框 */
+    border: 2px solid #d4a576;
+    margin-top: 20px;
 }
 
 .rules-box h2 {
@@ -249,10 +250,14 @@ h1 {
     text-align: center;
 }
 
-.rules-box p {
+.rules-box .rules-text {
     font-size: 1em;
     line-height: 1.8;
-    color: #6b4e31; /* 柔和棕色文字 */
+    color: #fff; /* 白字 */
+    background: #2f2f2f; /* 黑底 */
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 /* 手機適配 */
@@ -280,5 +285,8 @@ h1 {
     .menu-btn {
         width: 100%;
         text-align: center;
+    }
+    .rules-box .rules-text {
+        font-size: 0.9em; /* 手機上稍減小字體 */
     }
 }
