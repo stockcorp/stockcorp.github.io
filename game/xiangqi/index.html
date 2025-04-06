@@ -11,17 +11,19 @@
         <header>
             <h1>象棋 - Xiangqi Master</h1>
         </header>
-                <div class="scoreboard">
-                    <h3 class="section-title">計分板</h3>
+        <div class="scoreboard">
+            <div class="score-columns">
+                <div class="score-column">
                     <div class="score-item">
-                        <span class="player">當前玩家</span>
-                        <span id="current-player">紅方</span>
+                        <span class="player">計分板 當前玩家</span>
+                        <span class="score" id="current-player">紅方</span>
                     </div>
-                      <div class="score-item">
+                    <div class="score-item">
                         <span class="player">AI玩家</span>
-                        <span id="ai-player" class="ai-player">黑方</span>
+                        <span class="score ai-player" id="ai-player">黑方</span>
                     </div>
-             <div class="score-column">
+                </div>
+                <div class="score-column">
                     <h3 class="section-title">場上棋數</h3>
                     <div class="score-item">
                         <span class="player">紅方</span>
