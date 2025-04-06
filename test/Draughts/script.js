@@ -42,6 +42,16 @@ function initializeBoard() {
     updateCapturedList();
     updateDifficultyDisplay();
     resizeCanvas();
+    checkAudio(); // 檢查音效
+}
+
+function checkAudio() {
+    if (!stoneSound) {
+        console.error('音效元素未找到，請檢查 HTML 中的 <audio id="stone-sound">');
+        return;
+    }
+    stoneSound.load(); // 預載音效
+    stoneSound.onerror = () => console.error('音效檔案載入失敗，請確認 ./img/stone-drop.mp3 路徑正確');
 }
 
 function drawBoard() {
@@ -93,8 +103,12 @@ function animatePiece(fromX, fromY, toX, toY, piece, callback) {
         else if (callback) callback();
     }
 
-    stoneSound.currentTime = 0;
-    stoneSound.play().catch(() => {});
+    if (stoneSound) {
+        stoneSound.currentTime = 0;
+        stoneSound.play().catch(error => console.error('音效播放失敗:', error));
+    } else {
+        console.warn('音效未載入，跳過播放');
+    }
     requestAnimationFrame(step);
 }
 
@@ -395,6 +409,7 @@ function aiMove() {
     board[bestMove.toY][bestMove.toX] = bestMove.toY >= gridSize - 1 ? 'BK' : piece;
     whiteCaptured += bestMove.captures.length;
     whiteScore -= bestMove.captures.length;
+    bestMove.captures.forEach(([cx, cy]) => board[cy][cx] = '');
     animatePiece(bestMove.fromX, bestMove.fromY, bestMove.toX, bestMove.toY, board[bestMove.toY][bestMove.toX], () => {
         updateScoreboard();
         updateCapturedList();
@@ -409,8 +424,8 @@ function aiMove() {
 function handleMove(e) {
     if (gameOver || currentPlayer !== 'white') return;
     const rect = canvas.getBoundingClientRect();
-    const x = Math.floor((e.x - rect.left) / cellSize);
-    const y = Math.floor((e.y - rect.top) / cellSize);
+    const x = Math.floor((e.clientX - rect.left) / cellSize);
+    const y = Math.floor((e.clientY - rect.top) / cellSize);
     if (x < 0 || x >= gridSize || y < 0 || y >= gridSize) return;
     if (selectedPiece) {
         const moves = getValidMoves(selectedPiece.x, selectedPiece.y);
@@ -446,11 +461,11 @@ function handleMove(e) {
     }
 }
 
-canvas.addEventListener('click', e => handleMove({ x: e.clientX, y: e.clientY }));
+canvas.addEventListener('click', e => handleMove(e));
 canvas.addEventListener('touchstart', e => {
     e.preventDefault();
     const touch = e.touches[0];
-    handleMove({ x: touch.clientX, y: touch.clientY });
+    handleMove(touch);
 }, { passive: false });
 
 document.getElementById('reset-btn').addEventListener('click', () => {

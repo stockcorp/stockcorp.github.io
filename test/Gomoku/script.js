@@ -2,7 +2,7 @@ const canvas = document.getElementById('gomoku-board');
 const ctx = canvas.getContext('2d');
 const gridSize = 15;
 let cellSize, board = [];
-let currentPlayer = 'black'; // 黑方先手
+let currentPlayer = 'black'; // AI（黑方）先手
 let whiteScore = 0, blackScore = 0;
 const stoneSound = document.getElementById('stone-sound');
 let gameOver = false;
@@ -28,7 +28,17 @@ function initializeBoard() {
     updateCapturedList();
     updateDifficultyDisplay();
     resizeCanvas();
+    checkAudio(); // 檢查音效
     setTimeout(aiMove, 500); // AI 黑方先動
+}
+
+function checkAudio() {
+    if (!stoneSound) {
+        console.error('音效元素未找到，請檢查 HTML 中的 <audio id="stone-sound">');
+        return;
+    }
+    stoneSound.load(); // 預載音效
+    stoneSound.onerror = () => console.error('音效檔案載入失敗，請確認 ./img/stone-drop.mp3 路徑正確');
 }
 
 function drawBoard() {
@@ -80,8 +90,12 @@ function animateStone(x, y, color, callback) {
         else if (callback) callback();
     }
 
-    stoneSound.currentTime = 0;
-    stoneSound.play().catch(() => {});
+    if (stoneSound) {
+        stoneSound.currentTime = 0;
+        stoneSound.play().catch(error => console.error('音效播放失敗:', error));
+    } else {
+        console.warn('音效未載入，跳過播放');
+    }
     requestAnimationFrame(step);
 }
 
@@ -104,7 +118,7 @@ function updateDifficultyDisplay() {
 }
 
 function isValidMove(x, y) {
-    return !board[y][x] && !gameOver;
+    return !board[y][x] && !gameOver; // 僅檢查格子是否為空
 }
 
 function checkWin(x, y, color) {

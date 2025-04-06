@@ -234,7 +234,7 @@ h1 {
 
 .rules-box {
     padding: 20px;
-    background: #fdf6e3; /* 淺米色背景 */
+    background: #fdf6e3; /* 恢復淺米色背景 */
     border-radius: 15px;
     width: 100%;
     max-width: 780px;
@@ -253,7 +253,7 @@ h1 {
 .rules-box p {
     font-size: 1em;
     line-height: 1.8;
-    color: #6b4e31; /* 柔和棕色文字 */
+    color: #6b4e31; /* 恢復柔和棕色文字 */
     margin: 5px 0; /* 增加段落間距，分行更清晰 */
 }
 
@@ -276,9 +276,6 @@ h1 {
 
 /* 關於頁面專用樣式 */
 .about-section {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
     width: 100%;
     max-width: 780px;
     margin: 20px 0;
@@ -290,14 +287,14 @@ h1 {
 }
 
 .about-content {
-    flex: 2;
-    padding-right: 20px;
+    width: 100%;
 }
 
 .about-content h2 {
     font-size: 1.6em;
     margin-bottom: 15px;
     color: #4a2c00;
+    text-align: center;
 }
 
 .about-content p {
@@ -315,22 +312,6 @@ h1 {
 
 .about-content a:hover {
     color: #d4a017;
-}
-
-.about-image {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.decor-image {
-    width: 100%;
-    max-width: 200px;
-    height: auto;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border: 2px solid #a67c00;
 }
 
 /* 手機適配 */
@@ -366,17 +347,9 @@ h1 {
         font-size: 0.8em; /* 手機上稍減小字體 */
     }
     .about-section {
-        flex-direction: column;
-        text-align: center;
         padding: 15px;
     }
-    .about-content {
-        padding-right: 0;
-    }
-    .about-image {
-        margin-top: 15px;
-    }
-    .decor-image {
-        max-width: 150px;
+    .about-content p {
+        font-size: 0.9em;
     }
 }

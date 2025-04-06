@@ -52,6 +52,16 @@ function initializeBoard() {
     updateCapturedList();
     updateDifficultyDisplay();
     resizeCanvas();
+    checkAudio(); // 檢查音效是否可用
+}
+
+function checkAudio() {
+    if (!stoneSound) {
+        console.error('音效元素未找到，請檢查 HTML 中的 <audio id="stone-sound">');
+        return;
+    }
+    stoneSound.load(); // 預載音效
+    stoneSound.onerror = () => console.error('音效檔案載入失敗，請確認 ./img/stone-drop.mp3 路徑正確');
 }
 
 function drawBoard() {
@@ -124,8 +134,12 @@ function animatePiece(fromX, fromY, toX, toY, piece, callback) {
         else if (callback) callback();
     }
 
-    stoneSound.currentTime = 0;
-    stoneSound.play().catch(() => {});
+    if (stoneSound) {
+        stoneSound.currentTime = 0;
+        stoneSound.play().catch(error => console.error('音效播放失敗:', error));
+    } else {
+        console.warn('音效未載入，跳過播放');
+    }
     requestAnimationFrame(step);
 }
 
@@ -292,6 +306,7 @@ function applyMove(boardState, fromX, fromY, toX, toY) {
 function aiMove() {
     if (gameOver || currentPlayer !== aiColor) return;
     let validMoves = [];
+    const depth = difficulty === 'easy' ? EASY_DEPTH : HARD_DEPTH;
     for (let y = 0; y < gridHeight; y++) {
         for (let x = 0; x < gridWidth; x++) {
             if (!board[y][x].revealed) validMoves.push({ type: 'flip', x, y });
@@ -305,7 +320,6 @@ function aiMove() {
         }
     }
     if (validMoves.length > 0) {
-        const depth = difficulty === 'easy' ? EASY_DEPTH : HARD_DEPTH;
         let bestMove = null, bestScore = -Infinity;
         for (const move of validMoves) {
             const tempBoard = board.map(row => row.map(c => ({ ...c })));
@@ -334,7 +348,10 @@ function aiMove() {
         } else {
             const piece = board[bestMove.fromY][bestMove.fromX].piece;
             board[bestMove.fromY][bestMove.fromX] = { piece: '', revealed: false };
-            if (board[bestMove.toY][bestMove.toX].piece) redCaptured.push(board[bestMove.toY][bestMove.toX].piece);
+            if (board[bestMove.toY][bestMove.toX].piece) {
+                if (aiColor === 'red') blackCaptured.push(board[bestMove.toY][bestMove.toX].piece);
+                else redCaptured.push(board[bestMove.toY][bestMove.toX].piece);
+            }
             board[bestMove.toY][bestMove.toX] = { piece, revealed: true };
             animatePiece(bestMove.fromX, bestMove.fromY, bestMove.toX, bestMove.toY, piece, () => {
                 updateScoreboard();
@@ -346,14 +363,21 @@ function aiMove() {
                 }
             });
         }
+    } else {
+        console.log('AI 無合法移動，遊戲可能結束');
+        if (!checkGameOver()) {
+            currentPlayer = playerColor;
+            document.getElementById('current-player').textContent = `當前玩家：${currentPlayer === 'red' ? '紅方' : '黑方'}`;
+            drawBoard();
+        }
     }
 }
 
 function handleMove(e) {
-    if (gameOver) return;
+    if (gameOver || (playerColor && currentPlayer !== playerColor)) return;
     const rect = canvas.getBoundingClientRect();
-    const x = Math.floor((e.x - rect.left) / cellWidth);
-    const y = Math.floor((e.y - rect.top) / cellHeight);
+    const x = Math.floor((e.clientX - rect.left) / cellWidth);
+    const y = Math.floor((e.clientY - rect.top) / cellHeight);
     if (x < 0 || x >= gridWidth || y < 0 || y >= gridHeight) return;
 
     if (firstMove) {
@@ -362,45 +386,27 @@ function handleMove(e) {
             const piece = board[y][x].piece;
             playerColor = piece === piece.toUpperCase() ? 'red' : 'black';
             aiColor = playerColor === 'red' ? 'black' : 'red';
-            currentPlayer = playerColor;
+            currentPlayer = aiColor; // 第一步翻棋後輪到 AI
             animatePiece(x, y, x, y, piece, () => {
                 updateScoreboard();
                 updateCapturedList();
                 firstMove = false;
-                if (playerColor === 'black') setTimeout(aiMove, 500); // 若玩家翻到黑方，AI 先動
-                else drawBoard();
+                setTimeout(aiMove, 500); // AI 接著行動
             });
         }
-    } else if (currentPlayer === playerColor) {
-        if (selectedPiece) {
-            if (isValidMove(selectedPiece.x, selectedPiece.y, x, y)) {
-                const piece = board[selectedPiece.y][selectedPiece.x].piece;
-                if (board[y][x].piece) {
-                    if (playerColor === 'red') blackCaptured.push(board[y][x].piece);
-                    else redCaptured.push(board[y][x].piece);
-                }
-                board[y][x] = { piece, revealed: true };
-                board[selectedPiece.y][selectedPiece.x] = { piece: '', revealed: false };
-                animatePiece(selectedPiece.x, selectedPiece.y, x, y, piece, () => {
-                    updateScoreboard();
-                    updateCapturedList();
-                    selectedPiece = null;
-                    if (!checkGameOver()) {
-                        currentPlayer = aiColor;
-                        document.getElementById('current-player').textContent = `當前玩家：${currentPlayer === 'red' ? '紅方' : '黑方'}`;
-                        drawBoard();
-                        setTimeout(aiMove, 500);
-                    }
-                });
-            } else {
-                selectedPiece = null;
-                drawBoard();
+    } else if (selectedPiece) {
+        if (isValidMove(selectedPiece.x, selectedPiece.y, x, y)) {
+            const piece = board[selectedPiece.y][selectedPiece.x].piece;
+            if (board[y][x].piece) {
+                if (playerColor === 'red') blackCaptured.push(board[y][x].piece);
+                else redCaptured.push(board[y][x].piece);
             }
-        } else if (!board[y][x].revealed) {
-            board[y][x].revealed = true;
-            animatePiece(x, y, x, y, board[y][x].piece, () => {
+            board[y][x] = { piece, revealed: true };
+            board[selectedPiece.y][selectedPiece.x] = { piece: '', revealed: false };
+            animatePiece(selectedPiece.x, selectedPiece.y, x, y, piece, () => {
                 updateScoreboard();
                 updateCapturedList();
+                selectedPiece = null;
                 if (!checkGameOver()) {
                     currentPlayer = aiColor;
                     document.getElementById('current-player').textContent = `當前玩家：${currentPlayer === 'red' ? '紅方' : '黑方'}`;
@@ -408,18 +414,33 @@ function handleMove(e) {
                     setTimeout(aiMove, 500);
                 }
             });
-        } else if (board[y][x].piece && board[y][x].piece.match(playerColor === 'red' ? /[KABNRPS]/ : /[kabnrps]/)) {
-            selectedPiece = { x, y };
+        } else {
+            selectedPiece = null;
             drawBoard();
         }
+    } else if (!board[y][x].revealed) {
+        board[y][x].revealed = true;
+        animatePiece(x, y, x, y, board[y][x].piece, () => {
+            updateScoreboard();
+            updateCapturedList();
+            if (!checkGameOver()) {
+                currentPlayer = aiColor;
+                document.getElementById('current-player').textContent = `當前玩家：${currentPlayer === 'red' ? '紅方' : '黑方'}`;
+                drawBoard();
+                setTimeout(aiMove, 500);
+            }
+        });
+    } else if (board[y][x].piece && board[y][x].piece.match(playerColor === 'red' ? /[KABNRPS]/ : /[kabnrps]/)) {
+        selectedPiece = { x, y };
+        drawBoard();
     }
 }
 
-canvas.addEventListener('click', e => handleMove({ x: e.clientX, y: e.clientY }));
+canvas.addEventListener('click', e => handleMove(e));
 canvas.addEventListener('touchstart', e => {
     e.preventDefault();
     const touch = e.touches[0];
-    handleMove({ x: touch.clientX, y: touch.clientY });
+    handleMove(touch);
 }, { passive: false });
 
 document.getElementById('reset-btn').addEventListener('click', () => {

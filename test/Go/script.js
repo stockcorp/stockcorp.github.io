@@ -2,7 +2,7 @@ const canvas = document.getElementById('go-board');
 const ctx = canvas.getContext('2d');
 const gridSize = 19;
 let cellSize, board = [];
-let currentPlayer = 'black'; // 黑方先手
+let currentPlayer = 'white'; // 玩家（白方）先手
 let whiteScore = 0, blackScore = 0;
 const stoneSound = document.getElementById('stone-sound');
 let gameOver = false, whiteCaptured = 0, blackCaptured = 0;
@@ -26,13 +26,22 @@ function initializeBoard() {
     whiteCaptured = 0;
     blackCaptured = 0;
     gameOver = false;
-    currentPlayer = 'black'; // AI 先手
+    currentPlayer = 'white'; // 玩家先手
     lastMove = null;
     updateCapturedList();
     updateDifficultyDisplay();
     updateScoreboard();
     resizeCanvas();
-    setTimeout(aiMove, 500); // AI 黑方先動
+    checkAudio(); // 檢查音效
+}
+
+function checkAudio() {
+    if (!stoneSound) {
+        console.error('音效元素未找到，請檢查 HTML 中的 <audio id="stone-sound">');
+        return;
+    }
+    stoneSound.load(); // 預載音效
+    stoneSound.onerror = () => console.error('音效檔案載入失敗，請確認 ./img/stone-drop.mp3 路徑正確');
 }
 
 function drawBoard() {
@@ -95,8 +104,12 @@ function animateStone(x, y, color, callback) {
         else if (callback) callback();
     }
 
-    stoneSound.currentTime = 0;
-    stoneSound.play().catch(() => {});
+    if (stoneSound) {
+        stoneSound.currentTime = 0;
+        stoneSound.play().catch(error => console.error('音效播放失敗:', error));
+    } else {
+        console.warn('音效未載入，跳過播放');
+    }
     requestAnimationFrame(step);
 }
 
@@ -236,12 +249,14 @@ function aiMove() {
         animateStone(x, y, 'B', () => {
             updateScoreboard();
             updateCapturedList();
-            currentPlayer = 'white';
-            document.getElementById('current-player').textContent = '當前玩家：白方';
-            drawBoard();
+            if (!checkGameOver()) {
+                currentPlayer = 'white';
+                document.getElementById('current-player').textContent = '當前玩家：白方';
+                drawBoard();
+            }
         });
     } else {
-        alert('黑方無合法移動，白方勝！');
+        console.log('黑方無合法移動，遊戲結束');
         gameOver = true;
     }
 }
@@ -262,12 +277,24 @@ function handleMove(e) {
         animateStone(x, y, 'W', () => {
             updateScoreboard();
             updateCapturedList();
-            currentPlayer = 'black';
-            document.getElementById('current-player').textContent = '當前玩家：黑方';
-            drawBoard();
-            setTimeout(aiMove, 500);
+            if (!checkGameOver()) {
+                currentPlayer = 'black';
+                document.getElementById('current-player').textContent = '當前玩家：黑方';
+                drawBoard();
+                setTimeout(aiMove, 500);
+            }
         });
     }
+}
+
+function checkGameOver() {
+    // 簡單判斷是否有棋子被完全吃掉，實際圍棋應計算圍地
+    if (whiteScore + blackScore >= gridSize * gridSize) {
+        gameOver = true;
+        alert(whiteScore > blackScore ? '白方勝！' : '黑方勝！');
+        return true;
+    }
+    return false;
 }
 
 canvas.addEventListener('click', e => handleMove(e));
