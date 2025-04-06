@@ -58,28 +58,6 @@ h1 {
     min-width: 0;
 }
 
-.score-column .label {
-    font-size: 1em;
-    margin: 5px 0;
-}
-
-.scoreboard-title {
-    font-size: 1em; /* 調整為與其他文字一致，避免過高 */
-    font-weight: bold;
-    color: #ecf0f1;
-    margin-right: 10px; /* 與「當前玩家」保持適當間距 */
-}
-
-#current-player {
-    font-weight: bold;
-    color: #e74c3c;
-}
-
-.ai-player {
-    font-weight: bold;
-    color: #fff;
-}
-
 .section-title {
     font-size: 1.1em;
     margin: 0 0 10px 0;
@@ -110,6 +88,11 @@ h1 {
     background: #e74c3c;
     padding: 5px 10px;
     border-radius: 5px;
+}
+
+.score-item .ai-player {
+    background: #333; /* AI玩家使用黑色背景，白色文字 */
+    color: #fff;
 }
 
 .captured-list {
