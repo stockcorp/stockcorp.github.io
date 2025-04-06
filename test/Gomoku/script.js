@@ -23,11 +23,12 @@ function initializeBoard() {
     whiteScore = 0;
     blackScore = 0;
     gameOver = false;
-    currentPlayer = 'black';
+    currentPlayer = 'black'; // AI 先手
     updateScoreboard();
     updateCapturedList();
     updateDifficultyDisplay();
     resizeCanvas();
+    setTimeout(aiMove, 500); // AI 黑方先動
 }
 
 function drawBoard() {
@@ -234,9 +235,10 @@ function aiMove() {
 function handleMove(e) {
     if (gameOver || currentPlayer !== 'white') return;
     const rect = canvas.getBoundingClientRect();
-    const x = Math.floor((e.x - rect.left) / cellSize);
-    const y = Math.floor((e.y - rect.top) / cellSize);
+    const x = Math.floor((e.clientX - rect.left) / cellSize);
+    const y = Math.floor((e.clientY - rect.top) / cellSize);
     if (x < 0 || x >= gridSize || y < 0 || y >= gridSize) return;
+
     if (isValidMove(x, y)) {
         board[y][x] = 'W';
         whiteScore++;
@@ -255,11 +257,10 @@ function handleMove(e) {
     }
 }
 
-canvas.addEventListener('click', e => handleMove({ x: e.clientX, y: e.clientY }));
+canvas.addEventListener('click', e => handleMove(e));
 canvas.addEventListener('touchstart', e => {
     e.preventDefault();
-    const touch = e.touches[0];
-    handleMove({ x: touch.clientX, y: touch.clientY });
+    handleMove(e.touches[0]);
 }, { passive: false });
 
 document.getElementById('reset-btn').addEventListener('click', () => {

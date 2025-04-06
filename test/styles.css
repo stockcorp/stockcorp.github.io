@@ -234,7 +234,7 @@ h1 {
 
 .rules-box {
     padding: 20px;
-    background: #fdf6e3; /* 恢復淺米色背景 */
+    background: #fdf6e3; /* 淺米色背景 */
     border-radius: 15px;
     width: 100%;
     max-width: 780px;
@@ -253,40 +253,10 @@ h1 {
 .rules-box p {
     font-size: 1em;
     line-height: 1.8;
-    color: #6b4e31; /* 恢復柔和棕色文字 */
+    color: #6b4e31; /* 柔和棕色文字 */
     margin: 5px 0; /* 增加段落間距，分行更清晰 */
 }
 
-/* 手機適配 */
-@media (max-width: 768px) {
-    .game-section {
-        flex-direction: column;
-        align-items: center;
-    }
-    .ad-left, .ad-right {
-        width: 100%;
-        height: 100px;
-        margin: 15px 0;
-    }
-    .score-columns {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-    .score-column {
-        width: 100%;
-    }
-    .menu {
-        flex-direction: column;
-        gap: 8px;
-    }
-    .menu-btn {
-        width: 100%;
-        text-align: center;
-    }
-    .rules-box p {
-        font-size: 0.9em; /* 手機上稍減小字體 */
-    }
-}
 .footer {
     margin-top: 20px;
     padding: 15px;
@@ -304,39 +274,7 @@ h1 {
     margin: 0;
 }
 
-/* 手機適配 */
-@media (max-width: 768px) {
-    .game-section {
-        flex-direction: column;
-        align-items: center;
-    }
-    .ad-left, .ad-right {
-        width: 100%;
-        height: 100px;
-        margin: 15px 0;
-    }
-    .score-columns {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-    .score-column {
-        width: 100%;
-    }
-    .menu {
-        flex-direction: column;
-        gap: 8px;
-    }
-    .menu-btn {
-        width: 100%;
-        text-align: center;
-    }
-    .rules-box p {
-        font-size: 0.9em;
-    }
-    .footer p {
-        font-size: 0.8em; /* 手機上稍減小字體 */
-    }
-}
+/* 關於頁面專用樣式 */
 .about-section {
     display: flex;
     justify-content: space-between;
@@ -395,7 +333,38 @@ h1 {
     border: 2px solid #a67c00;
 }
 
+/* 手機適配 */
 @media (max-width: 768px) {
+    .game-section {
+        flex-direction: column;
+        align-items: center;
+    }
+    .ad-left, .ad-right {
+        width: 100%;
+        height: 100px;
+        margin: 15px 0;
+    }
+    .score-columns {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .score-column {
+        width: 100%;
+    }
+    .menu {
+        flex-direction: column;
+        gap: 8px;
+    }
+    .menu-btn {
+        width: 100%;
+        text-align: center;
+    }
+    .rules-box p {
+        font-size: 0.9em; /* 手機上稍減小字體 */
+    }
+    .footer p {
+        font-size: 0.8em; /* 手機上稍減小字體 */
+    }
     .about-section {
         flex-direction: column;
         text-align: center;

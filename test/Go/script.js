@@ -1,6 +1,6 @@
 const canvas = document.getElementById('go-board');
 const ctx = canvas.getContext('2d');
-const gridSize = 19; // 調整為 19x19 棋盤
+const gridSize = 19;
 let cellSize, board = [];
 let currentPlayer = 'black'; // 黑方先手
 let whiteScore = 0, blackScore = 0;
@@ -12,7 +12,7 @@ let lastMove = null;
 
 function resizeCanvas() {
     const containerWidth = document.querySelector('.board-section').offsetWidth;
-    const maxWidth = Math.min(containerWidth, 480); // 保持最大寬度 480px
+    const maxWidth = Math.min(containerWidth, 480);
     canvas.width = maxWidth;
     canvas.height = maxWidth;
     cellSize = canvas.width / gridSize;
@@ -26,12 +26,13 @@ function initializeBoard() {
     whiteCaptured = 0;
     blackCaptured = 0;
     gameOver = false;
-    currentPlayer = 'black';
+    currentPlayer = 'black'; // AI 先手
     lastMove = null;
     updateCapturedList();
     updateDifficultyDisplay();
     updateScoreboard();
     resizeCanvas();
+    setTimeout(aiMove, 500); // AI 黑方先動
 }
 
 function drawBoard() {
@@ -50,7 +51,6 @@ function drawBoard() {
         ctx.lineTo(canvas.width - cellSize / 2, i * cellSize + cellSize / 2);
         ctx.stroke();
     }
-    // 19x19 棋盤的星位
     const starPoints = [
         [3, 3], [3, 9], [3, 15],
         [9, 3], [9, 9], [9, 15],
@@ -59,7 +59,7 @@ function drawBoard() {
     ctx.fillStyle = '#4a2c00';
     starPoints.forEach(([x, y]) => {
         ctx.beginPath();
-        ctx.arc(x * cellSize + cellSize / 2, y * cellSize + cellSize / 2, 2, 0, Math.PI * 2); // 星位縮小為 2px
+        ctx.arc(x * cellSize + cellSize / 2, y * cellSize + cellSize / 2, 2, 0, Math.PI * 2);
         ctx.fill();
     });
     for (let y = 0; y < gridSize; y++) {
@@ -71,7 +71,7 @@ function drawBoard() {
 
 function drawStone(x, y, color) {
     ctx.beginPath();
-    ctx.arc(x * cellSize + cellSize / 2, y * cellSize + cellSize / 2, cellSize / 2 - 1, 0, Math.PI * 2); // 縮小棋子半徑
+    ctx.arc(x * cellSize + cellSize / 2, y * cellSize + cellSize / 2, cellSize / 2 - 1, 0, Math.PI * 2);
     ctx.fillStyle = color === 'W' ? '#fff' : '#000';
     ctx.fill();
     ctx.strokeStyle = '#4a2c00';
@@ -177,7 +177,7 @@ function minimax(boardState, depth, alpha, beta, maximizingPlayer) {
                 }
             }
         }
-        return maxEval === -Infinity ? 0 : maxEval; // 若無合法移動，返回 0
+        return maxEval === -Infinity ? 0 : maxEval;
     } else {
         let minEval = Infinity;
         for (let y = 0; y < gridSize; y++) {
@@ -193,7 +193,7 @@ function minimax(boardState, depth, alpha, beta, maximizingPlayer) {
                 }
             }
         }
-        return minEval === Infinity ? 0 : minEval; // 若無合法移動，返回 0
+        return minEval === Infinity ? 0 : minEval;
     }
 }
 
@@ -249,9 +249,10 @@ function aiMove() {
 function handleMove(e) {
     if (gameOver || currentPlayer !== 'white') return;
     const rect = canvas.getBoundingClientRect();
-    const x = Math.floor((e.x - rect.left) / cellSize);
-    const y = Math.floor((e.y - rect.top) / cellSize);
+    const x = Math.floor((e.clientX - rect.left) / cellSize);
+    const y = Math.floor((e.clientY - rect.top) / cellSize);
     if (x < 0 || x >= gridSize || y < 0 || y >= gridSize) return;
+
     if (isValidMove(x, y)) {
         board[y][x] = 'W';
         const captured = removeCapturedStones(board, 'B');
@@ -269,11 +270,10 @@ function handleMove(e) {
     }
 }
 
-canvas.addEventListener('click', e => handleMove({ x: e.clientX, y: e.clientY }));
+canvas.addEventListener('click', e => handleMove(e));
 canvas.addEventListener('touchstart', e => {
     e.preventDefault();
-    const touch = e.touches[0];
-    handleMove({ x: touch.clientX, y: touch.clientY });
+    handleMove(e.touches[0]);
 }, { passive: false });
 
 document.getElementById('reset-btn').addEventListener('click', () => {

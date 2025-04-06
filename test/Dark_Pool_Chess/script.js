@@ -2,13 +2,15 @@ const canvas = document.getElementById('dark-pool-board');
 const ctx = canvas.getContext('2d');
 const gridWidth = 8, gridHeight = 4;
 let cellWidth, cellHeight, board = [];
-let currentPlayer = 'red';
+let currentPlayer = 'red'; // 初始為紅方，翻棋後可能變更
+let playerColor = null, aiColor = null; // 玩家和 AI 的陣營，翻第一枚棋子後確定
 let redScore = 16, blackScore = 16;
 const stoneSound = document.getElementById('stone-sound');
 let selectedPiece = null, gameOver = false;
 let redCaptured = [], blackCaptured = [];
 let difficulty = 'easy';
 const EASY_DEPTH = 3, HARD_DEPTH = 4;
+let firstMove = true; // 標記是否為第一步翻棋
 
 function resizeCanvas() {
     const containerWidth = document.querySelector('.board-section').offsetWidth;
@@ -41,7 +43,10 @@ function initializeBoard() {
     redCaptured = [];
     blackCaptured = [];
     gameOver = false;
-    currentPlayer = 'red';
+    currentPlayer = 'red'; // 玩家先翻棋
+    playerColor = null;
+    aiColor = null;
+    firstMove = true;
     selectedPiece = null;
     updateScoreboard();
     updateCapturedList();
@@ -70,8 +75,8 @@ function drawBoard() {
     for (let y = 0; y < gridHeight; y++) {
         for (let x = 0; x < gridWidth; x++) {
             const { piece, revealed } = board[y][x];
-            if (revealed) drawPiece(x, y, piece);
-            else drawHidden(x, y);
+            if (revealed && piece) drawPiece(x, y, piece);
+            else if (!revealed) drawHidden(x, y);
         }
     }
     if (selectedPiece) {
@@ -112,7 +117,8 @@ function animatePiece(fromX, fromY, toX, toY, piece, callback) {
         opacity = Math.min(elapsed / duration, 1);
         drawBoard();
         ctx.globalAlpha = opacity;
-        drawPiece(toX, toY, piece);
+        if (fromX === toX && fromY === toY) drawPiece(toX, toY, piece); // 翻棋時不移動
+        else drawPiece(toX, toY, piece);
         ctx.globalAlpha = 1;
         if (elapsed < duration) requestAnimationFrame(step);
         else if (callback) callback();
@@ -168,7 +174,7 @@ function canEat(attacker, defender) {
 
 function isValidMove(fromX, fromY, toX, toY) {
     const piece = board[fromY][fromX].piece;
-    if (!piece || !piece.match(/[KABNRPS]/)) return false;
+    if (!piece || (playerColor === 'red' && !piece.match(/[KABNRPS]/)) || (playerColor === 'black' && !piece.match(/[kabnrps]/))) return false;
     const target = board[toY][toX].piece;
     const dx = Math.abs(toX - fromX), dy = Math.abs(toY - fromY);
     if (dx > 1 || dy > 1 || (dx === 0 && dy === 0)) return false;
@@ -199,14 +205,14 @@ function minimax(boardState, depth, alpha, beta, maximizingPlayer) {
         for (let y = 0; y < gridHeight; y++) {
             for (let x = 0; x < gridWidth; x++) {
                 const cell = boardState[y][x];
-                if (!cell.revealed) {
+                if (aiColor && !cell.revealed) {
                     const tempBoard = boardState.map(row => row.map(c => ({ ...c })));
                     tempBoard[y][x].revealed = true;
                     const evalScore = minimax(tempBoard, depth - 1, alpha, beta, false);
                     maxEval = Math.max(maxEval, evalScore);
                     alpha = Math.max(alpha, evalScore);
                     if (beta <= alpha) break;
-                } else if (cell.piece && cell.piece === cell.piece.toLowerCase()) {
+                } else if (cell.piece && cell.piece.match(aiColor === 'red' ? /[KABNRPS]/ : /[kabnrps]/)) {
                     for (let ty = 0; ty < gridHeight; ty++) {
                         for (let tx = 0; tx < gridWidth; tx++) {
                             if (isValidMoveForAI(x, y, tx, ty, boardState)) {
@@ -227,14 +233,14 @@ function minimax(boardState, depth, alpha, beta, maximizingPlayer) {
         for (let y = 0; y < gridHeight; y++) {
             for (let x = 0; x < gridWidth; x++) {
                 const cell = boardState[y][x];
-                if (!cell.revealed) {
+                if (playerColor && !cell.revealed) {
                     const tempBoard = boardState.map(row => row.map(c => ({ ...c })));
                     tempBoard[y][x].revealed = true;
                     const evalScore = minimax(tempBoard, depth - 1, alpha, beta, true);
                     minEval = Math.min(minEval, evalScore);
                     beta = Math.min(beta, evalScore);
                     if (beta <= alpha) break;
-                } else if (cell.piece && cell.piece === cell.piece.toUpperCase()) {
+                } else if (cell.piece && cell.piece.match(playerColor === 'red' ? /[KABNRPS]/ : /[kabnrps]/)) {
                     for (let ty = 0; ty < gridHeight; ty++) {
                         for (let tx = 0; tx < gridWidth; tx++) {
                             if (isValidMove(x, y, tx, ty)) {
@@ -259,12 +265,12 @@ function checkGameOverBoard(boardState) {
 
 function isValidMoveForAI(fromX, fromY, toX, toY, boardState) {
     const piece = boardState[fromY][fromX].piece;
-    if (!piece || !piece.match(/[kabnrps]/)) return false;
+    if (!piece || !piece.match(aiColor === 'red' ? /[KABNRPS]/ : /[kabnrps]/)) return false;
     const target = boardState[toY][toX].piece;
     const dx = Math.abs(toX - fromX), dy = Math.abs(toY - fromY);
     if (dx > 1 || dy > 1 || (dx === 0 && dy === 0)) return false;
     if (!target) return true;
-    if (piece === 'p') {
+    if (piece === 'P' || piece === 'p') {
         const midX = (fromX + toX) / 2, midY = (fromY + toY) / 2;
         return dx === 1 && dy === 1 && boardState[midY][midX].piece && canEat(piece, target);
     }
@@ -284,12 +290,12 @@ function applyMove(boardState, fromX, fromY, toX, toY) {
 }
 
 function aiMove() {
-    if (currentPlayer !== 'black' || gameOver) return;
+    if (gameOver || currentPlayer !== aiColor) return;
     let validMoves = [];
     for (let y = 0; y < gridHeight; y++) {
         for (let x = 0; x < gridWidth; x++) {
             if (!board[y][x].revealed) validMoves.push({ type: 'flip', x, y });
-            else if (board[y][x].piece && board[y][x].piece === board[y][x].piece.toLowerCase()) {
+            else if (board[y][x].piece && board[y][x].piece.match(aiColor === 'red' ? /[KABNRPS]/ : /[kabnrps]/)) {
                 for (let ty = 0; ty < gridHeight; ty++) {
                     for (let tx = 0; tx < gridWidth; tx++) {
                         if (isValidMoveForAI(x, y, tx, ty, board)) validMoves.push({ type: 'move', fromX: x, fromY: y, toX: tx, toY: ty });
@@ -320,8 +326,8 @@ function aiMove() {
                 updateScoreboard();
                 updateCapturedList();
                 if (!checkGameOver()) {
-                    currentPlayer = 'red';
-                    document.getElementById('current-player').textContent = '當前玩家：紅方';
+                    currentPlayer = playerColor;
+                    document.getElementById('current-player').textContent = `當前玩家：${currentPlayer === 'red' ? '紅方' : '黑方'}`;
                     drawBoard();
                 }
             });
@@ -334,8 +340,8 @@ function aiMove() {
                 updateScoreboard();
                 updateCapturedList();
                 if (!checkGameOver()) {
-                    currentPlayer = 'red';
-                    document.getElementById('current-player').textContent = '當前玩家：紅方';
+                    currentPlayer = playerColor;
+                    document.getElementById('current-player').textContent = `當前玩家：${currentPlayer === 'red' ? '紅方' : '黑方'}`;
                     drawBoard();
                 }
             });
@@ -344,47 +350,68 @@ function aiMove() {
 }
 
 function handleMove(e) {
-    if (gameOver || currentPlayer !== 'red') return;
+    if (gameOver) return;
     const rect = canvas.getBoundingClientRect();
     const x = Math.floor((e.x - rect.left) / cellWidth);
     const y = Math.floor((e.y - rect.top) / cellHeight);
     if (x < 0 || x >= gridWidth || y < 0 || y >= gridHeight) return;
-    if (selectedPiece) {
-        if (isValidMove(selectedPiece.x, selectedPiece.y, x, y)) {
-            const piece = board[selectedPiece.y][selectedPiece.x].piece;
-            if (board[y][x].piece) blackCaptured.push(board[y][x].piece);
-            board[y][x] = { piece, revealed: true };
-            board[selectedPiece.y][selectedPiece.x] = { piece: '', revealed: false };
-            animatePiece(selectedPiece.x, selectedPiece.y, x, y, piece, () => {
+
+    if (firstMove) {
+        if (!board[y][x].revealed) {
+            board[y][x].revealed = true;
+            const piece = board[y][x].piece;
+            playerColor = piece === piece.toUpperCase() ? 'red' : 'black';
+            aiColor = playerColor === 'red' ? 'black' : 'red';
+            currentPlayer = playerColor;
+            animatePiece(x, y, x, y, piece, () => {
                 updateScoreboard();
                 updateCapturedList();
+                firstMove = false;
+                if (playerColor === 'black') setTimeout(aiMove, 500); // 若玩家翻到黑方，AI 先動
+                else drawBoard();
+            });
+        }
+    } else if (currentPlayer === playerColor) {
+        if (selectedPiece) {
+            if (isValidMove(selectedPiece.x, selectedPiece.y, x, y)) {
+                const piece = board[selectedPiece.y][selectedPiece.x].piece;
+                if (board[y][x].piece) {
+                    if (playerColor === 'red') blackCaptured.push(board[y][x].piece);
+                    else redCaptured.push(board[y][x].piece);
+                }
+                board[y][x] = { piece, revealed: true };
+                board[selectedPiece.y][selectedPiece.x] = { piece: '', revealed: false };
+                animatePiece(selectedPiece.x, selectedPiece.y, x, y, piece, () => {
+                    updateScoreboard();
+                    updateCapturedList();
+                    selectedPiece = null;
+                    if (!checkGameOver()) {
+                        currentPlayer = aiColor;
+                        document.getElementById('current-player').textContent = `當前玩家：${currentPlayer === 'red' ? '紅方' : '黑方'}`;
+                        drawBoard();
+                        setTimeout(aiMove, 500);
+                    }
+                });
+            } else {
                 selectedPiece = null;
+                drawBoard();
+            }
+        } else if (!board[y][x].revealed) {
+            board[y][x].revealed = true;
+            animatePiece(x, y, x, y, board[y][x].piece, () => {
+                updateScoreboard();
+                updateCapturedList();
                 if (!checkGameOver()) {
-                    currentPlayer = 'black';
-                    document.getElementById('current-player').textContent = '當前玩家：黑方';
+                    currentPlayer = aiColor;
+                    document.getElementById('current-player').textContent = `當前玩家：${currentPlayer === 'red' ? '紅方' : '黑方'}`;
                     drawBoard();
                     setTimeout(aiMove, 500);
                 }
             });
-        } else {
-            selectedPiece = null;
+        } else if (board[y][x].piece && board[y][x].piece.match(playerColor === 'red' ? /[KABNRPS]/ : /[kabnrps]/)) {
+            selectedPiece = { x, y };
             drawBoard();
         }
-    } else if (!board[y][x].revealed) {
-        board[y][x].revealed = true;
-        animatePiece(x, y, x, y, board[y][x].piece, () => {
-            updateScoreboard();
-            updateCapturedList();
-            if (!checkGameOver()) {
-                currentPlayer = 'black';
-                document.getElementById('current-player').textContent = '當前玩家：黑方';
-                drawBoard();
-                setTimeout(aiMove, 500);
-            }
-        });
-    } else if (board[y][x].piece && board[y][x].piece === board[y][x].piece.toUpperCase()) {
-        selectedPiece = { x, y };
-        drawBoard();
     }
 }
 
