@@ -240,40 +240,22 @@
             background-color: transparent;
             border-radius: 4px;
         }
-.share-button {
-    display: inline-block;
-    width: 32px;
-    height: 32px;
-    cursor: pointer;
-    padding: 0;
-    margin: 0 5px;
-    border-radius: 4px;
-    transition: opacity 0.3s ease;
-}
-
-.share-button img {
-    width: 32px;
-    height: 32px;
-    display: block;
-}
-
-.share-button:hover {
-    opacity: 0.8;
-}
-
-/* 品牌顏色 */
-.share-button.facebook img {
-    fill: #1877F2; /* Facebook 藍 */
-}
-.share-button.x img {
-    fill: #000000; /* X 黑 */
-}
-.share-button.instagram img {
-    fill: #E1306C; /* Instagram 主色（簡化，原始為漸層） */
-}
-.share-button.line img {
-    fill: #00B900; /* Line 綠 */
-}
+        .line-button, .facebook-button {
+            width: 32px;
+            height: 32px;
+            background-size: cover;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            margin: 0;
+            border-radius: 4px;
+        }
+        .line-button {
+            background-image: url('https://upload.wikimedia.org/wikipedia/commons/4/41/LINE_logo.svg');
+        }
+        .facebook-button {
+            background-image: url('https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg');
+        }
         footer {
             text-align: center;
             margin-top: 20px;
@@ -548,24 +530,14 @@
             <!-- 計算結果 -->
             <div class="result-section" id="result">
                 <h2>分析報告</h2>
-<div class="button-container">
-    <div class="button-with-text" onclick="downloadResultAsImage()">
-        <button class="download-button" aria-label="下載報告"></button>
-        <span>下載報告</span>
-    </div>
-    <a href="https://www.facebook.com/sharer/sharer.php?u=https://stockcorp.github.io/" target="_blank" class="share-button facebook">
-        <img src="https://cdnjs.cloudflare.com/ajax/libs/simple-icons/10.0.0/facebook.svg" alt="Facebook Share" width="32" height="32">
-    </a>
-    <a href="https://x.com/intent/tweet?url=https://stockcorp.github.io/" target="_blank" class="share-button x">
-        <img src="https://cdnjs.cloudflare.com/ajax/libs/simple-icons/10.0.0/x.svg" alt="X Share" width="32" height="32">
-    </a>
-    <a href="https://www.instagram.com/?url=https://stockcorp.github.io/" target="_blank" class="share-button instagram">
-        <img src="https://cdnjs.cloudflare.com/ajax/libs/simple-icons/10.0.0/instagram.svg" alt="Instagram Share" width="32" height="32">
-    </a>
-    <a href="https://line.me/R/msg/text/?探索SQL資料庫百科全書！%0D%0Ahttps://stockcorp.github.io/" target="_blank" class="share-button line">
-        <img src="https://cdnjs.cloudflare.com/ajax/libs/simple-icons/10.0.0/line.svg" alt="Line Share" width="32" height="32">
-    </a>
-</div>
+                <div class="button-container">
+                    <div class="button-with-text" onclick="downloadResultAsImage()">
+                        <button class="download-button" aria-label="下載報告"></button>
+                        <span>下載報告</span>
+                    </div>
+                    <button class="line-button" onclick="shareToLine()" title="分享到 Line" aria-label="分享到 Line"></button>
+                    <button class="facebook-button" onclick="shareToFacebook()" title="分享到 Facebook" aria-label="分享到 Facebook"></button>
+                </div>
                 <p>利潤: <span id="profit">0</span> 元</p>
                 <p>買入總額: <span id="buy-total">0</span> 元</p>
                 <p>賣出總額: <span id="sell-total">0</span> 元</p>
@@ -736,68 +708,39 @@
                 link.click();
             });
         }
-		// 分享到 Line
-function shareToLine() {
-    captureFullResult(canvas => {
-        const imageData = canvas.toDataURL("image/png");
-        const text = `探索SQL資料庫百科全書！%0D%0Ahttps://stockcorp.github.io/`;
-        const lineUrl = `https://line.me/R/msg/text/?${text}`;
-        window.open(lineUrl, '_blank');
-        alert("Line 不支援直接分享圖片，請下載圖片後手動分享至 Line。圖片已自動下載。");
-        const link = document.createElement("a");
-        link.download = "stock_profit_full_result.png";
-        link.href = imageData;
-        link.click();
-    });
-}
 
-// 分享到 Facebook
-function shareToFacebook() {
-    captureFullResult(canvas => {
-        const imageData = canvas.toDataURL("image/png");
-        const url = "https://stockcorp.github.io/";
-        const encodedUrl = encodeURIComponent(url);
-        const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`;
-        window.open(facebookUrl, '_blank');
-        alert("Facebook 不支援直接分享圖片，請下載圖片後手動上傳至 Facebook。圖片已自動下載。");
-        const link = document.createElement("a");
-        link.download = "stock_profit_full_result.png";
-        link.href = imageData;
-        link.click();
-    });
-}
+        // 分享到 Line
+        function shareToLine() {
+            captureFullResult(canvas => {
+                const imageData = canvas.toDataURL("image/png");
+                const url = "stockcorp.github.io";
+                const text = `我的股票利潤計算結果圖表，請查看：${url}`;
+                const encodedText = encodeURIComponent(text);
+                const lineUrl = `https://line.me/R/msg/text/?${encodedText}`;
+                window.open(lineUrl, '_blank');
+                alert("Line 不支援直接分享圖片，請下載圖片後手動分享至 Line。圖片已自動下載。");
+                const link = document.createElement("a");
+                link.download = "stock_profit_full_result.png";
+                link.href = imageData;
+                link.click();
+            });
+        }
 
-// 分享到 X
-function shareToX() {
-    captureFullResult(canvas => {
-        const imageData = canvas.toDataURL("image/png");
-        const url = "https://stockcorp.github.io/";
-        const encodedUrl = encodeURIComponent(url);
-        const xUrl = `https://x.com/intent/tweet?url=${encodedUrl}`;
-        window.open(xUrl, '_blank');
-        alert("X 不支援直接分享圖片，請下載圖片後手動上傳至 X。圖片已自動下載。");
-        const link = document.createElement("a");
-        link.download = "stock_profit_full_result.png";
-        link.href = imageData;
-        link.click();
-    });
-}
-
-// 分享到 Instagram
-function shareToInstagram() {
-    captureFullResult(canvas => {
-        const imageData = canvas.toDataURL("image/png");
-        const url = "https://stockcorp.github.io/";
-        const encodedUrl = encodeURIComponent(url);
-        const instagramUrl = `https://www.instagram.com/?url=${encodedUrl}`;
-        window.open(instagramUrl, '_blank');
-        alert("Instagram 不支援直接分享圖片，請下載圖片後手動上傳至 Instagram。圖片已自動下載。");
-        const link = document.createElement("a");
-        link.download = "stock_profit_full_result.png";
-        link.href = imageData;
-        link.click();
-    });
-}
+        // 分享到 Facebook
+        function shareToFacebook() {
+            captureFullResult(canvas => {
+                const imageData = canvas.toDataURL("image/png");
+                const url = "stockcorp.github.io";
+                const encodedUrl = encodeURIComponent(url);
+                const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`;
+                window.open(facebookUrl, '_blank');
+                alert("Facebook 不支援直接分享圖片，請下載圖片後手動上傳至 Facebook。圖片已自動下載。");
+                const link = document.createElement("a");
+                link.download = "stock_profit_full_result.png";
+                link.href = imageData;
+                link.click();
+            });
+        }
     </script>
 </body>
 </html>
