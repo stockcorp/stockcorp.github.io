@@ -246,7 +246,7 @@
     height: 32px;
     cursor: pointer;
     padding: 0;
-    margin: 0 5px; /* 按鈕間距 */
+    margin: 0 5px;
     border-radius: 4px;
     transition: opacity 0.3s ease;
 }
@@ -260,12 +260,20 @@
 .share-button:hover {
     opacity: 0.8;
 }
-        .line-button {
-            background-image: url('https://upload.wikimedia.org/wikipedia/commons/4/41/LINE_logo.svg');
-        }
-        .facebook-button {
-            background-image: url('https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg');
-        }
+
+/* 品牌顏色 */
+.share-button.facebook img {
+    fill: #1877F2; /* Facebook 藍 */
+}
+.share-button.x img {
+    fill: #000000; /* X 黑 */
+}
+.share-button.instagram img {
+    fill: #E1306C; /* Instagram 主色（簡化，原始為漸層） */
+}
+.share-button.line img {
+    fill: #00B900; /* Line 綠 */
+}
         footer {
             text-align: center;
             margin-top: 20px;
