@@ -38,6 +38,37 @@
         return gk_fileData[filename] || "";
         }
         </script><script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex));
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><script type="text/javascript">
     var gk_fileData = {};
     function loadFileData(filename) {
       return gk_fileData[filename] || "";
@@ -109,11 +140,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: Arial, 'Noto Sans TC', sans-serif;
             margin: 0;
             padding: 20px;
-            background-color: #1a1a1a;
-            color: #ffffff;
+            background-color: #f7f9fc;
+            color: #333333;
         }
         .container {
             max-width: 1200px;
@@ -134,10 +165,10 @@
             margin-bottom: 20px;
         }
         .site-title {
-            background-color: #2d2d2d;
+            background-color: #ffffff;
             padding: 15px 20px;
             border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(255,255,255,0.1);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             width: fit-content;
             display: flex;
             align-items: center;
@@ -145,8 +176,7 @@
         .site-title h1 {
             font-size: 28px;
             margin: 0;
-            color: #ffffff;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+            color: #2563eb;
             display: inline;
         }
         .header {
@@ -156,7 +186,7 @@
             background-position: center;
             background-repeat: no-repeat;
             border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(255,255,255,0.1);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             position: relative;
             width: 100%;
             height: 120px;
@@ -186,19 +216,51 @@
                 padding: 20px;
             }
         }
+.nav-tabs {
+    display: flex;
+    width: 100%;
+    background-color: transparent;
+    border-radius: 8px;
+    box-shadow: none;
+    margin-bottom: 20px;
+}
+
+.nav-tab {
+    flex: 1;
+    padding: 10px 0;
+    text-align: center;
+    text-decoration: none;
+    background-color: #2563eb; /* 藍色背景 */
+    color: #ffffff; /* 白色文字 */
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 4px; /* 與 <button> 一致 */
+    margin: 4px;
+    border: none;
+    transition: background-color 0.3s ease;
+}
+
+.nav-tab:hover {
+    background-color: #3b82f6; /* 懸停時與 <button> 一致 */
+}
+
+.nav-tab.active {
+    background-color: #1d4ed8; /* 選中時更深的藍色 */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); /* 可選：添加陰影 */
+}
         .marketing-image {
             width: 100%;
             max-width: 1200px;
             height: auto;
             margin: 20px 0;
             border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(255,255,255,0.1);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
         .about-section {
-            background-color: #2d2d2d;
+            background-color: #ffffff;
             padding: 20px;
             border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(255,255,255,0.1);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             text-align: center;
             width: 100%;
             margin: 20px 0;
@@ -206,46 +268,46 @@
         .about-section h1 {
             font-size: 24px;
             margin-bottom: 10px;
-            color: #00ccff;
+            color: #2563eb;
         }
         .about-section p {
             line-height: 1.6;
-            color: #e0e0e0;
+            color: #666666;
         }
         .facebook-comments {
             margin-top: 20px;
             padding: 20px;
-            background-color: #2d2d2d;
+            background-color: #ffffff;
             border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(255,255,255,0.1);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             text-align: center;
         }
         .facebook-comments h2 {
             font-size: 20px;
             margin-bottom: 10px;
-            color: #00ccff;
+            color: #2563eb;
         }
         .guide-section ul, .facebook-comments ul {
             margin-left: 20px;
             line-height: 1.6;
-            color: #e0e0e0;
+            color: #666666;
         }
         .privacy-section {
             margin-top: 20px;
             padding: 20px;
-            background-color: #2d2d2d;
+            background-color: #ffffff;
             border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(255,255,255,0.1);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             text-align: left;
         }
         .privacy-section h1 {
             font-size: 24px;
             margin-bottom: 10px;
-            color: #00ccff;
+            color: #2563eb;
         }
         .facebook-comments p, .privacy-section p {
             line-height: 1.6;
-            color: #e0e0e0;
+            color: #666666;
         }
         .row {
             display: flex;
@@ -254,70 +316,38 @@
             width: 100%;
         }
         a {
-            color: #00ccff;
+            color: #2563eb;
             text-decoration: underline;
             transition: color 0.3s ease;
         }
         a:hover {
-            color: #66e6ff;
+            color: #3b82f6;
             text-decoration: underline;
         }
         a:focus {
-            outline: 2px solid #ffffff;
+            outline: 2px solid #2563eb;
             outline-offset: 2px;
         }
         footer {
             text-align: center;
             margin-top: 20px;
             font-size: 14px;
-            color: #999;
+            color: #666666;
             width: 100%;
         }
-        .nav-buttons {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 15px;
-        }
-        .nav-button {
-            display: flex;
-            align-items: center;
-            background-color: #2d2d2d;
-            padding: 8px 12px;
-            border: 1px solid #666;
-            border-radius: 6px;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            width: 120px;
-            justify-content: center;
-        }
-        .nav-button:hover {
-            background-color: #3a3a3a;
-            border-color: #888;
-            box-shadow: 0 2px 4px rgba(255, 255, 255, 0.1);
-        }
-        .nav-button img {
-            width: 24px;
-            height: 24px;
-            margin-right: 8px;
-        }
-        .nav-button span {
-            color: #ffffff;
-            font-size: 14px;
-            font-weight: 500;
-        }
         .form-section {
-            background-color: #2d2d2d;
+            background-color: #ffffff;
             padding: 20px;
             border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(255,255,255,0.1);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
         .result-section {
             margin-top: 20px;
             padding: 20px;
-            background-color: #2d2d2d;
-            borderսովներս 0px 0px transparent;
+            background-color: #ffffff;
+            border: 0px 0px transparent;
             border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(255,255,255,0.1);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             position: relative;
         }
         .button-container {
@@ -331,59 +361,59 @@
         .guide-section {
             margin-top: 20px;
             padding: 20px;
-            background-color: #2d2d2d;
+            background-color: #ffffff;
             border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(255,255,255,0.1);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             text-align: left;
         }
         .guide-section h1, .privacy-section h1, .facebook-comments h1 {
             font-size: 24px;
             margin-bottom: 10px;
-            color: #00ccff;
+            color: #2563eb;
         }
         .guide-section h2 {
             font-size: 18px;
             margin-top: 20px;
             margin-bottom: 10px;
-            color: #00ccff;
+            color: #2563eb;
         }
         .result-section h2 {
             font-size: 24px;
             margin-bottom: 10px;
-            color: #ffffff;
+            color: #333333;
         }
         .section-title {
             font-size: 24px;
-            color: #ffffff;
+            color: #333333;
             margin-bottom: 10px;
         }
         .guide-section p, .privacy-section p, .facebook-comments p {
             line-height: 1.6;
-            color: #e0e0e0;
+            color: #666666;
         }
         input, select {
             padding: 10px;
             margin: 5px 0;
             width: 100%;
             box-sizing: border-box;
-            background-color: #404040;
-            color: #ffffff;
-            border: 1px solid #666;
+            background-color: #f5f5f5;
+            color: #333333;
+            border: 1px solid #d1d5db;
             border-radius: 4px;
         }
         button {
             padding: 10px;
             margin: 5px 0;
             width: 100%;
-            background-color: #00ccff;
-            color: #000000;
+            background-color: #2563eb;
+            color: #ffffff;
             border: none;
             border-radius: 4px;
             cursor: pointer;
             font-weight: bold;
         }
         button:hover {
-            background-color: #0099cc;
+            background-color: #3b82f6;
         }
         .download-button {
             padding: 0;
@@ -449,7 +479,7 @@
             position: absolute;
             top: -9999px;
             left: -9999px;
-            background-color: #1a1a1a;
+            background-color: #f7f9fc;
             padding: 20px;
             display: flex;
             flex-direction: column;
@@ -465,7 +495,7 @@
             cursor: pointer;
         }
         .button-with-text span {
-            color: #ffffff;
+            color: #333333;
             font-size: 12px;
             line-height: 1;
         }
@@ -478,28 +508,20 @@
             <div class="header"></div>
         </div>
 
+        <!-- 滿版切換按鈕 -->
+        <div class="nav-tabs">
+            <a href="index.html" class="nav-tab">股票利潤計算機</a>
+            <a href="kelly.html" class="nav-tab">凱莉計算機</a>
+            <a href="compound.html" class="nav-tab">複利計算機</a>
+            <a href="loan.html" class="nav-tab">房貸計算機</a>
+            <a href="car.html" class="nav-tab">車貸計算機</a>
+            <a href="about.html" class="nav-tab">關於</a>
+        </div>
+
         <!-- 左側欄：標題與計算區域 -->
         <div class="left-column">
-            <!-- 導航按鈕與標題 -->
+            <!-- 標題 -->
             <div class="header-section">
-                <div class="nav-buttons">
-                    <a href="https://stockcorp.github.io/" class="nav-button">
-                        <img src="/img/home_button.jpg" alt="首頁圖標">
-                        <span>首頁</span>
-                    </a>
-                    <a href="compound.html" class="nav-button">
-                        <img src="/img/compound_button.jpg" alt="複利計算機圖標">
-                        <span>複利<br>計算機</span>
-                    </a>
-					<a href="loan.html" class="nav-button">
-                        <img src="/img/loan_button.jpg" alt="房貸計算機圖標">
-                        <span>房貸<br>計算機</span>
-                    </a>
-                    <a href="about.html" class="nav-button">
-                        <img src="/img/about_button.jpg" alt="關於圖標">
-                        <span>關於</span>
-                    </a>
-                </div>
                 <div class="site-title">
                     <img src="/img/icon1.jpg" alt="股市企業研究院圖標" style="vertical-align: middle; margin-right: 10px; height: 28px; width: auto;">
                     <h1>stockcorp.github.io</h1>
@@ -684,7 +706,7 @@
                 <h1>隱私權政策</h1>
                 <p>我們的應用程式不會收集個人資訊。</p>
                 <p>理財工具系列作品由 <a href="https://www.youtube.com/@吉米理財學堂" target="_blank">吉米理財學堂</a> 授權 股市企業研究院 開發</p>
-                <p>如有任何問題，請聯絡我們：<a href="/cdn-cgi/l/email-protection#fdc5dfd2d3888c8dfddad0dcd4d193ded2d0"><span class="__cf_email__" data-cfemail="6e560c010a5155542e0903060e0b4c010d0f">[email&#160;protected]</span></a></p>
+                <p>如有任何問題，請聯絡我們：<a href="mailto:xbon510@gmail.com">xbon510@gmail.com</a></p>
             </div>
         </div>
 
@@ -845,7 +867,9 @@
             });
         }
     </script>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
     <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9301fb448dfbbffe',t:'MTc0NDYyMDg5OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
     <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'93506324ca07bcf5',t:'MTc0NTQ0MzA0Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9353ab797c48bfdd',t:'MTc0NTQ3NzQ2Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
 </body>
 </html>

@@ -38,6 +38,37 @@
         return gk_fileData[filename] || "";
         }
         </script><script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex));
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><script type="text/javascript">
     var gk_fileData = {};
     function loadFileData(filename) {
       return gk_fileData[filename] || "";
@@ -108,13 +139,15 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <!-- ECharts 庫用於圓環圖 -->
     <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <!-- 載入 Google Fonts 支援中文 -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: Arial, 'Noto Sans TC', sans-serif;
             margin: 0;
             padding: 20px;
-            background-color: #1a1a1a;
-            color: #ffffff;
+            background-color: #f7f9fc;
+            color: #333333;
         }
         .container {
             max-width: 1200px;
@@ -135,10 +168,10 @@
             margin-bottom: 20px;
         }
         .site-title {
-            background-color: #2d2d2d;
+            background-color: #ffffff;
             padding: 15px 20px;
             border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(255,255,255,0.1);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             width: fit-content;
             display: flex;
             align-items: center;
@@ -146,8 +179,7 @@
         .site-title h1 {
             font-size: 28px;
             margin: 0;
-            color: #ffffff;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+            color: #2563eb;
             display: inline;
         }
         .header {
@@ -157,7 +189,7 @@
             background-position: center;
             background-repeat: no-repeat;
             border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(255,255,255,0.1);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             position: relative;
             width: 100%;
             height: 120px;
@@ -187,24 +219,66 @@
                 padding: 20px;
             }
         }
+ .nav-tabs {
+    display: flex;
+    width: 100%;
+    background-color: transparent;
+    border-radius: 8px;
+    box-shadow: none;
+    margin-bottom: 20px;
+}
+
+.nav-tab {
+    flex: 1;
+    padding: 10px 0;
+    text-align: center;
+    text-decoration: none;
+    background-color: #2563eb; /* 藍色背景 */
+    color: #ffffff; /* 白色文字 */
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 4px; /* 與 <button> 一致 */
+    margin: 4px;
+    border: none;
+    transition: background-color 0.3s ease;
+}
+
+.nav-tab:hover {
+    background-color: #3b82f6; /* 懸停時與 <button> 一致 */
+}
+
+.nav-tab.active {
+    background-color: #1d4ed8; /* 選中時更深的藍色 */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); /* 可選：添加陰影 */
+}
         .form-section {
-            background-color: #2d2d2d;
+            background-color: #ffffff;
             padding: 20px;
             border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(255,255,255,0.1);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
-        .radio-group {
+        .tab-buttons {
             display: flex;
-            gap: 15px;
+            gap: 10px;
             margin-bottom: 10px;
         }
-        .radio-group label {
-            display: flex;
-            align-items: center;
-            color: #e0e0e0;
+        .tab-button {
+            padding: 8px 16px;
+            background-color: #f5f5f5;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            color: #333333;
+            cursor: pointer;
+            font-size: 16px;
         }
-        .radio-group input {
-            margin-right: 5px;
+        .tab-button.active {
+            background-color: #2563eb;
+            color: #ffffff;
+            border-color: #2563eb;
+        }
+        .tab-button:hover {
+            background-color: #e6efff;
+            color: #2563eb;
         }
         .input-custom {
             display: flex;
@@ -215,14 +289,14 @@
         }
         .input-custom span {
             margin-left: 5px;
-            color: #e0e0e0;
+            color: #666666;
         }
         .result-section {
             margin-top: 20px;
             padding: 20px;
-            background-color: #2d2d2d;
+            background-color: #ffffff;
             border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(255,255,255,0.1);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             position: relative;
         }
         .charts-container {
@@ -232,7 +306,7 @@
         }
         .chart {
             width: 100%;
-            height: 220px;
+            height: 250px;
         }
         .modal {
             display: none;
@@ -246,31 +320,31 @@
             background-color: rgba(0,0,0,0.5);
         }
         .modal-content {
-            background-color: #2d2d2d;
+            background-color: #ffffff;
             margin: 15% auto;
             padding: 20px;
-            border: 1px solid #666;
+            border: 1px solid #d1d5db;
             border-radius: 8px;
             width: 80%;
             max-width: 600px;
-            color: #e0e0e0;
+            color: #333333;
         }
         .modal-header, .modal-body {
             padding: 10px;
         }
         .modal-header h4 {
             margin: 0;
-            color: #00ccff;
+            color: #2563eb;
         }
         .close {
-            color: #e0e0e0;
+            color: #666666;
             float: right;
             font-size: 28px;
             font-weight: bold;
             cursor: pointer;
         }
         .close:hover {
-            color: #ffffff;
+            color: #333333;
         }
         .modal-table table {
             width: 100%;
@@ -279,11 +353,11 @@
         .modal-table th, .modal-table td {
             padding: 8px;
             text-align: right;
-            border-bottom: 1px solid #666;
+            border-bottom: 1px solid #d1d5db;
         }
         .modal-table th {
-            background-color: #3a3a3a;
-            color: #00ccff;
+            background-color: #f5f5f5;
+            color: #2563eb;
         }
         .button-container {
             position: absolute;
@@ -296,55 +370,55 @@
         .guide-section {
             margin-top: 20px;
             padding: 20px;
-            background-color: #2d2d2d;
+            background-color: #ffffff;
             border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(255,255,255,0.1);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             text-align: left;
         }
         .guide-section h1, .privacy-section h1 {
             font-size: 24px;
             margin-bottom: 10px;
-            color: #00ccff;
+            color: #2563eb;
         }
         .guide-section h2 {
             font-size: 18px;
             margin-top: 20px;
             margin-bottom: 10px;
-            color: #00ccff;
+            color: #2563eb;
         }
         .result-section h2 {
             font-size: 24px;
             margin-bottom: 10px;
-            color: #ffffff;
+            color: #333333;
         }
         .facebook-comments {
             margin-top: 20px;
             padding: 20px;
-            background-color: #2d2d2d;
+            background-color: #ffffff;
             border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(255,255,255,0.1);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             text-align: center;
         }
         .facebook-comments h2 {
             font-size: 20px;
             margin-bottom: 10px;
-            color: #00ccff;
+            color: #2563eb;
         }
         .guide-section p, .privacy-section p, .facebook-comments p {
             line-height: 1.6;
-            color: #e0e0e0;
+            color: #666666;
         }
         .guide-section ul {
             margin-left: 20px;
             line-height: 1.6;
-            color: #e0e0e0;
+            color: #666666;
         }
         .privacy-section {
             margin-top: 20px;
             padding: 20px;
-            background-color: #2d2d2d;
+            background-color: #ffffff;
             border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(255,255,255,0.1);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             text-align: left;
         }
         input, select {
@@ -352,24 +426,24 @@
             margin: 5px 0;
             width: 100%;
             box-sizing: border-box;
-            background-color: #404040;
-            color: #ffffff;
-            border: 1px solid #666;
+            background-color: #f5f5f5;
+            color: #333333;
+            border: 1px solid #d1d5db;
             border-radius: 4px;
         }
         button {
             padding: 10px;
             margin: 5px 0;
             width: 100%;
-            background-color: #00ccff;
-            color: #000000;
+            background-color: #2563eb;
+            color: #ffffff;
             border: none;
             border-radius: 4px;
             cursor: pointer;
             font-weight: bold;
         }
         button:hover {
-            background-color: #0099cc;
+            background-color: #3b82f6;
         }
         .download-button {
             padding: 0;
@@ -400,22 +474,23 @@
             text-align: center;
             margin-top: 20px;
             font-size: 14px;
-            color: #999;
+            color: #666666;
+            width: 100%;
         }
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 10px;
-            color: #e0e0e0;
+            color: #333333;
         }
         th, td {
             padding: 8px;
             text-align: right;
-            border-bottom: 1px solid #666;
+            border-bottom: 1px solid #d1d5db;
         }
         th {
-            background-color: #3a3a3a;
-            color: #00ccff;
+            background-color: #f5f5f5;
+            color: #2563eb;
         }
         .row {
             display: flex;
@@ -423,11 +498,17 @@
             align-items: center;
         }
         a {
-            color: #00ccff;
-            text-decoration: none;
+            color: #2563eb;
+            text-decoration: underline;
+            transition: color 0.3s ease;
         }
         a:hover {
+            color: #3b82f6;
             text-decoration: underline;
+        }
+        a:focus {
+            outline: 2px solid #2563eb;
+            outline-offset: 2px;
         }
         .highlight-red {
             background-color: #ff4444;
@@ -445,7 +526,7 @@
             cursor: pointer;
         }
         .button-with-text span {
-            color: #ffffff;
+            color: #333333;
             font-size: 12px;
             line-height: 1;
         }
@@ -453,44 +534,12 @@
             position: absolute;
             top: -9999px;
             left: -9999px;
-            background-color: #1a1a1a;
+            background-color: #f7f9fc;
             padding: 20px;
             display: flex;
             flex-direction: column;
             gap: 20px;
             width: 300px;
-        }
-        .nav-buttons {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 15px;
-        }
-        .nav-button {
-            display: flex;
-            align-items: center;
-            background-color: #2d2d2d;
-            padding: 8px 12px;
-            border: 1px solid #666;
-            border-radius: 6px;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            width: 120px;
-            justify-content: center;
-        }
-        .nav-button:hover {
-            background-color: #3a3a3a;
-            border-color: #888;
-            box-shadow: 0 2px 4px rgba(255, 255, 255, 0.1);
-        }
-        .nav-button img {
-            width: 24px;
-            height: 24px;
-            margin-right: 8px;
-        }
-        .nav-button span {
-            color: #ffffff;
-            font-size: 14px;
-            font-weight: 500;
         }
         .error {
             color: #ff4444;
@@ -506,28 +555,20 @@
             <div class="header"></div>
         </div>
 
+        <!-- 滿版切換按鈕 -->
+        <div class="nav-tabs">
+            <a href="index.html" class="nav-tab">股票利潤計算機</a>
+            <a href="kelly.html" class="nav-tab">凱莉計算機</a>
+            <a href="compound.html" class="nav-tab">複利計算機</a>
+            <a href="loan.html" class="nav-tab">房貸計算機</a>
+            <a href="car.html" class="nav-tab">車貸計算機</a>
+            <a href="about.html" class="nav-tab">關於</a>
+        </div>
+
         <!-- 左側欄：標題與計算區域 -->
         <div class="left-column">
-            <!-- 導航按鈕與標題 -->
+            <!-- 標題 -->
             <div class="header-section">
-                <div class="nav-buttons">
-                    <a href="index.html" class="nav-button">
-                        <img src="/img/home_button.jpg" alt="首頁圖標">
-                        <span>首頁</span>
-                    </a>
-                    <a href="compound.html" class="nav-button">
-                        <img src="/img/compound_button.jpg" alt="複利計算機圖標">
-                        <span>複利<br>計算機</span>
-                    </a>
-                    <a href="loan.html" class="nav-button">
-                        <img src="/img/loan_button.jpg" alt="房貸計算機圖標">
-                        <span>房貸<br>計算機</span>
-                    </a>
-                    <a href="about.html" class="nav-button">
-                        <img src="/img/about_button.jpg" alt="關於圖標">
-                        <span>關於</span>
-                    </a>
-                </div>
                 <div class="site-title">
                     <img src="/img/icon1.jpg" alt="股市企業研究院圖標" style="vertical-align: middle; margin-right: 10px; height: 28px; width: auto;">
                     <h1>stockcorp.github.io</h1>
@@ -540,13 +581,9 @@
                 <hr>
                 <div class="input-item">
                     <label class="text">貸款類型</label>
-                    <div class="radio-group">
-                        <label>
-                            <input type="radio" name="kind" value="1" checked onclick="updateForm()"> 一般貸款
-                        </label>
-                        <label>
-                            <input type="radio" name="kind" value="2" onclick="updateForm()"> 青安貸款
-                        </label>
+                    <div class="tab-buttons">
+                        <button class="tab-button active" onclick="switchLoanType('general')">一般貸款</button>
+                        <button class="tab-button" onclick="switchLoanType('youth')">青安貸款</button>
                     </div>
                 </div>
                 <div class="input-item">
@@ -641,7 +678,7 @@
             <div id="interest-modal" class="modal">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <span class="close" onclick="closeModal('interest-modal')">&times;</span>
+                        <span class="close" onclick="closeModal('interest-modal')">×</span>
                         <h4>本息攤還每月還款明細</h4>
                     </div>
                     <div class="modal-body modal-table">
@@ -661,7 +698,7 @@
             <div id="capital-modal" class="modal">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <span class="close" onclick="closeModal('capital-modal')">&times;</span>
+                        <span class="close" onclick="closeModal('capital-modal')">×</span>
                         <h4>本金攤還每月還款明細</h4>
                     </div>
                     <div class="modal-body modal-table">
@@ -737,7 +774,7 @@
                 <h1>隱私權政策</h1>
                 <p>我們的應用程式不會收集個人資訊。</p>
                 <p>理財工具系列作品由 <a href="https://www.youtube.com/@吉米理財學堂" target="_blank">吉米理財學堂</a> 授權 股市企業研究院 開發</p>
-                <p>如有任何問題，請聯絡我們：<a href="/cdn-cgi/l/email-protection#b68094999c9899b6919b979f9ad89b9795"><span class="__cf_email__" data-cfemail="b78185888d8988b7909a969e9bd9989496">[email&#160;protected]</span></a></p>
+                <p>如有任何問題，請聯絡我們：<a href="mailto:xbon510@gmail.com">xbon510@gmail.com</a></p>
             </div>
         </div>
 
@@ -752,6 +789,25 @@
         // 格式化數字為千位分隔符
         function formatNumber(num) {
             return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+
+        // 切換貸款類型
+        function switchLoanType(type) {
+            const generalButton = document.querySelector(".tab-buttons .tab-button:nth-child(1)");
+            const youthButton = document.querySelector(".tab-buttons .tab-button:nth-child(2)");
+            const rateInput = document.getElementById("rate");
+
+            if (type === "general") {
+                generalButton.classList.add("active");
+                youthButton.classList.remove("active");
+                rateInput.value = 2; // 恢復用戶輸入的利率
+                rateInput.disabled = false;
+            } else {
+                generalButton.classList.remove("active");
+                youthButton.classList.add("active");
+                rateInput.value = 1.19; // 青安貸款預設利率
+                rateInput.disabled = true;
+            }
         }
 
         // 表單顯示邏輯
@@ -839,7 +895,7 @@
         function calculateLoan() {
             if (!validateInputs()) return;
 
-            const kind = document.querySelector('input[name="kind"]:checked').value;
+            const kind = document.querySelector(".tab-buttons .tab-button.active").textContent === "一般貸款" ? "1" : "2";
             const method = document.getElementById("method").value;
             let principal = method === "1" ? parseFloat(document.getElementById("price").value) * 10000 : 
                            (parseFloat(document.getElementById("total-price").value) - parseFloat(document.getElementById("first-price").value)) * 10000;
@@ -904,8 +960,10 @@
             document.getElementById("interest-capital").innerText = formatNumber(Math.round(totalInterestCapital));
             document.getElementById("total-capital").innerText = formatNumber(Math.round(principal + totalInterestCapital));
 
-            // 更新圓環圖
-            initCharts(principal, totalInterestAlike, totalInterestCapital);
+            // 更新圓環圖（延遲執行以確保 DOM 準備好）
+            setTimeout(() => {
+                initCharts(principal, totalInterestAlike, totalInterestCapital);
+            }, 100);
 
             // 更新明細表格
             updateTable("interest-table", interestAlikeData);
@@ -914,32 +972,73 @@
 
         // 初始化圓環圖
         function initCharts(principal, totalInterestAlike, totalInterestCapital) {
+            // 檢查 ECharts 是否可用
+            if (typeof echarts === 'undefined') {
+                console.error('ECharts 未正確加載');
+                return;
+            }
+
+            // 四捨五入利息數字
+            totalInterestAlike = Math.round(totalInterestAlike);
+            totalInterestCapital = Math.round(totalInterestCapital);
+            principal = Math.round(principal);
+
             const interestChart = echarts.init(document.getElementById("interest-chart"));
             const capitalChart = echarts.init(document.getElementById("capital-chart"));
 
             const interestOption = {
-                title: { text: '本息攤還', left: 'center', textStyle: { color: '#00ccff' } },
+                title: {
+                    text: '本息攤還',
+                    left: 'center',
+                    textStyle: {
+                        color: '#2563eb',
+                        fontFamily: "'Noto Sans TC', Arial, sans-serif"
+                    }
+                },
                 series: [{
                     type: 'pie',
                     radius: ['40%', '70%'],
                     data: [
-                        { value: principal, name: '本金', itemStyle: { color: '#00ccff' } },
+                        { value: principal, name: '本金', itemStyle: { color: '#2563eb' } },
                         { value: totalInterestAlike, name: '利息', itemStyle: { color: '#ff4444' } }
                     ],
-                    label: { show: true, formatter: '{b}: {c}元' }
+                    label: {
+                        show: true,
+                        position: 'inside',
+                        formatter: function(params) {
+                            return params.name + ': ' + formatNumber(params.value) + '元';
+                        },
+                        fontSize: 12,
+                        fontFamily: "'Noto Sans TC', Arial, sans-serif"
+                    }
                 }]
             };
 
             const capitalOption = {
-                title: { text: '本金攤還', left: 'center', textStyle: { color: '#00ccff' } },
+                title: {
+                    text: '本金攤還',
+                    left: 'center',
+                    textStyle: {
+                        color: '#2563eb',
+                        fontFamily: "'Noto Sans TC', Arial, sans-serif"
+                    }
+                },
                 series: [{
                     type: 'pie',
                     radius: ['40%', '70%'],
                     data: [
-                        { value: principal, name: '本金', itemStyle: { color: '#00ccff' } },
+                        { value: principal, name: '本金', itemStyle: { color: '#2563eb' } },
                         { value: totalInterestCapital, name: '利息', itemStyle: { color: '#ff4444' } }
                     ],
-                    label: { show: true, formatter: '{b}: {c}元' }
+                    label: {
+                        show: true,
+                        position: 'inside',
+                        formatter: function(params) {
+                            return params.name + ': ' + formatNumber(params.value) + '元';
+                        },
+                        fontSize: 12,
+                        fontFamily: "'Noto Sans TC', Arial, sans-serif"
+                    }
                 }]
             };
 
@@ -1054,7 +1153,12 @@
         document.getElementById("total-price").addEventListener("input", updateFirstRate);
         document.getElementById("first-price").addEventListener("input", updateFirstRate);
         document.getElementById("first-rate").addEventListener("input", updateFirstPrice);
+
+        // 確保 DOM 準備好後執行初始化
+        document.addEventListener("DOMContentLoaded", function() {
+            updateForm();
+        });
     </script>
-    <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'935080775847495c',t:'MTc0NTQ0NDI0My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
 </body>
 </html>
