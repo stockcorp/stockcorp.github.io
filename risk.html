@@ -49,6 +49,24 @@
       gtag('config', 'G-Q32FFR42XT');
     </script>
 
+    <!-- Facebook SDK -->
+    <script>
+      window.fbAsyncInit = function() {
+        FB.init({
+          appId      : 'YOUR_APP_ID', // 請替換為您的 Facebook App ID
+          xfbml      : true,
+          version    : 'v18.0'
+        });
+      };
+      (function(d, s, id){
+         var js, fjs = d.getElementsByTagName(s)[0];
+         if (d.getElementById(id)) {return;}
+         js = d.createElement(s); js.id = id;
+         js.src = "https://connect.facebook.net/zh_TW/sdk.js";
+         fjs.parentNode.insertBefore(js, fjs);
+       }(document, 'script', 'facebook-jssdk'));
+    </script>
+
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
@@ -312,6 +330,7 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             padding: 20px;
             text-align: left;
+            margin-bottom: 20px;
         }
         .rules-section h2 {
             font-size: 24px;
@@ -329,6 +348,25 @@
             font-style: italic;
             color: #ff4444;
             margin-top: 10px;
+        }
+        /* Facebook 留言板 */
+        .facebook-comments {
+            width: 100%;
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .facebook-comments h2 {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: #2563eb;
+        }
+        .facebook-comments p {
+            line-height: 1.6;
+            color: #666666;
         }
         footer {
             text-align: center;
@@ -428,10 +466,17 @@
                         <li>三張圖表分別顯示 14 天、90 天和 250 天 RSI。</li>
                         <li>每種資產用不同顏色顯示，可點擊圖例單獨關閉某資產的顯示（例如關閉比特幣）。</li>
                         <li>圖例獨立控制：點選 14 天圖表的某資產（如比特幣）只影響 14 天圖表，不影響 90 天和 250 天圖表。</li>
+                        <li>橫軸顯示真實日期，14 天圖表顯示最近 14 天，90 天圖表顯示最近 90 天，250 天圖表顯示最近 250 天。</li>
                     </ul>
                 </li>
             </ul>
             <p class="disclaimer">本站全部資訊僅供參考用，請勿用於實際投資，投資還是要自行判斷決策。</p>
+        </div>
+
+        <!-- Facebook 留言板 -->
+        <div class="facebook-comments">
+            <h2>留言板</h2>
+            <div class="fb-comments" data-href="https://stockcorp.github.io/risk.html" data-width="100%" data-numposts="5"></div>
         </div>
 
         <!-- 頁腳 -->
@@ -514,34 +559,34 @@
                     const rsi90 = calculateRSI(prices, 90);
                     const rsi250 = calculateRSI(prices, 250);
 
-                    // 儲存 RSI 值和日期（確保日期與 RSI 值對應）
-                    rsiData['14'].values[asset.name] = rsi14.slice(-100);
-                    rsiData['90'].values[asset.name] = rsi90.slice(-100);
-                    rsiData['250'].values[asset.name] = rsi250.slice(-100);
+                    // 儲存 RSI 值和日期（根據周期切割）
+                    rsiData['14'].values[asset.name] = rsi14.slice(-14); // 最近 14 天
+                    rsiData['90'].values[asset.name] = rsi90.slice(-90); // 最近 90 天
+                    rsiData['250'].values[asset.name] = rsi250.slice(-250); // 最近 250 天
 
                     // 儲存日期（只需儲存一次）
                     if (rsiData['14'].dates.length === 0) {
-                        rsiData['14'].dates = dates.slice(-100);
+                        rsiData['14'].dates = dates.slice(-14);
                     }
                     if (rsiData['90'].dates.length === 0) {
-                        rsiData['90'].dates = dates.slice(-100);
+                        rsiData['90'].dates = dates.slice(-90);
                     }
                     if (rsiData['250'].dates.length === 0) {
-                        rsiData['250'].dates = dates.slice(-100);
+                        rsiData['250'].dates = dates.slice(-250);
                     }
                 } catch (error) {
                     console.error(`抓取 ${asset.name} 數據失敗:`, error.message);
-                    rsiData['14'].values[asset.name] = new Array(100).fill(0);
-                    rsiData['90'].values[asset.name] = new Array(100).fill(0);
-                    rsiData['250'].values[asset.name] = new Array(100).fill(0);
+                    rsiData['14'].values[asset.name] = new Array(14).fill(0);
+                    rsiData['90'].values[asset.name] = new Array(90).fill(0);
+                    rsiData['250'].values[asset.name] = new Array(250).fill(0);
                     if (rsiData['14'].dates.length === 0) {
-                        rsiData['14'].dates = Array.from({ length: 100 }, (_, i) => `D-${99 - i}`);
+                        rsiData['14'].dates = Array.from({ length: 14 }, (_, i) => `D-${13 - i}`);
                     }
                     if (rsiData['90'].dates.length === 0) {
-                        rsiData['90'].dates = Array.from({ length: 100 }, (_, i) => `D-${99 - i}`);
+                        rsiData['90'].dates = Array.from({ length: 90 }, (_, i) => `D-${89 - i}`);
                     }
                     if (rsiData['250'].dates.length === 0) {
-                        rsiData['250'].dates = Array.from({ length: 100 }, (_, i) => `D-${99 - i}`);
+                        rsiData['250'].dates = Array.from({ length: 250 }, (_, i) => `D-${249 - i}`);
                     }
                 }
             }
@@ -550,8 +595,10 @@
             adjustAllocation();
 
             // 初始化圖表
-            initPieChart();
-            initRSICharts();
+            setTimeout(() => {
+                initPieChart();
+                initRSICharts();
+            }, 100); // 確保 DOM 載入完成
         }
 
         // 計算 RSI
