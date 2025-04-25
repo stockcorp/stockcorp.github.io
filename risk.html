@@ -134,7 +134,7 @@
             "@type": "Organization",
             "name": "吉米理財學堂",
             "url": "https://www.youtube.com/@吉米理財學堂",
-            "email": "xbon510@gmail.com"
+            "email": "x hardnessbon510@gmail.com"
         },
         "applicationCategory": "Finance"
     }
@@ -513,7 +513,7 @@
                 </li>
                 <li><strong>RSI 圖表</strong>：
                     <ul>
-                        <li>包含 7 種資產：VT、S&P500、NASDAQ、DIA、AGG、黃金SPDR、比特幣。</li>
+                        <li>包含 5 種資產：VT、S&P500、AGG、黃金SPDR、比特幣。</li>
                         <li>圖表顯示 14 天 RSI。</li>
                         <li>每種資產用不同顏色顯示，可點擊圖例單獨關閉某資產的顯示（例如關閉比特幣）。</li>
                         <li>橫軸顯示真實日期，14 天圖表顯示最近 14 天。</li>
@@ -539,12 +539,10 @@
         // Alpha Vantage API Key
         const apiKey = 'A5XBYNGDTUZ4ZRWK';
 
-        // 資產清單與對應的 Alpha Vantage 符號
+        // 資產清單與對應的 Alpha Vantage 符號（移除 NASDAQ 和 DIA）
         const assets = [
             { name: 'VT', symbol: 'VT', category: '股市', color: '#2563eb' },
             { name: 'S&P500', symbol: 'SPY', category: '股市', color: '#ff4444' },
-            { name: 'NASDAQ', symbol: 'QQQ', category: '股市', color: '#00cc00' },
-            { name: 'DIA', symbol: 'DIA', category: '股市', color: '#ff9900' },
             { name: 'AGG', symbol: 'AGG', category: '債券', color: '#9933cc' },
             { name: '黃金SPDR', symbol: 'GLD', category: '避險資產', color: '#ffcc00' },
             { name: '比特幣', symbol: 'BTCUSD', category: '避險資產', color: '#6666ff' }
@@ -577,8 +575,6 @@
         const mockData = {
             'VT': Array.from({ length: 30 }, (_, i) => 100 + i * 0.5), // 模擬價格
             'SPY': Array.from({ length: 30 }, (_, i) => 400 - i * 2), // 模擬 S&P500 下跌趨勢
-            'QQQ': Array.from({ length: 30 }, (_, i) => 300 + i * 1),
-            'DIA': Array.from({ length: 30 }, (_, i) => 350 + i * 0.2),
             'AGG': Array.from({ length: 30 }, (_, i) => 110 - i * 0.1),
             'GLD': Array.from({ length: 30 }, (_, i) => 180 + i * 0.8),
             'BTCUSD': Array.from({ length: 30 }, (_, i) => 60000 + i * 100)
