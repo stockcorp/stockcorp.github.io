@@ -37,37 +37,6 @@
         }
         return gk_fileData[filename] || "";
         }
-        </script><script type="text/javascript">
-        var gk_isXlsx = false;
-        var gk_xlsxFileLookup = {};
-        var gk_fileData = {};
-        function filledCell(cell) {
-          return cell !== '' && cell != null;
-        }
-        function loadFileData(filename) {
-        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
-            try {
-                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
-                var firstSheetName = workbook.SheetNames[0];
-                var worksheet = workbook.Sheets[firstSheetName];
-                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
-                var filteredData = jsonData.filter(row => row.some(filledCell));
-                var headerRowIndex = filteredData.findIndex((row, index) =>
-                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
-                );
-                if (headerRowIndex === -1 || headerRowIndex > 25) {
-                  headerRowIndex = 0;
-                }
-                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex));
-                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
-                return csv;
-            } catch (e) {
-                console.error(e);
-                return "";
-            }
-        }
-        return gk_fileData[filename] || "";
-        }
         </script><!DOCTYPE html>
 <html lang="zh-TW">
 <head>
@@ -199,38 +168,114 @@
                 padding: 20px;
             }
         }
-.nav-tabs {
-    display: flex;
-    width: 100%;
-    background-color: transparent;
-    border-radius: 8px;
-    box-shadow: none;
-    margin-bottom: 20px;
-}
-
-.nav-tab {
-    flex: 1;
-    padding: 10px 0;
-    text-align: center;
-    text-decoration: none;
-    background-color: #2563eb; /* 藍色背景 */
-    color: #ffffff; /* 白色文字 */
-    font-size: 16px;
-    font-weight: bold;
-    border-radius: 4px; /* 與 <button> 一致 */
-    margin: 4px;
-    border: none;
-    transition: background-color 0.3s ease;
-}
-
-.nav-tab:hover {
-    background-color: #3b82f6; /* 懸停時與 <button> 一致 */
-}
-
-.nav-tab.active {
-    background-color: #1d4ed8; /* 選中時更深的藍色 */
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); /* 可選：添加陰影 */
-}
+        /* 導航選單樣式 */
+        nav {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        .nav-tabs {
+            display: flex;
+            background-color: transparent;
+            border-radius: 8px;
+            box-shadow: none;
+        }
+        .nav-tab {
+            flex: 1;
+            padding: 10px 0;
+            text-align: center;
+            text-decoration: none;
+            background-color: #2563eb;
+            color: #ffffff;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 4px;
+            margin: 4px;
+            border: none;
+            transition: background-color 0.3s ease;
+        }
+        .nav-tab:hover {
+            background-color: #3b82f6;
+        }
+        .nav-tab.active {
+            background-color: #1d4ed8;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+        /* 漢堡選單樣式 */
+        .hamburger-menu {
+            display: none;
+            cursor: pointer;
+            width: 30px;
+            height: 20px;
+            position: relative;
+            z-index: 1001;
+        }
+        #hamburger-toggle {
+            display: none;
+        }
+        .hamburger-icon,
+        .hamburger-icon::before,
+        .hamburger-icon::after {
+            background-color: #333333;
+            height: 3px;
+            width: 100%;
+            position: absolute;
+            left: 0;
+            transition: all 0.3s ease;
+        }
+        .hamburger-icon {
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        .hamburger-icon::before {
+            content: '';
+            top: -8px;
+        }
+        .hamburger-icon::after {
+            content: '';
+            top: 8px;
+        }
+        #hamburger-toggle:checked ~ .hamburger-icon {
+            background: transparent;
+        }
+        #hamburger-toggle:checked ~ .hamburger-icon::before {
+            transform: rotate(45deg);
+            top: 0;
+        }
+        #hamburger-toggle:checked ~ .hamburger-icon::after {
+            transform: rotate(-45deg);
+            top: 0;
+        }
+        #hamburger-toggle:checked ~ .nav-tabs {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        /* 手機版選單樣式 */
+        @media screen and (max-width: 767px) {
+            .hamburger-menu {
+                display: block;
+                margin: 10px;
+            }
+            .nav-tabs {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100vh;
+                background-color: #ffffff;
+                flex-direction: column;
+                padding: 60px 20px 20px;
+                transform: translateX(-100%);
+                opacity: 0;
+                transition: transform 0.3s ease, opacity 0.3s ease;
+                z-index: 1000;
+            }
+            .nav-tab {
+                margin: 10px 0;
+                padding: 15px;
+                width: 100%;
+                box-sizing: border-box;
+            }
+        }
         .marketing-image {
             width: 100%;
             max-width: 1200px;
@@ -255,7 +300,7 @@
         }
         .about-section p {
             line-height: 1.6;
-            color: #666666;
+            color: #333333;
         }
         .facebook-comments {
             background-color: #ffffff;
@@ -292,12 +337,12 @@
         }
         .links-section p, .privacy-section p {
             line-height: 1.6;
-            color: #666666;
+            color: #333333;
         }
         .links-section ul {
             margin-left: 20px;
             line-height: 1.6;
-            color: #666666;
+            color: #333333;
         }
         .row {
             display: flex;
@@ -322,7 +367,7 @@
             text-align: center;
             margin-top: 20px;
             font-size: 14px;
-            color: #666666;
+            color: #333333;
             width: 100%;
         }
     </style>
@@ -335,14 +380,22 @@
         </div>
 
         <!-- 滿版切換按鈕 -->
-        <div class="nav-tabs">
-            <a href="index.html" class="nav-tab">股票利潤計算機</a>
-            <a href="kelly.html" class="nav-tab">凱莉計算機</a>
-            <a href="compound.html" class="nav-tab">複利計算機</a>
-            <a href="loan.html" class="nav-tab">房貸計算機</a>
-            <a href="car.html" class="nav-tab">車貸計算機</a>
-            <a href="about.html" class="nav-tab">關於</a>
-        </div>
+        <nav>
+            <input type="checkbox" id="hamburger-toggle" aria-label="Toggle menu">
+            <label for="hamburger-toggle" class="hamburger-menu">
+                <span class="hamburger-icon"></span>
+            </label>
+            <div class="nav-tabs">
+                <a href="index.html" class="nav-tab">股票利潤計算機</a>
+                <a href="kelly.html" class="nav-tab">凱莉計算機</a>
+                <a href="compound.html" class="nav-tab">複利計算機</a>
+                <a href="loan.html" class="nav-tab">房貸計算機</a>
+                <a href="car.html" class="nav-tab">車貸計算機</a>
+                <a href="creditcard.html" class="nav-tab">信用卡驗證</a>
+                <a href="bmi.html" class="nav-tab active">BMI計算機</a>
+                <a href="about.html" class="nav-tab">關於</a>
+            </div>
+        </nav>
 
         <!-- 標題 -->
         <div style="width: 100%;">
@@ -382,7 +435,7 @@
             <div class="privacy-section">
                 <h1>隱私權政策</h1>
                 <p>我們的應用程式不會收集個人資訊。</p>
-                <p>理財工具系列作品由 <a href="https://www.youtube.com/@吉米理財學堂" target="_blank">吉米理財學堂</a> 授權 股市企業研究院 開發</p>
+                <p>理財工具系列作品由 <a href="https://www.youtube.com/@吉米理財學堂" target="_blank">吉米理財學堂</a> 授權開發</p>
                 <p>如有任何問題，請聯絡我們：<a href="mailto:xbon510@gmail.com">xbon510@gmail.com</a></p>
             </div>
         </div>
@@ -392,8 +445,51 @@
             <p>© 2025 <a href="https://www.youtube.com/@吉米理財學堂" target="_blank">吉米理財學堂</a>。保留所有權利。</p>
         </footer>
     </div>
+
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+    <script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+            if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+                try {
+                    var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                    var firstSheetName = workbook.SheetNames[0];
+                    var worksheet = workbook.Sheets[firstSheetName];
+                    var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                    var filteredData = jsonData.filter(row => row.some(filledCell));
+                    var headerRowIndex = filteredData.findIndex((row, index) =>
+                      row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                    );
+                    if (headerRowIndex === -1 || headerRowIndex > 25) {
+                      headerRowIndex = 0;
+                    }
+                    var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex));
+                    csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                    return csv;
+                } catch (e) {
+                    console.error(e);
+                    return "";
+                }
+            }
+            return gk_fileData[filename] || "";
+        }
+    </script>
+    <script>
+        // 點擊選單項後收合選單（手機版）
+        document.querySelectorAll('.nav-tab').forEach(item => {
+            item.addEventListener('click', () => {
+                document.getElementById('hamburger-toggle').checked = false;
+            });
+        });
+    </script>
     <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
     <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'93505fdd0ad4d1b5',t:'MTc0NTQ0MjkwNy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
     <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9353d24f2e274593',t:'MTc0NTQ3OTA1Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+    <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'935a0b64fb2ab045',t:'MTc0NTU0NDMwNS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
 </body>
 </html>

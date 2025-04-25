@@ -70,26 +70,25 @@
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="免費複利計算機，支援入門與進階定期定額計算，含逐年分析表格。">
+    <meta name="description" content="免費信用卡號驗證機，檢查卡號有效性並提供發卡機構與卡片資訊。">
     <meta name="image" content="stockcorp.github.io/img/small.jpg">
-    <meta name="keywords" content="免費複利計算機, 投資收益, 定投計算">
+    <meta name="keywords" content="信用卡驗證, 卡號檢查, Luhn演算法, 吉米理財學堂">
     <meta name="author" content="股市企業研究院">
     <meta name="robots" content="index, follow">
-    <title>股市企業研究院 - 複利計算機 - 吉米理財學堂</title>
-    <meta name="description" content="股市企業研究院提供專業股票實用工具與研究。">
+    <title>股市企業研究院 - 信用卡驗證機 - 吉米理財學堂</title>
     <!-- Open Graph Meta Tags for Social Media -->
-    <meta property="og:title" content="股市企業研究院 - 複利計算機 - 吉米理財學堂">
-    <meta property="og:description" content="支援入門與進階定期定額複利計算，含逐年分析表格。">
-    <meta property="og:url" content="stockcorp.github.io">
+    <meta property="og:title" content="股市企業研究院 - 信用卡驗證機 - 吉米理財學堂">
+    <meta property="og:description" content="免費信用卡號驗證機，檢查卡號有效性並提供發卡機構與卡片資訊。">
+    <meta property="og:url" content="https://stockcorp.github.io/creditcard.html">
     <meta property="og:type" content="website">
     <!-- Structured Data (JSON-LD) for SEO -->
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
         "@type": "WebApplication",
-        "name": "複利計算機",
-        "url": "stockcorp.github.io",
-        "description": "一款免費的複利計算工具，支援入門與進階定期定額計算。",
+        "name": "信用卡驗證機",
+        "url": "https://stockcorp.github.io/creditcard.html",
+        "description": "一款免費的信用卡號驗證工具，檢查卡號有效性並提供發卡機構資訊。",
         "publisher": {
             "@type": "Organization",
             "name": "吉米理財學堂",
@@ -99,8 +98,12 @@
         "applicationCategory": "Finance"
     }
     </script>
-    <!-- html2canvas 庫用於將表格轉為圖片 -->
+    <!-- html2canvas 庫用於截圖 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <!-- ECharts 庫用於圖表 -->
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <!-- 載入 Google Fonts 支援中文 -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: Arial, 'Noto Sans TC', sans-serif;
@@ -179,7 +182,6 @@
                 padding: 20px;
             }
         }
-        /* 導航選單樣式 */
         nav {
             width: 100%;
             margin-bottom: 20px;
@@ -211,7 +213,6 @@
             background-color: #1d4ed8;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
         }
-        /* 漢堡選單樣式 */
         .hamburger-menu {
             display: none;
             cursor: pointer;
@@ -260,7 +261,6 @@
             transform: translateX(0);
             opacity: 1;
         }
-        /* 手機版選單樣式 */
         @media screen and (max-width: 767px) {
             .hamburger-menu {
                 display: block;
@@ -293,42 +293,34 @@
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
-        .tab-buttons {
+        .input-custom {
             display: flex;
-            gap: 10px;
-            margin-bottom: 10px;
+            align-items: center;
         }
-        .tab-button {
-            padding: 8px 16px;
-            background-color: #f5f5f5;
-            border: 1px solid #d1d5db;
-            border-radius: 4px;
+        .input-custom input {
+            flex: 1;
+        }
+        .input-custom span {
+            margin-left: 5px;
             color: #333333;
-            cursor: pointer;
-            font-size: 16px;
-        }
-        .tab-button.active {
-            background-color: #2563eb;
-            color: #ffffff;
-            border-color: #2563eb;
-        }
-        .tab-button:hover {
-            background-color: #e6efff;
-            color: #2563eb;
-        }
-        .basic-form, .advanced-form {
-            display: none;
-        }
-        .basic-form.active, .advanced-form.active {
-            display: block;
         }
         .result-section {
-            margin-top: 20px;
             padding: 20px;
             background-color: #ffffff;
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             position: relative;
+            margin-bottom: 20px;
+        }
+        .chart-container {
+            width: 100%;
+            height: 300px;
+            margin-bottom: 20px;
+        }
+        .result-details {
+            margin-top: 20px;
+            line-height: 1.6;
+            color: #333333;
         }
         .button-container {
             position: absolute;
@@ -338,41 +330,43 @@
             gap: 10px;
             align-items: center;
         }
-        .table-tabs {
+        .button-with-text {
             display: flex;
-            gap: 10px;
-            margin-bottom: 10px;
-        }
-        .table-tab {
-            padding: 6px 12px;
-            background-color: #f5f5f5;
-            border: 1px solid #d1d5db;
-            border-radius: 4px;
-            color: #333333;
-            cursor: pointer;
-            font-size: 14px;
-        }
-        .table-tab.active {
-            background-color: #2563eb;
-            color: #ffffff;
-            border-color: #2563eb;
-        }
-        .table-tab:hover {
-            background-color: #e6efff;
-            color: #2563eb;
-        }
-        .facebook-comments {
-            margin-top: 20px;
-            padding: 20px;
-            background-color: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            flex-direction: column;
+            align-items: center;
             text-align: center;
+            gap: 5px;
+            cursor: pointer;
         }
-        .facebook-comments h2 {
-            font-size: 20px;
-            margin-bottom: 10px;
-            color: #2563eb;
+        .button-with-text span {
+            color: #333333;
+            font-size: 12px;
+            line-height: 1;
+        }
+        .download-button {
+            padding: 0;
+            width: 32px;
+            height: 32px;
+            background-image: url('img/download.jpg');
+            background-size: cover;
+            background-color: transparent;
+            border-radius: 4px;
+        }
+        .line-button, .facebook-button {
+            width: 32px;
+            height: 32px;
+            background-size: cover;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            margin: 0;
+            border-radius: 4px;
+        }
+        .line-button {
+            background-image: url('https://upload.wikimedia.org/wikipedia/commons/4/41/LINE_logo.svg');
+        }
+        .facebook-button {
+            background-image: url('https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg');
         }
         .guide-section {
             margin-top: 20px;
@@ -397,6 +391,19 @@
             font-size: 24px;
             margin-bottom: 10px;
             color: #333333;
+        }
+        .facebook-comments {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .facebook-comments h2 {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: #2563eb;
         }
         .guide-section p, .privacy-section p, .facebook-comments p {
             line-height: 1.6;
@@ -439,57 +446,12 @@
         button:hover {
             background-color: #3b82f6;
         }
-        .download-button {
-            padding: 0;
-            width: 32px;
-            height: 32px;
-            background-image: url('img/download.jpg');
-            background-size: cover;
-            background-color: transparent;
-            border-radius: 4px;
-        }
-        .line-button, .facebook-button {
-            width: 32px;
-            height: 32px;
-            background-size: cover;
-            border: none;
-            cursor: pointer;
-            padding: 0;
-            margin: 0;
-            border-radius: 4px;
-        }
-        .line-button {
-            background-image: url('https://upload.wikimedia.org/wikipedia/commons/4/41/LINE_logo.svg');
-        }
-        .facebook-button {
-            background-image: url('https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg');
-        }
         footer {
             text-align: center;
             margin-top: 20px;
             font-size: 14px;
             color: #333333;
             width: 100%;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-            color: #333333;
-        }
-        th, td {
-            padding: 8px;
-            text-align: right;
-            border-bottom: 1px solid #d1d5db;
-        }
-        th {
-            background-color: #f5f5f5;
-            color: #2563eb;
-        }
-        .row {
-            display: flex;
-            gap: 10px;
-            align-items: center;
         }
         a {
             color: #2563eb;
@@ -511,18 +473,10 @@
             border-radius: 4px;
             display: inline-block;
         }
-        .button-with-text {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            gap: 5px;
-            cursor: pointer;
-        }
-        .button-with-text span {
-            color: #333333;
+        .error {
+            color: #ff4444;
             font-size: 12px;
-            line-height: 1;
+            margin-top: 5px;
         }
         #screenshot-container {
             position: absolute;
@@ -533,7 +487,22 @@
             display: flex;
             flex-direction: column;
             gap: 20px;
-            width: 300px;
+            width: 800px;
+        }
+        .result-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            color: #333333;
+        }
+        .result-table th, .result-table td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #d1d5db;
+        }
+        .result-table th {
+            background-color: #f5f5f5;
+            color: #2563eb;
         }
     </style>
 </head>
@@ -562,7 +531,7 @@
             </div>
         </nav>
 
-        <!-- 左側欄：標題與計算區域 -->
+        <!-- 左側欄：表單和留言板 -->
         <div class="left-column">
             <!-- 標題 -->
             <div class="header-section">
@@ -574,196 +543,102 @@
 
             <!-- 輸入表單 -->
             <div class="form-section">
-                <h2>複利計算機</h2>
+                <h2>信用卡驗證機</h2>
                 <hr>
-                <div class="tab-buttons">
-                    <button class="tab-button active" onclick="switchTab('basic')">入門</button>
-                    <button class="tab-button" onclick="switchTab('advanced')">進階定期定額</button>
-                </div>
-                <!-- 入門表單 -->
-                <div class="basic-form active">
-                    <label for="basic-initial-investment">初期本金:</label>
-                    <input type="text" id="basic-initial-investment" placeholder="輸入初期本金" value="20,000">
-                    <label for="basic-years">計息期數 (n):</label>
-                    <input type="number" id="basic-years" step="1" min="0" max="200" placeholder="輸入計息期數" value="20">
-                    <label for="basic-annual-rate">收益率 (%):</label>
-                    <input type="number" id="basic-annual-rate" step="0.01" min="0" max="100" placeholder="輸入年化收益率" value="5">
-                    <button onclick="calculateBasicCompound()">計算複利</button>
-                </div>
-                <!-- 進階定期定額表單 -->
-                <div class="advanced-form">
-                    <label for="adv-initial-investment">初期本金:</label>
-                    <input type="text" id="adv-initial-investment" placeholder="輸入初期本金" value="20,000">
-                    <label for="monthly-investment">每月投資金額:</label>
-                    <input type="text" id="monthly-investment" placeholder="輸入每月投資金額" value="5,000">
-                    <label for="investment-period">投資期數:</label>
-                    <div class="row">
-                        <input type="number" id="investment-period" step="1" min="0" max="200" placeholder="輸入期數" value="5" style="width: 70%;">
-                        <select id="period-unit">
-                            <option value="years" selected>年</option>
-                            <option value="months">月</option>
-                        </select>
+                <div class="input-item">
+                    <label class="text">信用卡號</label>
+                    <div class="input-custom">
+                        <input type="text" id="card-number" placeholder="輸入信用卡號 (如 4929 5090 1200 5229)" maxlength="19" value="4929 5090 1200 5229">
                     </div>
-                    <label for="interest-rate">利率 (%):</label>
-                    <div class="row">
-                        <input type="number" id="interest-rate" step="0.01" min="0" max="100" placeholder="輸入利率" value="5" style="width: 70%;">
-                        <select id="rate-unit">
-                            <option value="year" selected>年</option>
-                            <option value="month">月</option>
-                        </select>
-                    </div>
-                    <label for="compound-frequency">複利方式:</label>
-                    <select id="compound-frequency">
-                        <option value="1" selected>年複利</option>
-                        <option value="12">月複利</option>
-                    </select>
-                    <button onclick="calculateAdvancedCompound()">計算複利</button>
+                    <p id="card-number-error" class="error" style="display: none;"></p>
                 </div>
+                <button onclick="validateCard()">驗證信用卡</button>
             </div>
 
-            <!-- 計算結果 -->
+            <!-- 驗證結果 -->
             <div class="result-section" id="result">
-                <h2>分析報告</h2>
+                <h2>驗證結果</h2>
                 <div class="button-container">
-                    <div class="button-with-text" onclick="downloadTableAsImage()">
-                        <button class="download-button"></button>
+                    <div class="button-with-text" onclick="downloadResultAsImage()">
+                        <button class="download-button" aria-label="下載報告"></button>
                         <span>下載報告</span>
                     </div>
-                    <button class="line-button" onclick="shareToLine()" title="分享到 Line"></button>
-                    <button class="facebook-button" onclick="shareToFacebook()" title="分享到 Facebook"></button>
+                    <button class="line-button" onclick="shareToLine()" title="分享到 Line" aria-label="分享到 Line"></button>
+                    <button class="facebook-button" onclick="shareToFacebook()" title="分享到 Facebook" aria-label="分享到 Facebook"></button>
                 </div>
-                <p>總收益: <span id="total-profit" class="highlight-red">0</span> 元</p>
-                <p>最終金額: <span id="future-value" class="highlight-red">0</span> 元</p>
-                <p id="total-invested-p" style="display: none;">總投資額: <span id="total-invested" class="highlight-red">0</span> 元</p>
-                <div class="table-tabs">
-                    <button class="table-tab active" onclick="switchTableView('year')">年</button>
-                    <button class="table-tab" onclick="switchTableView('month')">月</button>
-                </div>
-                <table id="compound-table">
-                    <thead id="basic-table-head">
-                        <tr>
-                            <th>#</th>
-                            <th>收益</th>
-                            <th>總額</th>
-                            <th>收益率</th>
-                        </tr>
-                    </thead>
-                    <thead id="advanced-table-head" style="display: none;">
-                        <tr>
-                            <th id="advanced-period-label">年</th>
-                            <th>本金</th>
-                            <th>收益</th>
-                            <th>最終金額</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
+                <table class="result-table">
+                    <tr><th>項目</th><th>結果</th></tr>
+                    <tr><td>Luhn 演算法檢查</td><td id="luhn-status">未驗證</td></tr>
+                    <tr><td>卡號長度</td><td id="card-length">-</td></tr>
+                    <tr><td>卡品牌</td><td id="card-brand">-</td></tr>
+                    <tr><td>發卡機構</td><td id="issuer">-</td></tr>
+                    <tr><td>發卡國家</td><td id="country">-</td></tr>
+                    <tr><td>卡片類型</td><td id="card-type">-</td></tr>
+                    <tr><td>卡種</td><td id="card-level">-</td></tr>
+                    <tr><td>格式提示</td><td id="format-hint">-</td></tr>
+                    <tr><td>風險提示</td><td id="risk-hint">-</td></tr>
                 </table>
+                <div class="chart-container" id="validation-chart"></div>
+                <div class="result-details" id="result-details"></div>
             </div>
 
             <!-- Facebook 留言板 -->
             <div class="facebook-comments">
                 <h2>留言板</h2>
-                <div class="fb-comments" data-href="https://stockcorp.github.io/compound.html" data-width="100%" data-numposts="5"></div>
+                <div class="fb-comments" data-href="https://stockcorp.github.io/creditcard.html" data-width="100%" data-numposts="5"></div>
             </div>
         </div>
 
-        <!-- 右側欄：說明與其他內容 -->
+        <!-- 右側欄：使用說明與其他內容 -->
         <div class="right-column">
             <!-- 使用說明 -->
             <div class="guide-section">
-                <h1>歡迎體驗「複利計算機」 - 您的投資成長最佳助手！</h1>
-                <p>想知道投資能成長多少？「複利計算機」，提供「入門」與「進階定期定額」兩種模式，幫您計算複利收益並提供分析表格。快來試試吧！</p>
-                <h2>入門計算機使用說明</h2>
-                <p><strong>輸入欄位</strong><br>
-                - 初期本金：初始投入金額，例如 20,000 元。<br>
-                - 計息期數 (n)：投資年數，例如 20 年。<br>
-                - 收益率 (%)：年化收益率，例如 5%。<br>
-                <strong>計算邏輯</strong><br>
-                總額 = 初期本金 × (1 + 收益率)^計息期數，每年收益基於前一年總額計算。<br>
-                <strong>輸出結果</strong><br>
-                - 總收益與最終金額。<br>
-                - 逐年表格顯示年份、收益、總額與累計收益率。</p>
-                <h2>進階定期定額計算機使用說明</h2>
-                <p><strong>輸入欄位</strong><br>
-                - 初期本金：初始投入，例如 20,000 元。<br>
-                - 每月投資金額：每月定投，例如 5,000 元。<br>
-                - 投資期數：投資時間，例如 5 年。<br>
-                - 利率 (%)：年化或月化利率，例如 5%。<br>
-                - 複利方式：年複利、月複利等，例如年複利。<br>
-                <strong>計算邏輯</strong><br>
-                每月追加投資並按複利方式計算收益。<br>
-                <strong>輸出結果</strong><br>
-                - 總收益、最終金額、總投資額。<br>
-                - 可切換年/月表格顯示本金、收益與最終金額。<br><br>
-                <strong style="font-size: 18px; color: #2563eb;">月複利計算公式</strong><br>
-                <strong>公式</strong><br>
-                <b>futureValue = previousValue * (1 + monthlyRate) + monthlyInvestment</b><br><br>
-                <strong>變數說明</strong><br>
-                - futureValue：當前月份的未來價值（最終金額）。<br>
-                - previousValue：上個月的總額（本金加利息）。<br>
-                - monthlyRate：月利率，通常是年化利率 (annualRate) 除以12，即 monthlyRate = annualRate / 12。<br>
-                - monthlyInvestment：每個月追加的投資金額。<br><br>
-                <strong>原理</strong><br>
-                月複利的特點是每個月計算一次利息，並將該利息加入本金，作為下個月計算利息的基礎。公式分為兩部分：<br>
-                - previousValue * (1 + monthlyRate)：計算上個月總額的利息並加到本金上。<br>
-                - + monthlyInvestment：加上當月新投入的金額。<br>
-                這種方式模擬了現實中每月定投的情況，例如定期存款或基金定投，且利息每月結算並滾入本金。<br>
-                <strong>逐步計算範例</strong><br>
-                假設：初期本金20,000，每月投資5,000，5%年利率，月複利，計算前3個月：<br>
-                <strong>初始條件</strong>：<br>
-                - annualRate = 0.05（5%）<br>
-                - monthlyRate = 0.05 / 12 ≈ 0.0041667<br>
-                - previousValue = 20,000<br>
-                <strong>第1個月</strong>：<br>
-                - futureValue = 20,000 * (1 + 0.0041667) + 5,000<br>
-                - = 20,000 * 1.0041667 + 5,000<br>
-                - = 20,083.33 + 5,000 ≈ 25,083.33<br>
-                <strong>第2個月</strong>：<br>
-                - previousValue = 25,083.33<br>
-                - futureValue = 25,083.33 * (1 + 0.0041667) + 5,000<br>
-                - = 25,083.33 * 1.0041667 + 5,000<br>
-                - = 25,187.81 + 5,000 ≈ 30,187.81<br>
-                <strong>第3個月</strong>：<br>
-                - previousValue = 30,187.81<br>
-                - futureValue = 30,187.81 * (1 + 0.0041667) + 5,000<br>
-                - = 30,187.81 * 1.0041667 + 5,000<br>
-                - = 30,313.59 + 5,000 ≈ 35,313.59<br><br>
-                <strong style="font-size: 18px; color: #2563eb;">年複利計算公式</strong><br>
-                <strong>公式</strong><br>
-                <b>currentValue = (previousValue + monthlyInvestment * yearMonths) * (1 + annualRate)</b><br><br>
-                <strong>變數說明</strong><br>
-                - currentValue：當前年份的總額（最終金額）。<br>
-                - previousValue：上一年的總額。<br>
-                - monthlyInvestment：每個月追加的投資金額。<br>
-                - yearMonths：當年的月數（通常為12，若是最後一年可能少於12）。<br>
-                - annualRate：年化利率，例如5%則為0.05。<br><br>
-                <strong>原理</strong><br>
-                年複利的特點是每年計算一次利息，將全年累積的本金和利息作為下一年計算的基礎。公式分為兩部分：<br>
-                - previousValue + monthlyInvestment * yearMonths：計算當年結束時的總本金（上一年總額加上當年每月投入）。<br>
-                - * (1 + annualRate)：對全年總本金計算一次年利息，並加入本金。<br>
-                這模擬了每年結算一次利息的情況，例如某些年度定投產品。<br>
-                <strong>逐步計算範例</strong><br>
-                假設：初期本金20,000，每月投資5,000，5%年利率，年複利，計算前2年：<br>
-                <strong>初始條件</strong>：<br>
-                - annualRate = 0.05<br>
-                - yearMonths = 12<br>
-                - previousValue = 20,000<br>
-                <strong>第1年</strong>：<br>
-                - currentValue = (20,000 + 5,000 * 12) * (1 + 0.05)<br>
-                - = (20,000 + 60,000) * 1.05<br>
-                - = 80,000 * 1.05 = 84,000<br>
-                <strong>第2年</strong>：<br>
-                - previousValue = 84,000<br>
-                - currentValue = (84,000 + 5,000 * 12) * (1 + 0.05)<br>
-                - = (84,000 + 60,000) * 1.05<br>
-                - = 144,000 * 1.05 = 151,200</p>
+                <h1>歡迎體驗「信用卡驗證機」 - 您的卡號檢查最佳工具！</h1>
+                <p>想快速確認信用卡號是否有效？「信用卡驗證機」使用 Luhn 演算法檢查卡號格式，並提供發卡機構、卡片類型與風險提示！無論您是個人用戶還是商家，這款免費工具都能幫助您驗證卡號，確保交易安全。以下是使用秘訣，快來試試吧！</p>
+                <h2>Step 1：輸入信用卡號</h2>
+                <p>- 在輸入框中輸入完整的信用卡號（13-19 位數字），支援主流卡種如 Visa、MasterCard、American Express 等。<br>
+                - 可包含空格或破折號（如 4929 5090 1200 5229），系統會自動格式化。<br>
+                - 輸入後，點擊「驗證信用卡」按鈕進行檢查。</p>
+                <h2>Step 2：查看結果</h2>
+                <p>驗證完成後，您將看到：<br>
+                - <strong>Luhn 演算法檢查</strong>：卡號是否通過格式驗證（有效/無效）。<br>
+                - <strong>卡號長度</strong>：輸入卡號的位數。<br>
+                - <strong>卡品牌</strong>：如 Visa、MasterCard 等。<br>
+                - <strong>發卡機構</strong>：發卡銀行的名稱。<br>
+                - <strong>發卡國家</strong>：發卡銀行的所在國家。<br>
+                - <strong>卡片類型</strong>：信用卡或借記卡。<br>
+                - <strong>卡種</strong>：如 Classic、Gold 等。<br>
+                - <strong>格式提示</strong>：卡品牌的標準格式要求。<br>
+                - <strong>風險提示</strong>：是否為測試卡號或潛在風險。<br>
+                - <strong>圖表</strong>：圓環圖顯示驗證狀態（Luhn 和 BIN 匹配）。<br>
+                - 點擊「下載報告」保存結果，或分享至 Line/Facebook。</p>
+                <h2>驗證邏輯</h2>
+                <p><strong>Luhn 演算法</strong><br>
+                - 從卡號右邊開始，偶數位數字乘以 2，若結果大於 9，則減 9。<br>
+                - 將所有數字相加，總和應為 10 的倍數，則卡號有效。<br>
+                <strong>BIN 查詢</strong><br>
+                - 使用卡號前六位（BIN）查詢卡品牌、發卡機構和國家等資訊。<br>
+                - 注意：本工具僅檢查卡號格式和 BIN 資訊，無法驗證卡的實際狀態（如餘額或有效期）。<br>
+                <strong>風險評估</strong><br>
+                - 檢查是否為常見測試卡號（如 4111111111111111），提示潛在風險。</p>
+                <h2>範例</h2>
+                <p>輸入卡號：4929509012005229<br>
+                結果：<br>
+                - Luhn 演算法檢查：透過<br>
+                - 卡號長度：16 位<br>
+                - 卡品牌：Visa<br>
+                - 發卡機構：Barclays Bank PLC<br>
+                - 發卡國家：United Kingdom<br>
+                - 卡片類型：信用卡<br>
+                - 卡種：Classic<br>
+                - 格式提示：Visa 卡號通常為 16 位<br>
+                - 風險提示：無異常</p>
             </div>
 
             <!-- 隱私權政策 -->
             <div class="privacy-section">
                 <h1>隱私權政策</h1>
-                <p>我們的應用程式不會收集個人資訊。</p>
+                <p>我們的應用程式不會收集或儲存任何信用卡號資訊，您的輸入僅用於即時驗證並立即清除。</p>
                 <p>理財工具系列作品由 <a href="https://www.youtube.com/@吉米理財學堂" target="_blank">吉米理財學堂</a> 授權開發</p>
                 <p>如有任何問題，請聯絡我們：<a href="mailto:xbon510@gmail.com">xbon510@gmail.com</a></p>
             </div>
@@ -776,304 +651,207 @@
     </div>
 
     <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
-    <script type="text/javascript">
-        var gk_isXlsx = false;
-        var gk_xlsxFileLookup = {};
-        var gk_fileData = {};
-        function filledCell(cell) {
-          return cell !== '' && cell != null;
-        }
-        function loadFileData(filename) {
-            if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
-                try {
-                    var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
-                    var firstSheetName = workbook.SheetNames[0];
-                    var worksheet = workbook.Sheets[firstSheetName];
-                    var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
-                    var filteredData = jsonData.filter(row => row.some(filledCell));
-                    var headerRowIndex = filteredData.findIndex((row, index) =>
-                      row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
-                    );
-                    if (headerRowIndex === -1 || headerRowIndex > 25) {
-                      headerRowIndex = 0;
-                    }
-                    var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex));
-                    csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
-                    return csv;
-                } catch (e) {
-                    console.error(e);
-                    return "";
-                }
-            }
-            return gk_fileData[filename] || "";
-        }
-    </script>
     <script>
-        // 格式化數字為千位分隔符
-        function formatNumber(num) {
-            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-        }
-
-        // 移除千位分隔符並轉為數字
-        function parseNumber(str) {
-            return parseFloat(str.replace(/,/g, '')) || 0;
-        }
-
-        // 為輸入框添加千位分隔符
-        function addThousandSeparator(input) {
-            let value = input.value.replace(/,/g, '');
-            if (value) {
-                input.value = formatNumber(parseFloat(value).toFixed(0));
+        // 模擬 BIN 資料庫（擴展）
+        const binDatabase = [
+            {
+                bin: "492950",
+                brand: "Visa",
+                issuer: "Barclays Bank PLC",
+                country: "United Kingdom",
+                type: "Credit",
+                level: "Classic",
+                phone: "0800 151 0900",
+                website: "https://www.barclays.co.uk",
+                expectedLength: 16,
+                isTest: false
+            },
+            {
+                bin: "555555",
+                brand: "MasterCard",
+                issuer: "Sample Bank",
+                country: "United States",
+                type: "Credit",
+                level: "Gold",
+                phone: "1-800-555-1234",
+                website: "https://www.samplebank.com",
+                expectedLength: 16,
+                isTest: false
+            },
+            {
+                bin: "378282",
+                brand: "American Express",
+                issuer: "American Express",
+                country: "United States",
+                type: "Credit",
+                level: "Platinum",
+                phone: "1-800-528-4800",
+                website: "https://www.americanexpress.com",
+                expectedLength: 15,
+                isTest: false
+            },
+            {
+                bin: "411111",
+                brand: "Visa",
+                issuer: "Test Bank",
+                country: "Unknown",
+                type: "Credit",
+                level: "Test",
+                phone: "N/A",
+                website: "N/A",
+                expectedLength: 16,
+                isTest: true
             }
+        ];
+
+        // Luhn 演算法驗證
+        function luhnCheck(cardNumber) {
+            const digits = cardNumber.replace(/\D/g, '').split('').map(Number);
+            if (digits.length < 13 || digits.length > 19) return false;
+            let sum = 0;
+            let isEven = false;
+            for (let i = digits.length - 1; i >= 0; i--) {
+                let digit = digits[i];
+                if (isEven) {
+                    digit *= 2;
+                    if (digit > 9) digit -= 9;
+                }
+                sum += digit;
+                isEven = !isEven;
+            }
+            return sum % 10 === 0;
         }
 
-        // 初始化輸入框格式並限制最大值
-        document.addEventListener("DOMContentLoaded", function() {
-            const inputs = [
-                document.getElementById("basic-initial-investment"),
-                document.getElementById("adv-initial-investment"),
-                document.getElementById("monthly-investment")
-            ];
-            inputs.forEach(input => {
-                addThousandSeparator(input);
-                input.addEventListener("input", function() {
-                    addThousandSeparator(this);
-                });
-            });
+        // 格式化卡號
+        function formatCardNumber(input) {
+            let value = input.replace(/\D/g, '');
+            const formatted = value.match(/.{1,4}/g)?.join(' ') || value;
+            return formatted;
+        }
 
-            const basicYears = document.getElementById("basic-years");
-            basicYears.addEventListener("input", function() {
-                if (this.value > 200) this.value = 200;
-                if (this.value < 0) this.value = 0;
-            });
+        // 驗證卡號
+        function validateCard() {
+            const cardInput = document.getElementById("card-number");
+            const error = document.getElementById("card-number-error");
+            let cardNumber = cardInput.value.replace(/\D/g, '');
 
-            const investmentPeriod = document.getElementById("investment-period");
-            investmentPeriod.addEventListener("input", function() {
-                if (this.value > 200) this.value = 200;
-                if (this.value < 0) this.value = 0;
-            });
+            // 重置錯誤訊息
+            error.style.display = "none";
 
-            const basicAnnualRate = document.getElementById("basic-annual-rate");
-            basicAnnualRate.addEventListener("input", function() {
-                if (this.value > 100) this.value = 100;
-                if (this.value < 0) this.value = 0;
-            });
+            // 輸入驗證
+            if (!cardNumber) {
+                error.innerText = "請輸入信用卡號";
+                error.style.display = "block";
+                resetResults();
+                return;
+            }
+            if (cardNumber.length < 13 || cardNumber.length > 19) {
+                error.innerText = "卡號長度應為 13-19 位";
+                error.style.display = "block";
+                resetResults();
+                return;
+            }
 
-            const interestRate = document.getElementById("interest-rate");
-            interestRate.addEventListener("input", function() {
-                if (this.value > 100) this.value = 100;
-                if (this.value < 0) this.value = 0;
-            });
+            // Luhn 檢查
+            const isValid = luhnCheck(cardNumber);
+            document.getElementById("luhn-status").innerText = isValid ? "透過" : "無效";
+
+            // BIN 查詢
+            const bin = cardNumber.slice(0, 6);
+            const cardInfo = binDatabase.find(entry => entry.bin === bin) || {
+                brand: "未知",
+                issuer: "未知",
+                country: "未知",
+                type: "未知",
+                level: "未知",
+                expectedLength: 0,
+                isTest: false
+            };
+            document.getElementById("card-length").innerText = cardNumber.length + " 位";
+            document.getElementById("card-brand").innerText = cardInfo.brand;
+            document.getElementById("issuer").innerText = cardInfo.issuer;
+            document.getElementById("country").innerText = cardInfo.country;
+            document.getElementById("card-type").innerText = cardInfo.type;
+            document.getElementById("card-level").innerText = cardInfo.level;
+            document.getElementById("format-hint").innerText = cardInfo.expectedLength ? `${cardInfo.brand} 卡號通常為 ${cardInfo.expectedLength} 位` : "無標準格式";
+            document.getElementById("risk-hint").innerText = cardInfo.isTest ? "警告：此為測試卡號，無法用於實際交易" : "無異常";
+
+            // 詳細報告
+            let details = isValid ? "卡號通過 Luhn 演算法驗證，格式正確。" : "卡號未通過 Luhn 演算法驗證，可能無效。";
+            if (cardInfo.brand !== "未知") {
+                details += ` 卡號前六位（BIN）對應 ${cardInfo.brand}，由 ${cardInfo.issuer} 發行，來自 ${cardInfo.country}。`;
+            } else {
+                details += " 無法識別卡號的發卡機構，請確認輸入是否正確。";
+            }
+            if (cardInfo.isTest) {
+                details += " 此卡號為測試用途，建議勿用於實際交易。";
+            } else if (cardNumber.length !== cardInfo.expectedLength && cardInfo.expectedLength) {
+                details += ` 注意：${cardInfo.brand} 卡號通常為 ${cardInfo.expectedLength} 位，您的卡號為 ${cardNumber.length} 位，可能不標準。`;
+            }
+            document.getElementById("result-details").innerText = details;
+
+            // 更新圖表
+            setTimeout(() => {
+                initChart(isValid, cardInfo.brand !== "未知");
+            }, 100);
+        }
+
+        // 重置結果
+        function resetResults() {
+            document.getElementById("luhn-status").innerText = "未驗證";
+            document.getElementById("card-length").innerText = "-";
+            document.getElementById("card-brand").innerText = "-";
+            document.getElementById("issuer").innerText = "-";
+            document.getElementById("country").innerText = "-";
+            document.getElementById("card-type").innerText = "-";
+            document.getElementById("card-level").innerText = "-";
+            document.getElementById("format-hint").innerText = "-";
+            document.getElementById("risk-hint").innerText = "-";
+            document.getElementById("result-details").innerText = "";
+        }
+
+        // 初始化圓環圖
+        function initChart(isLuhnValid, isBinMatched) {
+            if (typeof echarts === 'undefined') {
+                console.error('ECharts 未正確加載');
+                return;
+            }
+
+            const chart = echarts.init(document.getElementById("validation-chart"));
+            const option = {
+                title: {
+                    text: '驗證狀態',
+                    left: 'center',
+                    textStyle: {
+                        color: '#2563eb',
+                        fontFamily: "'Noto Sans TC', Arial, sans-serif"
+                    }
+                },
+                series: [{
+                    type: 'pie',
+                    radius: ['40%', '70%'],
+                    data: [
+                        { value: isLuhnValid ? 1 : 0, name: 'Luhn 驗證', itemStyle: { color: isLuhnValid ? '#4caf50' : '#f44336' } },
+                        { value: isBinMatched ? 1 : 0, name: 'BIN 匹配', itemStyle: { color: isBinMatched ? '#4caf50' : '#f44336' } }
+                    ],
+                    label: {
+                        show: true,
+                        position: 'inside',
+                        formatter: '{b}: {c}',
+                        fontSize: 12,
+                        fontFamily: "'Noto Sans TC', Arial, sans-serif"
+                    }
+                }]
+            };
+            chart.setOption(option);
+        }
+
+        // 輸入格式化
+        document.getElementById("card-number").addEventListener("input", function() {
+            this.value = formatCardNumber(this.value);
         });
 
-        let currentTab = 'basic';
-        let currentTableView = 'year';
-        let advancedYearData = [];
-        let advancedMonthData = [];
-
-        function switchTab(tab) {
-            const basicButton = document.querySelector(".tab-buttons .tab-button:nth-child(1)");
-            const advButton = document.querySelector(".tab-buttons .tab-button:nth-child(2)");
-            const basicForm = document.querySelector(".basic-form");
-            const advForm = document.querySelector(".advanced-form");
-            const basicHead = document.getElementById("basic-table-head");
-            const advHead = document.getElementById("advanced-table-head");
-            const totalInvestedP = document.getElementById("total-invested-p");
-            const tableTabs = document.querySelector(".table-tabs");
-
-            currentTab = tab;
-            if (tab === "basic") {
-                basicButton.classList.add("active");
-                advButton.classList.remove("active");
-                basicForm.classList.add("active");
-                advForm.classList.remove("active");
-                basicHead.style.display = "table-header-group";
-                advHead.style.display = "none";
-                totalInvestedP.style.display = "none";
-                tableTabs.style.display = "none";
-                calculateBasicCompound();
-            } else {
-                basicButton.classList.remove("active");
-                advButton.classList.add("active");
-                basicForm.classList.remove("active");
-                advForm.classList.add("active");
-                basicHead.style.display = "none";
-                advHead.style.display = "table-header-group";
-                totalInvestedP.style.display = "block";
-                tableTabs.style.display = "flex";
-                calculateAdvancedCompound();
-            }
-        }
-
-        function switchTableView(view) {
-            const yearTab = document.querySelector(".table-tabs .table-tab:nth-child(1)");
-            const monthTab = document.querySelector(".table-tabs .table-tab:nth-child(2)");
-            const tableBody = document.querySelector("#compound-table tbody");
-            const periodLabel = document.getElementById("advanced-period-label");
-
-            currentTableView = view;
-            if (view === "year") {
-                yearTab.classList.add("active");
-                monthTab.classList.remove("active");
-                periodLabel.textContent = "年";
-                tableBody.innerHTML = "";
-                advancedYearData.forEach(data => {
-                    const row = document.createElement("tr");
-                    row.innerHTML = `
-                        <td>${data.year}</td>
-                        <td>${formatNumber(Math.round(data.principal))}</td>
-                        <td>+${formatNumber(Math.round(data.profit))}</td>
-                        <td>${formatNumber(Math.round(data.total))}</td>
-                    `;
-                    tableBody.appendChild(row);
-                });
-            } else {
-                yearTab.classList.remove("active");
-                monthTab.classList.add("active");
-                periodLabel.textContent = "月";
-                tableBody.innerHTML = "";
-                advancedMonthData.forEach(data => {
-                    const row = document.createElement("tr");
-                    row.innerHTML = `
-                        <td>${data.month}</td>
-                        <td>${formatNumber(Math.round(data.principal))}</td>
-                        <td>+${formatNumber(Math.round(data.profit))}</td>
-                        <td>${formatNumber(Math.round(data.total))}</td>
-                    `;
-                    tableBody.appendChild(row);
-                });
-            }
-        }
-
-        function calculateBasicCompound() {
-            const initialInvestment = parseNumber(document.getElementById("basic-initial-investment").value);
-            const years = Math.min(parseInt(document.getElementById("basic-years").value) || 0, 200);
-            const annualRate = Math.min((parseFloat(document.getElementById("basic-annual-rate").value) || 0), 100) / 100;
-
-            const futureValue = Math.round(initialInvestment * Math.pow(1 + annualRate, years));
-            const totalProfit = futureValue - initialInvestment;
-
-            document.getElementById("total-profit").innerText = formatNumber(totalProfit);
-            document.getElementById("future-value").innerText = formatNumber(futureValue);
-
-            const tableBody = document.querySelector("#compound-table tbody");
-            tableBody.innerHTML = "";
-
-            let currentValue = initialInvestment;
-            for (let i = 1; i <= years; i++) {
-                const previousValue = currentValue;
-                currentValue = Math.round(previousValue * (1 + annualRate));
-                const yearlyProfit = currentValue - previousValue;
-                const cumulativeRate = ((currentValue - initialInvestment) / initialInvestment) * 100;
-
-                const row = document.createElement("tr");
-                row.innerHTML = `
-                    <td>${i}</td>
-                    <td>+${formatNumber(yearlyProfit)}</td>
-                    <td>${formatNumber(currentValue)}</td>
-                    <td>${cumulativeRate.toFixed(2)}%</td>
-                `;
-                tableBody.appendChild(row);
-            }
-        }
-
-        function calculateAdvancedCompound() {
-            const initialInvestment = parseNumber(document.getElementById("adv-initial-investment").value);
-            const monthlyInvestment = parseNumber(document.getElementById("monthly-investment").value);
-            const period = Math.min(parseInt(document.getElementById("investment-period").value) || 0, 200);
-            const periodUnit = document.getElementById("period-unit").value;
-            const interestRate = Math.min((parseFloat(document.getElementById("interest-rate").value) || 0), 100) / 100;
-            const rateUnit = document.getElementById("rate-unit").value;
-            const compoundFrequency = parseInt(document.getElementById("compound-frequency").value);
-
-            const totalMonths = periodUnit === "years" ? period * 12 : period;
-            const totalYears = periodUnit === "years" ? period : Math.ceil(totalMonths / 12);
-            const annualRate = rateUnit === "month" ? interestRate * 12 : interestRate;
-            const monthlyRate = annualRate / 12;
-
-            let futureValue = initialInvestment;
-            let monthData = [];
-            let yearData = [];
-            let cumulativeInvested = initialInvestment;
-
-            if (compoundFrequency === 12) { // 月複利
-                for (let month = 1; month <= totalMonths; month++) {
-                    const previousValue = futureValue;
-                    cumulativeInvested += monthlyInvestment;
-                    futureValue = previousValue * (1 + monthlyRate) + monthlyInvestment;
-                    const monthlyProfit = futureValue - previousValue - monthlyInvestment;
-
-                    monthData.push({
-                        month: month,
-                        principal: cumulativeInvested,
-                        profit: monthlyProfit,
-                        total: futureValue
-                    });
-                }
-
-                for (let year = 1; year <= totalYears; year++) {
-                    const monthIndex = Math.min(year * 12, totalMonths) - 1;
-                    if (monthIndex >= 0) {
-                        const startIndex = (year - 1) * 12 - 1;
-                        const profit = monthData[monthIndex].total - (startIndex >= 0 ? monthData[startIndex].total : initialInvestment);
-                        yearData.push({
-                            year: year,
-                            principal: monthData[monthIndex].principal,
-                            profit: profit,
-                            total: monthData[monthIndex].total
-                        });
-                    }
-                }
-            } else { // 年複利
-                let currentValue = initialInvestment;
-                cumulativeInvested = initialInvestment;
-
-                for (let year = 1; year <= totalYears; year++) {
-                    const previousValue = currentValue;
-                    const yearMonths = Math.min(12, totalMonths - (year - 1) * 12);
-                    cumulativeInvested += monthlyInvestment * yearMonths;
-                    currentValue = (previousValue + monthlyInvestment * yearMonths) * (1 + annualRate);
-                    const yearlyProfit = currentValue - previousValue;
-
-                    yearData.push({
-                        year: year,
-                        principal: cumulativeInvested,
-                        profit: yearlyProfit,
-                        total: currentValue
-                    });
-
-                    const startMonth = (year - 1) * 12 + 1;
-                    const endMonth = Math.min(year * 12, totalMonths);
-                    const yearStartValue = year === 1 ? initialInvestment : yearData[year - 2].total;
-                    for (let month = startMonth; month <= endMonth; month++) {
-                        const monthProgress = (month - startMonth + 1) / yearMonths;
-                        const monthPrincipal = initialInvestment + monthlyInvestment * month;
-                        const monthTotal = yearStartValue + (currentValue - yearStartValue) * monthProgress;
-                        const monthProfit = monthTotal - monthPrincipal;
-
-                        monthData.push({
-                            month: month,
-                            principal: monthPrincipal,
-                            profit: monthProfit,
-                            total: monthTotal
-                        });
-                    }
-                    futureValue = currentValue;
-                }
-            }
-
-            const totalInvested = initialInvestment + monthlyInvestment * totalMonths;
-            const totalProfit = futureValue - totalInvested;
-
-            document.getElementById("total-profit").innerText = formatNumber(Math.round(totalProfit));
-            document.getElementById("future-value").innerText = formatNumber(Math.round(futureValue));
-            document.getElementById("total-invested").innerText = formatNumber(Math.round(totalInvested));
-
-            advancedYearData = yearData;
-            advancedMonthData = monthData;
-            switchTableView(currentTableView);
-        }
-
+        // 截圖並下載
         function captureFullResult(callback) {
             const siteTitle = document.querySelector(".site-title");
             const formSection = document.querySelector(".form-section");
@@ -1103,10 +881,10 @@
             });
         }
 
-        function downloadTableAsImage() {
+        function downloadResultAsImage() {
             captureFullResult(canvas => {
                 const link = document.createElement("a");
-                link.download = `compound_full_result_${currentTab}_${currentTableView}.png`;
+                link.download = "creditcard_result.png";
                 link.href = canvas.toDataURL("image/png");
                 link.click();
             });
@@ -1115,14 +893,14 @@
         function shareToLine() {
             captureFullResult(canvas => {
                 const imageData = canvas.toDataURL("image/png");
-                const url = "https://stockcorp.github.io/compound.html";
-                const text = `我的複利計算結果圖表，請查看：${url}`;
+                const url = "https://stockcorp.github.io/creditcard.html";
+                const text = `我的信用卡驗證結果圖表，請查看：${url}`;
                 const encodedText = encodeURIComponent(text);
                 const lineUrl = `https://line.me/R/msg/text/?${encodedText}`;
                 window.open(lineUrl, '_blank');
                 alert("Line 不支援直接分享圖片，請下載圖片後手動分享至 Line。圖片已自動下載。");
                 const link = document.createElement("a");
-                link.download = `compound_full_result_${currentTab}_${currentTableView}.png`;
+                link.download = "creditcard_result.png";
                 link.href = imageData;
                 link.click();
             });
@@ -1131,13 +909,13 @@
         function shareToFacebook() {
             captureFullResult(canvas => {
                 const imageData = canvas.toDataURL("image/png");
-                const url = "https://stockcorp.github.io/compound.html";
+                const url = "https://stockcorp.github.io/creditcard.html";
                 const encodedUrl = encodeURIComponent(url);
                 const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`;
                 window.open(facebookUrl, '_blank');
                 alert("Facebook 不支援直接分享圖片，請下載圖片後手動上傳至 Facebook。圖片已自動下載。");
                 const link = document.createElement("a");
-                link.download = `compound_full_result_${currentTab}_${currentTableView}.png`;
+                link.download = "creditcard_result.png";
                 link.href = imageData;
                 link.click();
             });
@@ -1150,9 +928,5 @@
             });
         });
     </script>
-    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
-    <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'93506c4f39b5ed8c',t:'MTc0NTQ0MzQxNy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
-    <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9353b56a7c4dbce3',t:'MTc0NTQ3Nzg2OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
-    <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'935a148168fdbfa4',t:'MTc0NTU0NDY3OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
 </body>
 </html>

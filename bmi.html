@@ -70,37 +70,40 @@
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="免費複利計算機，支援入門與進階定期定額計算，含逐年分析表格。">
+    <meta name="description" content="免費BMI計算機，計算身體質量指數、體脂率與基礎代謝率，提供健康建議與圖表分析。">
     <meta name="image" content="stockcorp.github.io/img/small.jpg">
-    <meta name="keywords" content="免費複利計算機, 投資收益, 定投計算">
+    <meta name="keywords" content="BMI計算機, 身體質量指數, 體脂率, 健康管理, 吉米理財學堂">
     <meta name="author" content="股市企業研究院">
     <meta name="robots" content="index, follow">
-    <title>股市企業研究院 - 複利計算機 - 吉米理財學堂</title>
-    <meta name="description" content="股市企業研究院提供專業股票實用工具與研究。">
+    <title>股市企業研究院 - BMI計算機 - 吉米理財學堂</title>
     <!-- Open Graph Meta Tags for Social Media -->
-    <meta property="og:title" content="股市企業研究院 - 複利計算機 - 吉米理財學堂">
-    <meta property="og:description" content="支援入門與進階定期定額複利計算，含逐年分析表格。">
-    <meta property="og:url" content="stockcorp.github.io">
+    <meta property="og:title" content="股市企業研究院 - BMI計算機 - 吉米理財學堂">
+    <meta property="og:description" content="免費BMI計算機，計算身體質量指數、體脂率與基礎代謝率，提供健康建議與圖表分析。">
+    <meta property="og:url" content="https://stockcorp.github.io/bmi.html">
     <meta property="og:type" content="website">
     <!-- Structured Data (JSON-LD) for SEO -->
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
         "@type": "WebApplication",
-        "name": "複利計算機",
-        "url": "stockcorp.github.io",
-        "description": "一款免費的複利計算工具，支援入門與進階定期定額計算。",
+        "name": "BMI計算機",
+        "url": "https://stockcorp.github.io/bmi.html",
+        "description": "一款免費的BMI計算工具，計算身體質量指數、體脂率與基礎代謝率，提供健康建議。",
         "publisher": {
             "@type": "Organization",
             "name": "吉米理財學堂",
             "url": "https://www.youtube.com/@吉米理財學堂",
             "email": "xbon510@gmail.com"
         },
-        "applicationCategory": "Finance"
+        "applicationCategory": "Health"
     }
     </script>
-    <!-- html2canvas 庫用於將表格轉為圖片 -->
+    <!-- html2canvas 庫用於截圖 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <!-- ECharts 庫用於圖表 -->
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <!-- 載入 Google Fonts 支援中文 -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: Arial, 'Noto Sans TC', sans-serif;
@@ -179,7 +182,6 @@
                 padding: 20px;
             }
         }
-        /* 導航選單樣式 */
         nav {
             width: 100%;
             margin-bottom: 20px;
@@ -211,7 +213,6 @@
             background-color: #1d4ed8;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
         }
-        /* 漢堡選單樣式 */
         .hamburger-menu {
             display: none;
             cursor: pointer;
@@ -260,7 +261,6 @@
             transform: translateX(0);
             opacity: 1;
         }
-        /* 手機版選單樣式 */
         @media screen and (max-width: 767px) {
             .hamburger-menu {
                 display: block;
@@ -293,42 +293,29 @@
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
-        .tab-buttons {
+        .input-custom {
             display: flex;
-            gap: 10px;
-            margin-bottom: 10px;
+            align-items: center;
         }
-        .tab-button {
-            padding: 8px 16px;
-            background-color: #f5f5f5;
-            border: 1px solid #d1d5db;
-            border-radius: 4px;
+        .input-custom input {
+            flex: 1;
+        }
+        .input-custom span {
+            margin-left: 5px;
             color: #333333;
-            cursor: pointer;
-            font-size: 16px;
-        }
-        .tab-button.active {
-            background-color: #2563eb;
-            color: #ffffff;
-            border-color: #2563eb;
-        }
-        .tab-button:hover {
-            background-color: #e6efff;
-            color: #2563eb;
-        }
-        .basic-form, .advanced-form {
-            display: none;
-        }
-        .basic-form.active, .advanced-form.active {
-            display: block;
         }
         .result-section {
-            margin-top: 20px;
             padding: 20px;
             background-color: #ffffff;
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             position: relative;
+            margin-bottom: 20px;
+        }
+        .chart-container {
+            width: 100%;
+            height: 300px;
+            margin-bottom: 20px;
         }
         .button-container {
             position: absolute;
@@ -338,41 +325,43 @@
             gap: 10px;
             align-items: center;
         }
-        .table-tabs {
+        .button-with-text {
             display: flex;
-            gap: 10px;
-            margin-bottom: 10px;
-        }
-        .table-tab {
-            padding: 6px 12px;
-            background-color: #f5f5f5;
-            border: 1px solid #d1d5db;
-            border-radius: 4px;
-            color: #333333;
-            cursor: pointer;
-            font-size: 14px;
-        }
-        .table-tab.active {
-            background-color: #2563eb;
-            color: #ffffff;
-            border-color: #2563eb;
-        }
-        .table-tab:hover {
-            background-color: #e6efff;
-            color: #2563eb;
-        }
-        .facebook-comments {
-            margin-top: 20px;
-            padding: 20px;
-            background-color: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            flex-direction: column;
+            align-items: center;
             text-align: center;
+            gap: 5px;
+            cursor: pointer;
         }
-        .facebook-comments h2 {
-            font-size: 20px;
-            margin-bottom: 10px;
-            color: #2563eb;
+        .button-with-text span {
+            color: #333333;
+            font-size: 12px;
+            labelHeight: 1;
+        }
+        .download-button {
+            padding: 0;
+            width: 32px;
+            height: 32px;
+            background-image: url('img/download.jpg');
+            background-size: cover;
+            background-color: transparent;
+            border-radius: 4px;
+        }
+        .line-button, .facebook-button {
+            width: 32px;
+            height: 32px;
+            background-size: cover;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            margin: 0;
+            border-radius: 4px;
+        }
+        .line-button {
+            background-image: url('https://upload.wikimedia.org/wikipedia/commons/4/41/LINE_logo.svg');
+        }
+        .facebook-button {
+            background-image: url('https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg');
         }
         .guide-section {
             margin-top: 20px;
@@ -397,6 +386,19 @@
             font-size: 24px;
             margin-bottom: 10px;
             color: #333333;
+        }
+        .facebook-comments {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .facebook-comments h2 {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: #2563eb;
         }
         .guide-section p, .privacy-section p, .facebook-comments p {
             line-height: 1.6;
@@ -439,57 +441,12 @@
         button:hover {
             background-color: #3b82f6;
         }
-        .download-button {
-            padding: 0;
-            width: 32px;
-            height: 32px;
-            background-image: url('img/download.jpg');
-            background-size: cover;
-            background-color: transparent;
-            border-radius: 4px;
-        }
-        .line-button, .facebook-button {
-            width: 32px;
-            height: 32px;
-            background-size: cover;
-            border: none;
-            cursor: pointer;
-            padding: 0;
-            margin: 0;
-            border-radius: 4px;
-        }
-        .line-button {
-            background-image: url('https://upload.wikimedia.org/wikipedia/commons/4/41/LINE_logo.svg');
-        }
-        .facebook-button {
-            background-image: url('https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg');
-        }
         footer {
             text-align: center;
             margin-top: 20px;
             font-size: 14px;
             color: #333333;
             width: 100%;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-            color: #333333;
-        }
-        th, td {
-            padding: 8px;
-            text-align: right;
-            border-bottom: 1px solid #d1d5db;
-        }
-        th {
-            background-color: #f5f5f5;
-            color: #2563eb;
-        }
-        .row {
-            display: flex;
-            gap: 10px;
-            align-items: center;
         }
         a {
             color: #2563eb;
@@ -511,18 +468,10 @@
             border-radius: 4px;
             display: inline-block;
         }
-        .button-with-text {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            gap: 5px;
-            cursor: pointer;
-        }
-        .button-with-text span {
-            color: #333333;
+        .error {
+            color: #ff4444;
             font-size: 12px;
-            line-height: 1;
+            margin-top: 5px;
         }
         #screenshot-container {
             position: absolute;
@@ -533,7 +482,7 @@
             display: flex;
             flex-direction: column;
             gap: 20px;
-            width: 300px;
+            width: 800px;
         }
     </style>
 </head>
@@ -562,7 +511,7 @@
             </div>
         </nav>
 
-        <!-- 左側欄：標題與計算區域 -->
+        <!-- 左側欄：表單和結果 -->
         <div class="left-column">
             <!-- 標題 -->
             <div class="header-section">
@@ -574,197 +523,116 @@
 
             <!-- 輸入表單 -->
             <div class="form-section">
-                <h2>複利計算機</h2>
+                <h2>BMI計算機</h2>
                 <hr>
-                <div class="tab-buttons">
-                    <button class="tab-button active" onclick="switchTab('basic')">入門</button>
-                    <button class="tab-button" onclick="switchTab('advanced')">進階定期定額</button>
-                </div>
-                <!-- 入門表單 -->
-                <div class="basic-form active">
-                    <label for="basic-initial-investment">初期本金:</label>
-                    <input type="text" id="basic-initial-investment" placeholder="輸入初期本金" value="20,000">
-                    <label for="basic-years">計息期數 (n):</label>
-                    <input type="number" id="basic-years" step="1" min="0" max="200" placeholder="輸入計息期數" value="20">
-                    <label for="basic-annual-rate">收益率 (%):</label>
-                    <input type="number" id="basic-annual-rate" step="0.01" min="0" max="100" placeholder="輸入年化收益率" value="5">
-                    <button onclick="calculateBasicCompound()">計算複利</button>
-                </div>
-                <!-- 進階定期定額表單 -->
-                <div class="advanced-form">
-                    <label for="adv-initial-investment">初期本金:</label>
-                    <input type="text" id="adv-initial-investment" placeholder="輸入初期本金" value="20,000">
-                    <label for="monthly-investment">每月投資金額:</label>
-                    <input type="text" id="monthly-investment" placeholder="輸入每月投資金額" value="5,000">
-                    <label for="investment-period">投資期數:</label>
-                    <div class="row">
-                        <input type="number" id="investment-period" step="1" min="0" max="200" placeholder="輸入期數" value="5" style="width: 70%;">
-                        <select id="period-unit">
-                            <option value="years" selected>年</option>
-                            <option value="months">月</option>
-                        </select>
-                    </div>
-                    <label for="interest-rate">利率 (%):</label>
-                    <div class="row">
-                        <input type="number" id="interest-rate" step="0.01" min="0" max="100" placeholder="輸入利率" value="5" style="width: 70%;">
-                        <select id="rate-unit">
-                            <option value="year" selected>年</option>
-                            <option value="month">月</option>
-                        </select>
-                    </div>
-                    <label for="compound-frequency">複利方式:</label>
-                    <select id="compound-frequency">
-                        <option value="1" selected>年複利</option>
-                        <option value="12">月複利</option>
+                <div class="input-item">
+                    <label class="text">性別</label>
+                    <select id="gender">
+                        <option value="male">男性</option>
+                        <option value="female">女性</option>
                     </select>
-                    <button onclick="calculateAdvancedCompound()">計算複利</button>
                 </div>
+                <div class="input-item">
+                    <label class="text">身高</label>
+                    <div class="input-custom">
+                        <input type="number" id="height" step="1" min="100" max="250" placeholder="輸入身高" value="170">
+                        <span>公分</span>
+                    </div>
+                    <p id="height-error" class="error" style="display: none;"></p>
+                </div>
+                <div class="input-item">
+                    <label class="text">體重</label>
+                    <div class="input-custom">
+                        <input type="number" id="weight" step="1" min="20" max="300" placeholder="輸入體重" value="70">
+                        <span>公斤</span>
+                    </div>
+                    <p id="weight-error" class="error" style="display: none;"></p>
+                </div>
+                <div class="input-item">
+                    <label class="text">年齡</label>
+                    <div class="input-custom">
+                        <input type="number" id="age" step="1" min="18" max="80" placeholder="輸入年齡" value="30">
+                        <span>歲</span>
+                    </div>
+                    <p id="age-error" class="error" style="display: none;"></p>
+                </div>
+                <button onclick="calculateBMI()">計算BMI</button>
             </div>
 
             <!-- 計算結果 -->
             <div class="result-section" id="result">
-                <h2>分析報告</h2>
+                <h2>健康報告</h2>
                 <div class="button-container">
-                    <div class="button-with-text" onclick="downloadTableAsImage()">
-                        <button class="download-button"></button>
+                    <div class="button-with-text" onclick="downloadResultAsImage()">
+                        <button class="download-button" aria-label="下載報告"></button>
                         <span>下載報告</span>
                     </div>
-                    <button class="line-button" onclick="shareToLine()" title="分享到 Line"></button>
-                    <button class="facebook-button" onclick="shareToFacebook()" title="分享到 Facebook"></button>
+                    <button class="line-button" onclick="shareToLine()" title="分享到 Line" aria-label="分享到 Line"></button>
+                    <button class="facebook-button" onclick="shareToFacebook()" title="分享到 Facebook" aria-label="分享到 Facebook"></button>
                 </div>
-                <p>總收益: <span id="total-profit" class="highlight-red">0</span> 元</p>
-                <p>最終金額: <span id="future-value" class="highlight-red">0</span> 元</p>
-                <p id="total-invested-p" style="display: none;">總投資額: <span id="total-invested" class="highlight-red">0</span> 元</p>
-                <div class="table-tabs">
-                    <button class="table-tab active" onclick="switchTableView('year')">年</button>
-                    <button class="table-tab" onclick="switchTableView('month')">月</button>
-                </div>
-                <table id="compound-table">
-                    <thead id="basic-table-head">
-                        <tr>
-                            <th>#</th>
-                            <th>收益</th>
-                            <th>總額</th>
-                            <th>收益率</th>
-                        </tr>
-                    </thead>
-                    <thead id="advanced-table-head" style="display: none;">
-                        <tr>
-                            <th id="advanced-period-label">年</th>
-                            <th>本金</th>
-                            <th>收益</th>
-                            <th>最終金額</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
+                <p>BMI值: <span id="bmi-value" class="highlight-red">0</span></p>
+                <p>健康狀態: <span id="bmi-status" class="highlight-red">-</span></p>
+                <p>體脂率（估計）: <span id="body-fat" class="highlight-red">0</span> %</p>
+                <p>基礎代謝率（BMR）: <span id="bmr" class="highlight-red">0</span> 卡路里/天</p>
+                <p>健康建議: <span id="suggestion">-</span></p>
+                <div class="chart-container" id="bmi-chart"></div>
             </div>
 
             <!-- Facebook 留言板 -->
             <div class="facebook-comments">
                 <h2>留言板</h2>
-                <div class="fb-comments" data-href="https://stockcorp.github.io/compound.html" data-width="100%" data-numposts="5"></div>
+                <div class="fb-comments" data-href="https://stockcorp.github.io/bmi.html" data-width="100%" data-numposts="5"></div>
             </div>
         </div>
 
-        <!-- 右側欄：說明與其他內容 -->
+        <!-- 右側欄：使用說明與其他內容 -->
         <div class="right-column">
             <!-- 使用說明 -->
             <div class="guide-section">
-                <h1>歡迎體驗「複利計算機」 - 您的投資成長最佳助手！</h1>
-                <p>想知道投資能成長多少？「複利計算機」，提供「入門」與「進階定期定額」兩種模式，幫您計算複利收益並提供分析表格。快來試試吧！</p>
-                <h2>入門計算機使用說明</h2>
-                <p><strong>輸入欄位</strong><br>
-                - 初期本金：初始投入金額，例如 20,000 元。<br>
-                - 計息期數 (n)：投資年數，例如 20 年。<br>
-                - 收益率 (%)：年化收益率，例如 5%。<br>
-                <strong>計算邏輯</strong><br>
-                總額 = 初期本金 × (1 + 收益率)^計息期數，每年收益基於前一年總額計算。<br>
-                <strong>輸出結果</strong><br>
-                - 總收益與最終金額。<br>
-                - 逐年表格顯示年份、收益、總額與累計收益率。</p>
-                <h2>進階定期定額計算機使用說明</h2>
-                <p><strong>輸入欄位</strong><br>
-                - 初期本金：初始投入，例如 20,000 元。<br>
-                - 每月投資金額：每月定投，例如 5,000 元。<br>
-                - 投資期數：投資時間，例如 5 年。<br>
-                - 利率 (%)：年化或月化利率，例如 5%。<br>
-                - 複利方式：年複利、月複利等，例如年複利。<br>
-                <strong>計算邏輯</strong><br>
-                每月追加投資並按複利方式計算收益。<br>
-                <strong>輸出結果</strong><br>
-                - 總收益、最終金額、總投資額。<br>
-                - 可切換年/月表格顯示本金、收益與最終金額。<br><br>
-                <strong style="font-size: 18px; color: #2563eb;">月複利計算公式</strong><br>
-                <strong>公式</strong><br>
-                <b>futureValue = previousValue * (1 + monthlyRate) + monthlyInvestment</b><br><br>
-                <strong>變數說明</strong><br>
-                - futureValue：當前月份的未來價值（最終金額）。<br>
-                - previousValue：上個月的總額（本金加利息）。<br>
-                - monthlyRate：月利率，通常是年化利率 (annualRate) 除以12，即 monthlyRate = annualRate / 12。<br>
-                - monthlyInvestment：每個月追加的投資金額。<br><br>
-                <strong>原理</strong><br>
-                月複利的特點是每個月計算一次利息，並將該利息加入本金，作為下個月計算利息的基礎。公式分為兩部分：<br>
-                - previousValue * (1 + monthlyRate)：計算上個月總額的利息並加到本金上。<br>
-                - + monthlyInvestment：加上當月新投入的金額。<br>
-                這種方式模擬了現實中每月定投的情況，例如定期存款或基金定投，且利息每月結算並滾入本金。<br>
-                <strong>逐步計算範例</strong><br>
-                假設：初期本金20,000，每月投資5,000，5%年利率，月複利，計算前3個月：<br>
-                <strong>初始條件</strong>：<br>
-                - annualRate = 0.05（5%）<br>
-                - monthlyRate = 0.05 / 12 ≈ 0.0041667<br>
-                - previousValue = 20,000<br>
-                <strong>第1個月</strong>：<br>
-                - futureValue = 20,000 * (1 + 0.0041667) + 5,000<br>
-                - = 20,000 * 1.0041667 + 5,000<br>
-                - = 20,083.33 + 5,000 ≈ 25,083.33<br>
-                <strong>第2個月</strong>：<br>
-                - previousValue = 25,083.33<br>
-                - futureValue = 25,083.33 * (1 + 0.0041667) + 5,000<br>
-                - = 25,083.33 * 1.0041667 + 5,000<br>
-                - = 25,187.81 + 5,000 ≈ 30,187.81<br>
-                <strong>第3個月</strong>：<br>
-                - previousValue = 30,187.81<br>
-                - futureValue = 30,187.81 * (1 + 0.0041667) + 5,000<br>
-                - = 30,187.81 * 1.0041667 + 5,000<br>
-                - = 30,313.59 + 5,000 ≈ 35,313.59<br><br>
-                <strong style="font-size: 18px; color: #2563eb;">年複利計算公式</strong><br>
-                <strong>公式</strong><br>
-                <b>currentValue = (previousValue + monthlyInvestment * yearMonths) * (1 + annualRate)</b><br><br>
-                <strong>變數說明</strong><br>
-                - currentValue：當前年份的總額（最終金額）。<br>
-                - previousValue：上一年的總額。<br>
-                - monthlyInvestment：每個月追加的投資金額。<br>
-                - yearMonths：當年的月數（通常為12，若是最後一年可能少於12）。<br>
-                - annualRate：年化利率，例如5%則為0.05。<br><br>
-                <strong>原理</strong><br>
-                年複利的特點是每年計算一次利息，將全年累積的本金和利息作為下一年計算的基礎。公式分為兩部分：<br>
-                - previousValue + monthlyInvestment * yearMonths：計算當年結束時的總本金（上一年總額加上當年每月投入）。<br>
-                - * (1 + annualRate)：對全年總本金計算一次年利息，並加入本金。<br>
-                這模擬了每年結算一次利息的情況，例如某些年度定投產品。<br>
-                <strong>逐步計算範例</strong><br>
-                假設：初期本金20,000，每月投資5,000，5%年利率，年複利，計算前2年：<br>
-                <strong>初始條件</strong>：<br>
-                - annualRate = 0.05<br>
-                - yearMonths = 12<br>
-                - previousValue = 20,000<br>
-                <strong>第1年</strong>：<br>
-                - currentValue = (20,000 + 5,000 * 12) * (1 + 0.05)<br>
-                - = (20,000 + 60,000) * 1.05<br>
-                - = 80,000 * 1.05 = 84,000<br>
-                <strong>第2年</strong>：<br>
-                - previousValue = 84,000<br>
-                - currentValue = (84,000 + 5,000 * 12) * (1 + 0.05)<br>
-                - = (84,000 + 60,000) * 1.05<br>
-                - = 144,000 * 1.05 = 151,200</p>
+                <h1>歡迎體驗「BMI計算機」 - 您的健康管理最佳助手！</h1>
+                <p>想了解您的健康狀況？「BMI計算機」不僅計算身體質量指數（BMI），還估算體脂率與基礎代謝率（BMR），並提供個人化健康建議！這款免費工具適合所有關注健康的人士，幫助您更好地管理體重與生活方式。以下是使用秘訣，快來試試吧！</p>
+                <h2>Step 1：輸入個人資料</h2>
+                <p>- <strong>性別</strong>：選擇男性或女性，用於精確計算體脂率和 BMR。<br>
+                - <strong>身高</strong>：輸入身高（100-250 公分），如 170 公分。<br>
+                - <strong>體重</strong>：輸入體重（20-300 公斤），如 70 公斤。<br>
+                - <strong>年齡</strong>：輸入年齡（18-80 歲），如 30 歲。<br>
+                - 輸入後，點擊「計算BMI」查看結果。</p>
+                <h2>Step 2：查看結果</h2>
+                <p>計算完成後，您將看到：<br>
+                - <strong>BMI值</strong>：根據台灣衛福部標準分類（過輕：<18.5，正常：18.5-24，過重：24-27，肥胖：≥27）。<br>
+                - <strong>體脂率</strong>：估計值，反映脂肪比例。<br>
+                - <strong>基礎代謝率（BMR）</strong>：每日靜態消耗的熱量。<br>
+                - <strong>健康建議</strong>：根據您的 BMI 和性別，提供飲食與運動建議。<br>
+                - <strong>圖表</strong>：圓環圖直觀顯示您的 BMI 範圍。<br>
+                - 點擊「下載報告」保存結果，或分享至 Line/Facebook。</p>
+                <h2>計算邏輯</h2>
+                <p><strong>BMI（身體質量指數）</strong><br>
+                公式：<b>BMI = 體重(公斤) ÷ 身高(公尺)²</b><br>
+                - 範例：體重 70 公斤，身高 1.7 公尺，BMI = 70 ÷ 1.7² ≈ 24.221（正常）。<br>
+                <strong>體脂率（Deurenberg 公式）</strong><br>
+                公式：<b>體脂率 = 1.2 × BMI + 0.23 × 年齡 - 10.8 × 性別 - 5.4</b><br>
+                - 性別：男=1，女=0<br>
+                - 範例：男性，30 歲，BMI 24.221，體脂率 ≈ 1.2 × 24.221 + 0.23 × 30 - 10.8 × 1 - 5.4 ≈ 19.76%。<br>
+                <strong>基礎代謝率（BMR，Harris-Benedict 公式）</strong><br>
+                - 男性：<b>66 + 13.7 × 體重 + 5 × 身高 - 6.8 × 年齡</b><br>
+                - 女性：<b>655 + 9.6 × 體重 + 1.8 × 身高 - 4.7 × 年齡</b><br>
+                - 範例：男性，70 公斤，170 公分，30 歲，BMR ≈ 66 + 13.7 × 70 + 5 × 170 - 6.8 × 30 ≈ 1664.5 卡路里/天。<br>
+                <strong>局限性</strong><br>
+                - BMI 無法區分肌肉與脂肪，運動員或老年人可能不適用。建議結合體脂率或腰臀比進行評估。</p>
+                <h2>範例</h2>
+                <p>輸入：男性，身高 170 公分，體重 70 公斤，年齡 30 歲<br>
+                結果：<br>
+                - BMI：24.221（正常）<br>
+                - 體脂率：約 19.76%（健康範圍）<br>
+                - BMR：約 1664.5 卡路里/天<br>
+                - 建議：維持均衡飲食，每週運動 3-5 次，每次 30 分鐘有氧運動。</p>
             </div>
 
             <!-- 隱私權政策 -->
             <div class="privacy-section">
                 <h1>隱私權政策</h1>
-                <p>我們的應用程式不會收集個人資訊。</p>
-                <p>理財工具系列作品由 <a href="https://www.youtube.com/@吉米理財學堂" target="_blank">吉米理財學堂</a> 授權開發</p>
+                <p>我們的應用程式不會收集或儲存任何個人資料（如身高、體重、年齡），您的輸入僅用於即時計算並立即清除。</p>
+                <p>理財與健康工具系列作品由 <a href="https://www.youtube.com/@吉米理財學堂" target="_blank">吉米理財學堂</a> 授權開發</p>
                 <p>如有任何問題，請聯絡我們：<a href="mailto:xbon510@gmail.com">xbon510@gmail.com</a></p>
             </div>
         </div>
@@ -776,304 +644,169 @@
     </div>
 
     <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
-    <script type="text/javascript">
-        var gk_isXlsx = false;
-        var gk_xlsxFileLookup = {};
-        var gk_fileData = {};
-        function filledCell(cell) {
-          return cell !== '' && cell != null;
-        }
-        function loadFileData(filename) {
-            if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
-                try {
-                    var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
-                    var firstSheetName = workbook.SheetNames[0];
-                    var worksheet = workbook.Sheets[firstSheetName];
-                    var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
-                    var filteredData = jsonData.filter(row => row.some(filledCell));
-                    var headerRowIndex = filteredData.findIndex((row, index) =>
-                      row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
-                    );
-                    if (headerRowIndex === -1 || headerRowIndex > 25) {
-                      headerRowIndex = 0;
-                    }
-                    var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex));
-                    csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
-                    return csv;
-                } catch (e) {
-                    console.error(e);
-                    return "";
-                }
-            }
-            return gk_fileData[filename] || "";
-        }
-    </script>
     <script>
-        // 格式化數字為千位分隔符
-        function formatNumber(num) {
-            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        // 格式化數字（BMI 保留三位小數，其他保留兩位小數）
+        function formatNumber(num, isBMI = false) {
+            return Number(num).toFixed(isBMI ? 3 : 2);
         }
 
-        // 移除千位分隔符並轉為數字
-        function parseNumber(str) {
-            return parseFloat(str.replace(/,/g, '')) || 0;
-        }
+        // 驗證輸入
+        function validateInputs() {
+            let isValid = true;
+            const height = parseFloat(document.getElementById("height").value) || 0;
+            const weight = parseFloat(document.getElementById("weight").value) || 0;
+            const age = parseInt(document.getElementById("age").value) || 0;
 
-        // 為輸入框添加千位分隔符
-        function addThousandSeparator(input) {
-            let value = input.value.replace(/,/g, '');
-            if (value) {
-                input.value = formatNumber(parseFloat(value).toFixed(0));
+            // 重置錯誤訊息
+            document.getElementById("height-error").style.display = "none";
+            document.getElementById("weight-error").style.display = "none";
+            document.getElementById("age-error").style.display = "none";
+
+            if (height < 100 || height > 250) {
+                document.getElementById("height-error").innerText = "請輸入正確身高 (100-250 公分)";
+                document.getElementById("height-error").style.display = "block";
+                isValid = false;
             }
+            if (weight < 20 || weight > 300) {
+                document.getElementById("weight-error").innerText = "請輸入正確體重 (20-300 公斤)";
+                document.getElementById("weight-error").style.display = "block";
+                isValid = false;
+            }
+            if (age < 18 || age > 80) {
+                document.getElementById("age-error").innerText = "請輸入正確年齡 (18-80 歲)";
+                document.getElementById("age-error").style.display = "block";
+                isValid = false;
+            }
+
+            return isValid;
         }
 
-        // 初始化輸入框格式並限制最大值
-        document.addEventListener("DOMContentLoaded", function() {
-            const inputs = [
-                document.getElementById("basic-initial-investment"),
-                document.getElementById("adv-initial-investment"),
-                document.getElementById("monthly-investment")
-            ];
-            inputs.forEach(input => {
-                addThousandSeparator(input);
-                input.addEventListener("input", function() {
-                    addThousandSeparator(this);
-                });
+        // 即時驗證輸入
+        function setupInputValidation() {
+            ['height', 'weight', 'age'].forEach(id => {
+                document.getElementById(id).addEventListener('input', validateInputs);
             });
+        }
 
-            const basicYears = document.getElementById("basic-years");
-            basicYears.addEventListener("input", function() {
-                if (this.value > 200) this.value = 200;
-                if (this.value < 0) this.value = 0;
-            });
+        // 計算 BMI、體脂率和 BMR
+        function calculateBMI() {
+            if (!validateInputs()) return;
 
-            const investmentPeriod = document.getElementById("investment-period");
-            investmentPeriod.addEventListener("input", function() {
-                if (this.value > 200) this.value = 200;
-                if (this.value < 0) this.value = 0;
-            });
+            const gender = document.getElementById("gender").value;
+            const height = parseFloat(document.getElementById("height").value) / 100; // 公尺
+            const weight = parseFloat(document.getElementById("weight").value);
+            const age = parseInt(document.getElementById("age").value);
 
-            const basicAnnualRate = document.getElementById("basic-annual-rate");
-            basicAnnualRate.addEventListener("input", function() {
-                if (this.value > 100) this.value = 100;
-                if (this.value < 0) this.value = 0;
-            });
+            // 計算 BMI
+            const bmi = weight / (height * height);
+            let bmiStatus = '';
+            if (bmi < 18.5) bmiStatus = '過輕';
+            else if (bmi < 24) bmiStatus = '正常';
+            else if (bmi < 27) bmiStatus = '過重';
+            else if (bmi < 30) bmiStatus = '輕度肥胖';
+            else if (bmi < 35) bmiStatus = '中度肥胖';
+            else bmiStatus = '重度肥胖';
 
-            const interestRate = document.getElementById("interest-rate");
-            interestRate.addEventListener("input", function() {
-                if (this.value > 100) this.value = 100;
-                if (this.value < 0) this.value = 0;
-            });
-        });
+            // 計算體脂率（Deurenberg 公式）
+            const genderFactor = gender === 'male' ? 1 : 0;
+            const bodyFat = 1.2 * bmi + 0.23 * age - 10.8 * genderFactor - 5.4;
 
-        let currentTab = 'basic';
-        let currentTableView = 'year';
-        let advancedYearData = [];
-        let advancedMonthData = [];
-
-        function switchTab(tab) {
-            const basicButton = document.querySelector(".tab-buttons .tab-button:nth-child(1)");
-            const advButton = document.querySelector(".tab-buttons .tab-button:nth-child(2)");
-            const basicForm = document.querySelector(".basic-form");
-            const advForm = document.querySelector(".advanced-form");
-            const basicHead = document.getElementById("basic-table-head");
-            const advHead = document.getElementById("advanced-table-head");
-            const totalInvestedP = document.getElementById("total-invested-p");
-            const tableTabs = document.querySelector(".table-tabs");
-
-            currentTab = tab;
-            if (tab === "basic") {
-                basicButton.classList.add("active");
-                advButton.classList.remove("active");
-                basicForm.classList.add("active");
-                advForm.classList.remove("active");
-                basicHead.style.display = "table-header-group";
-                advHead.style.display = "none";
-                totalInvestedP.style.display = "none";
-                tableTabs.style.display = "none";
-                calculateBasicCompound();
+            // 計算 BMR（Harris-Benedict 公式）
+            let bmr;
+            if (gender === 'male') {
+                bmr = 66 + 13.7 * weight + 5 * height * 100 - 6.8 * age;
             } else {
-                basicButton.classList.remove("active");
-                advButton.classList.add("active");
-                basicForm.classList.remove("active");
-                advForm.classList.add("active");
-                basicHead.style.display = "none";
-                advHead.style.display = "table-header-group";
-                totalInvestedP.style.display = "block";
-                tableTabs.style.display = "flex";
-                calculateAdvancedCompound();
+                bmr = 655 + 9.6 * weight + 1.8 * height * 100 - 4.7 * age;
             }
-        }
 
-        function switchTableView(view) {
-            const yearTab = document.querySelector(".table-tabs .table-tab:nth-child(1)");
-            const monthTab = document.querySelector(".table-tabs .table-tab:nth-child(2)");
-            const tableBody = document.querySelector("#compound-table tbody");
-            const periodLabel = document.getElementById("advanced-period-label");
-
-            currentTableView = view;
-            if (view === "year") {
-                yearTab.classList.add("active");
-                monthTab.classList.remove("active");
-                periodLabel.textContent = "年";
-                tableBody.innerHTML = "";
-                advancedYearData.forEach(data => {
-                    const row = document.createElement("tr");
-                    row.innerHTML = `
-                        <td>${data.year}</td>
-                        <td>${formatNumber(Math.round(data.principal))}</td>
-                        <td>+${formatNumber(Math.round(data.profit))}</td>
-                        <td>${formatNumber(Math.round(data.total))}</td>
-                    `;
-                    tableBody.appendChild(row);
-                });
+            // 健康建議
+            let suggestion = '';
+            if (bmi < 18.5) {
+                suggestion = '您的體重過輕，建議增加熱量攝取，選擇高蛋白食物（如雞胸肉、牛奶），並進行適度力量訓練，每週 2-3 次，每次 30 分鐘。';
+            } else if (bmi < 24) {
+                suggestion = '您的體重正常，建議維持均衡飲食（每日熱量約 ' + Math.round(bmr * 1.2) + ' 卡路里），並每週進行 3-5 次有氧運動，每次 30 分鐘。';
+            } else if (bmi < 27) {
+                suggestion = '您的體重略高，建議控制每日熱量攝取（約 ' + Math.round(bmr * 1.1) + ' 卡路里），增加蔬菜攝取，每週 4-5 次有氧運動，每次 40 分鐘。';
             } else {
-                yearTab.classList.remove("active");
-                monthTab.classList.add("active");
-                periodLabel.textContent = "月";
-                tableBody.innerHTML = "";
-                advancedMonthData.forEach(data => {
-                    const row = document.createElement("tr");
-                    row.innerHTML = `
-                        <td>${data.month}</td>
-                        <td>${formatNumber(Math.round(data.principal))}</td>
-                        <td>+${formatNumber(Math.round(data.profit))}</td>
-                        <td>${formatNumber(Math.round(data.total))}</td>
-                    `;
-                    tableBody.appendChild(row);
-                });
+                suggestion = '您的體重屬於肥胖範圍，建議諮詢醫師或營養師，控制熱量攝取（約 ' + Math.round(bmr) + ' 卡路里），並每週進行 5 次低強度運動，如快走 45 分鐘。';
             }
+
+            // 更新結果
+            document.getElementById("bmi-value").innerText = formatNumber(bmi, true);
+            document.getElementById("bmi-status").innerText = bmiStatus;
+            document.getElementById("body-fat").innerText = formatNumber(bodyFat);
+            document.getElementById("bmr").innerText = Math.round(bmr);
+            document.getElementById("suggestion").innerText = suggestion;
+
+            // 更新圖表
+            setTimeout(() => {
+                initChart(bmi);
+            }, 100);
         }
 
-        function calculateBasicCompound() {
-            const initialInvestment = parseNumber(document.getElementById("basic-initial-investment").value);
-            const years = Math.min(parseInt(document.getElementById("basic-years").value) || 0, 200);
-            const annualRate = Math.min((parseFloat(document.getElementById("basic-annual-rate").value) || 0), 100) / 100;
-
-            const futureValue = Math.round(initialInvestment * Math.pow(1 + annualRate, years));
-            const totalProfit = futureValue - initialInvestment;
-
-            document.getElementById("total-profit").innerText = formatNumber(totalProfit);
-            document.getElementById("future-value").innerText = formatNumber(futureValue);
-
-            const tableBody = document.querySelector("#compound-table tbody");
-            tableBody.innerHTML = "";
-
-            let currentValue = initialInvestment;
-            for (let i = 1; i <= years; i++) {
-                const previousValue = currentValue;
-                currentValue = Math.round(previousValue * (1 + annualRate));
-                const yearlyProfit = currentValue - previousValue;
-                const cumulativeRate = ((currentValue - initialInvestment) / initialInvestment) * 100;
-
-                const row = document.createElement("tr");
-                row.innerHTML = `
-                    <td>${i}</td>
-                    <td>+${formatNumber(yearlyProfit)}</td>
-                    <td>${formatNumber(currentValue)}</td>
-                    <td>${cumulativeRate.toFixed(2)}%</td>
-                `;
-                tableBody.appendChild(row);
+        // 初始化圓環圖
+        function initChart(bmi) {
+            if (typeof echarts === 'undefined') {
+                console.error('ECharts 未正確加載');
+                return;
             }
-        }
 
-        function calculateAdvancedCompound() {
-            const initialInvestment = parseNumber(document.getElementById("adv-initial-investment").value);
-            const monthlyInvestment = parseNumber(document.getElementById("monthly-investment").value);
-            const period = Math.min(parseInt(document.getElementById("investment-period").value) || 0, 200);
-            const periodUnit = document.getElementById("period-unit").value;
-            const interestRate = Math.min((parseFloat(document.getElementById("interest-rate").value) || 0), 100) / 100;
-            const rateUnit = document.getElementById("rate-unit").value;
-            const compoundFrequency = parseInt(document.getElementById("compound-frequency").value);
-
-            const totalMonths = periodUnit === "years" ? period * 12 : period;
-            const totalYears = periodUnit === "years" ? period : Math.ceil(totalMonths / 12);
-            const annualRate = rateUnit === "month" ? interestRate * 12 : interestRate;
-            const monthlyRate = annualRate / 12;
-
-            let futureValue = initialInvestment;
-            let monthData = [];
-            let yearData = [];
-            let cumulativeInvested = initialInvestment;
-
-            if (compoundFrequency === 12) { // 月複利
-                for (let month = 1; month <= totalMonths; month++) {
-                    const previousValue = futureValue;
-                    cumulativeInvested += monthlyInvestment;
-                    futureValue = previousValue * (1 + monthlyRate) + monthlyInvestment;
-                    const monthlyProfit = futureValue - previousValue - monthlyInvestment;
-
-                    monthData.push({
-                        month: month,
-                        principal: cumulativeInvested,
-                        profit: monthlyProfit,
-                        total: futureValue
-                    });
-                }
-
-                for (let year = 1; year <= totalYears; year++) {
-                    const monthIndex = Math.min(year * 12, totalMonths) - 1;
-                    if (monthIndex >= 0) {
-                        const startIndex = (year - 1) * 12 - 1;
-                        const profit = monthData[monthIndex].total - (startIndex >= 0 ? monthData[startIndex].total : initialInvestment);
-                        yearData.push({
-                            year: year,
-                            principal: monthData[monthIndex].principal,
-                            profit: profit,
-                            total: monthData[monthIndex].total
-                        });
+            const chart = echarts.init(document.getElementById("bmi-chart"));
+            const option = {
+                title: {
+                    text: 'BMI 分類',
+                    left: 'center',
+                    textStyle: {
+                        color: '#2563eb',
+                        fontFamily: "'Noto Sans TC', Arial, sans-serif"
                     }
-                }
-            } else { // 年複利
-                let currentValue = initialInvestment;
-                cumulativeInvested = initialInvestment;
-
-                for (let year = 1; year <= totalYears; year++) {
-                    const previousValue = currentValue;
-                    const yearMonths = Math.min(12, totalMonths - (year - 1) * 12);
-                    cumulativeInvested += monthlyInvestment * yearMonths;
-                    currentValue = (previousValue + monthlyInvestment * yearMonths) * (1 + annualRate);
-                    const yearlyProfit = currentValue - previousValue;
-
-                    yearData.push({
-                        year: year,
-                        principal: cumulativeInvested,
-                        profit: yearlyProfit,
-                        total: currentValue
-                    });
-
-                    const startMonth = (year - 1) * 12 + 1;
-                    const endMonth = Math.min(year * 12, totalMonths);
-                    const yearStartValue = year === 1 ? initialInvestment : yearData[year - 2].total;
-                    for (let month = startMonth; month <= endMonth; month++) {
-                        const monthProgress = (month - startMonth + 1) / yearMonths;
-                        const monthPrincipal = initialInvestment + monthlyInvestment * month;
-                        const monthTotal = yearStartValue + (currentValue - yearStartValue) * monthProgress;
-                        const monthProfit = monthTotal - monthPrincipal;
-
-                        monthData.push({
-                            month: month,
-                            principal: monthPrincipal,
-                            profit: monthProfit,
-                            total: monthTotal
-                        });
+                },
+                series: [{
+                    type: 'pie',
+                    radius: ['40%', '70%'],
+                    data: [
+                        { value: 18.5, name: '過輕 (<18.5)', itemStyle: { color: '#ffeb3b' } },
+                        { value: 5.5, name: '正常 (18.5-24)', itemStyle: { color: '#4caf50' } },
+                        { value: 3, name: '過重 (24-27)', itemStyle: { color: '#ff9800' } },
+                        { value: 8, name: '肥胖 (≥27)', itemStyle: { color: '#f44336' } }
+                    ],
+                    label: {
+                        show: true,
+                        position: 'inside',
+                        formatter: '{b}',
+                        fontSize: 12,
+                        fontFamily: "'Noto Sans TC', Arial, sans-serif"
+                    },
+                    emphasis: {
+                        itemStyle: {
+                            shadowBlur: 10,
+                            shadowOffsetX: 0,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                        }
+                    },
+                    markPoint: {
+                        data: [
+                            { 
+                                name: '您的 BMI', 
+                                value: Number(bmi).toFixed(3), 
+                                x: 'center', 
+                                y: 'center', 
+                                symbol: 'circle', 
+                                symbolSize: 10, 
+                                itemStyle: { color: '#2563eb' } 
+                            }
+                        ]
                     }
-                    futureValue = currentValue;
+                }],
+                tooltip: {
+                    trigger: 'item',
+                    formatter: '{b}: {c}'
                 }
-            }
-
-            const totalInvested = initialInvestment + monthlyInvestment * totalMonths;
-            const totalProfit = futureValue - totalInvested;
-
-            document.getElementById("total-profit").innerText = formatNumber(Math.round(totalProfit));
-            document.getElementById("future-value").innerText = formatNumber(Math.round(futureValue));
-            document.getElementById("total-invested").innerText = formatNumber(Math.round(totalInvested));
-
-            advancedYearData = yearData;
-            advancedMonthData = monthData;
-            switchTableView(currentTableView);
+            };
+            chart.setOption(option);
         }
 
+        // 截圖並下載
         function captureFullResult(callback) {
             const siteTitle = document.querySelector(".site-title");
             const formSection = document.querySelector(".form-section");
@@ -1103,10 +836,10 @@
             });
         }
 
-        function downloadTableAsImage() {
+        function downloadResultAsImage() {
             captureFullResult(canvas => {
                 const link = document.createElement("a");
-                link.download = `compound_full_result_${currentTab}_${currentTableView}.png`;
+                link.download = "bmi_result.png";
                 link.href = canvas.toDataURL("image/png");
                 link.click();
             });
@@ -1115,14 +848,14 @@
         function shareToLine() {
             captureFullResult(canvas => {
                 const imageData = canvas.toDataURL("image/png");
-                const url = "https://stockcorp.github.io/compound.html";
-                const text = `我的複利計算結果圖表，請查看：${url}`;
+                const url = "https://stockcorp.github.io/bmi.html";
+                const text = `我的 BMI 健康報告，請查看：${url}`;
                 const encodedText = encodeURIComponent(text);
                 const lineUrl = `https://line.me/R/msg/text/?${encodedText}`;
                 window.open(lineUrl, '_blank');
                 alert("Line 不支援直接分享圖片，請下載圖片後手動分享至 Line。圖片已自動下載。");
                 const link = document.createElement("a");
-                link.download = `compound_full_result_${currentTab}_${currentTableView}.png`;
+                link.download = "bmi_result.png";
                 link.href = imageData;
                 link.click();
             });
@@ -1131,13 +864,13 @@
         function shareToFacebook() {
             captureFullResult(canvas => {
                 const imageData = canvas.toDataURL("image/png");
-                const url = "https://stockcorp.github.io/compound.html";
+                const url = "https://stockcorp.github.io/bmi.html";
                 const encodedUrl = encodeURIComponent(url);
                 const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`;
                 window.open(facebookUrl, '_blank');
                 alert("Facebook 不支援直接分享圖片，請下載圖片後手動上傳至 Facebook。圖片已自動下載。");
                 const link = document.createElement("a");
-                link.download = `compound_full_result_${currentTab}_${currentTableView}.png`;
+                link.download = "bmi_result.png";
                 link.href = imageData;
                 link.click();
             });
@@ -1149,10 +882,11 @@
                 document.getElementById('hamburger-toggle').checked = false;
             });
         });
+
+        // 初始化
+        document.addEventListener("DOMContentLoaded", function() {
+            setupInputValidation();
+        });
     </script>
-    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
-    <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'93506c4f39b5ed8c',t:'MTc0NTQ0MzQxNy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
-    <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9353b56a7c4dbce3',t:'MTc0NTQ3Nzg2OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
-    <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'935a148168fdbfa4',t:'MTc0NTU0NDY3OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
 </body>
 </html>
