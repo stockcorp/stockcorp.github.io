@@ -1,0 +1,956 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-Q32FFR42XT"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-Q32FFR42XT');
+    </script>
+    
+    <!-- Facebook SDK -->
+    <script>
+      window.fbAsyncInit = function() {
+        FB.init({
+          appId      : 'YOUR_APP_ID', // 請替換為您的 Facebook App ID
+          xfbml      : true,
+          version    : 'v18.0'
+        });
+      };
+      (function(d, s, id){
+         var js, fjs = d.getElementsByTagName(s)[0];
+         if (d.getElementById(id)) {return;}
+         js = d.createElement(s); js.id = id;
+         js.src = "https://connect.facebook.net/zh_TW/sdk.js";
+         fjs.parentNode.insertBefore(js, fjs);
+       }(document, 'script', 'facebook-jssdk'));
+    </script>
+
+    <!-- Google reCAPTCHA -->
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="免費信用卡號驗證機，檢查卡號有效性並提供發卡機構與卡片資訊。">
+    <meta name="image" content="stockcorp.github.io/img/small.jpg">
+    <meta name="keywords" content="信用卡驗證, 卡號檢查, Luhn演算法, 吉米理財學堂">
+    <meta name="author" content="股市企業研究院">
+    <meta name="robots" content="index, follow">
+    <title>股市企業研究院 - 信用卡驗證機 - 吉米理財學堂</title>
+    <!-- Open Graph Meta Tags for Social Media -->
+    <meta property="og:title" content="股市企業研究院 - 信用卡驗證機 - 吉米理財學堂">
+    <meta property="og:description" content="免費信用卡號驗證機，檢查卡號有效性並提供發卡機構與卡片資訊。">
+    <meta property="og:url" content="https://stockcorp.github.io/creditcard.html">
+    <meta property="og:type" content="website">
+    <!-- Structured Data (JSON-LD) for SEO -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "信用卡驗證機",
+        "url": "https://stockcorp.github.io/creditcard.html",
+        "description": "一款免費的信用卡號驗證工具，檢查卡號有效性並提供發卡機構資訊。",
+        "publisher": {
+            "@type": "Organization",
+            "name": "吉米理財學堂",
+            "url": "https://www.youtube.com/@吉米理財學堂",
+            "email": "xbon510@gmail.com"
+        },
+        "applicationCategory": "Finance"
+    }
+    </script>
+    <!-- html2canvas 庫用於截圖 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <!-- ECharts 庫用於圖表 -->
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <!-- 載入 Google Fonts 支援中文 -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, 'Noto Sans TC', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f7f9fc;
+            color: #333333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .left-column {
+            flex: 1;
+            min-width: 300px;
+        }
+        .right-column {
+            flex: 2;
+            min-width: 300px;
+        }
+        .header-section {
+            margin-bottom: 20px;
+        }
+        .site-title {
+            background-color: #ffffff;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            width: fit-content;
+            display: flex;
+            align-items: center;
+        }
+        .site-title h1 {
+            font-size: 28px;
+            margin: 0;
+            color: #2563eb;
+            display: inline;
+        }
+        .header {
+            text-align: center;
+            background-image: url('/img/channels4_banner.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: relative;
+            width: 100%;
+            height: 120px;
+            min-height: 80px;
+            max-height: 200px;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        @media screen and (max-width: 600px) {
+            .header {
+                height: 80px;
+                padding: 10px;
+                background-size: contain;
+                background-position: center center;
+            }
+        }
+        @media screen and (min-width: 601px) and (max-width: 900px) {
+            .header {
+                height: 100px;
+                padding: 15px;
+                background-size: cover;
+            }
+        }
+        @media screen and (min-width: 901px) {
+            .header {
+                height: 150px;
+                padding: 20px;
+            }
+        }
+        nav {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        .nav-tabs {
+            display: flex;
+            background-color: transparent;
+            border-radius: 8px;
+            box-shadow: none;
+        }
+        .nav-tab {
+            flex: 1;
+            padding: 10px 0;
+            text-align: center;
+            text-decoration: none;
+            background-color: #2563eb;
+            color: #ffffff;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 4px;
+            margin: 4px;
+            border: none;
+            transition: background-color 0.3s ease;
+        }
+        .nav-tab:hover {
+            background-color: #3b82f6;
+        }
+        .nav-tab.active {
+            background-color: #1d4ed8;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+        .hamburger-menu {
+            display: none;
+            cursor: pointer;
+            width: 30px;
+            height: 20px;
+            position: relative;
+            z-index: 1001;
+        }
+        #hamburger-toggle {
+            display: none;
+        }
+        .hamburger-icon,
+        .hamburger-icon::before,
+        .hamburger-icon::after {
+            background-color: #333333;
+            height: 3px;
+            width: 100%;
+            position: absolute;
+            left: 0;
+            transition: all 0.3s ease;
+        }
+        .hamburger-icon {
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        .hamburger-icon::before {
+            content: '';
+            top: -8px;
+        }
+        .hamburger-icon::after {
+            content: '';
+            top: 8px;
+        }
+        #hamburger-toggle:checked ~ .hamburger-icon {
+            background: transparent;
+        }
+        #hamburger-toggle:checked ~ .hamburger-icon::before {
+            transform: rotate(45deg);
+            top: 0;
+        }
+        #hamburger-toggle:checked ~ .hamburger-icon::after {
+            transform: rotate(-45deg);
+            top: 0;
+        }
+        #hamburger-toggle:checked ~ .nav-tabs {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        @media screen and (max-width: 767px) {
+            .hamburger-menu {
+                display: block;
+                margin: 10px;
+            }
+            .nav-tabs {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100vh;
+                background-color: #ffffff;
+                flex-direction: column;
+                padding: 60px 20px 20px;
+                transform: translateX(-100%);
+                opacity: 0;
+                transition: transform 0.3s ease, opacity 0.3s ease;
+                z-index: 1000;
+            }
+            .nav-tab {
+                margin: 10px 0;
+                padding: 15px;
+                width: 100%;
+                box-sizing: border-box;
+            }
+        }
+        .form-section {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .input-custom {
+            display: flex;
+            align-items: center;
+        }
+        .input-custom input {
+            flex: 1;
+        }
+        .input-custom span {
+            margin-left: 5px;
+            color: #333333;
+        }
+        .result-section {
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: relative;
+            margin-bottom: 20px;
+        }
+        .chart-container {
+            width: 100%;
+            height: 300px;
+            margin-bottom: 20px;
+        }
+        .result-details {
+            margin-top: 20px;
+            line-height: 1.6;
+            color: #333333;
+        }
+        .button-container {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .button-with-text {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 5px;
+            cursor: pointer;
+        }
+        .button-with-text span {
+            color: #333333;
+            font-size: 12px;
+            line-height: 1;
+        }
+        .download-button {
+            padding: 0;
+            width: 32px;
+            height: 32px;
+            background-image: url('img/download.jpg');
+            background-size: cover;
+            background-color: transparent;
+            border-radius: 4px;
+        }
+        .line-button, .facebook-button {
+            width: 32px;
+            height: 32px;
+            background-size: cover;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            margin: 0;
+            border-radius: 4px;
+        }
+        .line-button {
+            background-image: url('https://upload.wikimedia.org/wikipedia/commons/4/41/LINE_logo.svg');
+        }
+        .facebook-button {
+            background-image: url('https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg');
+        }
+        .guide-section {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            text-align: left;
+        }
+        .guide-section h1, .privacy-section h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #2563eb;
+        }
+        .guide-section h2 {
+            font-size: 18px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            color: #2563eb;
+        }
+        .result-section h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #333333;
+        }
+        .facebook-comments {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .facebook-comments h2 {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: #2563eb;
+        }
+        .guide-section p, .privacy-section p, .facebook-comments p {
+            line-height: 1.6;
+            color: #333333;
+        }
+        .guide-section ul {
+            margin-left: 20px;
+            line-height: 1.6;
+            color: #333333;
+        }
+        .privacy-section {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            text-align: left;
+        }
+        input, select {
+            padding: 10px;
+            margin: 5px 0;
+            width: 100%;
+            box-sizing: border-box;
+            background-color: #f5f5f5;
+            color: #333333;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+        }
+        button {
+            padding: 10px;
+            margin: 5px 0;
+            width: 100%;
+            background-color: #2563eb;
+            color: #ffffff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        button:hover {
+            background-color: #3b82f6;
+        }
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #333333;
+            width: 100%;
+        }
+        a {
+            color: #2563eb;
+            text-decoration: underline;
+            transition: color 0.3s ease;
+        }
+        a:hover {
+            color: #3b82f6;
+            text-decoration: underline;
+        }
+        a:focus {
+            outline: 2px solid #2563eb;
+            outline-offset: 2px;
+        }
+        .highlight-red {
+            background-color: #ff4444;
+            color: #ffffff;
+            padding: 2px 8px;
+            border-radius: 4px;
+            display: inline-block;
+        }
+        .error {
+            color: #ff4444;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+        #screenshot-container {
+            position: absolute;
+            top: -9999px;
+            left: -9999px;
+            background-color: #f7f9fc;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            width: 800px;
+        }
+        .result-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            color: #333333;
+        }
+        .result-table th, .result-table td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #d1d5db;
+        }
+        .result-table th {
+            background-color: #f5f5f5;
+            color: #2563eb;
+        }
+        .g-recaptcha {
+            margin: 10px 0;
+        }
+        @media screen and (max-width: 767px) {
+            .g-recaptcha {
+                transform: scale(0.8);
+                transform-origin: 0 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 橫幅 -->
+        <div style="width: 100%;">
+            <div class="header"></div>
+        </div>
+
+        <!-- 滿版切換按鈕 -->
+        <nav>
+            <input type="checkbox" id="hamburger-toggle" aria-label="Toggle menu">
+            <label for="hamburger-toggle" class="hamburger-menu">
+                <span class="hamburger-icon"></span>
+            </label>
+            <div class="nav-tabs">
+                <a href="index.html" class="nav-tab">股票利潤計算機</a>
+                <a href="kelly.html" class="nav-tab">凱莉計算機</a>
+                <a href="compound.html" class="nav-tab">複利計算機</a>
+                <a href="loan.html" class="nav-tab">房貸計算機</a>
+                <a href="car.html" class="nav-tab">車貸計算機</a>
+                <a href="creditcard.html" class="nav-tab active">信用卡驗證</a>
+                <a href="bmi.html" class="nav-tab">BMI計算機</a>
+                <a href="about.html" class="nav-tab">關於</a>
+            </div>
+        </nav>
+
+        <!-- 左側欄：表單和留言板 -->
+        <div class="left-column">
+            <!-- 標題 -->
+            <div class="header-section">
+                <div class="site-title">
+                    <img src="/img/icon1.jpg" alt="股市企業研究院圖標" style="vertical-align: middle; margin-right: 10px; height: 28px; width: auto;">
+                    <h1>stockcorp.github.io</h1>
+                </div>
+            </div>
+
+            <!-- 輸入表單 -->
+            <div class="form-section">
+                <h2>信用卡驗證機</h2>
+                <hr>
+                <div class="input-item">
+                    <label class="text">信用卡號</label>
+                    <div class="input-custom">
+                        <input type="text" id="card-number" placeholder="輸入信用卡號 (如 4929 5090 1200 5229)" maxlength="19" value="4929 5090 1200 5229">
+                    </div>
+                    <p id="card-number-error" class="error" style="display: none;"></p>
+                </div>
+                <div class="g-recaptcha" data-sitekey="6LdU2CMrAAAAALsMwNkzNd7trQK9MNfz8BFxYzSz"></div>
+                <button onclick="validateCard()">驗證信用卡</button>
+            </div>
+
+            <!-- 驗證結果 -->
+            <div class="result-section" id="result">
+                <h2>驗證結果</h2>
+                <div class="button-container">
+                    <div class="button-with-text" onclick="downloadResultAsImage()">
+                        <button class="download-button" aria-label="下載報告"></button>
+                        <span>下載報告</span>
+                    </div>
+                    <button class="line-button" onclick="shareToLine()" title="分享到 Line" aria-label="分享到 Line"></button>
+                    <button class="facebook-button" onclick="shareToFacebook()" title="分享到 Facebook" aria-label="分享到 Facebook"></button>
+                </div>
+                <table class="result-table">
+                    <tr><th>項目</th><th>結果</th></tr>
+                    <tr><td>Luhn 演算法檢查</td><td id="luhn-status">未驗證</td></tr>
+                    <tr><td>卡號長度</td><td id="card-length">-</td></tr>
+                    <tr><td>卡品牌</td><td id="card-brand">-</td></tr>
+                    <tr><td>發卡機構</td><td id="issuer">-</td></tr>
+                    <tr><td>發卡國家</td><td id="country">-</td></tr>
+                    <tr><td>卡片類型</td><td id="card-type">-</td></tr>
+                    <tr><td>卡種</td><td id="card-level">-</td></tr>
+                    <tr><td>格式提示</td><td id="format-hint">-</td></tr>
+                    <tr><td>風險提示</td><td id="risk-hint">-</td></tr>
+                </table>
+                <div class="chart-container" id="validation-chart"></div>
+                <div class="result-details" id="result-details"></div>
+            </div>
+
+            <!-- Facebook 留言板 -->
+            <div class="facebook-comments">
+                <h2>留言板</h2>
+                <div class="fb-comments" data-href="https://stockcorp.github.io/creditcard.html" data-width="100%" data-numposts="5"></div>
+            </div>
+        </div>
+
+        <!-- 右側欄：使用說明與其他內容 -->
+        <div class="right-column">
+            <!-- 使用說明 -->
+            <div class="guide-section">
+                <h1>歡迎體驗「信用卡驗證機」 - 您的卡號檢查最佳工具！</h1>
+                <p>想快速確認信用卡號是否有效？「信用卡驗證機」使用 Luhn 演算法檢查卡號格式，並提供發卡機構、卡片類型與風險提示！無論您是個人用戶還是商家，這款免費工具都能幫助您驗證卡號，確保交易安全。以下是使用秘訣，快來試試吧！</p>
+                <h2>Step 1：輸入信用卡號</h2>
+                <p>- 在輸入框中輸入完整的信用卡號（13-19 位數字），支援主流卡種如 Visa、MasterCard、American Express 等。<br>
+                - 可包含空格或破折號（如 4929 5090 1200 5229），系統會自動格式化。<br>
+                - 通過 Google reCAPTCHA 驗證，確保安全。<br>
+                - 輸入後，點擊「驗證信用卡」按鈕進行檢查。</p>
+                <h2>Step 2：查看結果</h2>
+                <p>驗證完成後，您將看到：<br>
+                - <strong>Luhn 演算法檢查</strong>：卡號是否通過格式驗證（有效/無效）。<br>
+                - <strong>卡號長度</strong>：輸入卡號的位數。<br>
+                - <strong>卡品牌</strong>：如 Visa、MasterCard 等。<br>
+                - <strong>發卡機構</strong>：發卡銀行的名稱。<br>
+                - <strong>發卡國家</strong>：發卡銀行的所在國家。<br>
+                - <strong>卡片類型</strong>：信用卡或借記卡。<br>
+                - <strong>卡種</strong>：如 Classic、Gold 等。<br>
+                - <strong>格式提示</strong>：卡品牌的標準格式要求。<br>
+                - <strong>風險提示</strong>：是否為測試卡號或潛在風險。<br>
+                - <strong>圖表</strong>：圓環圖顯示驗證狀態（Luhn 和 BIN 匹配）。<br>
+                - 點擊「下載報告」保存結果，或分享至 Line/Facebook。</p>
+                <h2>驗證邏輯</h2>
+                <p><strong>Luhn 演算法</strong><br>
+                - 從卡號右邊開始，偶數位數字乘以 2，若結果大於 9，則減 9。<br>
+                - 將所有數字相加，總和應為 10 的倍數，則卡號有效。<br>
+                <strong>BIN 查詢</strong><br>
+                - 使用卡號前六位（BIN）查詢卡品牌、發卡機構和國家等資訊。<br>
+                - 注意：本工具僅檢查卡號格式和 BIN 資訊，無法驗證卡的實際狀態（如餘額或有效期）。<br>
+                <strong>風險評估</strong><br>
+                - 檢查是否為常見測試卡號（如 4111111111111111），提示潛在風險。</p>
+                <h2>範例</h2>
+                <p>輸入卡號：4929509012005229<br>
+                結果：<br>
+                - Luhn 演算法檢查：透過<br>
+                - 卡號長度：16 位<br>
+                - 卡品牌：Visa<br>
+                - 發卡機構：Barclays Bank PLC<br>
+                - 發卡國家：United Kingdom<br>
+                - 卡片類型：信用卡<br>
+                - 卡種：Classic<br>
+                - 格式提示：Visa 卡號通常為 16 位<br>
+                - 風險提示：無異常</p>
+            </div>
+
+            <!-- 隱私權政策 -->
+            <div class="privacy-section">
+                <h1>隱私權政策</h1>
+                <p>我們的應用程式不會收集或儲存任何信用卡號資訊，您的輸入僅用於即時驗證並立即清除。Google reCAPTCHA 用於防止機器人濫用，您的驗證資料不會被儲存。</p>
+                <p>理財工具系列作品由 <a href="https://www.youtube.com/@吉米理財學堂" target="_blank">吉米理財學堂</a> 授權開發</p>
+                <p>如有任何問題，請聯絡我們：<a href="/cdn-cgi/l/email-protection#d7a5beb3b2e9edec97b0bab6bebbf9b4b8ba"><span class="__cf_email__" data-cfemail="ebb9a2afae151110abbcaca0a8adc5c8c4c6">[email protected]</span></a></p>
+            </div>
+        </div>
+
+        <!-- 頁腳 -->
+        <footer style="width: 100%;">
+            <p>© 2025 <a href="https://www.youtube.com/@吉米理財學堂" target="_blank">吉米理財學堂</a>。保留所有權利。</p>
+        </footer>
+    </div>
+
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+    <script>
+        // 模擬 BIN 資料庫（擴展）
+        const binDatabase = [
+            {
+                bin: "492950",
+                brand: "Visa",
+                issuer: "Barclays Bank PLC",
+                country: "United Kingdom",
+                type: "Credit",
+                level: "Classic",
+                phone: "0800 151 0900",
+                website: "https://www.barclays.co.uk",
+                expectedLength: 16,
+                isTest: false
+            },
+            {
+                bin: "555555",
+                brand: "MasterCard",
+                issuer: "Sample Bank",
+                country: "United States",
+                type: "Credit",
+                level: "Gold",
+                phone: "1-800-555-1234",
+                website: "https://www.samplebank.com",
+                expectedLength: 16,
+                isTest: false
+            },
+            {
+                bin: "378282",
+                brand: "American Express",
+                issuer: "American Express",
+                country: "United States",
+                type: "Credit",
+                level: "Platinum",
+                phone: "1-800-528-4800",
+                website: "https://www.americanexpress.com",
+                expectedLength: 15,
+                isTest: false
+            },
+            {
+                bin: "411111",
+                brand: "Visa",
+                issuer: "Test Bank",
+                country: "Unknown",
+                type: "Credit",
+                level: "Test",
+                phone: "N/A",
+                website: "N/A",
+                expectedLength: 16,
+                isTest: true
+            }
+        ];
+
+        // Luhn 演算法驗證
+        function luhnCheck(cardNumber) {
+            const digits = cardNumber.replace(/\D/g, '').split('').map(Number);
+            if (digits.length < 13 || digits.length > 19) return false;
+            let sum = 0;
+            let isEven = false;
+            for (let i = digits.length - 1; i >= 0; i--) {
+                let digit = digits[i];
+                if (isEven) {
+                    digit *= 2;
+                    if (digit > 9) digit -= 9;
+                }
+                sum += digit;
+                isEven = !isEven;
+            }
+            return sum % 10 === 0;
+        }
+
+        // 格式化卡號
+        function formatCardNumber(input) {
+            let value = input.replace(/\D/g, '');
+            const formatted = value.match(/.{1,4}/g)?.join(' ') || value;
+            return formatted;
+        }
+
+        // 驗證卡號
+        function validateCard() {
+            const cardInput = document.getElementById("card-number");
+            const error = document.getElementById("card-number-error");
+            let cardNumber = cardInput.value.replace(/\D/g, '');
+
+            // 檢查 reCAPTCHA
+            const recaptchaResponse = grecaptcha.getResponse();
+            if (!recaptchaResponse) {
+                error.innerText = "請完成 reCAPTCHA 驗證";
+                error.style.display = "block";
+                return;
+            }
+
+            // 重置錯誤訊息
+            error.style.display = "none";
+
+            // 輸入驗證
+            if (!cardNumber) {
+                error.innerText = "請輸入信用卡號";
+                error.style.display = "block";
+                resetResults();
+                return;
+            }
+            if (cardNumber.length < 13 || cardNumber.length > 19) {
+                error.innerText = "卡號長度應為 13-19 位";
+                error.style.display = "block";
+                resetResults();
+                return;
+            }
+
+            // Luhn 檢查
+            const isValid = luhnCheck(cardNumber);
+            document.getElementById("luhn-status").innerText = isValid ? "透過" : "無效";
+
+            // BIN 查詢
+            const bin = cardNumber.slice(0, 6);
+            const cardInfo = binDatabase.find(entry => entry.bin === bin) || {
+                brand: "未知",
+                issuer: "未知",
+                country: "未知",
+                type: "未知",
+                level: "未知",
+                expectedLength: 0,
+                isTest: false
+            };
+            document.getElementById("card-length").innerText = cardNumber.length + " 位";
+            document.getElementById("card-brand").innerText = cardInfo.brand;
+            document.getElementById("issuer").innerText = cardInfo.issuer;
+            document.getElementById("country").innerText = cardInfo.country;
+            document.getElementById("card-type").innerText = cardInfo.type;
+            document.getElementById("card-level").innerText = cardInfo.level;
+            document.getElementById("format-hint").innerText = cardInfo.expectedLength ? `${cardInfo.brand} 卡號通常為 ${cardInfo.expectedLength} 位` : "無標準格式";
+            document.getElementById("risk-hint").innerText = cardInfo.isTest ? "警告：此為測試卡號，無法用於實際交易" : "無異常";
+
+            // 詳細報告
+            let details = isValid ? "卡號通過 Luhn 演算法驗證，格式正確。" : "卡號未通過 Luhn 演算法驗證，可能無效。";
+            if (cardInfo.brand !== "未知") {
+                details += ` 卡號前六位（BIN）對應 ${cardInfo.brand}，由 ${cardInfo.issuer} 發行，來自 ${cardInfo.country}。`;
+            } else {
+                details += " 無法識別卡號的發卡機構，請確認輸入是否正確。";
+            }
+            if (cardInfo.isTest) {
+                details += " 此卡號為測試用途，建議勿用於實際交易。";
+            } else if (cardNumber.length !== cardInfo.expectedLength && cardInfo.expectedLength) {
+                details += ` 注意：${cardInfo.brand} 卡號通常為 ${cardInfo.expectedLength} 位，您的卡號為 ${cardNumber.length} 位，可能不標準。`;
+            }
+            document.getElementById("result-details").innerText = details;
+
+            // 更新圖表
+            setTimeout(() => {
+                initChart(isValid, cardInfo.brand !== "未知");
+            }, 100);
+
+            // 重置 reCAPTCHA
+            grecaptcha.reset();
+        }
+
+        // 重置結果
+        function resetResults() {
+            document.getElementById("luhn-status").innerText = "未驗證";
+            document.getElementById("card-length").innerText = "-";
+            document.getElementById("card-brand").innerText = "-";
+            document.getElementById("issuer").innerText = "-";
+            document.getElementById("country").innerText = "-";
+            document.getElementById("card-type").innerText = "-";
+            document.getElementById("card-level").innerText = "-";
+            document.getElementById("format-hint").innerText = "-";
+            document.getElementById("risk-hint").innerText = "-";
+            document.getElementById("result-details").innerText = "";
+        }
+
+        // 初始化圓環圖
+        function initChart(isLuhnValid, isBinMatched) {
+            if (typeof echarts === 'undefined') {
+                console.error('ECharts 未正確加載');
+                return;
+            }
+
+            const chart = echarts.init(document.getElementById("validation-chart"));
+            const option = {
+                title: {
+                    text: '驗證狀態',
+                    left: 'center',
+                    textStyle: {
+                        color: '#2563eb',
+                        fontFamily: "'Noto Sans TC', Arial, sans-serif"
+                    }
+                },
+                series: [{
+                    type: 'pie',
+                    radius: ['40%', '70%'],
+                    data: [
+                        { value: isLuhnValid ? 1 : 0, name: 'Luhn 驗證', itemStyle: { color: isLuhnValid ? '#4caf50' : '#f44336' } },
+                        { value: isBinMatched ? 1 : 0, name: 'BIN 匹配', itemStyle: { color: isBinMatched ? '#4caf50' : '#f44336' } }
+                    ],
+                    label: {
+                        show: true,
+                        position: 'inside',
+                        formatter: '{b}: {c}',
+                        fontSize: 12,
+                        fontFamily: "'Noto Sans TC', Arial, sans-serif"
+                    }
+                }]
+            };
+            chart.setOption(option);
+        }
+
+        // 輸入格式化
+        document.getElementById("card-number").addEventListener("input", function() {
+            this.value = formatCardNumber(this.value);
+        });
+
+        // 截圖並下載
+        function captureFullResult(callback) {
+            const siteTitle = document.querySelector(".site-title");
+            const formSection = document.querySelector(".form-section");
+            const resultSection = document.getElementById("result");
+            
+            let tempContainer = document.getElementById("screenshot-container");
+            if (!tempContainer) {
+                tempContainer = document.createElement("div");
+                tempContainer.id = "screenshot-container";
+                document.body.appendChild(tempContainer);
+            }
+            
+            tempContainer.innerHTML = "";
+            const siteTitleClone = siteTitle.cloneNode(true);
+            const formClone = formSection.cloneNode(true);
+            const resultClone = resultSection.cloneNode(true);
+            tempContainer.appendChild(siteTitleClone);
+            tempContainer.appendChild(formClone);
+            tempContainer.appendChild(resultClone);
+
+            const buttonContainer = tempContainer.querySelector(".button-container");
+            if (buttonContainer) buttonContainer.remove();
+
+            html2canvas(tempContainer).then(canvas => {
+                callback(canvas);
+                tempContainer.innerHTML = "";
+            });
+        }
+
+        function downloadResultAsImage() {
+            captureFullResult(canvas => {
+                const link = document.createElement("a");
+                link.download = "creditcard_result.png";
+                link.href = canvas.toDataURL("image/png");
+                link.click();
+            });
+        }
+
+        function shareToLine() {
+            captureFullResult(canvas => {
+                const imageData = canvas.toDataURL("image/png");
+                const url = "https://stockcorp.github.io/creditcard.html";
+                const text = `我的信用卡驗證結果圖表，請查看：${url}`;
+                const encodedText = encodeURIComponent(text);
+                const lineUrl = `https://line.me/R/msg/text/?${encodedText}`;
+                window.open(lineUrl, '_blank');
+                alert("Line 不支援直接分享圖片，請下載圖片後手動分享至 Line。圖片已自動下載。");
+                const link = document.createElement("a");
+                link.download = "creditcard_result.png";
+                link.href = imageData;
+                link.click();
+            });
+        }
+
+        function shareToFacebook() {
+            captureFullResult(canvas => {
+                const imageData = canvas.toDataURL("image/png");
+                const url = "https://stockcorp.github.io/creditcard.html";
+                const encodedUrl = encodeURIComponent(url);
+                const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`;
+                window.open(facebookUrl, '_blank');
+                alert("Facebook 不支援直接分享圖片，請下載圖片後手動上傳至 Facebook。圖片已自動下載。");
+                const link = document.createElement("a");
+                link.download = "creditcard_result.png";
+                link.href = imageData;
+                link.click();
+            });
+        }
+
+        // 點擊選單項後收合選單（手機版）
+        document.querySelectorAll('.nav-tab').forEach(item => {
+            item.addEventListener('click', () => {
+                document.getElementById('hamburger-toggle').checked = false;
+            });
+        });
+    </script>
+</body>
+</html>
