@@ -182,15 +182,13 @@
                 padding: 20px;
             }
         }
-        nav {
-            width: 100%;
-            margin-bottom: 20px;
-        }
         .nav-tabs {
             display: flex;
+            width: 100%;
             background-color: transparent;
             border-radius: 8px;
             box-shadow: none;
+            margin-bottom: 20px;
         }
         .nav-tab {
             flex: 1;
@@ -212,80 +210,6 @@
         .nav-tab.active {
             background-color: #1d4ed8;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-        }
-        .hamburger-menu {
-            display: none;
-            cursor: pointer;
-            width: 30px;
-            height: 20px;
-            position: relative;
-            z-index: 1001;
-        }
-        #hamburger-toggle {
-            display: none;
-        }
-        .hamburger-icon,
-        .hamburger-icon::before,
-        .hamburger-icon::after {
-            background-color: #333333;
-            height: 3px;
-            width: 100%;
-            position: absolute;
-            left: 0;
-            transition: all 0.3s ease;
-        }
-        .hamburger-icon {
-            top: 50%;
-            transform: translateY(-50%);
-        }
-        .hamburger-icon::before {
-            content: '';
-            top: -8px;
-        }
-        .hamburger-icon::after {
-            content: '';
-            top: 8px;
-        }
-        #hamburger-toggle:checked ~ .hamburger-icon {
-            background: transparent;
-        }
-        #hamburger-toggle:checked ~ .hamburger-icon::before {
-            transform: rotate(45deg);
-            top: 0;
-        }
-        #hamburger-toggle:checked ~ .hamburger-icon::after {
-            transform: rotate(-45deg);
-            top: 0;
-        }
-        #hamburger-toggle:checked ~ .nav-tabs {
-            transform: translateX(0);
-            opacity: 1;
-        }
-        @media screen and (max-width: 767px) {
-            .hamburger-menu {
-                display: block;
-                margin: 10px;
-            }
-            .nav-tabs {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100vh;
-                background-color: #ffffff;
-                flex-direction: column;
-                padding: 60px 20px 20px;
-                transform: translateX(-100%);
-                opacity: 0;
-                transition: transform 0.3s ease, opacity 0.3s ease;
-                z-index: 1000;
-            }
-            .nav-tab {
-                margin: 10px 0;
-                padding: 15px;
-                width: 100%;
-                box-sizing: border-box;
-            }
         }
         .form-section {
             background-color: #ffffff;
@@ -514,22 +438,16 @@
         </div>
 
         <!-- 滿版切換按鈕 -->
-        <nav>
-            <input type="checkbox" id="hamburger-toggle" aria-label="Toggle menu">
-            <label for="hamburger-toggle" class="hamburger-menu">
-                <span class="hamburger-icon"></span>
-            </label>
-            <div class="nav-tabs">
-                <a href="index.html" class="nav-tab">股票利潤計算機</a>
-                <a href="kelly.html" class="nav-tab">凱莉計算機</a>
-                <a href="compound.html" class="nav-tab">複利計算機</a>
-                <a href="loan.html" class="nav-tab">房貸計算機</a>
-                <a href="car.html" class="nav-tab">車貸計算機</a>
-                <a href="creditcard.html" class="nav-tab">信用卡驗證</a>
-                <a href="bmi.html" class="nav-tab active">BMI計算機</a>
-                <a href="about.html" class="nav-tab">關於</a>
-            </div>
-        </nav>
+        <div class="nav-tabs">
+            <a href="index.html" class="nav-tab">股票利潤計算機</a>
+            <a href="kelly.html" class="nav-tab">凱莉計算機</a>
+            <a href="compound.html" class="nav-tab">複利計算機</a>
+            <a href="loan.html" class="nav-tab">房貸計算機</a>
+            <a href="car.html" class="nav-tab">車貸計算機</a>
+            <a href="creditcard.html" class="nav-tab active">信用卡驗證</a>
+            <a href="bmi.html" class="nav-tab">BMI計算機</a>
+            <a href="about.html" class="nav-tab">關於</a>
+        </div>
 
         <!-- 左側欄：表單和留言板 -->
         <div class="left-column">
@@ -640,7 +558,7 @@
                 <h1>隱私權政策</h1>
                 <p>我們的應用程式不會收集或儲存任何信用卡號資訊，您的輸入僅用於即時驗證並立即清除。</p>
                 <p>理財工具系列作品由 <a href="https://www.youtube.com/@吉米理財學堂" target="_blank">吉米理財學堂</a> 授權開發</p>
-                <p>如有任何問題，請聯絡我們：<a href="mailto:xbon510@gmail.com">xbon510@gmail.com</a></p>
+                <p>如有任何問題，請聯絡我們：<a href="/cdn-cgi/l/email-protection#f58d979a9bc0c4c5b59298949c99db969a98"><span class="__cf_email__" data-cfemail="9fe7fdf0f1aaaeafdfd8d2ded6d3b1fcf0f2">[email&#160;protected]</span></a></p>
             </div>
         </div>
 
@@ -920,13 +838,6 @@
                 link.click();
             });
         }
-
-        // 點擊選單項後收合選單（手機版）
-        document.querySelectorAll('.nav-tab').forEach(item => {
-            item.addEventListener('click', () => {
-                document.getElementById('hamburger-toggle').checked = false;
-            });
-        });
     </script>
 </body>
 </html>
