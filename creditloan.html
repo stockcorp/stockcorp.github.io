@@ -53,7 +53,7 @@
     <script>
       window.fbAsyncInit = function() {
         FB.init({
-          appId      : 'YOUR_APP_ID',
+          appId      : 'YOUR_APP_ID', // 請替換為您的 Facebook App ID
           xfbml      : true,
           version    : 'v18.0'
         });
@@ -70,27 +70,30 @@
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
+    <!-- 載入 Google Fonts 支援中文 -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="免費凱莉公式計算機，計算最佳投注比例，含模擬結果表格與資金曲線圖。">
-    <meta name="image" content="stockcorp.github.io/img/small.jpg">
-    <meta name="keywords" content="凱莉公式, 投注比例, 資金管理, 模擬投注, 吉米理財學堂">
+    <meta name="description" content="免費信貸計算機，支援單一利率與多段利率計算，含本息攤還與本金攤還明細。">
+    <meta name="image" content="https://stockcorp.github.io/img/small.jpg">
+    <meta name="keywords" content="信貸計算機, 貸款試算, 單一利率, 多段利率, 吉米理財學堂">
     <meta name="author" content="股市企業研究院">
     <meta name="robots" content="index, follow">
-    <title>股市企業研究院 - 凱莉計算機 - 吉米理財學堂</title>
+    <title>股市企業研究院 - 信貸計算機 - 吉米理財學堂</title>
     <!-- Open Graph Meta Tags for Social Media -->
-    <meta property="og:title" content="股市企業研究院 - 凱莉計算機 - 吉米理財學堂">
-    <meta property="og:description" content="免費凱莉公式計算機，計算最佳投注比例，含模擬結果表格與資金曲線圖。">
-    <meta property="og:url" content="https://stockcorp.github.io/kelly.html">
+    <meta property="og:title" content="股市企業研究院 - 信貸計算機 - 吉米理財學堂">
+    <meta property="og:description" content="免費信貸計算機，支援單一利率與多段利率計算，含本息攤還與本金攤還明細。">
+    <meta property="og:url" content="https://stockcorp.github.io/creditloan.html">
     <meta property="og:type" content="website">
     <!-- Structured Data (JSON-LD) for SEO -->
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
         "@type": "WebApplication",
-        "name": "凱莉計算機",
-        "url": "https://stockcorp.github.io/kelly.html",
-        "description": "一款免費的凱莉公式計算工具，計算最佳投注比例並模擬資金變化。",
+        "name": "信貸計算機",
+        "url": "https://stockcorp.github.io/creditloan.html",
+        "description": "一款免費的信貸計算工具，支援單一利率與多段利率計算。",
         "publisher": {
             "@type": "Organization",
             "name": "吉米理財學堂",
@@ -100,12 +103,8 @@
         "applicationCategory": "Finance"
     }
     </script>
-    <!-- html2canvas 庫用於截圖 -->
+    <!-- html2canvas 庫用於將結果轉為圖片 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <!-- ECharts 庫用於曲線圖 -->
-    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
-    <!-- 載入 Google Fonts 支援中文 -->
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: Arial, 'Noto Sans TC', sans-serif;
@@ -308,9 +307,32 @@
         }
         .form-section {
             background-color: #ffffff;
-            padding: 20px;
+            padding: 24px;
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .tab-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .tab-button {
+            padding: 8px 16px;
+            background-color: #f5f5f5;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            color: #333333;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .tab-button.active {
+            background-color: #2563eb;
+            color: #ffffff;
+            border-color: #2563eb;
+        }
+        .tab-button:hover {
+            background-color: #e6efff;
+            color: #2563eb;
         }
         .input-custom {
             display: flex;
@@ -323,23 +345,80 @@
             margin-left: 5px;
             color: #000000;
         }
+        .multi-rate-section {
+            margin-top: 10px;
+            padding: 10px;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+        }
+        .multi-rate-item {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+        .multi-rate-item input {
+            width: 100px;
+        }
         .result-section {
-            padding: 20px;
+            margin-top: 20px;
+            padding: 24px;
             background-color: #ffffff;
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             position: relative;
-            margin-bottom: 20px;
         }
-        .chart-container {
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
             width: 100%;
-            height: 400px;
-            margin-bottom: 20px;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.5);
         }
-        .table-container {
-            max-height: 300px;
-            overflow-y: auto;
-            margin-bottom: 20px;
+        .modal-content {
+            background-color: #ffffff;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            width: 80%;
+            max-width: 600px;
+            color: #333333;
+        }
+        .modal-header, .modal-body {
+            padding: 10px;
+        }
+        .modal-header h4 {
+            margin: 0;
+            color: #2563eb;
+        }
+        .close {
+            color: #000000;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close:hover {
+            color: #333333;
+        }
+        .modal-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .modal-table th, .modal-table td {
+            padding: 8px;
+            text-align: right;
+            border-bottom: 1px solid #d1d5db;
+            font-size: 18px;
+        }
+        .modal-table th {
+            background-color: #f5f5f5;
+            color: #2563eb;
         }
         .button-container {
             position: absolute;
@@ -349,18 +428,87 @@
             gap: 10px;
             align-items: center;
         }
-        .button-with-text {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            gap: 5px;
-            cursor: pointer;
+        .guide-section {
+            margin-top: 20px;
+            padding: 24px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            text-align: left;
         }
-        .button-with-text span {
+        .guide-section h1, .privacy-section h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #2563eb;
+        }
+        .guide-section h2 {
+            font-size: 18px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            color: #2563eb;
+        }
+        .result-section h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
             color: #333333;
-            font-size: 12px;
-            line-height: 1;
+        }
+        .facebook-comments {
+            margin-top: 20px;
+            padding: 24px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .facebook-comments h2 {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: #2563eb;
+        }
+        .guide-section p, .privacy-section p, .facebook-comments p {
+            line-height: 1.6;
+            color: #000000;
+            font-size: 18px;
+        }
+        .guide-section ul {
+            margin-left: 20px;
+            line-height: 1.6;
+            color: #000000;
+            font-size: 18px;
+        }
+        .privacy-section {
+            margin-top: 20px;
+            padding: 24px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            text-align: left;
+        }
+        input, select {
+            padding: 10px;
+            margin: 5px 0;
+            width: 100%;
+            box-sizing: border-box;
+            background-color: #f5f5f5;
+            color: #333333;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        button {
+            padding: 10px;
+            margin: 5px 0;
+            width: 100%;
+            background-color: #2563eb;
+            color: #ffffff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #3b82f6;
         }
         .download-button {
             padding: 0;
@@ -387,84 +535,6 @@
         .facebook-button {
             background-image: url('https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg');
         }
-        .guide-section {
-            margin-top: 20px;
-            padding: 20px;
-            background-color: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            text-align: left;
-        }
-        .guide-section h1, .privacy-section h1 {
-            font-size: 24px;
-            margin-bottom: 10px;
-            color: #2563eb;
-        }
-        .guide-section h2 {
-            font-size: 18px;
-            margin-top: 20px;
-            margin-bottom: 10px;
-            color: #2563eb;
-        }
-        .result-section h2 {
-            font-size: 24px;
-            margin-bottom: 10px;
-            color: #333333;
-        }
-        .facebook-comments {
-            margin-top: 20px;
-            padding: 20px;
-            background-color: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            text-align: center;
-        }
-        .facebook-comments h2 {
-            font-size: 20px;
-            margin-bottom: 10px;
-            color: #2563eb;
-        }
-        .guide-section p, .privacy-section p, .facebook-comments p {
-            line-height: 1.6;
-            color: #000000;
-        }
-        .guide-section ul {
-            margin-left: 20px;
-            line-height: 1.6;
-            color: #000000;
-        }
-        .privacy-section {
-            margin-top: 20px;
-            padding: 20px;
-            background-color: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            text-align: left;
-        }
-        input, select {
-            padding: 10px;
-            margin: 5px 0;
-            width: 100%;
-            box-sizing: border-box;
-            background-color: #f5f5f5;
-            color: #333333;
-            border: 1px solid #d1d5db;
-            border-radius: 4px;
-        }
-        button {
-            padding: 10px;
-            margin: 5px 0;
-            width: 100%;
-            background-color: #2563eb;
-            color: #ffffff;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-        button:hover {
-            background-color: #3b82f6;
-        }
         footer {
             text-align: center;
             margin-top: 20px;
@@ -482,10 +552,16 @@
             padding: 8px;
             text-align: right;
             border-bottom: 1px solid #d1d5db;
+            font-size: 18px;
         }
         th {
             background-color: #f5f5f5;
             color: #2563eb;
+        }
+        .row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
         }
         a {
             color: #2563eb;
@@ -507,10 +583,18 @@
             border-radius: 4px;
             display: inline-block;
         }
-        .error {
-            color: #ff4444;
+        .button-with-text {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 5px;
+            cursor: pointer;
+        }
+        .button-with-text span {
+            color: #333333;
             font-size: 12px;
-            margin-top: 5px;
+            line-height: 1;
         }
         #screenshot-container {
             position: absolute;
@@ -521,7 +605,21 @@
             display: flex;
             flex-direction: column;
             gap: 20px;
-            width: 800px;
+            width: 300px;
+        }
+        .error {
+            color: #ff4444;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+        label {
+            font-size: 18px;
+            color: #333333;
+        }
+        .result-section p {
+            font-size: 18px;
+            line-height: 1.6;
+            color: #000000;
         }
         /* 響應式設計 */
         @media screen and (max-width: 768px) {
@@ -533,6 +631,13 @@
             }
             .mobile-nav.active {
                 display: block;
+            }
+            .multi-rate-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .multi-rate-item input {
+                width: 100%;
             }
         }
         @media screen and (min-width: 769px) {
@@ -590,7 +695,7 @@
             <a href="about.html">關於我們</a>
         </div>
 
-        <!-- 左側欄：表單和留言板 -->
+        <!-- 左側欄：標題與計算區域 -->
         <div class="left-column">
             <!-- 標題 -->
             <div class="header-section">
@@ -601,53 +706,74 @@
 
             <!-- 輸入表單 -->
             <div class="form-section">
-                <h2>凱莉計算機</h2>
+                <h2>信貸計算機</h2>
                 <hr>
                 <div class="input-item">
-                    <label class="text">勝率</label>
+                    <label>利率類型</label>
+                    <div class="tab-buttons">
+                        <button class="tab-button active" onclick="switchRateType('single')">單一利率</button>
+                        <button class="tab-button" onclick="switchRateType('multi')">多段利率</button>
+                    </div>
+                </div>
+                <div class="input-item">
+                    <label>貸款金額</label>
                     <div class="input-custom">
-                        <input type="number" id="win-prob" step="0.01" min="0" max="100" placeholder="輸入勝率" value="60">
+                        <input type="number" id="principal" step="1" min="0" placeholder="輸入貸款金額" value="100">
+                        <span>萬元</span>
+                    </div>
+                    <p id="principal-error" class="error" style="display: none;"></p>
+                </div>
+                <div class="input-item">
+                    <label>貸款期限</label>
+                    <select id="year">
+                        <option value="3">3年（36個月）</option>
+                        <option value="5" selected>5年（60個月）</option>
+                        <option value="7">7年（84個月）</option>
+                        <option value="10">10年（120個月）</option>
+                    </select>
+                </div>
+                <div class="input-item">
+                    <label>寬限期</label>
+                    <select id="grace">
+                        <option value="0" selected>0年</option>
+                        <option value="1">1年</option>
+                        <option value="2">2年</option>
+                        <option value="3">3年</option>
+                    </select>
+                </div>
+                <div class="input-item" id="single-rate-input">
+                    <label>年利率</label>
+                    <div class="input-custom">
+                        <input type="number" id="rate" step="0.01" min="0" max="20" placeholder="輸入年利率" value="2">
                         <span>%</span>
                     </div>
-                    <p id="win-prob-error" class="error" style="display: none;"></p>
+                    <p id="rate-error" class="error" style="display: none;"></p>
+                </div>
+                <div class="input-item" id="multi-rate-input" style="display: none;">
+                    <label>多段利率</label>
+                    <div class="multi-rate-section">
+                        <div class="multi-rate-item">
+                            <input type="number" class="multi-rate-year" step="1" min="1" placeholder="年數" value="2">
+                            <input type="number" class="multi-rate-value" step="0.01" min="0" max="20" placeholder="利率 (%)" value="1.5">
+                        </div>
+                        <div class="multi-rate-item">
+                            <input type="number" class="multi-rate-year" step="1" min="1" placeholder="年數" value="3">
+                            <input type="number" class="multi-rate-value" step="0.01" min="0" max="20" placeholder="利率 (%)" value="2.5">
+                        </div>
+                    </div>
+                    <p id="multi-rate-error" class="error" style="display: none;"></p>
                 </div>
                 <div class="input-item">
-                    <label class="text">賠率</label>
-                    <div class="input-custom">
-                        <input type="number" id="odds" step="0.01" min="1" placeholder="輸入賠率" value="2">
-                        <span>倍</span>
-                    </div>
-                    <p id="odds-error" class="error" style="display: none;"></p>
+                    <label>還款方式</label>
+                    <select id="method">
+                        <option value="alike" selected>本息攤還</option>
+                        <option value="capital">本金攤還</option>
+                    </select>
                 </div>
-                <div class="input-item">
-                    <label class="text">資金總額</label>
-                    <div class="input-custom">
-                        <input type="number" id="capital" step="1" min="0" placeholder="輸入資金總額" value="10000">
-                        <span>元</span>
-                    </div>
-                    <p id="capital-error" class="error" style="display: none;"></p>
-                </div>
-                <div class="input-item">
-                    <label class="text">模擬次數</label>
-                    <div class="input-custom">
-                        <input type="number" id="trials" step="1" min="1" max="4500" placeholder="輸入模擬次數" value="100">
-                        <span>次</span>
-                    </div>
-                    <p id="trials-error" class="error" style="display: none;"></p>
-                </div>
-                <button onclick="calculateKelly()">計算凱莉</button>
+                <button onclick="calculateLoan()">計算信貸</button>
             </div>
 
-            <!-- Facebook 留言板 -->
-            <div class="facebook-comments">
-                <h2>留言板</h2>
-                <div class="fb-comments" data-href="https://stockcorp.github.io/kelly.html" data-width="100%" data-numposts="5"></div>
-            </div>
-        </div>
-
-        <!-- 右側欄：分析報告、說明與其他內容 -->
-        <div class="right-column">
-            <!-- 分析報告 -->
+            <!-- 計算結果 -->
             <div class="result-section" id="result">
                 <h2>分析報告</h2>
                 <div class="button-container">
@@ -658,58 +784,86 @@
                     <button class="line-button" onclick="shareToLine()" title="分享到 Line" aria-label="分享到 Line"></button>
                     <button class="facebook-button" onclick="shareToFacebook()" title="分享到 Facebook" aria-label="分享到 Facebook"></button>
                 </div>
-                <p>最佳投注比例: <span id="kelly-ratio" class="highlight-red">0</span> %</p>
-                <p>最終資金: <span id="final-capital" class="highlight-red">0</span> 元</p>
-                <p>平均收益率: <span id="avg-return" class="highlight-red">0</span> %</p>
-                <div class="chart-container" id="capital-chart"></div>
-                <div class="table-container">
-                    <table id="detail-table">
-                        <tr>
-                            <th>次數</th>
-                            <th>投注金額 (元)</th>
-                            <th>是否獲勝</th>
-                            <th>資金 (元)</th>
-                        </tr>
-                    </table>
+                <p>本金: <span id="principal-result" class="highlight-red">0</span> 元</p>
+                <p>總利息: <span id="interest-result" class="highlight-red">0</span> 元</p>
+                <p>本息合計: <span id="total-result" class="highlight-red">0</span> 元</p>
+                <p><a href="javascript:;" onclick="showModal('schedule-modal')">查看還款明細</a></p>
+            </div>
+
+            <!-- 模態框：還款明細 -->
+            <div id="schedule-modal" class="modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <span class="close" onclick="closeModal('schedule-modal')">×</span>
+                        <h4>還款明細</h4>
+                    </div>
+                    <div class="modal-body modal-table">
+                        <table id="schedule-table">
+                            <tr>
+                                <th>月份</th>
+                                <th>本金 (元)</th>
+                                <th>利息 (元)</th>
+                                <th>總額 (元)</th>
+                            </tr>
+                        </table>
+                    </div>
                 </div>
             </div>
 
+            <!-- Facebook 留言板 -->
+            <div class="facebook-comments">
+                <h2>留言板</h2>
+                <div class="fb-comments" data-href="https://stockcorp.github.io/creditloan.html" data-width="100%" data-numposts="5"></div>
+            </div>
+        </div>
+
+        <!-- 右側欄：說明與其他內容 -->
+        <div class="right-column">
             <!-- 使用說明 -->
             <div class="guide-section">
-                <h1>歡迎體驗「凱莉計算機」 - 您的資金管理最佳工具！</h1>
-                <p>想知道最佳投注比例以最大化長期收益？「凱莉計算機」使用凱莉公式，幫助您計算最佳資金分配，並模擬投注過程以分析資金變化！無論您是投資者還是賭博愛好者，這款免費工具都能讓您更好地管理風險與收益。以下是使用秘訣，快來試試吧！</p>
-                <h2>Step 1：輸入參數</h2>
-                <p><strong>勝率</strong>：預期獲勝的機率（0-100%），例如 60%。<br>
-                <strong>賠率</strong>：勝利時的賠率，例如 2 表示贏 1 單位可得 2 單位。<br>
-                <strong>資金總額</strong>：初始資金（單位：元），例如 10,000 元。<br>
-                <strong>模擬次數</strong>：模擬的投注次數，例如 100 次。</p>
-                <h2>Step 2：計算並查看結果</h2>
-                <p>點擊「計算凱莉」，即可查看：<br>
-                - <strong>最佳投注比例</strong>：根據凱莉公式計算的資金投注比例。<br>
-                - <strong>最終資金</strong>：模擬結束後的資金總額。<br>
-                - <strong>平均收益率</strong>：模擬期間的平均收益率。<br>
-                - <strong>曲線圖</strong>：資金隨投注次數變化的趨勢。<br>
-                - <strong>模擬結果</strong>：下方表格顯示每次投注的詳細數據。</p>
+                <h1>歡迎體驗「信貸計算機」 - 您的貸款規劃最佳助手！</h1>
+                <p>想知道信貸每月還款金額？「信貸計算機」提供單一利率與多段利率計算，支援本息攤還與本金攤還，幫助您輕鬆規劃貸款！無論您是個人貸款需求者或財務規劃者，這款免費工具都能讓您快速掌握還款詳情。以下是使用秘訣，快來試試吧！</p>
+                <h2>Step 1：選擇利率類型</h2>
+                <p><strong>單一利率</strong>：輸入一個固定年利率，適用於整個貸款期限。<br>
+                <strong>多段利率</strong>：輸入多個利率段（例如前 2 年 1.5%，後 3 年 2.5%），每個段指定年數，總年數需等於貸款期限。</p>
+                <h2>Step 2：輸入貸款參數</h2>
+                <p><strong>貸款金額</strong>：輸入貸款總額（單位：萬元），例如 100 萬元。<br>
+                <strong>貸款期限</strong>：選擇 3 年、5 年、7 年或 10 年，影響每月還款額。<br>
+                <strong>寬限期</strong>：0-3 年，期間只還利息，不還本金，減輕初期負擔。<br>
+                <strong>還款方式</strong>：選擇本息�摊還（每月固定還款）或本金攤還（每月本金固定，利息遞減）。</p>
+                <h2>Step 3：計算並查看結果</h2>
+                <p>點擊「計算信貸」，即可查看：<br>
+                - <strong>本金</strong>：貸款總額。<br>
+                - <strong>總利息</strong>：整個貸款期間的利息總和。<br>
+                - <strong>本息合計</strong>：本金與利息之和。<br>
+                - <strong>還款明細</strong>：點擊「查看還款明細」，顯示每月本金、利息和總額。<br>
+                - <strong>分享功能</strong>：下載結果圖片或分享至 Line/Facebook。</p>
                 <h2>計算邏輯</h2>
-                <p><strong>凱莉公式</strong><br>
-                最佳投注比例公式為：<br>
-                <b>f = (p * (odds + 1) - 1) / odds</b><br>
-                - f：每次投注的資金比例<br>
-                - p：勝率（小數形式，例如 60% = 0.6）<br>
-                - odds：賠率（例如 2）<br>
-                <strong>模擬過程</strong><br>
-                - 根據勝率隨機決定每次投注是否獲勝。<br>
-                - 每次投注金額 = 當前資金 × 最佳投注比例。<br>
-                - 若獲勝，資金增加：投注金額 × 賠率；若失敗，資金減少：投注金額。<br>
-                - 重複模擬指定次數，記錄每次資金變化。</p>
+                <p><strong>本息攤還（等額本息）</strong><br>
+                每月還款額固定，公式為：<br>
+                <b>每月還款 = P × r × (1 + r)^n / ((1 + r)^n - 1)</b><br>
+                - P：貸款本金（元）<br>
+                - r：月利率（年利率 / 12）<br>
+                - n：總期數（年數 × 12）<br>
+                <strong>本金攤還（等額本金）</strong><br>
+                每月還款本金固定，利息隨本金減少而遞減：<br>
+                <b>每月本金 = P / n</b><br>
+                <b>每月利息 = 剩餘本金 × r</b><br>
+                <b>每月還款 = 每月本金 + 每月利息</b><br>
+                <strong>多段利率</strong>：按利率段分割期限，逐段計算攤還表，確保連續性。<br>
+                <strong>寬限期</strong>：期間只還利息（剩餘本金 × 月利率），之後重新計算攤還。</p>
                 <h2>範例</h2>
-                <p>假設勝率 60%，賠率 2，資金總額 10,000 元，模擬 100 次：<br>
-                - 最佳投注比例 = (0.6 * (2 + 1) - 1) / 2 = (0.6 * 3 - 1) / 2 = 0.8 / 2 = 0.4 = 40%。<br>
-                - 每次投注金額 = 當前資金 × 40%。<br>
-                - 若當前資金為 10,000 元，則首次投注 4,000 元：<br>
-                  - 若獲勝，資金變為 10,000 + 4,000 × 2 = 18,000 元。<br>
-                  - 若失敗，資金變為 10,000 - 4,000 = 6,000 元。<br>
-                - 重複 100 次，顯示最終資金和資金變化曲線。</p>
+                <p>假設貸款 100 萬元，期限 5 年，單一利率 2%，無寬限期：<br>
+                <strong>本息攤還</strong>：<br>
+                - 月利率 = 2% / 12 = 0.0016667<br>
+                - 每月還款 ≈ 1,000,000 × 0.0016667 × (1 + 0.0016667)^60 / ((1 + 0.0016667)^60 - 1) ≈ 17,578 元<br>
+                - 總利息 ≈ 17,578 × 60 - 1,000,000 ≈ 54,680 元<br>
+                <strong>本金攤還</strong>：<br>
+                - 每月本金 = 1,000,000 / 60 ≈ 16,667 元<br>
+                - 第 1 個月利息 = 1,000,000 × 0.0016667 ≈ 1,667 元<br>
+                - 第 1 個月還款 ≈ 16,667 + 1,667 ≈ 18,334 元<br>
+                - 總利息 ≈ 50,000 元（逐月遞減計算）。<br>
+                <strong>多段利率</strong>：前 2 年 1.5%，後 3 年 2.5%，分段計算攤還表。</p>
             </div>
 
             <!-- 隱私權政策 -->
@@ -717,7 +871,7 @@
                 <h1>隱私權政策</h1>
                 <p>我們的應用程式不會收集個人資訊。</p>
                 <p>理財工具系列作品由 <a href="https://www.youtube.com/@吉米理財學堂" target="_blank">吉米理財學堂</a> 授權 股市企業研究院 開發</p>
-                <p>如有任何問題，請聯絡我們：<a href="mailto:xbon510@gmail.com">xbon510@gmail.com</a></p>
+                <p>如有任何問題，請聯絡我們：<a href="/cdn-cgi/l/email-protection#f08b959891cecbcab0979d91999cde939f9d"><span class="__cf_email__" data-cfemail="ef849a9592c9cccdaf88828e8683c1808c8e">[email&#160;protected]</span></a></p>
             </div>
         </div>
 
@@ -760,227 +914,211 @@
             return gk_fileData[filename] || "";
         }
     </script>
-    <script type="text/javascript">
-        var gk_isXlsx = false;
-        var gk_xlsxFileLookup = {};
-        var gk_fileData = {};
-        function filledCell(cell) {
-          return cell !== '' && cell != null;
-        }
-        function loadFileData(filename) {
-            if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
-                try {
-                    var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
-                    var firstSheetName = workbook.SheetNames[0];
-                    var worksheet = workbook.Sheets[firstSheetName];
-                    var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
-                    var filteredData = jsonData.filter(row => row.some(filledCell));
-                    var headerRowIndex = filteredData.findIndex((row, index) =>
-                      row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
-                    );
-                    if (headerRowIndex === -1 || headerRowIndex > 25) {
-                      headerRowIndex = 0;
-                    }
-                    var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex));
-                    csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
-                    return csv;
-                } catch (e) {
-                    console.error(e);
-                    return "";
-                }
-            }
-            return gk_fileData[filename] || "";
-        }
-    </script>
-    <script type="text/javascript">
-        var gk_fileData = {};
-        function loadFileData(filename) {
-          return gk_fileData[filename] || "";
-        }
-    </script>
     <script>
         // 格式化數字為千位分隔符
         function formatNumber(num) {
             return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         }
 
+        // 切換利率類型
+        function switchRateType(type) {
+            const singleButton = document.querySelector(".tab-buttons .tab-button:nth-child(1)");
+            const multiButton = document.querySelector(".tab-buttons .tab-button:nth-child(2)");
+            const singleInput = document.getElementById("single-rate-input");
+            const multiInput = document.getElementById("multi-rate-input");
+
+            if (type === "single") {
+                singleButton.classList.add("active");
+                multiButton.classList.remove("active");
+                singleInput.style.display = "block";
+                multiInput.style.display = "none";
+            } else {
+                singleButton.classList.remove("active");
+                multiButton.classList.add("active");
+                singleInput.style.display = "none";
+                multiInput.style.display = "block";
+            }
+        }
+
         // 表單驗證
         function validateInputs() {
             let isValid = true;
-            const winProb = parseFloat(document.getElementById("win-prob").value) || 0;
-            const odds = parseFloat(document.getElementById("odds").value) || 0;
-            const capital = parseFloat(document.getElementById("capital").value) || 0;
-            const trials = parseInt(document.getElementById("trials").value) || 0;
+            const principal = parseFloat(document.getElementById("principal").value) || 0;
+            const years = parseInt(document.getElementById("year").value) || 0;
+            const grace = parseInt(document.getElementById("grace").value) || 0;
+            const rateType = document.querySelector(".tab-buttons .tab-button.active").textContent === "單一利率" ? "single" : "multi";
+            let rate = 0;
 
             // 重置錯誤訊息
-            document.getElementById("win-prob-error").style.display = "none";
-            document.getElementById("odds-error").style.display = "none";
-            document.getElementById("capital-error").style.display = "none";
-            document.getElementById("trials-error").style.display = "none";
+            document.getElementById("principal-error").style.display = "none";
+            document.getElementById("rate-error").style.display = "none";
+            document.getElementById("multi-rate-error").style.display = "none";
 
-            if (winProb <= 0 || winProb >= 100) {
-                document.getElementById("win-prob-error").innerText = "請輸入正確勝率 (0-100%)";
-                document.getElementById("win-prob-error").style.display = "block";
+            if (principal <= 0) {
+                document.getElementById("principal-error").innerText = "請輸入正確貸款金額";
+                document.getElementById("principal-error").style.display = "block";
                 isValid = false;
             }
 
-            if (odds < 1) {
-                document.getElementById("odds-error").innerText = "請輸入正確賠率 (大於等於1)";
-                document.getElementById("odds-error").style.display = "block";
+            if (grace > years) {
+                document.getElementById("principal-error").innerText = "寬限期不得超過貸款期限";
+                document.getElementById("principal-error").style.display = "block";
                 isValid = false;
             }
 
-            if (capital <= 0) {
-                document.getElementById("capital-error").innerText = "請輸入正確資金總額";
-                document.getElementById("capital-error").style.display = "block";
-                isValid = false;
-            }
-
-            if (trials <= 0 || trials > 4500) {
-                document.getElementById("trials-error").innerText = "請輸入正確模擬次數 (1-4500)";
-                document.getElementById("trials-error").style.display = "block";
-                isValid = false;
+            if (rateType === "single") {
+                rate = parseFloat(document.getElementById("rate").value) || 0;
+                if (rate <= 0 || rate > 20) {
+                    document.getElementById("rate-error").innerText = "請輸入正確年利率 (0-20%)";
+                    document.getElementById("rate-error").style.display = "block";
+                    isValid = false;
+                }
+            } else {
+                const rateItems = document.querySelectorAll(".multi-rate-item");
+                let totalYears = 0;
+                for (let item of rateItems) {
+                    const years = parseInt(item.querySelector(".multi-rate-year").value) || 0;
+                    const rateValue = parseFloat(item.querySelector(".multi-rate-value").value) || 0;
+                    totalYears += years;
+                    if (years <= 0 || rateValue <= 0 || rateValue > 20) {
+                        document.getElementById("multi-rate-error").innerText = "請輸入正確年數和利率 (年數 > 0, 利率 0-20%)";
+                        document.getElementById("multi-rate-error").style.display = "block";
+                        isValid = false;
+                        break;
+                    }
+                }
+                if (totalYears !== years) {
+                    document.getElementById("multi-rate-error").innerText = "多段利率的總年數必須等於貸款期限";
+                    document.getElementById("multi-rate-error").style.display = "block";
+                    isValid = false;
+                }
             }
 
             return isValid;
         }
 
-        // 計算凱莉公式
-        function calculateKelly() {
+        // 計算信貸
+        function calculateLoan() {
             if (!validateInputs()) return;
 
-            const winProb = parseFloat(document.getElementById("win-prob").value) / 100;
-            const odds = parseFloat(document.getElementById("odds").value);
-            let capital = parseFloat(document.getElementById("capital").value);
-            const trials = parseInt(document.getElementById("trials").value);
+            const principal = parseFloat(document.getElementById("principal").value) * 10000;
+            const years = parseInt(document.getElementById("year").value);
+            const months = years * 12;
+            const grace = parseInt(document.getElementById("grace").value) * 12;
+            const method = document.getElementById("method").value;
+            const rateType = document.querySelector(".tab-buttons .tab-button.active").textContent === "單一利率" ? "single" : "multi";
 
-            // 計算凱莉比例
-            const kellyRatio = (winProb * (odds + 1) - 1) / odds;
-            const kellyPercentage = Math.max(0, kellyRatio) * 100; // 確保比例不為負數
-
-            // 模擬投注
-            let detailData = [];
-            let capitalHistory = [capital];
-            for (let i = 1; i <= trials; i++) {
-                const betAmount = capital * kellyRatio;
-                const win = Math.random() < winProb;
-                if (win) {
-                    capital += betAmount * odds;
-                } else {
-                    capital -= betAmount;
+            let rates = [];
+            if (rateType === "single") {
+                const annualRate = parseFloat(document.getElementById("rate").value) / 100;
+                rates.push({ years: years, rate: annualRate });
+            } else {
+                const rateItems = document.querySelectorAll(".multi-rate-item");
+                for (let item of rateItems) {
+                    const rateYears = parseInt(item.querySelector(".multi-rate-year").value);
+                    const rateValue = parseFloat(item.querySelector(".multi-rate-value").value) / 100;
+                    rates.push({ years: rateYears, rate: rateValue });
                 }
-                capital = Math.max(0, capital); // 確保資金不為負數
-                capitalHistory.push(capital);
-                detailData.push({
-                    trial: i,
-                    betAmount: betAmount,
-                    win: win ? "是" : "否",
-                    capital: capital
-                });
             }
 
-            // 計算平均收益率
-            const finalCapital = capital;
-            const totalReturn = ((finalCapital - capitalHistory[0]) / capitalHistory[0]) * 100;
-            const avgReturn = totalReturn / trials;
+            // 計算攤還表
+            let scheduleData = [];
+            let totalInterest = 0;
+            let remainingPrincipal = principal;
+            let currentMonth = 0;
+
+            if (method === "alike") {
+                // 本息攤還
+                for (let segment of rates) {
+                    const segmentMonths = segment.years * 12;
+                    const monthlyRate = segment.rate / 12;
+                    let monthlyPayment = remainingPrincipal * monthlyRate * Math.pow(1 + monthlyRate, segmentMonths) / (Math.pow(1 + monthlyRate, segmentMonths) - 1);
+
+                    for (let month = 1; month <= segmentMonths; month++) {
+                        currentMonth++;
+                        if (currentMonth > months) break;
+
+                        let interest = remainingPrincipal * monthlyRate;
+                        let capital = currentMonth <= grace ? 0 : monthlyPayment - interest;
+                        let total = currentMonth <= grace ? interest : monthlyPayment;
+                        totalInterest += interest;
+                        remainingPrincipal -= capital;
+
+                        scheduleData.push({
+                            month: currentMonth,
+                            capital: capital,
+                            interest: interest,
+                            total: total
+                        });
+                    }
+                }
+            } else {
+                // 本金攤還
+                const monthlyPrincipal = principal / months;
+                for (let segment of rates) {
+                    const segmentMonths = segment.years * 12;
+                    const monthlyRate = segment.rate / 12;
+
+                    for (let month = 1; month <= segmentMonths; month++) {
+                        currentMonth++;
+                        if (currentMonth > months) break;
+
+                        let interest = remainingPrincipal * monthlyRate;
+                        let capital = currentMonth <= grace ? 0 : monthlyPrincipal;
+                        let total = currentMonth <= grace ? interest : monthlyPrincipal + interest;
+                        totalInterest += interest;
+                        remainingPrincipal -= capital;
+
+                        scheduleData.push({
+                            month: currentMonth,
+                            capital: capital,
+                            interest: interest,
+                            total: total
+                        });
+                    }
+                }
+            }
 
             // 更新結果
-            document.getElementById("kelly-ratio").innerText = kellyPercentage.toFixed(2);
-            document.getElementById("final-capital").innerText = formatNumber(Math.round(finalCapital));
-            document.getElementById("avg-return").innerText = avgReturn.toFixed(2);
+            document.getElementById("principal-result").innerText = formatNumber(Math.round(principal));
+            document.getElementById("interest-result").innerText = formatNumber(Math.round(totalInterest));
+            document.getElementById("total-result").innerText = formatNumber(Math.round(principal + totalInterest));
 
-            // 更新曲線圖（延遲執行以確保 DOM 準備好）
-            setTimeout(() => {
-                initChart(capitalHistory);
-            }, 100);
-
-            // 更新詳細表格
-            updateTable("detail-table", detailData);
+            // 更新攤還表
+            updateTable("schedule-table", scheduleData);
         }
 
-        // 初始化曲線圖
-        function initChart(capitalHistory) {
-            if (typeof echarts === 'undefined') {
-                console.error('ECharts 未正確加載');
-                return;
-            }
-
-            const chart = echarts.init(document.getElementById("capital-chart"));
-            const option = {
-                title: {
-                    text: '資金變化曲線',
-                    left: 'center',
-                    textStyle: {
-                        color: '#2563eb',
-                        fontFamily: "'Noto Sans TC', Arial, sans-serif"
-                    }
-                },
-                grid: {
-                    left: '15%', // 增加左側邊距
-                    right: '5%',
-                    top: '15%',
-                    bottom: '10%'
-                },
-                xAxis: {
-                    type: 'category',
-                    data: Array.from({ length: capitalHistory.length }, (_, i) => i.toString()),
-                    name: '投注次數',
-                    axisLabel: {
-                        fontSize: 10
-                    }
-                },
-                yAxis: {
-                    type: 'value',
-                    name: '資金 (元)',
-                    axisLabel: {
-                        fontSize: 10, // 縮小字體大小
-                        formatter: function(value) {
-                            return formatNumber(Math.round(value));
-                        }
-                    }
-                },
-                series: [{
-                    data: capitalHistory,
-                    type: 'line',
-                    smooth: true,
-                    lineStyle: {
-                        color: '#2563eb'
-                    },
-                    itemStyle: {
-                        color: '#2563eb'
-                    }
-                }],
-                tooltip: {
-                    trigger: 'axis',
-                    formatter: function(params) {
-                        return `次數: ${params[0].name}<br>資金: ${formatNumber(Math.round(params[0].value))} 元`;
-                    }
-                }
-            };
-            chart.setOption(option);
-        }
-
-        // 更新詳細表格
+        // 更新攤還表
         function updateTable(tableId, data) {
             const table = document.getElementById(tableId);
             table.innerHTML = `
                 <tr>
-                    <th>次數</th>
-                    <th>投注金額 (元)</th>
-                    <th>是否獲勝</th>
-                    <th>資金 (元)</th>
+                    <th>月份</th>
+                    <th>本金 (元)</th>
+                    <th>利息 (元)</th>
+                    <th>總額 (元)</th>
                 </tr>
             `;
             data.forEach(item => {
                 const row = document.createElement("tr");
                 row.innerHTML = `
-                    <td>${item.trial}</td>
-                    <td>${formatNumber(Math.round(item.betAmount))}</td>
-                    <td>${item.win}</td>
+                    <td>${item.month}</td>
                     <td>${formatNumber(Math.round(item.capital))}</td>
+                    <td>${formatNumber(Math.round(item.interest))}</td>
+                    <td>${formatNumber(Math.round(item.total))}</td>
                 `;
                 table.appendChild(row);
             });
+        }
+
+        // 顯示模態框
+        function showModal(modalId) {
+            document.getElementById(modalId).style.display = "block";
+        }
+
+        // 關閉模態框
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = "none";
         }
 
         // 截圖並下載
@@ -1016,7 +1154,7 @@
         function downloadResultAsImage() {
             captureFullResult(canvas => {
                 const link = document.createElement("a");
-                link.download = "kelly_result.png";
+                link.download = "creditloan_result.png";
                 link.href = canvas.toDataURL("image/png");
                 link.click();
             });
@@ -1025,14 +1163,14 @@
         function shareToLine() {
             captureFullResult(canvas => {
                 const imageData = canvas.toDataURL("image/png");
-                const url = "https://stockcorp.github.io/kelly.html";
-                const text = `我的凱莉計算結果圖表，請查看：${url}`;
+                const url = "https://stockcorp.github.io/creditloan.html";
+                const text = `我的信貸計算結果圖表，請查看：${url}`;
                 const encodedText = encodeURIComponent(text);
                 const lineUrl = `https://line.me/R/msg/text/?${encodedText}`;
                 window.open(lineUrl, '_blank');
                 alert("Line 不支援直接分享圖片，請下載圖片後手動分享至 Line。圖片已自動下載。");
                 const link = document.createElement("a");
-                link.download = "kelly_result.png";
+                link.download = "creditloan_result.png";
                 link.href = imageData;
                 link.click();
             });
@@ -1041,13 +1179,13 @@
         function shareToFacebook() {
             captureFullResult(canvas => {
                 const imageData = canvas.toDataURL("image/png");
-                const url = "https://stockcorp.github.io/kelly.html";
+                const url = "https://stockcorp.github.io/creditloan.html";
                 const encodedUrl = encodeURIComponent(url);
                 const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`;
                 window.open(facebookUrl, '_blank');
                 alert("Facebook 不支援直接分享圖片，請下載圖片後手動上傳至 Facebook。圖片已自動下載。");
                 const link = document.createElement("a");
-                link.download = "kelly_result.png";
+                link.download = "creditloan_result.png";
                 link.href = imageData;
                 link.click();
             });
@@ -1062,8 +1200,11 @@
             const dropdown = document.getElementById('mobile-dropdown');
             dropdown.classList.toggle('active');
         }
+
+        // 初始化
+        document.addEventListener("DOMContentLoaded", function() {
+            switchRateType('single'); // 預設單一利率
+        });
     </script>
-    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
-    <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9360522a6e0ebd19',t:'MTc0NTYxMDExOC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
 </body>
 </html>

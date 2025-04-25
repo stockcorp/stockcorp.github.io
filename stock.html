@@ -1,0 +1,1051 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <!-- Google Tag Manager -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-Q32FFR42XT"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-Q32FFR42XT');
+    </script>
+
+    <!-- Facebook SDK -->
+    <script>
+      window.fbAsyncInit = function() {
+        FB.init({
+          appId      : 'YOUR_APP_ID', // 請替換為您的 Facebook App ID
+          xfbml      : true,
+          version    : 'v18.0'
+        });
+      };
+      (function(d, s, id){
+         var js, fjs = d.getElementsByTagName(s)[0];
+         if (d.getElementById(id)) {return;}
+         js = d.createElement(s); js.id = id;
+         js.src = "https://connect.facebook.net/zh_TW/sdk.js";
+         fjs.parentNode.insertBefore(js, fjs);
+       }(document, 'script', 'facebook-jssdk'));
+    </script>
+
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- 載入 Google Fonts 支援中文 -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="免費台灣股票利潤計算機，支援券商手續費計算，快速計算您的股票交易利潤。">
+    <meta name="image" content="https://stockcorp.github.io//img/small.jpg">
+    <meta name="keywords" content="股票利潤計算機, 台股計算, 券商手續費, 台灣股市, 吉米理財學堂">
+    <meta name="author" content="股市企業研究院">
+    <meta name="robots" content="index, follow">
+    <title>股市企業研究院 - 台灣股票利潤計算機</title>
+    <meta name="description" content="股市企業研究院提供專業股票實用工具與研究。">
+    <!-- Open Graph Meta Tags for Social Media -->
+    <meta property="og:title" content="股市企業研究院 - 台灣股票利潤計算機 - 吉米理財學堂">
+    <meta property="og:description" content="快速計算台股交易利潤，支援手續費折扣計算。">
+    <meta property="og:url" content="https://stockcorp.github.io/">
+    <meta property="og:type" content="website">
+    <!-- Structured Data (JSON-LD) for SEO -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "台灣股票利潤計算機",
+        "url": "https://stockcorp.github.io/",
+        "description": "一款免費的台灣股票利潤計算工具，支援券商手續費折扣計算。",
+        "publisher": {
+            "@type": "Organization",
+            "name": "吉米理財學堂",
+            "url": "https://www.youtube.com/@吉米理財學堂",
+            "email": "xbon510@gmail.com"
+        },
+        "applicationCategory": "Finance"
+    }
+    </script>
+    <!-- html2canvas 庫用於將分析報告轉為圖片 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, 'Noto Sans TC', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f7f9fc;
+            color: #333333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .left-column {
+            flex: 1;
+            min-width: 300px;
+        }
+        .right-column {
+            flex: 2;
+            min-width: 300px;
+        }
+        .header-section {
+            margin-bottom: 20px;
+        }
+        .site-title {
+            background-color: #ffffff;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            width: fit-content;
+            display: flex;
+            align-items: center;
+        }
+        .site-title h1 {
+            font-size: 28px;
+            margin: 0;
+            color: #2563eb;
+            display: inline;
+        }
+        .header {
+            text-align: center;
+            background-image: url('/img/channels4_banner.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: relative;
+            width: 100%;
+            height: 120px;
+            min-height: 80px;
+            max-height: 200px;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        @media screen and (max-width: 600px) {
+            .header {
+                height: 80px;
+                padding: 10px;
+                background-size: contain;
+                background-position: center center;
+            }
+        }
+        @media screen and (min-width: 601px) and (max-width: 900px) {
+            .header {
+                height: 100px;
+                padding: 15px;
+                background-size: cover;
+            }
+        }
+        @media screen and (min-width: 901px) {
+            .header {
+                height: 150px;
+                padding: 20px;
+            }
+        }
+        /* 導航選單 */
+        .nav-tabs {
+            display: flex;
+            width: 100%;
+            background-color: transparent;
+            margin-bottom: 20px;
+        }
+        .nav-tab {
+            flex: 1;
+            padding: 10px 0;
+            text-align: center;
+            text-decoration: none;
+            background-color: #2563eb;
+            color: #ffffff;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 4px;
+            margin: 4px;
+            transition: background-color 0.3s ease;
+            position: relative;
+        }
+        .nav-tab:hover {
+            background-color: #1e40af;
+        }
+        .nav-tab.active {
+            background-color: #1d4ed8;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+        /* 下拉選單 */
+        .dropdown {
+            position: relative;
+        }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #eff6ff;
+            min-width: 220px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            border-radius: 6px;
+            z-index: 1;
+            top: 100%;
+            left: 0;
+            padding: 10px 0;
+            animation: fadeIn 0.3s ease;
+        }
+        .dropdown-content a {
+            color: #1e40af;
+            padding: 10px 16px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            transition: background-color 0.2s ease;
+        }
+        .dropdown-content a:hover {
+            background-color: #dbeafe;
+            border-radius: 4px;
+        }
+        .dropdown-content a i {
+            color: #2563eb;
+        }
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        /* 漢堡選單 */
+        .hamburger {
+            display: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #2563eb;
+            padding: 10px;
+        }
+        .mobile-nav {
+            display: none;
+            background-color: #ffffff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-radius: 4px;
+            position: absolute;
+            top: 60px;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 10px 0;
+            animation: slideIn 0.3s ease;
+        }
+        .mobile-nav a {
+            display: block;
+            padding: 10px 20px;
+            color: #333333;
+            text-decoration: none;
+            font-size: 16px;
+        }
+        .mobile-nav a:hover {
+            background-color: #f5f5f5;
+        }
+        .mobile-dropdown {
+            padding-left: 20px;
+            display: none;
+        }
+        .mobile-dropdown.active {
+            display: block;
+        }
+        .mobile-dropdown a {
+            padding: 8px 20px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #1e40af;
+        }
+        .mobile-dropdown a i {
+            color: #2563eb;
+        }
+        @keyframes slideIn {
+            from { transform: translateY(-10px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .marketing-image {
+            width: 100%;
+            max-width: 1200px;
+            height: auto;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .about-section {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            text-align: center;
+            width: 100%;
+            margin: 20px 0;
+        }
+        .about-section h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #2563eb;
+        }
+        .about-section p {
+            line-height: 1.6;
+            color: #000000;
+        }
+        .facebook-comments {
+            margin-top: 20px;
+            padding: 24px; /* 從 20px 增加到 24px，與 kelly.html 和 loan.html 表格區域對齊 */
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .facebook-comments h2 {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: #2563eb;
+        }
+        .guide-section ul, .facebook-comments ul {
+            margin-left: 20px;
+            line-height: 1.6;
+            color: #000000;
+        }
+        .privacy-section {
+            margin-top: 20px;
+            padding: 24px; /* 從 20px 增加到 24px */
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            text-align: left;
+        }
+        .privacy-section h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #2563eb;
+        }
+        .facebook-comments p, .privacy-section p {
+            line-height: 1.6;
+            color: #000000;
+            font-size: 18px; /* 與 kelly.html 和 loan.html 的表格文字對齊 */
+        }
+        .row {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            width: 100%;
+        }
+        a {
+            color: #2563eb;
+            text-decoration: underline;
+            transition: color 0.3s ease;
+        }
+        a:hover {
+            color: #3b82f6;
+            text-decoration: underline;
+        }
+        a:focus {
+            outline: 2px solid #2563eb;
+            outline-offset: 2px;
+        }
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #000000;
+            width: 100%;
+        }
+        .form-section {
+            background-color: #ffffff;
+            padding: 24px; /* 從 20px 增加到 24px，使輸入區域更舒展 */
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .result-section {
+            margin-top: 20px;
+            padding: 24px; /* 從 20px 增加到 24px */
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        .button-container {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .guide-section {
+            margin-top: 20px;
+            padding: 24px; /* 從 20px 增加到 24px */
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            text-align: left;
+        }
+        .guide-section h1, .privacy-section h1, .facebook-comments h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #2563eb;
+        }
+        .guide-section h2 {
+            font-size: 18px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            color: #2563eb;
+        }
+        .result-section h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #333333;
+        }
+        .section-title {
+            font-size: 24px;
+            color: #333333;
+            margin-bottom: 10px;
+        }
+        .guide-section p, .privacy-section p, .facebook-comments p {
+            line-height: 1.6;
+            color: #000000;
+            font-size: 18px; /* 與 kelly.html 和 loan.html 的表格文字對齊 */
+        }
+        input, select {
+            padding: 10px;
+            margin: 5px 0;
+            width: 100%;
+            box-sizing: border-box;
+            background-color: #f5f5f5;
+            color: #333333;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            font-size: 16px; /* 保持與 kelly.html 和 loan.html 一致 */
+        }
+        button {
+            padding: 10px;
+            margin: 5px 0;
+            width: 100%;
+            background-color: #2563eb;
+            color: #ffffff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px; /* 保持與 kelly.html 和 loan.html 一致 */
+        }
+        button:hover {
+            background-color: #3b82f6;
+        }
+        .download-button {
+            padding: 0;
+            width: 32px;
+            height: 32px;
+            background-image: url('img/download.jpg');
+            background-size: cover;
+            background-color: transparent;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .swap-button {
+            padding: 0;
+            width: 32px;
+            height: 32px;
+            background-image: url('img/price_replace.jpg');
+            background-size: cover;
+            background-color: transparent;
+            border-radius: 4px;
+        }
+        .line-button, .facebook-button {
+            width: 32px;
+            height: 32px;
+            background-size: cover;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            margin: 0;
+            border-radius: 4px;
+        }
+        .line-button {
+            background-image: url('https://upload.wikimedia.org/wikipedia/commons/4/41/LINE_logo.svg');
+        }
+        .facebook-button {
+            background-image: url('https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg');
+        }
+        .row {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+        }
+        .row > div {
+            flex: 1;
+        }
+        .swap-button-container {
+            display: flex;
+            justify-content: center;
+            margin: 10px 0;
+        }
+        .profit-positive {
+            background-color: #ff4444;
+            color: #ffffff;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+        .profit-negative {
+            background-color: #00cc00;
+            color: #ffffff;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+        #screenshot-container {
+            position: absolute;
+            top: -9999px;
+            left: -9999px;
+            background-color: #f7f9fc;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            width: 300px;
+        }
+        .button-with-text {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 5px;
+            cursor: pointer;
+        }
+        .button-with-text span {
+            color: #333333;
+            font-size: 12px;
+            line-height: 1;
+        }
+        /* 表格樣式，與 kelly.html 和 loan.html 一致 */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            color: #333333;
+        }
+        th, td {
+            padding: 8px;
+            text-align: right;
+            border-bottom: 1px solid #d1d5db;
+            font-size: 18px; /* 與 kelly.html 和 loan.html 的表格文字對齊 */
+        }
+        th {
+            background-color: #f5f5f5;
+            color: #2563eb;
+        }
+        /* 標籤字體放大，與 kelly.html 和 loan.html 的輸入區域對齊 */
+        label {
+            font-size: 18px;
+            color: #333333;
+        }
+        /* 結果文字放大，與 kelly.html 和 loan.html 的表格和圖表文字對齊 */
+        .result-section p {
+            font-size: 18px;
+            line-height: 1.6;
+            color: #000000;
+        }
+        /* 響應式設計 */
+        @media screen and (max-width: 768px) {
+            .nav-tabs {
+                display: none;
+            }
+            .hamburger {
+                display: block;
+            }
+            .mobile-nav.active {
+                display: block;
+            }
+        }
+        @media screen and (min-width: 769px) {
+            .mobile-nav {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 橫幅 -->
+        <div style="width: 100%;">
+            <div class="header"></div>
+        </div>
+
+        <!-- 漢堡選單按鈕 -->
+        <div class="hamburger" onclick="toggleMobileNav()">☰</div>
+
+        <!-- 導航選單 -->
+        <div class="nav-tabs">
+            <a href="index.html" class="nav-tab">最新消息</a>
+            <a href="risk.html" class="nav-tab">即時資產風險</a>
+            <div class="nav-tab dropdown active">
+                投資理財計算機
+                <div class="dropdown-content">
+                    <a href="stock.html"><i class="fas fa-chart-line"></i>股票利潤計算機</a>
+                    <a href="compound.html"><i class="fas fa-percentage"></i>複利計算機</a>
+                    <a href="kelly.html"><i class="fas fa-calculator"></i>凱莉計算機</a>
+                    <a href="creditloan.html"><i class="fas fa-money-check-alt"></i>信貸計算機</a>
+                    <a href="loan.html"><i class="fas fa-home"></i>房貸計算機</a>
+                    <a href="car.html"><i class="fas fa-car"></i>車貸計算機</a>
+                    <a href="creditcard.html"><i class="fas fa-credit-card"></i>信用卡驗證</a>
+                    <a href="bmi.html"><i class="fas fa-weight"></i>BMI計算機</a>
+                </div>
+            </div>
+            <a href="about.html" class="nav-tab">關於我們</a>
+        </div>
+
+        <!-- 手機版導航 -->
+        <div class="mobile-nav" id="mobile-nav">
+            <a href="index.html">最新消息</a>
+            <a href="risk.html">即時資產風險</a>
+            <a href="#" onclick="toggleMobileDropdown()">投資理財計算機</a>
+            <div class="mobile-dropdown" id="mobile-dropdown">
+                <a href="stock.html"><i class="fas fa-chart-line"></i>股票利潤計算機</a>
+                <a href="compound.html"><i class="fas fa-percentage"></i>複利計算機</a>
+                <a href="kelly.html"><i class="fas fa-calculator"></i>凱莉計算機</a>
+                <a href="creditloan.html"><i class="fas fa-money-check-alt"></i>信貸計算機</a>
+                <a href="loan.html"><i class="fas fa-home"></i>房貸計算機</a>
+                <a href="car.html"><i class="fas fa-car"></i>車貸計算機</a>
+                <a href="creditcard.html"><i class="fas fa-credit-card"></i>信用卡驗證</a>
+                <a href="bmi.html"><i class="fas fa-weight"></i>BMI計算機</a>
+            </div>
+            <a href="about.html">關於我們</a>
+        </div>
+
+        <!-- 左側欄：標題與計算區域 -->
+        <div class="left-column">
+            <!-- 標題 -->
+            <div class="header-section">
+                <div class="site-title">
+                    <h1>stockcorp.github.io</h1>
+                </div>
+            </div>
+
+            <!-- 輸入表單 -->
+            <div class="form-section">
+                <h2>台灣股票利潤計算機</h2>
+                <hr>
+                <label for="buy-price">買入價格:</label>
+                <input type="number" id="buy-price" step="0.01" placeholder="輸入買入價格" value='23'>
+                <div class="swap-button-container">
+                    <div class="button-with-text" onclick="swapPrices()">
+                        <button class="swap-button" aria-label="價格切換"></button>
+                        <span>價格切換</span>
+                    </div>
+                </div>
+                <label for="sell-price">賣出價格:</label>
+                <input type="number" id="sell-price" step="0.01" placeholder="輸入賣出價格" value='52'>
+                <label for="shares">股票張數 (零股用小數，如 0.1 = 100股):</label>
+                <input type="number" id="shares" step="0.001" placeholder="輸入張數" value='5'>
+                <div class="row">
+                    <div>
+                        <label for="fee promis-discount">券商手續費折扣:</label>
+                        <select id="fee-discount">
+                            <option value="0.11">1.1 折</option>
+                            <option value="0.12">1.2 折</option>
+                            <option value="0.13">1.3 折</option>
+                            <option value="0.14">1.4 折</option>
+                            <option value="0.15">1.5 折</option>
+                            <option value="0.16">1.6 折</option>
+                            <option value="0.17">1.7 折</option>
+                            <option value="0.18">1.8 折</option>
+                            <option value="0.19">1.9 折</option>
+                            <option value="0.2">2.0 折</option>
+                            <option value="0.21">2.1 折</option>
+                            <option value="0.22">2.2 折</option>
+                            <option value="0.23">2.3 折</option>
+                            <option value="0.24">2.4 折</option>
+                            <option value="0.25">2.5 折</option>
+                            <option value="0.26">2.6 折</option>
+                            <option value="0.27">2.7 折</option>
+                            <option value="0.28">2.8 折</option>
+                            <option value="0.29">2.9 折</option>
+                            <option value="0.3">3.0 折</option>
+                            <option value="0.31">3.1 折</option>
+                            <option value="0.32">3.2 折</option>
+                            <option value="0.33">3.3 折</option>
+                            <option value="0.34">3.4 折</option>
+                            <option value="0.35">3.5 折</option>
+                            <option value="0.36">3.6 折</option>
+                            <option value="0.37">3.7 折</option>
+                            <option value="0.38">3.8 折</option>
+                            <option value="0.39">3.9 折</option>
+                            <option value="0.4">4.0 折</option>
+                            <option value="0.41">4.1 折</option>
+                            <option value="0.42">4.2 折</option>
+                            <option value="0.43">4.3 折</option>
+                            <option value="0.44">4.4 折</option>
+                            <option value="0.45">4.5 折</option>
+                            <option value="0.46">4.6 折</option>
+                            <option value="0.47">4.7 折</option>
+                            <option value="0.48">4.8 折</option>
+                            <option value="0.49">4.9 折</option>
+                            <option value="0.5">5.0 折</option>
+                            <option value="0.51">5.1 折</option>
+                            <option value="0.52">5.2 折</option>
+                            <option value="0.53">5.3 折</option>
+                            <option value="0.54">5.4 折</option>
+                            <option value="0.55">5.5 折</option>
+                            <option value="0.56">5.6 折</option>
+                            <option value="0.57">5.7 折</option>
+                            <option value="0.58">5.8 折</option>
+                            <option value="0.59">5.9 折</option>
+                            <option value="0.6">6.0 折</option>
+                            <option value="0.61">6.1 折</option>
+                            <option value="0.62">6.2 折</option>
+                            <option value="0.63">6.3 折</option>
+                            <option value="0.64">6.4 折</option>
+                            <option value="0.65" selected>6.5 折 (預設)</option>
+                            <option value="0.66">6.6 折</option>
+                            <option value="0.67">6.7 折</option>
+                            <option value="0.68">6.8 折</option>
+                            <option value="0.69">6.9 折</option>
+                            <option value="0.7">7.0 折</option>
+                            <option value="0.71">7.1 折</option>
+                            <option value="0.72">7.2 折</option>
+                            <option value="0.73">7.3 折</option>
+                            <option value="0.74">7.4 折</option>
+                            <option value="0.75">7.5 折</option>
+                            <option value="0.76">7.6 折</option>
+                            <option value="0.77">7.7 折</option>
+                            <option value="0.78">8.8 折</option>
+                            <option value="0.79">7.9 折</option>
+                            <option value="0.8">8.0 折</option>
+                            <option value="0.81">8.1 折</option>
+                            <option value="0.82">8.2 折</option>
+                            <option value="0.83">8.3 折</option>
+                            <option value="0.84">8.4 折</option>
+                            <option value="0.85">8.5 折</option>
+                            <option value="0.86">8.6 折</option>
+                            <option value="0.87">8.7 折</option>
+                            <option value="0.88">8.8 折</option>
+                            <option value="0.89">8.9 折</option>
+                            <option value="0.9">9.0 折</option>
+                            <option value="0.91">9.1 折</option>
+                            <option value="0.92">9.2 折</option>
+                            <option value="0.93">9.3 折</option>
+                            <option value="0.94">9.4 折</option>
+                            <option value="0.95">9.5 折</option>
+                            <option value="0.96">9.6 折</option>
+                            <option value="0.97">9.7 折</option>
+                            <option value="0.98">9.8 折</option>
+                            <option value="0.99">9.9 折</option>
+                            <option value="1.0">10 折</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="trade-mode">交易模式:</label>
+                        <select id="trade-mode">
+                            <option value="台股">台股</option>
+                            <option value="ETF">ETF</option>
+                            <option value="現股當沖">現股當沖</option>
+                        </select>
+                    </div>
+                </div>
+                <button onclick="calculateProfit()">計算利潤</button>
+            </div>
+
+            <!-- 計算結果 -->
+            <div class="result-section" id="result">
+                <h2>分析報告</h2>
+                <div class="button-container">
+                    <div class="button-with-text" onclick="downloadResultAsImage()">
+                        <button class="download-button" aria-label="下載報告"></button>
+                        <span>下載報告</span>
+                    </div>
+                    <button class="line-button" onclick="shareToLine()" title="分享到 Line" aria-label="分享到 Line"></button>
+                    <button class="facebook-button" onclick="shareToFacebook()" title="分享到 Facebook" aria-label="分享到 Facebook"></button>
+                </div>
+                <p>利潤: <span id="profit">0</span> 元</p>
+                <p>買入總額: <span id="buy-total">0</span> 元</p>
+                <p>賣出總額: <span id="sell-total">0</span> 元</p>
+                <p>買入手續費: <span id="buy-fee">0</span> 元</p>
+                <p>賣出手續費: <span id="sell-fee">0</span> 元</p>
+                <p>證券交易稅: <span id="tax">0</span> 元</p>
+            </div>
+
+            <!-- Facebook 留言板 -->
+            <div class="facebook-comments">
+                <h2>留言板</h2>
+                <div class="fb-comments" data-href="https://stockcorp.github.io/" data-width="100%" data-numposts="5"></div>
+            </div>
+        </div>
+
+        <!-- 右側欄：說明與其他內容 -->
+        <div class="right-column">
+            <!-- 使用說明 -->
+            <div class="guide-section">
+                <h1>歡迎體驗「台灣股票利潤計算機」 - 您的台股交易最佳助手！</h1>
+                <p>想知道股票交易能賺多少？還是怕手續費、稅金算不清楚？別擔心！「台灣股票利潤計算機」幫您一鍵搞定台股、ETF、現股當沖的利潤分析，省時又省力！無論您是新手還是老手，這款免費工具都能讓您輕鬆掌握交易全貌。以下是使用秘訣，快來試試吧！</p>
+                <h2>Step 1：輸入基本交易資訊</h2>
+                <p><strong>買入價格 & 賣出價格</strong><br>在「買入價格」和「賣出價格」欄位，輸入您的交易價格（支援小數點後兩位）。</p>
+                <p><strong>股票張數</strong><br>填入您交易的張數，支援零股計算（例如 0.1 表示 100 股）。精準到小數點後三位，讓您的每一股都算得清清楚楚！</p>
+                <p><strong>價格互換超方便</strong><br>想快速比較買賣順序的利潤？點擊「價格互換」按鈕，買入與賣出價格瞬間對調，靈活又省事。</p>
+                <h2>Step 2：設定交易條件</h2>
+                <p><strong>券商手續費折扣</strong><br>從下拉選單挑選您的手續費折扣（預設 6.5 折，範圍從 1.1 折到 10 折）。無論您跟哪家券商合作，這裡都能精準匹配！</p>
+                <p><strong>交易模式</strong><br>選擇您的交易類型：台股、ETF 或現股當沖。系統會自動調整手續費率與交易稅率（台股 0.3%、ETF 0.1%、當沖 0.15%），讓計算更貼近真實。</p>
+                <h2>Step 3：一鍵計算，結果秒現</h2>
+                <p>點擊「計算利潤」按鈕，馬上看到完整分析報告：</p>
+                <ul>
+                    <li><strong>利潤</strong>：紅色代表賺錢，綠色提醒虧損，一目了然。</li>
+                    <li><strong>買入總額 / 賣出總額</strong>：包含手續費後的真實成本與收入。</li>
+                    <li><strong>手續費 & 交易稅</strong>：細項拆分，透明公開，絕不漏算。</li>
+                </ul>
+                <h2>開始吧！</h2>
+            </div>
+
+            <!-- 隱私權政策 -->
+            <div class="privacy-section">
+                <h1>隱私權政策</h1>
+                <p>我們的應用程式不會收集個人資訊。</p>
+                <p>理財工具系列作品由 <a href="https://www.youtube.com/@吉米理財學堂" target="_blank">吉米理財學堂</a> 授權 股市企業研究院 開發</p>
+                <p>如有任何問題，請聯絡我們：<a href="/cdn-cgi/l/email-protection#2b534944451e1a1b6b4c464a424705484446"><span class="__cf_email__" data-cfemail="0f776d60613a3e3f4f68626e6663216c6062">[email&#160;protected]</span></a></p>
+            </div>
+        </div>
+
+        <!-- 頁腳 -->
+        <footer style="width: 100%;">
+            <p>© 2025 <a href="https://www.youtube.com/@吉米理財學堂" target="_blank">吉米理財學堂</a>。保留所有權利。</p>
+        </footer>
+    </div>
+
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+    <script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+            if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+                try {
+                    var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                    var firstSheetName = workbook.SheetNames[0];
+                    var worksheet = workbook.Sheets[firstSheetName];
+                    var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                    var filteredData = jsonData.filter(row => row.some(filledCell));
+                    var headerRowIndex = filteredData.findIndex((row, index) =>
+                      row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                    );
+                    if (headerRowIndex === -1 || headerRowIndex > 25) {
+                      headerRowIndex = 0;
+                    }
+                    var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex));
+                    csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                    return csv;
+                } catch (e) {
+                    console.error(e);
+                    return "";
+                }
+            }
+            return gk_fileData[filename] || "";
+        }
+    </script>
+    <script>
+        // 格式化數字為千位分隔符
+        function formatNumber(num) {
+            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+
+        // 互換買入價格與賣出價格
+        function swapPrices() {
+            const buyPrice = document.getElementById("buy-price").value;
+            const sellPrice = document.getElementById("sell-price").value;
+            document.getElementById("buy-price").value = sellPrice;
+            document.getElementById("sell-price").value = buyPrice;
+        }
+
+        // 計算利潤
+        function calculateProfit() {
+            const buyPrice = parseFloat(document.getElementById("buy-price").value) || 0;
+            const sellPrice = parseFloat(document.getElementById("sell-price").value) || 0;
+            const shares = parseFloat(document.getElementById("shares").value) || 0;
+            const discount = parseFloat(document.getElementById("fee-discount").value);
+            const mode = document.getElementById("trade-mode").value;
+            const volume = shares * 1000;
+
+            let buyFeeRate, sellFeeRate, taxRate;
+            switch (mode) {
+                case "台股":
+                    buyFeeRate = 0.001425;
+                    sellFeeRate = 0.001425;
+                    taxRate = 0.003;
+                    break;
+                case "ETF":
+                    buyFeeRate = 0.001;
+                    sellFeeRate = 0.001;
+                    taxRate = 0.001;
+                    break;
+                case "現股當沖":
+                    buyFeeRate = 0.0015;
+                    sellFeeRate = 0.0015;
+                    taxRate = 0.0015;
+                    break;
+                default:
+                    buyFeeRate = 0.001425;
+                    sellFeeRate = 0.001425;
+                    taxRate = 0.003;
+            }
+
+            let buyFee = Math.max(buyPrice * volume * buyFeeRate * discount, 20);
+            let sellFee = Math.max(sellPrice * volume * sellFeeRate * discount, 20);
+            if (buyPrice === 0 || shares === 0) buyFee = 0;
+            if (sellPrice === 0 || shares === 0) sellFee = 0;
+
+            const tax = sellPrice * volume * taxRate;
+            const buyTotal = buyPrice * volume + buyFee;
+            const sellTotal = sellPrice * volume - sellFee - tax;
+            const profit = sellTotal - buyTotal;
+
+            const profitElement = document.getElementById("profit");
+            const buyTotalElement = document.getElementById("buy-total");
+            const sellTotalElement = document.getElementById("sell-total");
+
+            const formattedProfit = formatNumber(profit.toFixed(0));
+            const formattedBuyTotal = formatNumber(buyTotal.toFixed(0));
+            const formattedSellTotal = formatNumber(sellTotal.toFixed(0));
+
+            const className = profit >= 0 ? "profit-positive" : "profit-negative";
+            profitElement.innerText = formattedProfit;
+            profitElement.className = className;
+            buyTotalElement.innerText = formattedBuyTotal;
+            buyTotalElement.className = className;
+            sellTotalElement.innerText = formattedSellTotal;
+            sellTotalElement.className = className;
+
+            document.getElementById("buy-fee").innerText = formatNumber(buyFee.toFixed(0));
+            document.getElementById("sell-fee").innerText = formatNumber(sellFee.toFixed(0));
+            document.getElementById("tax").innerText = formatNumber(tax.toFixed(0));
+        }
+
+        // 截取包含網站標識、輸入表單和分析報告的完整圖片
+        function captureFullResult(callback) {
+            const siteTitle = document.querySelector(".site-title");
+            const formSection = document.querySelector(".form-section");
+            const resultSection = document.getElementById("result");
+
+            let tempContainer = document.getElementById("screenshot-container");
+            if (!tempContainer) {
+                tempContainer = document.createElement("div");
+                tempContainer.id = "screenshot-container";
+                document.body.appendChild(tempContainer);
+            }
+
+            tempContainer.innerHTML = "";
+            const siteTitleClone = siteTitle.cloneNode(true);
+            const formClone = formSection.cloneNode(true);
+            const resultClone = resultSection.cloneNode(true);
+            tempContainer.appendChild(siteTitleClone);
+            tempContainer.appendChild(formClone);
+            tempContainer.appendChild(resultClone);
+
+            const buttonContainer = tempContainer.querySelector(".button-container");
+            if (buttonContainer) buttonContainer.remove();
+
+            html2canvas(tempContainer).then(canvas => {
+                callback(canvas);
+                tempContainer.innerHTML = "";
+            });
+        }
+
+        // 下載完整圖片
+        function downloadResultAsImage() {
+            captureFullResult(canvas => {
+                const link = document.createElement("a");
+                link.download = "stock_profit_full_result.png";
+                link.href = canvas.toDataURL("image/png");
+                link.click();
+            });
+        }
+
+        // 分享到 Line
+        function shareToLine() {
+            captureFullResult(canvas => {
+                const imageData = canvas.toDataURL("image/png");
+                const url = "https://stockcorp.github.io/";
+                const text = `我的股票利潤計算結果圖表，請查看：${url}`;
+                const encodedText = encodeURIComponent(text);
+                const lineUrl = `https://line.me/R/msg/text/?${encodedText}`;
+                window.open(lineUrl, '_blank');
+                alert("Line 不支援直接分享圖片，請下載圖片後手動分享至 Line。圖片已自動下載。");
+                const link = document.createElement("a");
+                link.download = "stock_profit_full_result.png";
+                link.href = imageData;
+                link.click();
+            });
+        }
+
+        // 分享到 Facebook
+        function shareToFacebook() {
+            captureFullResult(canvas => {
+                const imageData = canvas.toDataURL("image/png");
+                const url = "https://stockcorp.github.io/";
+                const encodedUrl = encodeURIComponent(url);
+                const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`;
+                window.open(facebookUrl, '_blank');
+                alert("Facebook 不支援直接分享圖片，請下載圖片後手動上傳至 Facebook。圖片已自動下載。");
+                const link = document.createElement("a");
+                link.download = "stock_profit_full_result.png";
+                link.href = imageData;
+                link.click();
+            });
+        }
+
+        // 漢堡選單控制
+        function toggleMobileNav() {
+            const mobileNav = document.getElementById('mobile-nav');
+            mobileNav.classList.toggle('active');
+        }
+        function toggleMobileDropdown() {
+            const dropdown = document.getElementById('mobile-dropdown');
+            dropdown.classList.toggle('active');
+        }
+    </script>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+    <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'93609b6a4a93bcf2',t:'MTc0NTYxMzExOS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+</body>
+</html>
