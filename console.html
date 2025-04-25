@@ -446,7 +446,8 @@
             // 載入文章列表
             async function loadArticles(pat) {
                 try {
-                    const response = await fetch('https://api.github.com/repos/stockcorp/stockcorp.github.io/contents/content/content.txt', {
+                    console.log('正在載入 content.txt...');
+                    const response = await fetch('https://api.github.com/repos/stockcorp/stockcorp.github.io/contents/content.txt', {
                         headers: {
                             'Authorization': `token ${pat}`,
                             'Accept': 'application/vnd.github.v3+json'
@@ -455,6 +456,7 @@
                     if (response.ok) {
                         const data = await response.json();
                         const content = atob(data.content);
+                        console.log('content.txt 內容:', content);
                         articles = [];
                         const regex = /^## (.+?)\n([\s\S]+?)\n---/gm;
                         let match;
@@ -464,6 +466,7 @@
                                 content: match[2].trim()
                             });
                         }
+                        console.log('解析後的文章:', articles);
                         editSelect.innerHTML = '<option value="">請選擇文章</option>';
                         articles.forEach((article, index) => {
                             const option = document.createElement('option');
@@ -472,12 +475,14 @@
                             editSelect.appendChild(option);
                         });
                     } else if (response.status === 404) {
+                        console.log('content.txt 不存在');
                         articles = [];
                         editSelect.innerHTML = '<option value="">無文章可編輯</option>';
                     } else {
                         throw new Error('無法載入文章列表');
                     }
                 } catch (error) {
+                    console.error('載入文章失敗:', error);
                     alert(`載入文章失敗：${error.message}`);
                 }
             }
@@ -485,6 +490,7 @@
             // 載入圖片計數器
             async function loadImageCounter(pat) {
                 try {
+                    console.log('正在載入 img/content 圖片清單...');
                     const response = await fetch('https://api.github.com/repos/stockcorp/stockcorp.github.io/contents/img/content', {
                         headers: {
                             'Authorization': `token ${pat}`,
@@ -493,6 +499,7 @@
                     });
                     if (response.ok) {
                         const files = await response.json();
+                        console.log('img/content 檔案:', files);
                         const imageFiles = files.filter(file => /\.(jpg|jpeg|png)$/i.test(file.name));
                         if (imageFiles.length > 0) {
                             const numbers = imageFiles.map(file => {
@@ -505,11 +512,14 @@
                                 return 0;
                             });
                             imageCounter = Math.max(...numbers) / 1000 + 1;
+                            console.log('計算後的 imageCounter:', imageCounter);
                         } else {
                             imageCounter = 1;
+                            console.log('img/content 無圖片，imageCounter 設為 1');
                         }
                     } else if (response.status === 404) {
                         imageCounter = 1;
+                        console.log('img/content 資料夾不存在，imageCounter 設為 1');
                     } else {
                         throw new Error('無法載入圖片清單');
                     }
@@ -522,6 +532,7 @@
             // 儲存文章
             async function saveArticle(pat, title, content, isEdit = false, index = -1) {
                 try {
+                    console.log('正在儲存文章:', title);
                     // 提取圖片
                     const parser = new DOMParser();
                     const doc = parser.parseFromString(content, 'text/html');
@@ -530,11 +541,13 @@
                     let currentImageIndex = imageCounter;
 
                     // 上傳圖片
+                    console.log('圖片數量:', images.length);
                     for (let i = 0; i < images.length; i++) {
                         const img = images[i];
                         const base64Data = img.src.split(',')[1];
                         const extension = img.src.startsWith('data:image/png') ? 'png' : 'jpg';
                         const filename = images.length > 1 ? `${currentImageIndex}-${i + 1}.${extension}` : `${currentImageIndex}.${extension}`;
+                        console.log('上傳圖片:', filename);
 
                         imagePromises.push(
                             fetch(`https://api.github.com/repos/stockcorp/stockcorp.github.io/contents/img/content/${filename}`, {
@@ -561,6 +574,7 @@
                     // 等待所有圖片上傳完成
                     await Promise.all(imagePromises);
                     imageCounter++;
+                    console.log('新 imageCounter:', imageCounter);
 
                     // 更新文章內容
                     const updatedContent = doc.body.innerHTML;
@@ -569,7 +583,8 @@
                     let existingContent = '';
                     let sha = null;
                     try {
-                        const response = await fetch('https://api.github.com/repos/stockcorp/stockcorp.github.io/contents/content/content.txt', {
+                        console.log('正在獲取現有 content.txt...');
+                        const response = await fetch('https://api.github.com/repos/stockcorp/stockcorp.github.io/contents/content.txt', {
                             headers: {
                                 'Authorization': `token ${pat}`,
                                 'Accept': 'application/vnd.github.v3+json'
@@ -579,11 +594,13 @@
                             const data = await response.json();
                             existingContent = atob(data.content);
                             sha = data.sha;
+                            console.log('現有 content.txt 內容:', existingContent);
                         }
                     } catch (error) {
                         if (!error.message.includes('404')) {
                             throw error;
                         }
+                        console.log('content.txt 不存在，將創建新檔案');
                     }
 
                     // 生成新 content.txt
@@ -601,11 +618,13 @@
                     } else {
                         newContent = existingContent + (existingContent ? '\n' : '') + `## ${title}\n${updatedContent}\n---`;
                     }
+                    console.log('新 content.txt 內容:', newContent);
 
                     const base64Content = btoa(unescape(encodeURIComponent(newContent)));
 
                     // 上傳 content.txt
-                    const response = await fetch('https://api.github.com/repos/stockcorp/stockcorp.github.io/contents/content/content.txt', {
+                    console.log('正在上傳 content.txt...');
+                    const response = await fetch('https://api.github.com/repos/stockcorp/stockcorp.github.io/contents/content.txt', {
                         method: 'PUT',
                         headers: {
                             'Authorization': `token ${pat}`,
@@ -624,8 +643,10 @@
                         throw new Error(errorData.message || '儲存文章失敗');
                     }
 
+                    console.log('文章儲存成功');
                     return true;
                 } catch (error) {
+                    console.error('儲存文章失敗:', error);
                     throw error;
                 }
             }
