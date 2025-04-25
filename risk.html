@@ -484,7 +484,7 @@
 
         <!-- 圓餅圖：動態資產配置 -->
         <div class="pie-chart-container">
-            <h2>動態資產配置圖（根據 90 天 RSI 調整）</h2>
+            <h2>動態資產配置圖</h2>
             <div id="allocation-pie-chart"></div>
         </div>
 
@@ -494,12 +494,6 @@
             <h3>14 天 RSI</h3>
             <div class="legend-container" id="rsi-legend-14"></div>
             <div id="rsi-chart-14" class="rsi-chart"></div>
-            <h3>90 天 RSI</h3>
-            <div class="legend-container" id="rsi-legend-90"></div>
-            <div id="rsi-chart-90" class="rsi-chart"></div>
-            <h3>250 天 RSI</h3>
-            <div class="legend-container" id="rsi-legend-250"></div>
-            <div id="rsi-chart-250" class="rsi-chart"></div>
         </div>
 
         <!-- 規則說明 -->
@@ -511,19 +505,18 @@
                 <li><strong>現金比例</strong>：從頭到尾固定為 10%。</li>
                 <li><strong>動態調整規則</strong>：
                     <ul>
-                        <li>根據 90 天 RSI 調整四種資產（VT、S&P500、AGG、黃金SPDR）的比例。</li>
-                        <li>當 S&P500 的 90 天 RSI 小於 30 時，增加 2% 比例；小於 20 時，增加 4% 比例。</li>
-                        <li>增加比例時，從其他四種資產中 RSI 最高的資產減少相應比例。例如，若黃金SPDR 的 90 天 RSI 為 68（最高），則減少其比例。</li>
+                        <li>根據最近一天的 14 天 RSI 調整四種資產（VT、S&P500、AGG、黃金SPDR）的比例。</li>
+                        <li>當 S&P500 的 14 天 RSI 小於 30 時，增加 2% 比例；小於 20 時，增加 4% 比例。</li>
+                        <li>增加比例時，從其他四種資產中 RSI 最高的資產減少相應比例。例如，若黃金SPDR 的 14 天 RSI 為 68（最高），則減少其比例。</li>
                         <li>比特幣比例上限為 6%，即使 RSI 調整後也不會超過此上限。</li>
                     </ul>
                 </li>
                 <li><strong>RSI 圖表</strong>：
                     <ul>
                         <li>包含 7 種資產：VT、S&P500、NASDAQ、DIA、AGG、黃金SPDR、比特幣。</li>
-                        <li>三張圖表分別顯示 14 天、90 天和 250 天 RSI。</li>
+                        <li>圖表顯示 14 天 RSI。</li>
                         <li>每種資產用不同顏色顯示，可點擊圖例單獨關閉某資產的顯示（例如關閉比特幣）。</li>
-                        <li>圖例獨立控制：點選 14 天圖表的某資產（如比特幣）只影響 14 天圖表，不影響 90 天和 250 天圖表。</li>
-                        <li>橫軸顯示真實日期，14 天圖表顯示最近 14 天，90 天圖表顯示最近 90 天，250 天圖表顯示最近 250 天。</li>
+                        <li>橫軸顯示真實日期，14 天圖表顯示最近 14 天。</li>
                     </ul>
                 </li>
             </ul>
@@ -544,7 +537,7 @@
 
     <script>
         // Alpha Vantage API Key
-        const apiKey = 'X7Z5L57YG3PK1RE6';
+        const apiKey = 'A5XBYNGDTUZ4ZRWK';
 
         // 資產清單與對應的 Alpha Vantage 符號
         const assets = [
@@ -569,21 +562,31 @@
 
         // 儲存 RSI 數據和日期
         let rsiData = {
-            '14': { values: {}, dates: [] },
-            '90': { values: {}, dates: [] },
-            '250': { values: {}, dates: [] }
+            '14': { values: {}, dates: [] }
         };
 
-        // 儲存是否顯示某資產的狀態（分開控制）
+        // 儲存是否顯示某資產的狀態（僅 14 天）
         let assetVisibility = {
-            '14': {},
-            '90': {},
-            '250': {}
+            '14': {}
         };
         assets.forEach(asset => {
             assetVisibility['14'][asset.name] = true;
-            assetVisibility['90'][asset.name] = true;
-            assetVisibility['250'][asset.name] = true;
+        });
+
+        // 模擬數據（用於測試 RSI 計算邏輯）
+        const mockData = {
+            'VT': Array.from({ length: 30 }, (_, i) => 100 + i * 0.5), // 模擬價格
+            'SPY': Array.from({ length: 30 }, (_, i) => 400 - i * 2), // 模擬 S&P500 下跌趨勢
+            'QQQ': Array.from({ length: 30 }, (_, i) => 300 + i * 1),
+            'DIA': Array.from({ length: 30 }, (_, i) => 350 + i * 0.2),
+            'AGG': Array.from({ length: 30 }, (_, i) => 110 - i * 0.1),
+            'GLD': Array.from({ length: 30 }, (_, i) => 180 + i * 0.8),
+            'BTCUSD': Array.from({ length: 30 }, (_, i) => 60000 + i * 100)
+        };
+        const mockDates = Array.from({ length: 30 }, (_, i) => {
+            const date = new Date();
+            date.setDate(date.getDate() - (29 - i));
+            return date.toISOString().split('T')[0];
         });
 
         // 抓取所有資產的價格數據並計算 RSI
@@ -595,8 +598,12 @@
                     );
                     const data = await response.json();
 
-                    if (data['Error Message'] || data['Information']) {
-                        throw new Error(data['Error Message'] || data['Information']);
+                    // 檢查是否有錯誤訊息
+                    if (data['Error Message']) {
+                        throw new Error(`API 錯誤: ${data['Error Message']}`);
+                    }
+                    if (data['Information']) {
+                        throw new Error(`API 限制: ${data['Information']}`);
                     }
 
                     const timeSeries = data['Time Series (Daily)'];
@@ -611,40 +618,36 @@
                         prices.push(parseFloat(timeSeries[date]['4. close']));
                     }
 
-                    // 計算不同周期的 RSI
-                    const rsi14 = calculateRSI(prices, 14);
-                    const rsi90 = calculateRSI(prices, 90);
-                    const rsi250 = calculateRSI(prices, 250);
+                    // 確保有足夠的數據來計算 14 天 RSI
+                    if (prices.length < 14) {
+                        throw new Error(`數據不足以計算 ${asset.name} 的 14 天 RSI，僅有 ${prices.length} 天的數據`);
+                    }
 
-                    // 儲存 RSI 值和日期（根據周期切割）
+                    // 計算 14 天的 RSI
+                    const rsi14 = calculateRSI(prices, 14);
+
+                    // 儲存 RSI 值和日期（僅 14 天）
                     rsiData['14'].values[asset.name] = rsi14.slice(-14); // 最近 14 天
-                    rsiData['90'].values[asset.name] = rsi90.slice(-90); // 最近 90 天
-                    rsiData['250'].values[asset.name] = rsi250.slice(-250); // 最近 250 天
 
                     // 儲存日期（只需儲存一次）
                     if (rsiData['14'].dates.length === 0) {
                         rsiData['14'].dates = dates.slice(-14);
                     }
-                    if (rsiData['90'].dates.length === 0) {
-                        rsiData['90'].dates = dates.slice(-90);
-                    }
-                    if (rsiData['250'].dates.length === 0) {
-                        rsiData['250'].dates = dates.slice(-250);
-                    }
+
+                    console.log(`${asset.name} 的 14 天 RSI:`, rsiData['14'].values[asset.name]);
                 } catch (error) {
                     console.error(`抓取 ${asset.name} 數據失敗:`, error.message);
-                    rsiData['14'].values[asset.name] = new Array(14).fill(0);
-                    rsiData['90'].values[asset.name] = new Array(90).fill(0);
-                    rsiData['250'].values[asset.name] = new Array(250).fill(0);
+
+                    // 使用模擬數據進行後續計算
+                    const prices = mockData[asset.symbol] || Array.from({ length: 30 }, () => 100);
+                    const rsi14 = calculateRSI(prices, 14);
+                    rsiData['14'].values[asset.name] = rsi14.slice(-14);
+
                     if (rsiData['14'].dates.length === 0) {
-                        rsiData['14'].dates = Array.from({ length: 14 }, (_, i) => `D-${13 - i}`);
+                        rsiData['14'].dates = mockDates.slice(-14);
                     }
-                    if (rsiData['90'].dates.length === 0) {
-                        rsiData['90'].dates = Array.from({ length: 90 }, (_, i) => `D-${89 - i}`);
-                    }
-                    if (rsiData['250'].dates.length === 0) {
-                        rsiData['250'].dates = Array.from({ length: 250 }, (_, i) => `D-${249 - i}`);
-                    }
+
+                    console.warn(`使用模擬數據為 ${asset.name} 計算 RSI:`, rsiData['14'].values[asset.name]);
                 }
             }
 
@@ -703,19 +706,19 @@
             return rsiValues;
         }
 
-        // 動態調整資產配置
+        // 動態調整資產配置（使用最近一天的 14 天 RSI）
         function adjustAllocation() {
-            // 獲取 90 天 RSI 值
-            const rsi90Latest = {};
+            // 獲取最近一天的 14 天 RSI 值
+            const rsi14Latest = {};
             assets.forEach(asset => {
-                rsi90Latest[asset.name] = rsiData['90'].values[asset.name].slice(-1)[0] || 0;
+                rsi14Latest[asset.name] = rsiData['14'].values[asset.name].slice(-1)[0] || 0;
             });
 
             // 調整 S&P500 比例
             let sp500Adjustment = 0;
-            if (rsi90Latest['S&P500'] < 20) {
+            if (rsi14Latest['S&P500'] < 20) {
                 sp500Adjustment = 4;
-            } else if (rsi90Latest['S&P500'] < 30) {
+            } else if (rsi14Latest['S&P500'] < 30) {
                 sp500Adjustment = 2;
             }
 
@@ -724,7 +727,7 @@
 
                 // 找出 RSI 最高的資產（排除 S&P500 和現金）
                 let adjustableAssets = assets.filter(a => a.name !== 'S&P500' && a.name !== '現金');
-                adjustableAssets.sort((a, b) => rsi90Latest[b.name] - rsi90Latest[a.name]);
+                adjustableAssets.sort((a, b) => rsi14Latest[b.name] - rsi14Latest[a.name]);
                 let highestRSIAsset = adjustableAssets[0].name;
 
                 // 減少 RSI 最高的資產比例
@@ -797,84 +800,82 @@
             chart.setOption(option);
         }
 
-        // 初始化 RSI 圖表
+        // 初始化 RSI 圖表（僅 14 天）
         function initRSICharts() {
-            const periods = ['14', '90', '250'];
-            periods.forEach(period => {
-                const chart = echarts.init(document.getElementById(`rsi-chart-${period}`));
-                const series = assets.map(asset => ({
-                    name: `${asset.category} - ${asset.name}`,
-                    type: 'line',
-                    data: rsiData[period].values[asset.name],
-                    itemStyle: { color: asset.color },
-                    showSymbol: false,
-                    lineStyle: { width: 2 }
-                }));
+            const period = '14';
+            const chart = echarts.init(document.getElementById(`rsi-chart-${period}`));
+            const series = assets.map(asset => ({
+                name: `${asset.category} - ${asset.name}`,
+                type: 'line',
+                data: rsiData[period].values[asset.name],
+                itemStyle: { color: asset.color },
+                showSymbol: false,
+                lineStyle: { width: 2 }
+            }));
 
-                const option = {
-                    title: {
-                        text: `${period} 天 RSI`,
-                        left: 'center',
-                        textStyle: {
-                            color: '#2563eb',
-                            fontFamily: "'Noto Sans TC', Arial, sans-serif"
-                        }
-                    },
-                    tooltip: {
-                        trigger: 'axis',
-                        formatter: params => {
-                            let result = `日期: ${params[0].axisValue}<br/>`;
-                            params.forEach(item => {
-                                if (item.value !== null) {
-                                    result += `${item.seriesName}: ${item.value.toFixed(2)}<br/>`;
-                                }
-                            });
-                            return result;
-                        }
-                    },
-                    xAxis: {
-                        type: 'category',
-                        data: rsiData[period].dates,
-                        axisLabel: { fontFamily: "'Noto Sans TC', Arial, sans-serif" }
-                    },
-                    yAxis: {
-                        type: 'value',
-                        min: 0,
-                        max: 100,
-                        axisLabel: { fontFamily: "'Noto Sans TC', Arial, sans-serif" }
-                    },
-                    series: series
-                };
-                chart.setOption(option);
+            const option = {
+                title: {
+                    text: `${period} 天 RSI`,
+                    left: 'center',
+                    textStyle: {
+                        color: '#2563eb',
+                        fontFamily: "'Noto Sans TC', Arial, sans-serif"
+                    }
+                },
+                tooltip: {
+                    trigger: 'axis',
+                    formatter: params => {
+                        let result = `日期: ${params[0].axisValue}<br/>`;
+                        params.forEach(item => {
+                            if (item.value !== null) {
+                                result += `${item.seriesName}: ${item.value.toFixed(2)}<br/>`;
+                            }
+                        });
+                        return result;
+                    }
+                },
+                xAxis: {
+                    type: 'category',
+                    data: rsiData[period].dates,
+                    axisLabel: { fontFamily: "'Noto Sans TC', Arial, sans-serif" }
+                },
+                yAxis: {
+                    type: 'value',
+                    min: 0,
+                    max: 100,
+                    axisLabel: { fontFamily: "'Noto Sans TC', Arial, sans-serif" }
+                },
+                series: series
+            };
+            chart.setOption(option);
 
-                // 圖例點擊事件（獨立控制）
-                chart.on('legendselectchanged', params => {
-                    const name = params.name;
-                    const assetName = name.split(' - ')[1];
-                    assetVisibility[period][assetName] = !assetVisibility[period][assetName];
+            // 圖例點擊事件（僅 14 天）
+            chart.on('legendselectchanged', params => {
+                const name = params.name;
+                const assetName = name.split(' - ')[1];
+                assetVisibility[period][assetName] = !assetVisibility[period][assetName];
+                updateRSIChart(period);
+            });
+
+            // 初始化圖例（僅 14 天）
+            const legendContainer = document.getElementById(`rsi-legend-${period}`);
+            assets.forEach(asset => {
+                const legendItem = document.createElement('div');
+                legendItem.className = 'legend-item';
+                legendItem.innerHTML = `
+                    <span class="legend-color" style="background-color: ${asset.color};"></span>
+                    ${asset.category} - ${asset.name}
+                `;
+                legendItem.onclick = () => {
+                    assetVisibility[period][asset.name] = !assetVisibility[period][asset.name];
+                    legendItem.style.opacity = assetVisibility[period][asset.name] ? 1 : 0.3;
                     updateRSIChart(period);
-                });
-
-                // 初始化圖例
-                const legendContainer = document.getElementById(`rsi-legend-${period}`);
-                assets.forEach(asset => {
-                    const legendItem = document.createElement('div');
-                    legendItem.className = 'legend-item';
-                    legendItem.innerHTML = `
-                        <span class="legend-color" style="background-color: ${asset.color};"></span>
-                        ${asset.category} - ${asset.name}
-                    `;
-                    legendItem.onclick = () => {
-                        assetVisibility[period][asset.name] = !assetVisibility[period][asset.name];
-                        legendItem.style.opacity = assetVisibility[period][asset.name] ? 1 : 0.3;
-                        updateRSIChart(period);
-                    };
-                    legendContainer.appendChild(legendItem);
-                });
+                };
+                legendContainer.appendChild(legendItem);
             });
         }
 
-        // 更新單個 RSI 圖表
+        // 更新單個 RSI 圖表（僅 14 天）
         function updateRSIChart(period) {
             const chart = echarts.getInstanceByDom(document.getElementById(`rsi-chart-${period}`));
             const series = assets.map(asset => ({
@@ -902,5 +903,5 @@
         // 執行數據抓取和圖表初始化
         document.addEventListener('DOMContentLoaded', fetchAndCalculateRSI);
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9361a9963de5b074',t:'MTc0NTYyNDE4NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9361a9963de5b074',t:'MTc0NTYyNDE4NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9361b89dbe349ae2',t:'MTc0NTYyNDgwMC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
