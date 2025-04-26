@@ -7,4 +7,4 @@ content:<p>探討長期投資的優勢。</p><p><img src="img/content/1.jpg" alt
 title:長期投資策略2
 images:2.jpg
 fontSize:16px
-content:<p>探討長期投資的優勢。</p><p><img src="/img/content/3.jpg"></p>
+content:<p>探討長期投資的優勢。</p><p><img src="/img/content/4.jpg"></p>
