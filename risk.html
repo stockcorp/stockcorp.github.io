@@ -53,23 +53,15 @@
                 var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
                 var firstSheetName = workbook.SheetNames[0];
                 var worksheet = workbook.Sheets[firstSheetName];
-
-                // Convert sheet to JSON to filter blank rows
                 var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
-                // Filter out blank rows (rows where all cells are empty, null, or undefined)
                 var filteredData = jsonData.filter(row => row.some(filledCell));
-
-                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
                 var headerRowIndex = filteredData.findIndex((row, index) =>
                   row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
                 );
-                // Fallback
                 if (headerRowIndex === -1 || headerRowIndex > 25) {
                   headerRowIndex = 0;
                 }
-
-                // Convert filtered JSON back to CSV
-                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex));
                 csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
                 return csv;
             } catch (e) {
@@ -93,7 +85,7 @@
     <script>
       window.fbAsyncInit = function() {
         FB.init({
-          appId      : 'YOUR_APP_ID', // 請替換為您的 Facebook App ID
+          appId      : 'YOUR_APP_ID',
           xfbml      : true,
           version    : 'v18.0'
         });
@@ -134,7 +126,7 @@
             "@type": "Organization",
             "name": "吉米理財學堂",
             "url": "https://www.youtube.com/@吉米理財學堂",
-            "email": "x hardnessbon510@gmail.com"
+            "email": "xbon510@gmail.com"
         },
         "applicationCategory": "Finance"
     }
@@ -377,6 +369,12 @@
             margin-bottom: 10px;
             color: #2563eb;
         }
+        .rules-section h3 {
+            font-size: 18px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            color: #2563eb;
+        }
         .rules-section p, .rules-section ul {
             line-height: 1.6;
             color: #333333;
@@ -388,6 +386,51 @@
             font-style: italic;
             color: #ff4444;
             margin-top: 10px;
+        }
+        /* RSI 表格區域 */
+        .rsi-table-container {
+            width: 100%;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .rsi-table-container h2 {
+            font-size: 20px;
+            margin-bottom: 15px;
+            color: #2563eb;
+            text-align: center;
+        }
+        .rsi-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 16px;
+        }
+        .rsi-table th, .rsi-table td {
+            padding: 12px 15px;
+            text-align: center;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .rsi-table th {
+            background-color: #2563eb;
+            color: #ffffff;
+            font-weight: bold;
+        }
+        .rsi-table tr:last-child td {
+            border-bottom: none;
+        }
+        .rsi-table tr:hover {
+            background-color: #f5f5f5;
+            transition: background-color 0.3s ease;
+        }
+        .rsi-table .color-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 5px;
+            vertical-align: middle;
         }
         /* Facebook 留言板 */
         .facebook-comments {
@@ -425,6 +468,12 @@
             }
             .mobile-nav.active {
                 display: block;
+            }
+            .rsi-table {
+                font-size: 14px;
+            }
+            .rsi-table th, .rsi-table td {
+                padding: 8px 10px;
             }
         }
         @media screen and (min-width: 769px) {
@@ -491,9 +540,25 @@
         <!-- RSI 圖表 -->
         <div class="rsi-charts-container">
             <h2>RSI 趨勢分析</h2>
-            <h3>14 天 RSI</h3>
-            <div class="legend-container" id="rsi-legend-14"></div>
-            <div id="rsi-chart-14" class="rsi-chart"></div>
+            <h3>90 天 RSI</h3>
+            <div class="legend-container" id="rsi-legend-90"></div>
+            <div id="rsi-chart-90" class="rsi-chart"></div>
+        </div>
+
+        <!-- 當天 RSI 表格 -->
+        <div class="rsi-table-container">
+            <h2>當天 90 天 RSI 值</h2>
+            <table class="rsi-table">
+                <thead>
+                    <tr>
+                        <th>資產</th>
+                        <th>RSI 值</th>
+                    </tr>
+                </thead>
+                <tbody id="rsi-table-body">
+                    <!-- 表格內容將由 JavaScript 動態生成 -->
+                </tbody>
+            </table>
         </div>
 
         <!-- 規則說明 -->
@@ -502,24 +567,105 @@
             <p>本頁面提供動態資產配置和 RSI 趨勢分析，規則如下：</p>
             <ul>
                 <li><strong>資產配置初始比例</strong>：VT 25%、S&P500 26%、AGG 21%、黃金SPDR 15%、比特幣 3%、現金 10%。</li>
-                <li><strong>現金比例</strong>：從頭到尾固定為 10%。</li>
+                <li><strong>現金比例</strong>：在 10%~20% 區間活動。</li>
+                <li><strong>比特幣比例</strong>：在 3%~6% 區間活動。</li>
+                <li><strong>黃金SPDR比例</strong>：在 10%~15% 區間活動。</li>
                 <li><strong>動態調整規則</strong>：
                     <ul>
-                        <li>根據最近一天的 14 天 RSI 調整四種資產（VT、S&P500、AGG、黃金SPDR）的比例。</li>
-                        <li>當 S&P500 的 14 天 RSI 小於 30 時，增加 2% 比例；小於 20 時，增加 4% 比例。</li>
-                        <li>增加比例時，從其他四種資產中 RSI 最高的資產減少相應比例。例如，若黃金SPDR 的 14 天 RSI 為 68（最高），則減少其比例。</li>
-                        <li>比特幣比例上限為 6%，即使 RSI 調整後也不會超過此上限。</li>
+                        <li>根據最近一天的 90 天 RSI 調整五種資產（VT、S&P500、AGG、黃金SPDR、比特幣）的比例。</li>
+                        <li>當某資產的 90 天 RSI 小於 20 時，增加 5% 比例；小於 30 時，增加 2% 比例（超賣，買入信號）。</li>
+                        <li>當某資產的 90 天 RSI 大於 80 時，減少 5% 比例；大於 70 時，減少 2% 比例（超買，賣出信號）。</li>
+                        <li>增加比例時，從其他資產中 RSI 最高的資產減少相應比例；減少比例時，分配給 RSI 最低的資產。</li>
+                        <li>調整後確保所有資產比例不為負數，且總和為 100%。</li>
                     </ul>
                 </li>
                 <li><strong>RSI 圖表</strong>：
                     <ul>
                         <li>包含 5 種資產：VT、S&P500、AGG、黃金SPDR、比特幣。</li>
-                        <li>圖表顯示 14 天 RSI。</li>
+                        <li>圖表顯示 90 天 RSI，涵蓋完整的 90 天每日 RSI 值。</li>
                         <li>每種資產用不同顏色顯示，可點擊圖例單獨關閉某資產的顯示（例如關閉比特幣）。</li>
-                        <li>橫軸顯示真實日期，14 天圖表顯示最近 14 天。</li>
+                        <li>橫軸顯示真實日期，90 天圖表顯示最近 90 天。</li>
                     </ul>
                 </li>
             </ul>
+
+            <h3>RSI 指標的詳細使用方法</h3>
+            <p>RSI（Relative Strength Index，相對強弱指數）是一種廣泛使用的技術分析指標，由 J. Welles Wilder 於 1978 年提出，用於衡量資產價格的動量和超買/超賣狀態。RSI 的數值範圍在 0 到 100 之間，通過比較一段時間內價格的漲幅和跌幅，來判斷資產是否處於過度買入（超買）或過度賣出（超賣）的狀態。以下是 RSI 指標的詳細使用方法：</p>
+            <ul>
+                <li><strong>計算方法</strong>：RSI 通常以 14 天為基準周期（本頁面使用 90 天周期），計算公式如下：
+                    <ul>
+                        <li>首先計算過去 90 天內每日價格的漲跌變化（當日收盤價減去前一日收盤價）。</li>
+                        <li>將漲幅（正數變化）和跌幅（負數變化）分別累加，計算平均漲幅（Avg Gain）和平均跌幅（Avg Loss）。</li>
+                        <li>計算相對強弱（RS）：RS = 平均漲幅 / 平均跌幅。</li>
+                        <li>最終 RSI 公式：RSI = 100 - (100 / (1 + RS))。</li>
+                    </ul>
+                </li>
+                <li><strong>超買與超賣判斷</strong>：
+                    <ul>
+                        <li><strong>超買（Overbought）</strong>：當 RSI 高於 70 時，表示資產價格可能過熱，市場情緒過於樂觀，價格可能已漲過頭，短期內可能出現回調或下跌。這是一個賣出信號。</li>
+                        <li><strong>超賣（Oversold）</strong>：當 RSI 低於 30 時，表示資產價格可能被過度拋售，市場情緒過於悲觀，價格可能已跌過頭，短期內可能出現反彈或上漲。這是一個買入信號。</li>
+                        <li>更極端的情況下，RSI 高於 80（極度超買）或低於 20（極度超賣）時，價格反轉的可能性更高。</li>
+                    </ul>
+                </li>
+                <li><strong>趨勢確認</strong>：
+                    <ul>
+                        <li>RSI 在 40~60 之間時，通常表示市場處於中性狀態，沒有明顯的超買或超賣信號。</li>
+                        <li>在強勢趨勢中，RSI 可能長期處於高位（例如牛市中 RSI 持續在 70 以上）或低位（例如熊市中 RSI 持續在 30 以下）。此時，RSI 可用於確認趨勢方向，而不一定是反轉信號。</li>
+                    </ul>
+                </li>
+                <li><strong>背離（Divergence）分析</strong>：
+                    <ul>
+                        <li><strong>看漲背離</strong>：當資產價格創出新低，但 RSI 反而形成更高的低點時，稱為看漲背離，表明下跌動能減弱，可能預示價格反彈。</li>
+                        <li><strong>看跌背離</strong>：當資產價格創出新高，但 RSI 反而形成更低的高點時，稱為看跌背離，表明上漲動能減弱，可能預示價格回調。</li>
+                    </ul>
+                </li>
+                <li><strong>其他應用</strong>：
+                    <ul>
+                        <li><strong>中軸線（50）分析</strong>：RSI 高於 50 通常表示市場處於上行趨勢，低於 50 表示下行趨勢。RSI 突破 50 可以作為趨勢轉換的信號。</li>
+                        <li><strong>時間周期選擇</strong>：短期交易者可能使用 7 天或 14 天 RSI 以捕捉快速波動；長期投資者可能使用 90 天或更長周期（如本頁面）以觀察更穩定的趨勢。</li>
+                    </ul>
+                </li>
+                <li><strong>局限性</strong>：
+                    <ul>
+                        <li>RSI 是一個滯後指標，基於歷史價格數據，可能無法及時反映市場最新變化。</li>
+                        <li>在強勢趨勢市場中，RSI 可能長期處於超買或超賣狀態，導致誤判。例如，在牛市中 RSI 可能持續高於 70，但價格仍繼續上漲。</li>
+                        <li>RSI 單獨使用時可能產生假信號，建議結合其他指標（如移動平均線、MACD 或成交量）或基本面分析來提高準確性。</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h3>為何使用 20、30、70、80 作為判斷閾值</h3>
+            <p>在本頁面的資產配置策略中，我們根據 RSI 指標的超買與超賣原理，選用了 20、30、70、80 作為判斷資產比例增減的閾值，具體原因如下：</p>
+            <ul>
+                <li><strong>RSI 低於 30 或 20（超賣，增加比例）</strong>：
+                    <ul>
+                        <li>當 RSI 低於 30 時，資產價格可能已被過度拋售，市場情緒過於悲觀，價格可能低於其內在價值，短期內有較高機率出現反彈或上漲。此時增加資產比例（例如增加 2%）可以抓住潛在的價格反彈機會，符合「低買」的投資原則。</li>
+                        <li>當 RSI 進一步低於 20 時，表示極度超賣狀態，反彈的可能性更高，因此我們進一步加大比例（例如增加 5%），以更積極地捕捉價格反轉的機會。</li>
+                        <li>這種策略基於 RSI 的核心原理：超賣狀態通常是市場情緒過度反應的結果，價格往往會在短期內回歸均值（mean reversion），為投資者提供低位買入的機會。</li>
+                    </ul>
+                </li>
+                <li><strong>RSI 高於 70 或 80（超買，減少比例）</strong>：
+                    <ul>
+                        <li>當 RSI 高於 70 時，資產價格可能過熱，市場情緒過於樂觀，價格可能已漲過頭，短期內有較高機率出現回調或下跌。此時減少資產比例（例如減少 2%）可以降低持倉風險，避免價格高位回調時的損失，符合「高賣」的投資原則。</li>
+                        <li>當 RSI 進一步高於 80 時，表示極度超買狀態，回調的可能性更高，因此我們進一步加大減少幅度（例如減少 5%），以更積極地規避潛在下跌風險。</li>
+                        <li>這種策略同樣基於 RSI 的核心原理：超買狀態通常是市場情緒過度亢奮的結果，價格往往會在短期內回歸均值，為投資者提供高位賣出的機會。</li>
+                    </ul>
+                </li>
+                <li><strong>選擇 20 和 80 作為極端閾值的原因</strong>：
+                    <ul>
+                        <li>傳統上，RSI 使用 30 和 70 作為超賣和超買的標準閾值。然而，為了捕捉更顯著的價格反轉機會，我們選用了更極端的閾值 20 和 80。當 RSI 達到這些極端值時，市場情緒的過度反應更為明顯，價格反轉的概率更高，適合用於動態調整資產比例。</li>
+                        <li>例如，RSI 低於 20 時，資產可能處於極度低估狀態，反彈潛力更大；RSI 高於 80 時，資產可能處於極度高估狀態，回調風險更大。這種極端閾值的設置使得我們的策略更具針對性，能更好地捕捉顯著的價格波動。</li>
+                    </ul>
+                </li>
+                <li><strong>90 天 RSI 的選擇</strong>：
+                    <ul>
+                        <li>我們選擇 90 天作為 RSI 的計算周期，主要是為了捕捉中長期的價格趨勢和市場情緒變化。相較於傳統的 14 天 RSI，90 天 RSI 更能反映長期動量，減少短期價格波動的噪音影響，適合用於資產配置的動態調整。</li>
+                        <li>90 天 RSI 的超買/超賣信號更具穩定性，能更好地反映資產的中期價值偏離情況，為我們的比例調整提供更可靠的依據。</li>
+                    </ul>
+                </li>
+            </ul>
+            <p>總之，我們的策略利用 RSI 的超買與超賣原理，通過 20、30、70、80 這些閾值來判斷市場情緒的極端狀態，並據此動態調整資產比例，以期在價格低位增加持倉捕捉反彈，在價格高位減少持倉規避回調，從而優化投資組合的風險與收益平衡。</p>
+
             <p class="disclaimer">本站全部資訊僅供參考用，請勿用於實際投資，投資還是要自行判斷決策。</p>
         </div>
 
@@ -539,7 +685,7 @@
         // Alpha Vantage API Key
         const apiKey = 'A5XBYNGDTUZ4ZRWK';
 
-        // 資產清單與對應的 Alpha Vantage 符號（移除 NASDAQ 和 DIA）
+        // 資產清單與對應的 Alpha Vantage 符號
         const assets = [
             { name: 'VT', symbol: 'VT', category: '股市', color: '#2563eb' },
             { name: 'S&P500', symbol: 'SPY', category: '股市', color: '#ff4444' },
@@ -548,7 +694,7 @@
             { name: '比特幣', symbol: 'BTCUSD', category: '避險資產', color: '#6666ff' }
         ];
 
-        // 初始資產配置比例（現金固定 10%）
+        // 初始資產配置比例（現金初始 10%）
         let allocation = {
             'VT': 25,
             'S&P500': 26,
@@ -560,41 +706,42 @@
 
         // 儲存 RSI 數據和日期
         let rsiData = {
-            '14': { values: {}, dates: [] }
+            '90': { values: {}, dates: [] }
         };
 
-        // 儲存是否顯示某資產的狀態（僅 14 天）
+        // 儲存是否顯示某資產的狀態（僅 90 天）
         let assetVisibility = {
-            '14': {}
+            '90': {}
         };
         assets.forEach(asset => {
-            assetVisibility['14'][asset.name] = true;
+            assetVisibility['90'][asset.name] = true;
         });
 
         // 模擬數據（用於測試 RSI 計算邏輯）
         const mockData = {
-            'VT': Array.from({ length: 30 }, (_, i) => 100 + i * 0.5), // 模擬價格
-            'SPY': Array.from({ length: 30 }, (_, i) => 400 - i * 2), // 模擬 S&P500 下跌趨勢
-            'AGG': Array.from({ length: 30 }, (_, i) => 110 - i * 0.1),
-            'GLD': Array.from({ length: 30 }, (_, i) => 180 + i * 0.8),
-            'BTCUSD': Array.from({ length: 30 }, (_, i) => 60000 + i * 100)
+            'VT': Array.from({ length: 90 }, (_, i) => 100 + i * 0.5 + Math.random() * 10),
+            'SPY': Array.from({ length: 90 }, (_, i) => 400 - i * 2 + Math.random() * 20),
+            'AGG': Array.from({ length: 90 }, (_, i) => 110 - i * 0.1 + Math.random() * 5),
+            'GLD': Array.from({ length: 90 }, (_, i) => 180 + i * 0.8 + Math.random() * 15),
+            'BTCUSD': Array.from({ length: 90 }, (_, i) => 60000 + i * 100 + Math.random() * 1000)
         };
-        const mockDates = Array.from({ length: 30 }, (_, i) => {
+        const mockDates = Array.from({ length: 90 }, (_, i) => {
             const date = new Date();
-            date.setDate(date.getDate() - (29 - i));
+            date.setDate(date.getDate() - (89 - i));
             return date.toISOString().split('T')[0];
         });
 
         // 抓取所有資產的價格數據並計算 RSI
         async function fetchAndCalculateRSI() {
             for (const asset of assets) {
+                let prices = [];
+                let dates = [];
                 try {
                     const response = await fetch(
                         `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=${asset.symbol}&outputsize=full&apikey=${apiKey}`
                     );
                     const data = await response.json();
 
-                    // 檢查是否有錯誤訊息
                     if (data['Error Message']) {
                         throw new Error(`API 錯誤: ${data['Error Message']}`);
                     }
@@ -607,54 +754,39 @@
                         throw new Error(`無法獲取 ${asset.name} 的價格數據`);
                     }
 
-                    // 提取收盤價和日期
-                    const prices = [];
-                    const dates = Object.keys(timeSeries).sort();
+                    dates = Object.keys(timeSeries).sort();
                     for (const date of dates) {
                         prices.push(parseFloat(timeSeries[date]['4. close']));
                     }
 
-                    // 確保有足夠的數據來計算 14 天 RSI
-                    if (prices.length < 14) {
-                        throw new Error(`數據不足以計算 ${asset.name} 的 14 天 RSI，僅有 ${prices.length} 天的數據`);
+                    if (prices.length < 90) {
+                        throw new Error(`數據不足以計算 ${asset.name} 的 90 天 RSI，僅有 ${prices.length} 天的數據`);
                     }
-
-                    // 計算 14 天的 RSI
-                    const rsi14 = calculateRSI(prices, 14);
-
-                    // 儲存 RSI 值和日期（僅 14 天）
-                    rsiData['14'].values[asset.name] = rsi14.slice(-14); // 最近 14 天
-
-                    // 儲存日期（只需儲存一次）
-                    if (rsiData['14'].dates.length === 0) {
-                        rsiData['14'].dates = dates.slice(-14);
-                    }
-
-                    console.log(`${asset.name} 的 14 天 RSI:`, rsiData['14'].values[asset.name]);
                 } catch (error) {
                     console.error(`抓取 ${asset.name} 數據失敗:`, error.message);
-
-                    // 使用模擬數據進行後續計算
-                    const prices = mockData[asset.symbol] || Array.from({ length: 30 }, () => 100);
-                    const rsi14 = calculateRSI(prices, 14);
-                    rsiData['14'].values[asset.name] = rsi14.slice(-14);
-
-                    if (rsiData['14'].dates.length === 0) {
-                        rsiData['14'].dates = mockDates.slice(-14);
-                    }
-
-                    console.warn(`使用模擬數據為 ${asset.name} 計算 RSI:`, rsiData['14'].values[asset.name]);
+                    // 使用模擬數據
+                    prices = mockData[asset.symbol];
+                    dates = mockDates;
+                    console.warn(`使用模擬數據為 ${asset.name} 計算 RSI`);
                 }
+
+                // 計算 90 天 RSI
+                const rsi90 = calculateRSI(prices, 90);
+                rsiData['90'].values[asset.name] = rsi90.map(val => (val === null || isNaN(val) ? 50 : val));
+                if (rsiData['90'].dates.length === 0) {
+                    rsiData['90'].dates = dates;
+                }
+
+                console.log(`${asset.name} 的 90 天 RSI 數據長度:`, rsiData['90'].values[asset.name].length);
+                console.log(`${asset.name} 的 90 天 RSI 數據:`, rsiData['90'].values[asset.name]);
             }
 
-            // 動態調整資產配置
             adjustAllocation();
-
-            // 初始化圖表
             setTimeout(() => {
                 initPieChart();
                 initRSICharts();
-            }, 100); // 確保 DOM 載入完成
+                populateRSITable();
+            }, 100);
         }
 
         // 計算 RSI
@@ -702,57 +834,122 @@
             return rsiValues;
         }
 
-        // 動態調整資產配置（使用最近一天的 14 天 RSI）
+        // 動態調整資產配置（使用最近一天的 90 天 RSI）
         function adjustAllocation() {
-            // 獲取最近一天的 14 天 RSI 值
-            const rsi14Latest = {};
+            const rsi90Latest = {};
             assets.forEach(asset => {
-                rsi14Latest[asset.name] = rsiData['14'].values[asset.name].slice(-1)[0] || 0;
+                rsi90Latest[asset.name] = rsiData['90'].values[asset.name].slice(-1)[0] || 0;
             });
 
-            // 調整 S&P500 比例
-            let sp500Adjustment = 0;
-            if (rsi14Latest['S&P500'] < 20) {
-                sp500Adjustment = 4;
-            } else if (rsi14Latest['S&P500'] < 30) {
-                sp500Adjustment = 2;
-            }
+            assets.forEach(asset => {
+                const rsi = rsi90Latest[asset.name];
+                let adjustment = 0;
 
-            if (sp500Adjustment > 0) {
-                allocation['S&P500'] += sp500Adjustment;
+                if (rsi < 20) {
+                    adjustment = 5;
+                } else if (rsi < 30) {
+                    adjustment = 2;
+                }
 
-                // 找出 RSI 最高的資產（排除 S&P500 和現金）
-                let adjustableAssets = assets.filter(a => a.name !== 'S&P500' && a.name !== '現金');
-                adjustableAssets.sort((a, b) => rsi14Latest[b.name] - rsi14Latest[a.name]);
-                let highestRSIAsset = adjustableAssets[0].name;
+                if (rsi > 80) {
+                    adjustment = -5;
+                } else if (rsi > 70) {
+                    adjustment = -2;
+                }
 
-                // 減少 RSI 最高的資產比例
-                allocation[highestRSIAsset] -= sp500Adjustment;
+                if (adjustment !== 0) {
+                    allocation[asset.name] += adjustment;
+                    let adjustableAssets = assets.filter(a => a.name !== asset.name && a.name !== '現金');
+                    adjustableAssets.sort((a, b) => {
+                        return adjustment > 0 ? rsi90Latest[b.name] - rsi90Latest[a.name] : rsi90Latest[a.name] - rsi90Latest[b.name];
+                    });
+                    const targetAsset = adjustableAssets[0].name;
+                    allocation[targetAsset] -= adjustment;
 
-                // 確保比特幣不超過 6%
-                if (allocation['比特幣'] > 6) {
-                    const excess = allocation['比特幣'] - 6;
-                    allocation['比特幣'] = 6;
-                    // 將多餘的比例分配給其他資產（平均分配）
-                    const otherAssets = ['VT', 'AGG', '黃金SPDR'];
-                    const adjustmentPerAsset = excess / otherAssets.length;
-                    otherAssets.forEach(asset => {
-                        allocation[asset] += adjustmentPerAsset;
+                    if (allocation['比特幣'] > 6) {
+                        const excess = allocation['比特幣'] - 6;
+                        allocation['比特幣'] = 6;
+                        const otherAssets = ['VT', 'S&P500', 'AGG', '黃金SPDR'];
+                        const adjustmentPerAsset = excess / otherAssets.length;
+                        otherAssets.forEach(asset => {
+                            allocation[asset] += adjustmentPerAsset;
+                        });
+                    } else if (allocation['比特幣'] < 3) {
+                        const deficit = 3 - allocation['比特幣'];
+                        allocation['比特幣'] = 3;
+                        const otherAssets = ['VT', 'S&P500', 'AGG', '黃金SPDR'];
+                        const adjustmentPerAsset = deficit / otherAssets.length;
+                        otherAssets.forEach(asset => {
+                            allocation[asset] -= adjustmentPerAsset;
+                        });
+                    }
+
+                    if (allocation['黃金SPDR'] > 15) {
+                        const excess = allocation['黃金SPDR'] - 15;
+                        allocation['黃金SPDR'] = 15;
+                        const otherAssets = ['VT', 'S&P500', 'AGG', '比特幣'];
+                        const adjustmentPerAsset = excess / otherAssets.length;
+                        otherAssets.forEach(asset => {
+                            allocation[asset] += adjustmentPerAsset;
+                        });
+                    } else if (allocation['黃金SPDR'] < 10) {
+                        const deficit = 10 - allocation['黃金SPDR'];
+                        allocation['黃金SPDR'] = 10;
+                        const otherAssets = ['VT', 'S&P500', 'AGG', '比特幣'];
+                        const adjustmentPerAsset = deficit / otherAssets.length;
+                        otherAssets.forEach(asset => {
+                            allocation[asset] -= adjustmentPerAsset;
+                        });
+                    }
+
+                    Object.keys(allocation).forEach(key => {
+                        if (allocation[key] < 0) allocation[key] = 0;
                     });
                 }
+            });
+
+            if (allocation['現金'] < 10) {
+                const deficit = 10 - allocation['現金'];
+                allocation['現金'] = 10;
+                const otherAssets = ['VT', 'S&P500', 'AGG', '黃金SPDR', '比特幣'];
+                const adjustmentPerAsset = deficit / otherAssets.length;
+                otherAssets.forEach(asset => {
+                    allocation[asset] -= adjustmentPerAsset;
+                    if (allocation[asset] < 0) allocation[asset] = 0;
+                });
+            } else if (allocation['現金'] > 20) {
+                const excess = allocation['現金'] - 20;
+                allocation['現金'] = 20;
+                const otherAssets = ['VT', 'S&P500', 'AGG', '黃金SPDR', '比特幣'];
+                const adjustmentPerAsset = excess / otherAssets.length;
+                otherAssets.forEach(asset => {
+                    allocation[asset] += adjustmentPerAsset;
+                });
             }
 
-            // 確保比例總和為 100%
-            const total = Object.values(allocation).reduce((sum, val) => sum + val, 0);
+            let total = Object.values(allocation).reduce((sum, val) => sum + val, 0);
             if (Math.abs(total - 100) > 0.01) {
                 const factor = 100 / total;
                 Object.keys(allocation).forEach(key => {
                     allocation[key] *= factor;
-                    if (key !== '現金') {
-                        allocation[key] = Math.round(allocation[key] * 100) / 100;
-                    }
+                    allocation[key] = Math.round(allocation[key] * 100) / 100;
                 });
-                allocation['現金'] = 10; // 固定現金比例
+            }
+
+            if (allocation['比特幣'] < 3) allocation['比特幣'] = 3;
+            if (allocation['比特幣'] > 6) allocation['比特幣'] = 6;
+            if (allocation['現金'] < 10) allocation['現金'] = 10;
+            if (allocation['現金'] > 20) allocation['現金'] = 20;
+            if (allocation['黃金SPDR'] < 10) allocation['黃金SPDR'] = 10;
+            if (allocation['黃金SPDR'] > 15) allocation['黃金SPDR'] = 15;
+
+            total = Object.values(allocation).reduce((sum, val) => sum + val, 0);
+            if (Math.abs(total - 100) > 0.01) {
+                const factor = 100 / total;
+                Object.keys(allocation).forEach(key => {
+                    allocation[key] *= factor;
+                    allocation[key] = Math.round(allocation[key] * 100) / 100;
+                });
             }
         }
 
@@ -796,9 +993,9 @@
             chart.setOption(option);
         }
 
-        // 初始化 RSI 圖表（僅 14 天）
+        // 初始化 RSI 圖表（90 天）
         function initRSICharts() {
-            const period = '14';
+            const period = '90';
             const chart = echarts.init(document.getElementById(`rsi-chart-${period}`));
             const series = assets.map(asset => ({
                 name: `${asset.category} - ${asset.name}`,
@@ -806,7 +1003,8 @@
                 data: rsiData[period].values[asset.name],
                 itemStyle: { color: asset.color },
                 showSymbol: false,
-                lineStyle: { width: 2 }
+                lineStyle: { width: 2 },
+                connectNulls: true
             }));
 
             const option = {
@@ -823,17 +1021,39 @@
                     formatter: params => {
                         let result = `日期: ${params[0].axisValue}<br/>`;
                         params.forEach(item => {
-                            if (item.value !== null) {
+                            if (item.value !== null && !isNaN(item.value)) {
                                 result += `${item.seriesName}: ${item.value.toFixed(2)}<br/>`;
                             }
                         });
                         return result;
                     }
                 },
+                grid: {
+                    left: '5%',
+                    right: '5%',
+                    bottom: '15%',
+                    containLabel: true
+                },
+                dataZoom: [
+                    {
+                        type: 'slider',
+                        start: 0,
+                        end: 100,
+                        height: 20
+                    },
+                    {
+                        type: 'inside'
+                    }
+                ],
                 xAxis: {
                     type: 'category',
                     data: rsiData[period].dates,
-                    axisLabel: { fontFamily: "'Noto Sans TC', Arial, sans-serif" }
+                    axisLabel: {
+                        fontFamily: "'Noto Sans TC', Arial, sans-serif",
+                        rotate: 45,
+                        interval: 0
+                    },
+                    boundaryGap: false
                 },
                 yAxis: {
                     type: 'value',
@@ -845,7 +1065,6 @@
             };
             chart.setOption(option);
 
-            // 圖例點擊事件（僅 14 天）
             chart.on('legendselectchanged', params => {
                 const name = params.name;
                 const assetName = name.split(' - ')[1];
@@ -853,7 +1072,6 @@
                 updateRSIChart(period);
             });
 
-            // 初始化圖例（僅 14 天）
             const legendContainer = document.getElementById(`rsi-legend-${period}`);
             assets.forEach(asset => {
                 const legendItem = document.createElement('div');
@@ -871,7 +1089,7 @@
             });
         }
 
-        // 更新單個 RSI 圖表（僅 14 天）
+        // 更新單個 RSI 圖表（90 天）
         function updateRSIChart(period) {
             const chart = echarts.getInstanceByDom(document.getElementById(`rsi-chart-${period}`));
             const series = assets.map(asset => ({
@@ -880,9 +1098,29 @@
                 data: assetVisibility[period][asset.name] ? rsiData[period].values[asset.name] : new Array(rsiData[period].values[asset.name].length).fill(null),
                 itemStyle: { color: asset.color },
                 showSymbol: false,
-                lineStyle: { width: 2 }
+                lineStyle: { width: 2 },
+                connectNulls: true
             }));
             chart.setOption({ series: series });
+        }
+
+        // 動態生成 RSI 表格
+        function populateRSITable() {
+            const tableBody = document.getElementById('rsi-table-body');
+            tableBody.innerHTML = ''; // 清空表格內容
+
+            assets.forEach(asset => {
+                const rsiValue = rsiData['90'].values[asset.name].slice(-1)[0] || 0;
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>
+                        <span class="color-indicator" style="background-color: ${asset.color};"></span>
+                        ${asset.category} - ${asset.name}
+                    </td>
+                    <td>${rsiValue.toFixed(2)}</td>
+                `;
+                tableBody.appendChild(row);
+            });
         }
 
         // 漢堡選單控制
@@ -899,5 +1137,5 @@
         // 執行數據抓取和圖表初始化
         document.addEventListener('DOMContentLoaded', fetchAndCalculateRSI);
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9361a9963de5b074',t:'MTc0NTYyNDE4NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9361b89dbe349ae2',t:'MTc0NTYyNDgwMC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</body>
 </html>
