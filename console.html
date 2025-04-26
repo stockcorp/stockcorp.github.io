@@ -188,6 +188,13 @@
             gap: 15px;
             width: 100%;
         }
+        #article-count {
+            font-size: 1rem;
+            font-weight: 500;
+            color: #4A4A4A;
+            text-align: center;
+            margin-bottom: 10px;
+        }
         #add-editor, #edit-editor {
             min-height: 400px;
             border: 1px solid #D1D5DB;
@@ -232,6 +239,9 @@
                 font-size: 1rem;
                 padding: 0.75rem;
             }
+            #article-count {
+                font-size: 0.9rem;
+            }
         }
     </style>
 </head>
@@ -270,6 +280,7 @@
                     </div>
                     <div id="editor-container" class="editor-container hidden">
                         <div class="input-group w-full" id="edit-select-group">
+                            <p id="article-count" class="text-center text-gray-600 font-medium mb-2"></p>
                             <label for="edit-select">選擇文章</label>
                             <select id="edit-select">
                                 <option value="">請選擇文章</option>
@@ -280,6 +291,16 @@
                             <label for="article-title">文章標題</label>
                             <input type="text" id="article-title" placeholder="輸入文章標題">
                             <p id="title-error" class="error">請輸入文章標題！</p>
+                        </div>
+                        <div class="input-group w-full">
+                            <label for="article-images">圖片名稱（以逗號分隔，例如 image1.jpg,image2.jpg）</label>
+                            <input type="text" id="article-images" placeholder="輸入圖片名稱">
+                            <p id="images-error" class="error">請輸入至少一張圖片名稱！</p>
+                        </div>
+                        <div class="input-group w-full">
+                            <label for="article-fontsize">字體大小（例如 16px）</label>
+                            <input type="text" id="article-fontsize" placeholder="輸入字體大小">
+                            <p id="fontsize-error" class="error">字體大小格式錯誤！</p>
                         </div>
                         <div class="input-group w-full">
                             <label>文章內容</label>
@@ -310,7 +331,12 @@
             const editSelect = document.getElementById('edit-select');
             const editSelectError = document.getElementById('edit-select-error');
             const articleTitle = document.getElementById('article-title');
+            const articleImages = document.getElementById('article-images');
+            const articleFontSize = document.getElementById('article-fontsize');
+            const articleCount = document.getElementById('article-count');
             const titleError = document.getElementById('title-error');
+            const imagesError = document.getElementById('images-error');
+            const fontsizeError = document.getElementById('fontsize-error');
             const contentError = document.getElementById('content-error');
             const saveBtn = document.getElementById('save-btn');
 
@@ -331,6 +357,12 @@
             let currentArticleIndex = -1;
             let imageCounter = 1;
             let isEditMode = false;
+
+            // 更新文章數量顯示
+            function updateArticleCount() {
+                const count = articles.length;
+                articleCount.textContent = `目前有 ${count} 篇文章`;
+            }
 
             // PAT 驗證
             authenticateBtn.addEventListener('click', async () => {
@@ -371,6 +403,7 @@
                     // 載入文章和圖片清單
                     await loadArticles(pat);
                     await loadImageCounter(pat);
+                    updateArticleCount(); // 初次載入後更新文章數量
 
                     // 啟動倒數計時器
                     const startTime = Date.now();
@@ -404,14 +437,56 @@
             });
 
             // 新增文章按鈕
-            addArticleBtn.addEventListener('click', () => {
+            addArticleBtn.addEventListener('click', async () => {
                 isEditMode = false;
                 editorContainer.classList.remove('hidden');
                 editSelectGroup.classList.add('hidden');
-                articleTitle.value = '';
-                quill.setText('');
+                // 動態產生圖片名稱
+                const articleCount = articles.length;
+                const nextImageNumber = articleCount === 0 ? 1 : articleCount + 1;
+                // 預設值
+                articleTitle.value = '長期投資策略';
+                articleImages.value = `${nextImageNumber}.jpg,${nextImageNumber}-1.jpg`;
+                articleFontSize.value = '16px';
+                quill.root.innerHTML = `
+                    <p>探討長期投資的優勢。</p>
+                    <img src="img/content/${nextImageNumber}.jpg" alt="長期投資" style="width: 100%; border-radius: 8px;">
+                    <p>穩健投資需要耐心和紀律。</p>
+                    <img src="img/content/${nextImageNumber}-1.jpg" alt="投資組合" style="width: 100%; border-radius: 8px;">
+                    <p>詳情請參考我們的<a href="/compound.html">複利計算機</a>.</p>
+                `;
+                updateArticleCount(); // 更新文章數量顯示
                 editSelectError.classList.remove('show');
                 titleError.classList.remove('show');
+                imagesError.classList.remove('show');
+                fontsizeError.classList.remove('show');
+                contentError.classList.remove('show');
+            });
+
+            // 編輯文章按鈕
+            addArticleBtn.addEventListener('click', async () => {
+                isEditMode = false;
+                editorContainer.classList.remove('hidden');
+                editSelectGroup.classList.add('hidden');
+                // 動態產生圖片名稱
+                const articleCount = articles.length;
+                const nextImageNumber = articleCount === 0 ? 1 : articleCount + 1;
+                // 預設值
+                articleTitle.value = '長期投資策略';
+                articleImages.value = `${nextImageNumber}.jpg,${nextImageNumber}-1.jpg`;
+                articleFontSize.value = '16px';
+                quill.root.innerHTML = `
+                    <p>探討長期投資的優勢。</p>
+                    <img src="img/content/${nextImageNumber}.jpg" alt="長期投資" style="width: 100%; border-radius: 8px;">
+                    <p>穩健投資需要耐心和紀律。</p>
+                    <img src="img/content/${nextImageNumber}-1.jpg" alt="投資組合" style="width: 100%; border-radius: 8px;">
+                    <p>詳情請參考我們的<a href="/compound.html">複利計算機</a>.</p>
+                `;
+                updateArticleCount(); // 更新文章數量顯示
+                editSelectError.classList.remove('show');
+                titleError.classList.remove('show');
+                imagesError.classList.remove('show');
+                fontsizeError.classList.remove('show');
                 contentError.classList.remove('show');
             });
 
@@ -422,9 +497,14 @@
                 editSelectGroup.classList.remove('hidden');
                 editSelect.value = '';
                 articleTitle.value = '';
+                articleImages.value = '';
+                articleFontSize.value = '';
                 quill.setText('');
+                updateArticleCount(); // 更新文章數量顯示
                 editSelectError.classList.remove('show');
                 titleError.classList.remove('show');
+                imagesError.classList.remove('show');
+                fontsizeError.classList.remove('show');
                 contentError.classList.remove('show');
             });
 
@@ -433,11 +513,16 @@
                 const index = parseInt(editSelect.value);
                 if (index >= 0) {
                     currentArticleIndex = index;
-                    articleTitle.value = articles[index].title;
-                    quill.root.innerHTML = articles[index].content;
+                    const article = articles[index];
+                    articleTitle.value = article.title;
+                    articleImages.value = article.images.join(',');
+                    articleFontSize.value = article.fontSize;
+                    quill.root.innerHTML = article.content;
                     editSelectError.classList.remove('show');
                 } else {
                     articleTitle.value = '';
+                    articleImages.value = '';
+                    articleFontSize.value = '';
                     quill.setText('');
                     currentArticleIndex = -1;
                 }
@@ -455,17 +540,11 @@
                     });
                     if (response.ok) {
                         const data = await response.json();
-                        const content = atob(data.content);
+                        // 解碼 Base64 並處理 UTF-8
+                        const rawContent = atob(data.content);
+                        const content = decodeURIComponent(escape(rawContent));
                         console.log('content.txt 內容:', content);
-                        articles = [];
-                        const regex = /^## (.+?)\n([\s\S]+?)\n---/gm;
-                        let match;
-                        while ((match = regex.exec(content)) !== null) {
-                            articles.push({
-                                title: match[1],
-                                content: match[2].trim()
-                            });
-                        }
+                        articles = parseContent(content);
                         console.log('解析後的文章:', articles);
                         editSelect.innerHTML = '<option value="">請選擇文章</option>';
                         articles.forEach((article, index) => {
@@ -485,6 +564,61 @@
                     console.error('載入文章失敗:', error);
                     alert(`載入文章失敗：${error.message}`);
                 }
+            }
+
+            // 解析 content.txt
+            function parseContent(text) {
+                const articles = [];
+                const entries = text.split('---').map(entry => entry.trim()).filter(entry => entry);
+                entries.forEach(entry => {
+                    const article = { content: '', images: [], fontSize: '' };
+                    const lines = entry.split('\n');
+                    let isContent = false;
+                    lines.forEach(line => {
+                        if (line.startsWith('title:') || line.startsWith('images:') || line.startsWith('image:') || line.startsWith('fontSize:') || line.startsWith('content:')) {
+                            const [key, value] = line.split(':').map(s => s.trim());
+                            if (key === 'image') {
+                                article.images = [value];
+                            } else if (key === 'images') {
+                                article.images = value.split(',').map(s => s.trim());
+                            } else if (key === 'content') {
+                                article.content = line.substring(line.indexOf(':') + 1).trim();
+                                isContent = true;
+                            } else {
+                                article[key] = value;
+                            }
+                        } else if (isContent) {
+                            article.content += (article.content ? '\n' : '') + line;
+                        }
+                    });
+                    article.content = article.content.trim();
+                    if (article.title && article.images.length > 0) {
+                        articles.push(article);
+                    }
+                });
+                return articles;
+            }
+
+            // 清理 HTML 內容（移除多餘的 <p> 和空白）
+            function cleanHTML(html) {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                const elements = Array.from(doc.body.childNodes);
+                let cleanedContent = '';
+
+                elements.forEach(node => {
+                    if (node.nodeType === Node.ELEMENT_NODE) {
+                        // 移除空的 <p> 標籤
+                        if (node.tagName === 'P' && node.textContent.trim() === '' && !node.querySelector('img')) {
+                            return;
+                        }
+                        cleanedContent += node.outerHTML;
+                    } else if (node.nodeType === Node.TEXT_NODE && node.textContent.trim() !== '') {
+                        cleanedContent += node.textContent.trim();
+                    }
+                });
+
+                return cleanedContent;
             }
 
             // 載入圖片計數器
@@ -530,23 +664,25 @@
             }
 
             // 儲存文章
-            async function saveArticle(pat, title, content, isEdit = false, index = -1) {
+            async function saveArticle(pat, title, images, fontSize, content, isEdit = false, index = -1) {
                 try {
                     console.log('正在儲存文章:', title);
+                    // 清理 HTML 內容
+                    const cleanedContent = cleanHTML(content);
                     // 提取圖片
                     const parser = new DOMParser();
-                    const doc = parser.parseFromString(content, 'text/html');
-                    const images = Array.from(doc.querySelectorAll('img')).filter(img => img.src.startsWith('data:image/'));
+                    const doc = parser.parseFromString(cleanedContent, 'text/html');
+                    const imgElements = Array.from(doc.querySelectorAll('img')).filter(img => img.src.startsWith('data:image/'));
                     const imagePromises = [];
                     let currentImageIndex = imageCounter;
 
                     // 上傳圖片
-                    console.log('圖片數量:', images.length);
-                    for (let i = 0; i < images.length; i++) {
-                        const img = images[i];
+                    console.log('圖片數量:', imgElements.length);
+                    for (let i = 0; i < imgElements.length; i++) {
+                        const img = imgElements[i];
                         const base64Data = img.src.split(',')[1];
                         const extension = img.src.startsWith('data:image/png') ? 'png' : 'jpg';
-                        const filename = images.length > 1 ? `${currentImageIndex}-${i + 1}.${extension}` : `${currentImageIndex}.${extension}`;
+                        const filename = imgElements.length > 1 ? `${currentImageIndex}-${i + 1}.${extension}` : `${currentImageIndex}.${extension}`;
                         console.log('上傳圖片:', filename);
 
                         imagePromises.push(
@@ -593,6 +729,7 @@
                         if (response.ok) {
                             const data = await response.json();
                             existingContent = atob(data.content);
+                            existingContent = decodeURIComponent(escape(existingContent));
                             sha = data.sha;
                             console.log('現有 content.txt 內容:', existingContent);
                         }
@@ -604,22 +741,26 @@
                     }
 
                     // 生成新 content.txt
-                    let newContent;
+                    let newContent = '';
                     if (isEdit && index >= 0) {
-                        newContent = '';
                         articles.forEach((article, i) => {
                             if (i === index) {
-                                newContent += `## ${title}\n${updatedContent}\n---\n`;
+                                newContent += `---\ntitle:${title}\nimages:${images}\nfontSize:${fontSize}\ncontent:${updatedContent}\n`;
                             } else {
-                                newContent += `## ${article.title}\n${article.content}\n---\n`;
+                                newContent += `---\ntitle:${article.title}\nimages:${article.images.join(',')}\nfontSize:${article.fontSize}\ncontent:${article.content}\n`;
                             }
                         });
-                        newContent = newContent.trim();
                     } else {
-                        newContent = existingContent + (existingContent ? '\n' : '') + `## ${title}\n${updatedContent}\n---`;
+                        if (existingContent) {
+                            newContent = existingContent + `\n---\ntitle:${title}\nimages:${images}\nfontSize:${fontSize}\ncontent:${updatedContent}\n`;
+                        } else {
+                            newContent = `---\ntitle:${title}\nimages:${images}\nfontSize:${fontSize}\ncontent:${updatedContent}\n`;
+                        }
                     }
+                    newContent = newContent.trim();
                     console.log('新 content.txt 內容:', newContent);
 
+                    // 將內容轉為 UTF-8 編碼並轉為 Base64
                     const base64Content = btoa(unescape(encodeURIComponent(newContent)));
 
                     // 上傳 content.txt
@@ -657,8 +798,11 @@
                     saveBtn.disabled = true;
                     const pat = patInput.value.trim();
                     const title = articleTitle.value.trim();
+                    const images = articleImages.value.trim();
+                    const fontSize = articleFontSize.value.trim();
                     const content = quill.root.innerHTML.trim();
 
+                    // 驗證輸入
                     if (isEditMode && parseInt(editSelect.value) < 0) {
                         editSelectError.classList.add('show');
                         alert('請選擇一篇文章！');
@@ -669,19 +813,32 @@
                         alert('請輸入文章標題！');
                         return;
                     }
+                    if (!images) {
+                        imagesError.classList.add('show');
+                        alert('請輸入至少一張圖片名稱！');
+                        return;
+                    }
+                    if (!fontSize.match(/^\d+px$/)) {
+                        fontsizeError.classList.add('show');
+                        alert('字體大小格式錯誤，請輸入如 16px 的格式！');
+                        return;
+                    }
                     if (!content || content === '<p><br></p>') {
                         contentError.classList.add('show');
                         alert('請輸入文章內容！');
                         return;
                     }
 
-                    await saveArticle(pat, title, content, isEditMode, parseInt(editSelect.value));
+                    await saveArticle(pat, title, images, fontSize, content, isEditMode, parseInt(editSelect.value));
                     alert(isEditMode ? '文章已成功更新！' : '文章已成功儲存！');
                     articleTitle.value = '';
+                    articleImages.value = '';
+                    articleFontSize.value = '';
                     quill.setText('');
                     editSelect.value = '';
                     currentArticleIndex = -1;
                     await loadArticles(pat);
+                    updateArticleCount(); // 更新文章數量顯示
                     editorContainer.classList.add('hidden');
                 } catch (error) {
                     alert(`${isEditMode ? '更新' : '儲存'}文章失敗：${error.message}`);
@@ -689,9 +846,21 @@
                     saveBtn.disabled = false;
                     editSelectError.classList.remove('show');
                     titleError.classList.remove('show');
+                    imagesError.classList.remove('show');
+                    fontsizeError.classList.remove('show');
                     contentError.classList.remove('show');
                 }
             });
+
+            // 漢堡選單控制
+            function toggleMobileNav() {
+                const mobileNav = document.getElementById('mobile-nav');
+                mobileNav.classList.toggle('active');
+            }
+            function toggleMobileDropdown() {
+                const dropdown = document.getElementById('mobile-dropdown');
+                dropdown.classList.toggle('active');
+            }
         });
     </script>
 </body>
