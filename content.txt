@@ -43,3 +43,8 @@ title:長期投資策略
 images:5.jpg,5-1.jpg
 fontSize:16px
 content:<p>探討長期投資的優勢。</p><p><img src="img/content/5.jpg" alt="長期投資" style="width: 100%; border-radius: 8px;"></p><p>穩健投資需要耐心和紀律。</p><p><img src="img/content/5-1.jpg" alt="投資組合" style="width: 100%; border-radius: 8px;"></p><p>詳情請參考我們的<a href="/compound.html">複利計算機</a>.</p>
+---
+title:長期投資策略
+images:6.jpg,6-1.jpg
+fontSize:16px
+content:<p>探討長期投資的優勢。</p><p><img src="img/content/6.jpg" alt="長期投資" style="width: 100%; border-radius: 8px;"></p><p>穩健投資需要耐心和紀律。</p><p><img src="img/content/6-1.jpg" alt="投資組合" style="width: 100%; border-radius: 8px;"></p><p>詳情請參考我們的<a href="/compound.html">複利計算機</a>.</p>
