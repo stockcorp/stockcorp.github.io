@@ -11,17 +11,9 @@ content:<p>這篇文章探討最新的財經趨勢，提供投資建議。</p>
 <a href="https://example.com">點擊查看更多</a>
 ---
 title:股票投資入門
-images:2.jpg
+images:2-2.png
 fontSize:16px
-content:<h3>新手指南</h3>
-<p>從零開始學習股票投資：</p>
-<img src="img/content/2.jpg" alt="投資入門" style="width: 100%; border-radius: 8px;">
-<ul>
-  <li>選擇優質券商</li>
-  <li>研究公司財報</li>
-  <li>分散投資風險</li>
-</ul>
-<p>詳情請參考我們的<a href="/stock.html">股票利潤計算機</a>.</p>
+content:<h3>新手指南</h3><p>從零開始學習股票投資：</p><p><img src="/img/content/2-2.png"></p><p>詳情請參考我們的<a href="/stock.html">股票利潤計算機</a>.</p>
 ---
 title:長期投資策略
 images:8.jpg,8-2.jpg
