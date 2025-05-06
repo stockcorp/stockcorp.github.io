@@ -314,6 +314,46 @@
         </div>
     </div>
 
+    <script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+    </script>
     <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -444,17 +484,11 @@
                 // 動態產生圖片名稱
                 const articleCount = articles.length;
                 const nextImageNumber = articleCount === 0 ? 1 : articleCount + 1;
-                // 預設值
-                articleTitle.value = '長期投資策略';
+                // 設置預設值
+                articleTitle.value = ''; // 文章標題留空
                 articleImages.value = `${nextImageNumber}.jpg,${nextImageNumber}-1.jpg`;
                 articleFontSize.value = '16px';
-                quill.root.innerHTML = `
-                    <p>探討長期投資的優勢。</p>
-                    <img src="img/content/${nextImageNumber}.jpg" alt="長期投資" style="width: 100%; border-radius: 8px;">
-                    <p>穩健投資需要耐心和紀律。</p>
-                    <img src="img/content/${nextImageNumber}-1.jpg" alt="投資組合" style="width: 100%; border-radius: 8px;">
-                    <p>詳情請參考我們的<a href="/compound.html">複利計算機</a>.</p>
-                `;
+                quill.root.innerHTML = ''; // 文章內容留空
                 updateArticleCount(); // 更新文章數量顯示
                 editSelectError.classList.remove('show');
                 titleError.classList.remove('show');
@@ -518,7 +552,9 @@
                         const content = decodeURIComponent(escape(rawContent));
                         console.log('content.txt 內容:', content);
                         articles = parseContent(content);
-                        console.log('解析後的文章:', articles);
+                        // 反轉文章順序，使新文章在前面
+                        articles.reverse();
+                        console.log('解析後的文章（反轉後）:', articles);
                         editSelect.innerHTML = '<option value="">請選擇文章</option>';
                         articles.forEach((article, index) => {
                             const option = document.createElement('option');
@@ -731,20 +767,16 @@
                         });
                     }
 
-                    // 格式化文章，符合要求：第一篇文章前無 ---，每篇文章後有空格 + 下一行 ---
+                    // 格式化文章，每篇文章結束後有空行和 ---
                     articles.forEach((article, idx) => {
-                        // 第一篇文章前不加 ---
-                        if (idx > 0) {
-                            newContent += '---\n';
-                        }
                         newContent += `title:${article.title}\n`;
                         newContent += `images:${article.images.join(',')}\n`;
                         newContent += `fontSize:${article.fontSize}\n`;
-                        newContent += `content:${article.content}\n`; // 確保 content 後有換行
-                        // 確保文章結束後有空格（換行符）
-                        newContent += '\n'; // 額外添加一個換行符，符合「文章結束後有空格，下一行 ---」的要求
+                        newContent += `content:${article.content}\n`;
+                        newContent += '\n'; // 空行
+                        newContent += '---\n'; // 分隔符
                     });
-                    newContent = newContent.trim(); // 移除結尾多餘的換行符
+
                     console.log('新 content.txt 內容:', newContent);
 
                     // 將內容轉為 UTF-8 編碼並轉為 Base64
@@ -852,5 +884,7 @@
     </script>
     <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'93b69c5c9fe5bcbc',t:'MTc0NjUxNDkzMy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
     <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'93bad9988aca2886',t:'MTc0NjU1OTM4NC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'93baf16edf2f7b94',t:'MTc0NjU2MDM2MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'93bb05660c18673f',t:'MTc0NjU2MTE3OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
 </body>
 </html>
