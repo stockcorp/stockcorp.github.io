@@ -716,21 +716,35 @@
                     // 生成新 content.txt
                     let newContent = '';
                     if (isEdit && index >= 0) {
-                        articles.forEach((article, i) => {
-                            if (i === index) {
-                                newContent += `---\ntitle:${title}\nimages:${images}\nfontSize:${fontSize}\ncontent:${updatedContent}\n`;
-                            } else {
-                                newContent += `---\ntitle:${article.title}\nimages:${article.images.join(',')}\nfontSize:${article.fontSize}\ncontent:${article.content}\n`;
-                            }
-                        });
+                        articles[index] = {
+                            title: title,
+                            images: images.split(',').map(img => img.trim()),
+                            fontSize: fontSize,
+                            content: updatedContent
+                        };
                     } else {
-                        if (existingContent) {
-                            newContent = existingContent + `\n---\ntitle:${title}\nimages:${images}\nfontSize:${fontSize}\ncontent:${updatedContent}\n`;
-                        } else {
-                            newContent = `---\ntitle:${title}\nimages:${images}\nfontSize:${fontSize}\ncontent:${updatedContent}\n`;
-                        }
+                        articles.push({
+                            title: title,
+                            images: images.split(',').map(img => img.trim()),
+                            fontSize: fontSize,
+                            content: updatedContent
+                        });
                     }
-                    newContent = newContent.trim();
+
+                    // 格式化文章，符合要求：第一篇文章前無 ---，每篇文章後有空格 + 下一行 ---
+                    articles.forEach((article, idx) => {
+                        // 第一篇文章前不加 ---
+                        if (idx > 0) {
+                            newContent += '---\n';
+                        }
+                        newContent += `title:${article.title}\n`;
+                        newContent += `images:${article.images.join(',')}\n`;
+                        newContent += `fontSize:${article.fontSize}\n`;
+                        newContent += `content:${article.content}\n`; // 確保 content 後有換行
+                        // 確保文章結束後有空格（換行符）
+                        newContent += '\n'; // 額外添加一個換行符，符合「文章結束後有空格，下一行 ---」的要求
+                    });
+                    newContent = newContent.trim(); // 移除結尾多餘的換行符
                     console.log('新 content.txt 內容:', newContent);
 
                     // 將內容轉為 UTF-8 編碼並轉為 Base64
@@ -837,5 +851,6 @@
         });
     </script>
     <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'93b69c5c9fe5bcbc',t:'MTc0NjUxNDkzMy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+    <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'93bad9988aca2886',t:'MTc0NjU1OTM4NC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
 </body>
 </html>
