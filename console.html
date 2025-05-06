@@ -464,33 +464,6 @@
             });
 
             // 編輯文章按鈕
-            addArticleBtn.addEventListener('click', async () => {
-                isEditMode = false;
-                editorContainer.classList.remove('hidden');
-                editSelectGroup.classList.add('hidden');
-                // 動態產生圖片名稱
-                const articleCount = articles.length;
-                const nextImageNumber = articleCount === 0 ? 1 : articleCount + 1;
-                // 預設值
-                articleTitle.value = '長期投資策略';
-                articleImages.value = `${nextImageNumber}.jpg,${nextImageNumber}-1.jpg`;
-                articleFontSize.value = '16px';
-                quill.root.innerHTML = `
-                    <p>探討長期投資的優勢。</p>
-                    <img src="img/content/${nextImageNumber}.jpg" alt="長期投資" style="width: 100%; border-radius: 8px;">
-                    <p>穩健投資需要耐心和紀律。</p>
-                    <img src="img/content/${nextImageNumber}-1.jpg" alt="投資組合" style="width: 100%; border-radius: 8px;">
-                    <p>詳情請參考我們的<a href="/compound.html">複利計算機</a>.</p>
-                `;
-                updateArticleCount(); // 更新文章數量顯示
-                editSelectError.classList.remove('show');
-                titleError.classList.remove('show');
-                imagesError.classList.remove('show');
-                fontsizeError.classList.remove('show');
-                contentError.classList.remove('show');
-            });
-
-            // 編輯文章按鈕
             editArticleBtn.addEventListener('click', () => {
                 isEditMode = true;
                 editorContainer.classList.remove('hidden');
@@ -681,8 +654,8 @@
                     for (let i = 0; i < imgElements.length; i++) {
                         const img = imgElements[i];
                         const base64Data = img.src.split(',')[1];
-                        const extension = img.src.startsWith('data:image/png') ? 'png' : 'jpg';
-                        const filename = imgElements.length > 1 ? `${currentImageIndex}-${i + 1}.${extension}` : `${currentImageIndex}.${extension}`;
+                        // 強制使用 .jpg 格式
+                        const filename = imgElements.length > 1 ? `${currentImageIndex}-${i + 1}.jpg` : `${currentImageIndex}.jpg`;
                         console.log('上傳圖片:', filename);
 
                         imagePromises.push(
@@ -863,5 +836,6 @@
             }
         });
     </script>
+    <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'93b69c5c9fe5bcbc',t:'MTc0NjUxNDkzMy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
 </body>
 </html>
