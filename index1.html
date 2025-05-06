@@ -1,0 +1,781 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <!-- Google Tag Manager -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-Q32FFR42XT"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-Q32FFR42XT');
+    </script>
+
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Facebook SDK -->
+    <script>
+      window.fbAsyncInit = function() {
+        FB.init({
+          appId      : 'YOUR_APP_ID', // 請替換為您的 Facebook App ID
+          xfbml      : true,
+          version    : 'v18.0'
+        });
+      };
+      (function(d, s, id){
+         var js, fjs = d.getElementsByTagName(s)[0];
+         if (d.getElementById(id)) {return;}
+         js = d.createElement(s); js.id = id;
+         js.src = "https://connect.facebook.net/zh_TW/sdk.js";
+         fjs.parentNode.insertBefore(js, fjs);
+       }(document, 'script', 'facebook-jssdk'));
+    </script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="專業財經部落格，提供最新資訊與深入文章，來自股市企業研究院。">
+    <meta name="keywords" content="財經部落格, 台股, 投資理財, 吉米理財學堂">
+    <meta name="author" content="股市企業研究院">
+    <meta name="robots" content="index, follow">
+    <title>股市企業研究院 - 財經部落格</title>
+
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="股市企業研究院 - 財經部落格">
+    <meta property="og:description" content="探索最新財經資訊與深入文章，來自吉米理財學堂。">
+    <meta property="og:url" content="https://stockcorp.github.io/">
+    <meta property="og:type" content="website">
+
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Blog",
+        "name": "股市企業研究院財經部落格",
+        "url": "https://stockcorp.github.io/",
+        "description": "專業財經部落格，提供最新資訊與深入文章。",
+        "publisher": {
+            "@type": "Organization",
+            "name": "吉米理財學堂",
+            "url": "https://www.youtube.com/@吉米理財學堂"
+        }
+    }
+    </script>
+
+    <style>
+        body {
+            font-family: Arial, 'Noto Sans TC', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f7f9fc;
+            color: #333333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        /* Banner */
+        .header {
+            text-align: center;
+            background-image: url('/img/channels4_banner.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: relative;
+            width: 100%;
+            height: 150px;
+            padding: 20px;
+            box-sizing: border-box;
+            margin-bottom: 20px;
+        }
+        @media screen and (max-width: 600px) {
+            .header {
+                height: 80px;
+                padding: 10px;
+                background-size: contain;
+                background-position: center center;
+            }
+        }
+        @media screen and (min-width: 601px) and (max-width: 900px) {
+            .header {
+                height: 100px;
+                padding: 15px;
+                background-size: cover;
+            }
+        }
+        /* 導航選單 */
+        .nav-tabs {
+            display: flex;
+            width: 100%;
+            background-color: transparent;
+            margin-bottom: 20px;
+        }
+        .nav-tab {
+            flex: 1;
+            padding: 10px 0;
+            text-align: center;
+            text-decoration: none;
+            background-color: #2563eb;
+            color: #ffffff;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 4px;
+            margin: 4px;
+            transition: background-color 0.3s ease;
+            position: relative;
+        }
+        .nav-tab:hover {
+            background-color: #1e40af;
+        }
+        .nav-tab.active {
+            background-color: #1d4ed8;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+        /* 下拉選單 */
+        .dropdown {
+            position: relative;
+        }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #eff6ff;
+            min-width: 220px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            border-radius: 6px;
+            z-index: 1;
+            top: 100%;
+            left: 0;
+            padding: 10px 0;
+            animation: fadeIn 0.3s ease;
+        }
+        .dropdown-content a {
+            color: #1e40af;
+            padding: 10px 16px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            transition: background-color 0.2s ease;
+        }
+        .dropdown-content a:hover {
+            background-color: #dbeafe;
+            border-radius: 4px;
+        }
+        .dropdown-content a i {
+            color: #2563eb;
+        }
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        /* 漢堡選單 */
+        .hamburger {
+            display: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #2563eb;
+            padding: 10px;
+        }
+        .mobile-nav {
+            display: none;
+            background-color: #ffffff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-radius: 4px;
+            position: absolute;
+            top: 60px;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 10px 0;
+            animation: slideIn 0.3s ease;
+        }
+        .mobile-nav a {
+            display: block;
+            padding: 10px 20px;
+            color: #333333;
+            text-decoration: none;
+            font-size: 16px;
+        }
+        .mobile-nav a:hover {
+            background-color: #f5f5f5;
+        }
+        .mobile-dropdown {
+            padding-left: 20px;
+            display: none;
+        }
+        .mobile-dropdown.active {
+            display: block;
+        }
+        .mobile-dropdown a {
+            padding: 8px 20px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #1e40af;
+        }
+        .mobile-dropdown a i {
+            color: #2563eb;
+        }
+        @keyframes slideIn {
+            from { transform: translateY(-10px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        /* 輪播框 */
+        .carousel {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .carousel-item {
+            display: none;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: #ffffff;
+        }
+        .carousel-item.active {
+            display: block;
+        }
+        .carousel-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        .carousel-title {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            background-color: rgba(0,0,0,0.7);
+            color: #ffffff;
+            font-size: 28px;
+            font-weight: bold;
+            padding: 10px 15px;
+            border-radius: 4px;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+            z-index: 10;
+            text-align: center;
+        }
+        .carousel-button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(0,0,0,0.5);
+            color: #ffffff;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            font-size: 18px;
+            border-radius: 4px;
+        }
+        .carousel-button.prev {
+            left: 10px;
+        }
+        .carousel-button.next {
+            right: 10px;
+        }
+        /* 文章列表 */
+        .articles {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .article-card {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        .article-card:hover {
+            transform: translateY(-5px);
+        }
+        .article-card h2 {
+            font-size: 24px;
+            color: #2563eb;
+            margin: 0 0 10px;
+        }
+        .article-card p {
+            color: #666666;
+            line-height: 1.6;
+        }
+        /* 文章內容 */
+        .article-content {
+            display: none;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-top: 20px;
+            white-space: pre-wrap;
+        }
+        .article-content.active {
+            display: block;
+        }
+        .article-content p, .article-content div {
+            margin: 10px 0;
+            line-height: 1.6;
+        }
+        /* 修改文章內容中的圖片樣式 */
+        .article-content img {
+            max-width: 100%;
+            height: auto;
+            object-fit: contain;
+            border-radius: 8px;
+            display: block;
+            margin: 0 auto;
+        }
+        /* 文章留言板 */
+        .article-comments {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .article-comments h3 {
+            font-size: 18px;
+            color: #2563eb;
+            margin-bottom: 10px;
+        }
+        /* 全站留言板 */
+        .facebook-comments {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .facebook-comments h2 {
+            font-size: 20px;
+            color: #2563eb;
+            margin-bottom: 10px;
+        }
+        /* 分頁 */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        .page-button {
+            width: 40px;
+            height: 40px;
+            background-color: #2563eb;
+            color: #ffffff;
+            border: none;
+            border-radius: 50%;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .page-button:hover {
+            background-color: #1e40af;
+        }
+        .page-button.active {
+            background-color: #1d4ed8;
+        }
+        .page-button.disabled {
+            background-color: #d1d5db;
+            cursor: not-allowed;
+        }
+        /* 頁腳 */
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #666666;
+            width: 100%;
+        }
+        a {
+            color: #2563eb;
+            text-decoration: underline;
+            transition: color 0.3s ease;
+        }
+        a:hover {
+            color: #3b82f6;
+        }
+        /* 響應式設計 */
+        @media screen and (max-width: 768px) {
+            .nav-tabs {
+                display: none;
+            }
+            .hamburger {
+                display: block;
+            }
+            .mobile-nav.active {
+                display: block;
+            }
+            .carousel {
+                height: 200px;
+            }
+            .carousel-title {
+                font-size: 20px;
+                padding: 8px 10px;
+            }
+        }
+        @media screen and (min-width: 769px) {
+            .mobile-nav {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Banner -->
+        <div class="header"></div>
+
+        <!-- 漢堡選單按鈕 -->
+        <div class="hamburger" onclick="toggleMobileNav()">☰</div>
+
+        <!-- 導航選單 -->
+        <div class="nav-tabs">
+            <a href="index.html" class="nav-tab active">最新消息</a>
+            <a href="risk.html" class="nav-tab">即時資產風險</a>
+            <div class="nav-tab dropdown">
+                投資理財計算機
+                <div class="dropdown-content">
+                    <a href="stock.html"><i class="fas fa-chart-line"></i>股票利潤計算機</a>
+                    <a href="compound.html"><i class="fas fa-percentage"></i>複利計算機</a>
+                    <a href="kelly.html"><i class="fas fa-calculator"></i>凱莉計算機</a>
+                    <a href="creditloan.html"><i class="fas fa-money-check-alt"></i>信貸計算機</a>
+                    <a href="loan.html"><i class="fas fa-home"></i>房貸計算機</a>
+                    <a href="car.html"><i class="fas fa-car"></i>車貸計算機</a>
+                    <a href="creditcard.html"><i class="fas fa-credit-card"></i>信用卡驗證</a>
+                    <a href="bmi.html"><i class="fas fa-weight"></i>BMI計算機</a>
+                </div>
+            </div>
+            <a href="about.html" class="nav-tab">關於我們</a>
+        </div>
+
+        <!-- 手機版導航 -->
+        <div class="mobile-nav" id="mobile-nav">
+            <a href="index.html">最新消息</a>
+            <a href="risk.html">即時資產風險</a>
+            <a href="#" onclick="toggleMobileDropdown()">投資理財計算機</a>
+            <div class="mobile-dropdown" id="mobile-dropdown">
+                <a href="stock.html"><i class="fas fa-chart-line"></i>股票利潤計算機</a>
+                <a href="compound.html"><i class="fas fa-percentage"></i>複利計算機</a>
+                <a href="kelly.html"><i class="fas fa-calculator"></i>凱莉計算機</a>
+                <a href="creditloan.html"><i class="fas fa-money-check-alt"></i>信貸計算機</a>
+                <a href="loan.html"><i class="fas fa-home"></i>房貸計算機</a>
+                <a href="car.html"><i class="fas fa-car"></i>車貸計算機</a>
+                <a href="creditcard.html"><i class="fas fa-credit-card"></i>信用卡驗證</a>
+                <a href="bmi.html"><i class="fas fa-weight"></i>BMI計算機</a>
+            </div>
+            <a href="about.html">關於我們</a>
+        </div>
+
+        <!-- 輪播框 -->
+        <div class="carousel" id="carousel">
+            <!-- 動態生成 -->
+        </div>
+
+        <!-- 文章列表 -->
+        <div class="articles" id="articles">
+            <!-- 動態生成 -->
+        </div>
+
+        <!-- 分頁 -->
+        <div class="pagination" id="pagination">
+            <!-- 動態生成 -->
+        </div>
+
+        <!-- 全站 Facebook 留言板 -->
+        <div class="facebook-comments">
+            <h2>留言板</h2>
+            <div class="fb-comments" data-href="https://stockcorp.github.io/" data-width="100%" data-numposts="5"></div>
+        </div>
+
+        <!-- 頁腳 -->
+        <footer>
+            <p>© 2025 <a href="https://www.youtube.com/@吉米理財學堂" target="_blank">吉米理財學堂</a>。保留所有權利。</p>
+        </footer>
+    </div>
+
+    <script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex));
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+    </script>
+
+    <script>
+        // 讀取 content.txt
+        async function loadContent() {
+            try {
+                const response = await fetch('content.txt');
+                if (!response.ok) throw new Error('無法載入 content.txt');
+                const text = await response.text();
+                const articles = parseContent(text);
+                renderCarousel(articles);
+                renderArticles(articles);
+            } catch (error) {
+                console.error('載入 content.txt 失敗:', error);
+            }
+        }
+
+        // 解析 content.txt
+        function parseContent(text) {
+            const articles = [];
+            const entries = text.split('---').map(entry => entry.trim()).filter(entry => entry);
+            entries.forEach(entry => {
+                const article = { content: '', images: [] };
+                const lines = entry.split('\n');
+                lines.forEach(line => {
+                    if (line.startsWith('title:') || line.startsWith('images:') || line.startsWith('fontSize:')) {
+                        const [key, value] = line.split(':').map(s => s.trim());
+                        if (key === 'images') {
+                            article.images = value.split(',').map(s => s.trim());
+                        } else {
+                            article[key] = value;
+                        }
+                    } else {
+                        article.content += line + '\n';
+                    }
+                });
+                article.content = article.content.trim();
+                if (article.title && article.images.length > 0) {
+                    articles.push(article);
+                }
+            });
+            return articles;
+        }
+
+        // 當前頁面
+        let currentPage = 0;
+        const articlesPerPage = 20;
+
+        // 渲染輪播框
+        function renderCarousel(articles) {
+            const carousel = document.getElementById('carousel');
+            carousel.innerHTML = '';
+            articles.forEach((article, index) => {
+                const item = document.createElement('div');
+                item.className = `carousel-item ${index === 0 ? 'active' : ''}`;
+                item.innerHTML = `
+                    <img src="/img/content/${article.images[0]}" alt="${article.title}">
+                    <h2 class="carousel-title">${article.title}</h2>
+                `;
+                carousel.appendChild(item);
+            });
+            if (articles.length > 1) {
+                carousel.innerHTML += `
+                    <button class="carousel-button prev" onclick="prevSlide()">❮</button>
+                    <button class="carousel-button next" onclick="nextSlide()">❯</button>
+                `;
+                startCarousel();
+            }
+        }
+
+        // 渲染文章列表
+        function renderArticles(articles) {
+            const articlesDiv = document.getElementById('articles');
+            articlesDiv.innerHTML = '';
+            const start = currentPage * articlesPerPage;
+            const end = Math.min(start + articlesPerPage, articles.length);
+            for (let i = start; i < end; i++) {
+                const article = articles[i];
+                const card = document.createElement('div');
+                card.className = 'article-card';
+                card.onclick = () => showArticle(i);
+                const preview = article.content.replace(/<[^>]+>/g, '').substring(0, 100);
+                card.innerHTML = `
+                    <h2>${article.title}</h2>
+                    <p>${preview}...</p>
+                `;
+                articlesDiv.appendChild(card);
+
+                const content = document.createElement('div');
+                content.className = 'article-content';
+                content.id = `content-${i}`;
+                const fontSizeStyle = article.fontSize ? `font-size: ${article.fontSize};` : '';
+                content.innerHTML = `
+                    <h2>${article.title}</h2>
+                    <div style="${fontSizeStyle}">${article.content}</div>
+                    <div class="article-comments">
+                        <h3>文章留言</h3>
+                        <div class="fb-comments" data-href="https://stockcorp.github.io/#article-${i}" data-width="100%" data-numposts="5"></div>
+                    </div>
+                `;
+                articlesDiv.appendChild(content);
+            }
+            renderPagination(articles);
+        }
+
+        // 渲染分頁
+        function renderPagination(articles) {
+            const pagination = document.getElementById('pagination');
+            pagination.innerHTML = '';
+            const totalPages = Math.ceil(articles.length / articlesPerPage);
+            if (totalPages <= 1) return;
+
+            // 上一頁
+            const prevButton = document.createElement('button');
+            prevButton.className = `page-button ${currentPage === 0 ? 'disabled' : ''}`;
+            prevButton.innerText = '❮';
+            prevButton.onclick = () => {
+                if (currentPage > 0) {
+                    currentPage--;
+                    renderArticles(articles);
+                }
+            };
+            pagination.appendChild(prevButton);
+
+            // 頁數按鈕
+            for (let i = 0; i < totalPages; i++) {
+                const pageButton = document.createElement('button');
+                pageButton.className = `page-button ${i === currentPage ? 'active' : ''}`;
+                pageButton.innerText = i + 1;
+                pageButton.onclick = () => {
+                    currentPage = i;
+                    renderArticles(articles);
+                };
+                pagination.appendChild(pageButton);
+            }
+
+            // 下一頁
+            const nextButton = document.createElement('button');
+            nextButton.className = `page-button ${currentPage === totalPages - 1 ? 'disabled' : ''}`;
+            nextButton.innerText = '❯';
+            nextButton.onclick = () => {
+                if (currentPage < totalPages - 1) {
+                    currentPage++;
+                    renderArticles(articles);
+                }
+            };
+            pagination.appendChild(nextButton);
+        }
+
+        // 顯示文章內容
+        function showArticle(index) {
+            document.querySelectorAll('.article-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(`content-${index}`).classList.add('active');
+            window.scrollTo({ top: document.getElementById(`content-${index}`).offsetTop, behavior: 'smooth' });
+        }
+
+        // 輪播框控制
+        let currentSlide = 0;
+        function showSlide(index) {
+            const slides = document.querySelectorAll('.carousel-item');
+            if (index >= slides.length) currentSlide = 0;
+            if (index < 0) currentSlide = slides.length - 1;
+            slides.forEach(slide => slide.classList.remove('active'));
+            slides[currentSlide].classList.add('active');
+        }
+        function nextSlide() {
+            currentSlide++;
+            showSlide(currentSlide);
+        }
+        function prevSlide() {
+            currentSlide--;
+            showSlide(currentSlide);
+        }
+        function startCarousel() {
+            setInterval(() => {
+                nextSlide();
+            }, 5000);
+        }
+
+        // 漢堡選單控制
+        function toggleMobileNav() {
+            const mobileNav = document.getElementById('mobile-nav');
+            mobileNav.classList.toggle('active');
+        }
+        function toggleMobileDropdown() {
+            const dropdown = document.getElementById('mobile-dropdown');
+            dropdown.classList.toggle('active');
+        }
+
+        // 初始化
+        loadContent();
+    </script>
+    <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'936a27071eae8978',t:'MTc0NTcxMzIwOS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+    <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'93b68a4a1976baea',t:'MTc0NjUxNDE5My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+</body>
+</html>
