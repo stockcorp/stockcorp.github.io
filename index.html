@@ -262,7 +262,7 @@
             color: #2563eb;
         }
         @keyframes slideIn {
-            from { transform: translateY(-10px); opacity: 0; }
+           -Starfrom { transform: translateY(-10px); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
         }
         /* 輪播框 */
@@ -563,15 +563,23 @@
                 var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
                 var firstSheetName = workbook.SheetNames[0];
                 var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
                 var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
                 var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
                 var headerRowIndex = filteredData.findIndex((row, index) =>
                   row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
                 );
+                // Fallback
                 if (headerRowIndex === -1 || headerRowIndex > 25) {
                   headerRowIndex = 0;
                 }
-                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex));
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
                 csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
                 return csv;
             } catch (e) {
@@ -603,18 +611,24 @@
             const articles = [];
             const entries = text.split('---').map(entry => entry.trim()).filter(entry => entry);
             entries.forEach(entry => {
-                const article = { content: '', images: [] };
+                const article = { title: '', images: [], fontSize: '', content: '' };
                 const lines = entry.split('\n');
+                let isContent = false;
                 lines.forEach(line => {
-                    if (line.startsWith('title:') || line.startsWith('images:') || line.startsWith('fontSize:')) {
-                        const [key, value] = line.split(':').map(s => s.trim());
-                        if (key === 'images') {
-                            article.images = value.split(',').map(s => s.trim());
-                        } else {
-                            article[key] = value;
-                        }
-                    } else {
-                        article.content += line + '\n';
+                    if (line.startsWith('title:')) {
+                        article.title = line.substring(6).trim();
+                        isContent = false;
+                    } else if (line.startsWith('images:')) {
+                        article.images = line.substring(7).trim().split(',').map(s => s.trim());
+                        isContent = false;
+                    } else if (line.startsWith('fontSize:')) {
+                        article.fontSize = line.substring(9).trim();
+                        isContent = false;
+                    } else if (line.startsWith('content:')) {
+                        article.content = line.substring(8).trim();
+                        isContent = true;
+                    } else if (isContent) {
+                        article.content += '\n' + line;
                     }
                 });
                 article.content = article.content.trim();
@@ -622,6 +636,7 @@
                     articles.push(article);
                 }
             });
+            console.log('Parsed articles:', articles); // 加入日誌以驗證解析結果
             return articles;
         }
 
@@ -776,6 +791,6 @@
         loadContent();
     </script>
     <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'936a27071eae8978',t:'MTc0NTcxMzIwOS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
-    <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'93b68a4a1976baea',t:'MTc0NjUxNDE5My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+    <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'93b6b5a93d46ad80',t:'MTc0NjUxNTk2OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
 </body>
 </html>
