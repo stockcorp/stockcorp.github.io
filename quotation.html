@@ -929,7 +929,6 @@
             top: 10px;
             width: 100%;
             text-align: center;
-            left: 0;
         }
         #seal-preview .invoice-label {
             font-size: 12px;
@@ -937,7 +936,6 @@
             top: 35px;
             width: 100%;
             text-align: center;
-            left: 0;
         }
         #seal-preview .tax-id-label {
             font-size: 12px;
@@ -945,7 +943,6 @@
             top: 50px;
             width: 100%;
             text-align: center;
-            left: 0;
         }
         #seal-preview .tax-id {
             font-size: 14px;
@@ -956,7 +953,6 @@
             position: absolute;
             top: 65px;
             width: 100%;
-            left: 0;
         }
         #seal-preview .tax-id::before,
         #seal-preview .tax-id::after {
@@ -970,7 +966,6 @@
             top: 85px;
             width: 100%;
             text-align: center;
-            left: 0;
         }
         #seal-preview .phone-info {
             font-size: 10px;
@@ -978,7 +973,6 @@
             top: 100px;
             width: 100%;
             text-align: center;
-            left: 0;
         }
         #seal-preview .address-info {
             font-size: 10px;
@@ -986,7 +980,6 @@
             bottom: 10px;
             width: 100%;
             text-align: center;
-            left: 0;
         }
         /* 說明區塊 */
         .explanation-section {
@@ -1552,7 +1545,7 @@
             }, 100); // 延遲 100ms 確保渲染完成
         }
 
-        // 生成報價單預覽並下載 PDF
+        // 生成報價單預覽並下載 PDF（移植自舊版本）
         function generateQuotation() {
             const quotationTitle = document.getElementById('quotation-title').value || "報價單";
             const companyName = document.getElementById('company-name').value;
@@ -1677,15 +1670,15 @@
                 row.innerHTML = `
                     <td>${item.description || '未填寫'}</td>
                     <td>${item.quantity}</td>
-                    <td>${item.price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}<span class="currency-symbol">${currencySymbol}</span></td>
-                    <td>${item.subtotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}<span class="currency-symbol">${currencySymbol}</span></td>
+                    <td>${item.price.toFixed(2)}<span class="currency-symbol">${currencySymbol}</span></td>
+                    <td>${item.subtotal.toFixed(2)}<span class="currency-symbol">${currencySymbol}</span></td>
                 `;
                 previewItemList.appendChild(row);
             });
             previewTaxRate.textContent = roundedTaxRate.toFixed(2);
-            previewTaxAmount.textContent = taxAmount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            previewTaxAmount.textContent = taxAmount;
             previewTaxCurrencySymbol.textContent = currencySymbol;
-            previewTotal.textContent = total.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            previewTotal.textContent = total;
             previewTotalCurrencySymbol.textContent = currencySymbol;
             previewNotes.textContent = notes || '無';
 
@@ -1713,75 +1706,58 @@
                 row.innerHTML = `
                     <td>${item.description || '未填寫'}</td>
                     <td>${item.quantity}</td>
-                    <td>${item.price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}<span class="currency-symbol">${currencySymbol}</span></td>
-                    <td>${item.subtotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}<span class="currency-symbol">${currencySymbol}</span></td>
+                    <td>${item.price.toFixed(2)}<span class="currency-symbol">${currencySymbol}</span></td>
+                    <td>${item.subtotal.toFixed(2)}<span class="currency-symbol">${currencySymbol}</span></td>
                 `;
                 previewItemListDesktop.appendChild(row);
             });
             previewTaxRateDesktop.textContent = roundedTaxRate.toFixed(2);
-            previewTaxAmountDesktop.textContent = taxAmount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            previewTaxAmountDesktop.textContent = taxAmount;
             previewTaxCurrencySymbolDesktop.textContent = currencySymbol;
-            previewTotalDesktop.textContent = total.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            previewTotalDesktop.textContent = total;
             previewTotalCurrencySymbolDesktop.textContent = currencySymbol;
             previewNotesDesktop.textContent = notes || '無';
 
             const isMobile = window.innerWidth <= 768;
             const targetElement = isMobile ? previewDesktop : preview;
             
-            preview.style.display = isMobile ? 'none' : 'block';
+            preview.style.display = 'block';
             if (isMobile) {
                 previewDesktop.style.display = 'block';
-                previewDesktop.style.position = 'absolute';
-                previewDesktop.style.top = '-9999px';
+                previewDesktop.style.top = '0'; // 確保在可見區域內渲染
                 previewDesktop.style.left = '0';
             }
 
+            // 使用舊版本的 PDF 生成邏輯
             setTimeout(() => {
-                const canvasWidth = 800; // Fixed width for consistency
-                const canvasHeight = targetElement.scrollHeight;
-
                 html2canvas(targetElement, {
                     scale: 2,
-                    useCORS: true,
-                    width: canvasWidth,
-                    height: canvasHeight,
-                    windowWidth: canvasWidth,
-                    windowHeight: canvasHeight,
-                    scrollX: 0,
-                    scrollY: 0
+                    useCORS: true
                 }).then(canvas => {
                     const imgData = canvas.toDataURL('image/png');
                     const { jsPDF } = window.jspdf;
                     const pdf = new jsPDF('p', 'mm', 'a4');
-                    const pdfWidth = pdf.internal.pageSize.getWidth();
                     const imgProps = pdf.getImageProperties(imgData);
-                    const imgWidth = (canvasWidth * 0.264583); // Convert px to mm (1px = 0.264583mm)
-                    const imgHeight = (canvasHeight * 0.264583);
-                    const xOffset = (pdfWidth - imgWidth) / 2; // Center horizontally
-
-                    let position = 0;
-                    const pageHeight = pdf.internal.pageSize.getHeight();
-                    const totalHeight = imgHeight;
-
-                    while (position < totalHeight) {
-                        pdf.addImage(imgData, 'PNG', xOffset, -position, imgWidth, imgHeight);
-                        position += pageHeight;
-                        if (position < totalHeight) {
-                            pdf.addPage();
-                        }
-                    }
-
+                    const pdfWidth = pdf.internal.pageSize.getWidth();
+                    const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+                    pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
                     pdf.save(`${quotationTitle}_${formattedDate}_${quotationNumber}.pdf`);
 
                     if (isMobile) {
                         previewDesktop.style.display = 'none';
+                        previewDesktop.style.top = '-9999px'; // 恢復隱藏狀態
+                        previewDesktop.style.left = '0';
                     }
+                    preview.style.display = isMobile ? 'none' : 'block';
                 }).catch(error => {
                     console.error('生成 PDF 失敗:', error);
                     alert('生成 PDF 失敗，請稍後再試！');
                     if (isMobile) {
                         previewDesktop.style.display = 'none';
+                        previewDesktop.style.top = '-9999px';
+                        previewDesktop.style.left = '0';
                     }
+                    preview.style.display = isMobile ? 'none' : 'block';
                 });
             }, 500);
         }
