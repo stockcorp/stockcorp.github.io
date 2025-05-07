@@ -1545,224 +1545,224 @@
             }, 100); // 延遲 100ms 確保渲染完成
         }
 
-        // 生成報價單預覽並下載 PDF（移植自舊版本）
-        function generateQuotation() {
-            const quotationTitle = document.getElementById('quotation-title').value || "報價單";
-            const companyName = document.getElementById('company-name').value;
-            const companyTaxId = document.getElementById('company-tax-id').value;
-            const companyEmail = document.getElementById('company-email').value;
-            const companyPhone = document.getElementById('company-phone').value;
-            const companyAddress = document.getElementById('company-address').value;
-            const clientName = document.getElementById('client-name').value;
-            const clientTaxId = document.getElementById('client-tax-id').value;
-            const clientEmail = document.getElementById('client-email').value;
-            const clientPhone = document.getElementById('client-phone').value;
-            const clientAddress = document.getElementById('client-address').value;
-            const quotationDate = document.getElementById('quotation-date').value;
-            const validUntil = document.getElementById('valid-until').value;
-            const quotationNumber = document.getElementById('quotation-number').value;
-            const taxRate = parseFloat(document.getElementById('tax-rate').value) || 0;
-            const currencySelect = document.getElementById('currency');
-            const selectedCurrency = currencySelect.options[currencySelect.selectedIndex];
-            const currencyCode = selectedCurrency.value;
-            const currencySymbol = selectedCurrency.getAttribute('data-symbol');
-            const notes = document.getElementById('notes').value;
-            const items = document.querySelectorAll('.item');
+// 生成報價單預覽並下載 PDF（移植自舊版本）
+function generateQuotation() {
+    const quotationTitle = document.getElementById('quotation-title').value || "報價單";
+    const companyName = document.getElementById('company-name').value;
+    const companyTaxId = document.getElementById('company-tax-id').value;
+    const companyEmail = document.getElementById('company-email').value;
+    const companyPhone = document.getElementById('company-phone').value;
+    const companyAddress = document.getElementById('company-address').value;
+    const clientName = document.getElementById('client-name').value;
+    const clientTaxId = document.getElementById('client-tax-id').value;
+    const clientEmail = document.getElementById('client-email').value;
+    const clientPhone = document.getElementById('client-phone').value;
+    const clientAddress = document.getElementById('client-address').value;
+    const quotationDate = document.getElementById('quotation-date').value;
+    const validUntil = document.getElementById('valid-until').value;
+    const quotationNumber = document.getElementById('quotation-number').value;
+    const taxRate = parseFloat(document.getElementById('tax-rate').value) || 0;
+    const currencySelect = document.getElementById('currency');
+    const selectedCurrency = currencySelect.options[currencySelect.selectedIndex];
+    const currencyCode = selectedCurrency.value;
+    const currencySymbol = selectedCurrency.getAttribute('data-symbol');
+    const notes = document.getElementById('notes').value;
+    const items = document.querySelectorAll('.item');
 
-            if (!companyName || !companyEmail || !companyPhone || 
-                !clientName || !clientEmail || !clientPhone || 
-                !quotationDate || !validUntil || !quotationNumber) {
-                alert('請填寫所有必填欄位！');
-                return;
-            }
+    if (!companyName || !companyEmail || !companyPhone || 
+        !clientName || !clientEmail || !clientPhone || 
+        !quotationDate || !validUntil || !quotationNumber) {
+        alert('請填寫所有必填欄位！');
+        return;
+    }
 
-            let subtotal = 0;
-            const itemList = [];
-            items.forEach(item => {
-                const description = item.querySelector('.item-description').value;
-                const quantity = parseInt(item.querySelector('.item-quantity').value) || 0;
-                const price = parseFloat(item.querySelector('.item-price').value) || 0;
-                const itemSubtotal = quantity * price;
-                subtotal += itemSubtotal;
-                itemList.push({ 
-                    description, 
-                    quantity, 
-                    price: Math.round(price * 100) / 100,
-                    subtotal: Math.round(itemSubtotal * 100) / 100
-                });
-            });
+    let subtotal = 0;
+    const itemList = [];
+    items.forEach(item => {
+        const description = item.querySelector('.item-description').value;
+        const quantity = parseInt(item.querySelector('.item-quantity').value) || 0;
+        const price = parseFloat(item.querySelector('.item-price').value) || 0;
+        const itemSubtotal = quantity * price;
+        subtotal += itemSubtotal;
+        itemList.push({ 
+            description, 
+            quantity, 
+            price: Math.round(price * 100) / 100,
+            subtotal: Math.round(itemSubtotal * 100) / 100
+        });
+    });
 
-            const taxAmount = Math.round(subtotal * taxRate / 100);
-            const total = Math.round(subtotal + taxAmount);
-            const roundedTaxRate = Math.round(taxRate * 100) / 100;
-            const formattedDate = quotationDate.replace(/-/g, '');
+    const taxAmount = Math.round(subtotal * taxRate / 100);
+    const total = Math.round(subtotal + taxAmount);
+    const roundedTaxRate = Math.round(taxRate * 100) / 100;
+    const formattedDate = quotationDate.replace(/-/g, '');
 
-            const preview = document.getElementById('quotation-preview');
-            const previewDesktop = document.getElementById('quotation-preview-desktop');
-            const previewQuotationTitle = document.getElementById('preview-quotation-title');
-            const previewQuotationTitleDesktop = document.getElementById('preview-quotation-title-desktop');
-            const previewLogo = document.getElementById('preview-logo');
-            const previewLogoDesktop = document.getElementById('preview-logo-desktop');
-            const previewSeal = document.getElementById('preview-seal');
-            const previewSealDesktop = document.getElementById('preview-seal-desktop');
-            const previewCompanyName = document.getElementById('preview-company-name');
-            const previewCompanyNameDesktop = document.getElementById('preview-company-name-desktop');
-            const previewCompanyTaxId = document.getElementById('preview-company-tax-id');
-            const previewCompanyTaxIdDesktop = document.getElementById('preview-company-tax-id-desktop');
-            const previewCompanyEmail = document.getElementById('preview-company-email');
-            const previewCompanyEmailDesktop = document.getElementById('preview-company-email-desktop');
-            const previewCompanyPhone = document.getElementById('preview-company-phone');
-            const previewCompanyPhoneDesktop = document.getElementById('preview-company-phone-desktop');
-            const previewCompanyAddress = document.getElementById('preview-company-address');
-            const previewCompanyAddressDesktop = document.getElementById('preview-company-address-desktop');
-            const previewClientName = document.getElementById('preview-client-name');
-            const previewClientNameDesktop = document.getElementById('preview-client-name-desktop');
-            const previewClientTaxId = document.getElementById('preview-client-tax-id');
-            const previewClientTaxIdDesktop = document.getElementById('preview-client-tax-id-desktop');
-            const previewClientEmail = document.getElementById('preview-client-email');
-            const previewClientEmailDesktop = document.getElementById('preview-client-email-desktop');
-            const previewClientPhone = document.getElementById('preview-client-phone');
-            const previewClientPhoneDesktop = document.getElementById('preview-client-phone-desktop');
-            const previewClientAddress = document.getElementById('preview-client-address');
-            const previewClientAddressDesktop = document.getElementById('preview-client-address-desktop');
-            const previewQuotationDate = document.getElementById('preview-quotation-date');
-            const previewQuotationDateDesktop = document.getElementById('preview-quotation-date-desktop');
-            const previewValidUntil = document.getElementById('preview-valid-until');
-            const previewValidUntilDesktop = document.getElementById('preview-valid-until-desktop');
-            const previewQuotationNumber = document.getElementById('preview-quotation-number');
-            const previewQuotationNumberDesktop = document.getElementById('preview-quotation-number-desktop');
-            const previewItemList = document.getElementById('preview-item-list');
-            const previewItemListDesktop = document.getElementById('preview-item-list-desktop');
-            const previewTaxRate = document.getElementById('preview-tax-rate');
-            const previewTaxRateDesktop = document.getElementById('preview-tax-rate-desktop');
-            const previewTaxAmount = document.getElementById('preview-tax-amount');
-            const previewTaxAmountDesktop = document.getElementById('preview-tax-amount-desktop');
-            const previewTotal = document.getElementById('preview-total');
-            const previewTotalDesktop = document.getElementById('preview-total-desktop');
-            const previewTaxCurrencySymbol = document.getElementById('tax-currency-symbol');
-            const previewTaxCurrencySymbolDesktop = document.getElementById('tax-currency-symbol-desktop');
-            const previewTotalCurrencySymbol = document.getElementById('total-currency-symbol');
-            const previewTotalCurrencySymbolDesktop = document.getElementById('total-currency-symbol-desktop');
-            const previewNotes = document.getElementById('preview-notes');
-            const previewNotesDesktop = document.getElementById('preview-notes-desktop');
+    const preview = document.getElementById('quotation-preview');
+    const previewDesktop = document.getElementById('quotation-preview-desktop');
+    const previewQuotationTitle = document.getElementById('preview-quotation-title');
+    const previewQuotationTitleDesktop = document.getElementById('preview-quotation-title-desktop');
+    const previewLogo = document.getElementById('preview-logo');
+    const previewLogoDesktop = document.getElementById('preview-logo-desktop');
+    const previewSeal = document.getElementById('preview-seal');
+    const previewSealDesktop = document.getElementById('preview-seal-desktop');
+    const previewCompanyName = document.getElementById('preview-company-name');
+    const previewCompanyNameDesktop = document.getElementById('preview-company-name-desktop');
+    const previewCompanyTaxId = document.getElementById('preview-company-tax-id');
+    const previewCompanyTaxIdDesktop = document.getElementById('preview-company-tax-id-desktop');
+    const previewCompanyEmail = document.getElementById('preview-company-email');
+    const previewCompanyEmailDesktop = document.getElementById('preview-company-email-desktop');
+    const previewCompanyPhone = document.getElementById('preview-company-phone');
+    const previewCompanyPhoneDesktop = document.getElementById('preview-company-phone-desktop');
+    const previewCompanyAddress = document.getElementById('preview-company-address');
+    const previewCompanyAddressDesktop = document.getElementById('preview-company-address-desktop');
+    const previewClientName = document.getElementById('preview-client-name');
+    const previewClientNameDesktop = document.getElementById('preview-client-name-desktop');
+    const previewClientTaxId = document.getElementById('preview-client-tax-id');
+    const previewClientTaxIdDesktop = document.getElementById('preview-client-tax-id-desktop');
+    const previewClientEmail = document.getElementById('preview-client-email');
+    const previewClientEmailDesktop = document.getElementById('preview-client-email-desktop');
+    const previewClientPhone = document.getElementById('preview-client-phone');
+    const previewClientPhoneDesktop = document.getElementById('preview-client-phone-desktop');
+    const previewClientAddress = document.getElementById('preview-client-address');
+    const previewClientAddressDesktop = document.getElementById('preview-client-address-desktop');
+    const previewQuotationDate = document.getElementById('preview-quotation-date');
+    const previewQuotationDateDesktop = document.getElementById('preview-quotation-date-desktop');
+    const previewValidUntil = document.getElementById('preview-valid-until');
+    const previewValidUntilDesktop = document.getElementById('preview-valid-until-desktop');
+    const previewQuotationNumber = document.getElementById('preview-quotation-number');
+    const previewQuotationNumberDesktop = document.getElementById('preview-quotation-number-desktop');
+    const previewItemList = document.getElementById('preview-item-list');
+    const previewItemListDesktop = document.getElementById('preview-item-list-desktop');
+    const previewTaxRate = document.getElementById('preview-tax-rate');
+    const previewTaxRateDesktop = document.getElementById('preview-tax-rate-desktop');
+    const previewTaxAmount = document.getElementById('preview-tax-amount');
+    const previewTaxAmountDesktop = document.getElementById('preview-tax-amount-desktop');
+    const previewTotal = document.getElementById('preview-total');
+    const previewTotalDesktop = document.getElementById('preview-total-desktop');
+    const previewTaxCurrencySymbol = document.getElementById('tax-currency-symbol');
+    const previewTaxCurrencySymbolDesktop = document.getElementById('tax-currency-symbol-desktop');
+    const previewTotalCurrencySymbol = document.getElementById('total-currency-symbol');
+    const previewTotalCurrencySymbolDesktop = document.getElementById('total-currency-symbol-desktop');
+    const previewNotes = document.getElementById('preview-notes');
+    const previewNotesDesktop = document.getElementById('preview-notes-desktop');
 
-            previewQuotationTitle.textContent = quotationTitle;
-            previewLogo.style.display = logoUrl ? 'block' : 'none';
-            if (logoUrl) previewLogo.src = logoUrl;
-            previewSeal.style.display = sealUrl ? 'block' : 'none';
-            if (sealUrl) previewSeal.src = sealUrl;
-            previewCompanyName.textContent = companyName;
-            previewCompanyTaxId.textContent = companyTaxId || '未填寫';
-            previewCompanyEmail.textContent = companyEmail;
-            previewCompanyPhone.textContent = companyPhone;
-            previewCompanyAddress.textContent = companyAddress || '未填寫';
-            previewClientName.textContent = clientName;
-            previewClientTaxId.textContent = clientTaxId || '未填寫';
-            previewClientEmail.textContent = clientEmail;
-            previewClientPhone.textContent = clientPhone;
-            previewClientAddress.textContent = clientAddress || '未填寫';
-            previewQuotationDate.textContent = quotationDate;
-            previewValidUntil.textContent = validUntil;
-            previewQuotationNumber.textContent = quotationNumber;
-            previewItemList.innerHTML = '';
-            itemList.forEach(item => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${item.description || '未填寫'}</td>
-                    <td>${item.quantity}</td>
-                    <td>${item.price.toFixed(2)}<span class="currency-symbol">${currencySymbol}</span></td>
-                    <td>${item.subtotal.toFixed(2)}<span class="currency-symbol">${currencySymbol}</span></td>
-                `;
-                previewItemList.appendChild(row);
-            });
-            previewTaxRate.textContent = roundedTaxRate.toFixed(2);
-            previewTaxAmount.textContent = taxAmount;
-            previewTaxCurrencySymbol.textContent = currencySymbol;
-            previewTotal.textContent = total;
-            previewTotalCurrencySymbol.textContent = currencySymbol;
-            previewNotes.textContent = notes || '無';
+    previewQuotationTitle.textContent = quotationTitle;
+    previewLogo.style.display = logoUrl ? 'block' : 'none';
+    if (logoUrl) previewLogo.src = logoUrl;
+    previewSeal.style.display = sealUrl ? 'block' : 'none';
+    if (sealUrl) previewSeal.src = sealUrl;
+    previewCompanyName.textContent = companyName;
+    previewCompanyTaxId.textContent = companyTaxId || '未填寫';
+    previewCompanyEmail.textContent = companyEmail;
+    previewCompanyPhone.textContent = companyPhone;
+    previewCompanyAddress.textContent = companyAddress || '未填寫';
+    previewClientName.textContent = clientName;
+    previewClientTaxId.textContent = clientTaxId || '未填寫';
+    previewClientEmail.textContent = clientEmail;
+    previewClientPhone.textContent = clientPhone;
+    previewClientAddress.textContent = clientAddress || '未填寫';
+    previewQuotationDate.textContent = quotationDate;
+    previewValidUntil.textContent = validUntil;
+    previewQuotationNumber.textContent = quotationNumber;
+    previewItemList.innerHTML = '';
+    itemList.forEach(item => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${item.description || '未填寫'}</td>
+            <td>${item.quantity}</td>
+            <td>${item.price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}<span class="currency-symbol">${currencySymbol}</span></td>
+            <td>${item.subtotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}<span class="currency-symbol">${currencySymbol}</span></td>
+        `;
+        previewItemList.appendChild(row);
+    });
+    previewTaxRate.textContent = roundedTaxRate.toFixed(2);
+    previewTaxAmount.textContent = taxAmount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    previewTaxCurrencySymbol.textContent = currencySymbol;
+    previewTotal.textContent = total.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    previewTotalCurrencySymbol.textContent = currencySymbol;
+    previewNotes.textContent = notes || '無';
 
-            previewQuotationTitleDesktop.textContent = quotationTitle;
-            previewLogoDesktop.style.display = logoUrl ? 'block' : 'none';
-            if (logoUrl) previewLogoDesktop.src = logoUrl;
-            previewSealDesktop.style.display = sealUrl ? 'block' : 'none';
-            if (sealUrl) previewSealDesktop.src = sealUrl;
-            previewCompanyNameDesktop.textContent = companyName;
-            previewCompanyTaxIdDesktop.textContent = companyTaxId || '未填寫';
-            previewCompanyEmailDesktop.textContent = companyEmail;
-            previewCompanyPhoneDesktop.textContent = companyPhone;
-            previewCompanyAddressDesktop.textContent = companyAddress || '未填寫';
-            previewClientNameDesktop.textContent = clientName;
-            previewClientTaxIdDesktop.textContent = clientTaxId || '未填寫';
-            previewClientEmailDesktop.textContent = clientEmail;
-            previewClientPhoneDesktop.textContent = clientPhone;
-            previewClientAddressDesktop.textContent = clientAddress || '未填寫';
-            previewQuotationDateDesktop.textContent = quotationDate;
-            previewValidUntilDesktop.textContent = validUntil;
-            previewQuotationNumberDesktop.textContent = quotationNumber;
-            previewItemListDesktop.innerHTML = '';
-            itemList.forEach(item => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${item.description || '未填寫'}</td>
-                    <td>${item.quantity}</td>
-                    <td>${item.price.toFixed(2)}<span class="currency-symbol">${currencySymbol}</span></td>
-                    <td>${item.subtotal.toFixed(2)}<span class="currency-symbol">${currencySymbol}</span></td>
-                `;
-                previewItemListDesktop.appendChild(row);
-            });
-            previewTaxRateDesktop.textContent = roundedTaxRate.toFixed(2);
-            previewTaxAmountDesktop.textContent = taxAmount;
-            previewTaxCurrencySymbolDesktop.textContent = currencySymbol;
-            previewTotalDesktop.textContent = total;
-            previewTotalCurrencySymbolDesktop.textContent = currencySymbol;
-            previewNotesDesktop.textContent = notes || '無';
+    previewQuotationTitleDesktop.textContent = quotationTitle;
+    previewLogoDesktop.style.display = logoUrl ? 'block' : 'none';
+    if (logoUrl) previewLogoDesktop.src = logoUrl;
+    previewSealDesktop.style.display = sealUrl ? 'block' : 'none';
+    if (sealUrl) previewSealDesktop.src = sealUrl;
+    previewCompanyNameDesktop.textContent = companyName;
+    previewCompanyTaxIdDesktop.textContent = companyTaxId || '未填寫';
+    previewCompanyEmailDesktop.textContent = companyEmail;
+    previewCompanyPhoneDesktop.textContent = companyPhone;
+    previewCompanyAddressDesktop.textContent = companyAddress || '未填寫';
+    previewClientNameDesktop.textContent = clientName;
+    previewClientTaxIdDesktop.textContent = clientTaxId || '未填寫';
+    previewClientEmailDesktop.textContent = clientEmail;
+    previewClientPhoneDesktop.textContent = clientPhone;
+    previewClientAddressDesktop.textContent = clientAddress || '未填寫';
+    previewQuotationDateDesktop.textContent = quotationDate;
+    previewValidUntilDesktop.textContent = validUntil;
+    previewQuotationNumberDesktop.textContent = quotationNumber;
+    previewItemListDesktop.innerHTML = '';
+    itemList.forEach(item => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${item.description || '未填寫'}</td>
+            <td>${item.quantity}</td>
+            <td>${item.price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}<span class="currency-symbol">${currencySymbol}</span></td>
+            <td>${item.subtotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}<span class="currency-symbol">${currencySymbol}</span></td>
+        `;
+        previewItemListDesktop.appendChild(row);
+    });
+    previewTaxRateDesktop.textContent = roundedTaxRate.toFixed(2);
+    previewTaxAmountDesktop.textContent = taxAmount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    previewTaxCurrencySymbolDesktop.textContent = currencySymbol;
+    previewTotalDesktop.textContent = total.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    previewTotalCurrencySymbolDesktop.textContent = currencySymbol;
+    previewNotesDesktop.textContent = notes || '無';
 
-            const isMobile = window.innerWidth <= 768;
-            const targetElement = isMobile ? previewDesktop : preview;
-            
-            preview.style.display = 'block';
+    const isMobile = window.innerWidth <= 768;
+    const targetElement = isMobile ? previewDesktop : preview;
+    
+    preview.style.display = 'block';
+    if (isMobile) {
+        previewDesktop.style.display = 'block';
+        previewDesktop.style.top = '0'; // 確保在可見區域內渲染
+        previewDesktop.style.left = '0';
+    }
+
+    // 使用舊版本的 PDF 生成邏輯
+    setTimeout(() => {
+        html2canvas(targetElement, {
+            scale: 2,
+            useCORS: true
+        }).then(canvas => {
+            const imgData = canvas.toDataURL('image/png');
+            const { jsPDF } = window.jspdf;
+            const pdf = new jsPDF('p', 'mm', 'a4');
+            const imgProps = pdf.getImageProperties(imgData);
+            const pdfWidth = pdf.internal.pageSize.getWidth();
+            const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+            pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+            pdf.save(`${quotationTitle}_${formattedDate}_${quotationNumber}.pdf`);
+
             if (isMobile) {
-                previewDesktop.style.display = 'block';
-                previewDesktop.style.top = '0'; // 確保在可見區域內渲染
+                previewDesktop.style.display = 'none';
+                previewDesktop.style.top = '-9999px'; // 恢復隱藏狀態
                 previewDesktop.style.left = '0';
             }
+            preview.style.display = isMobile ? 'none' : 'block';
+        }).catch(error => {
+            console.error('生成 PDF 失敗:', error);
+            alert('生成 PDF 失敗，請稍後再試！');
+            if (isMobile) {
+                previewDesktop.style.display = 'none';
+                previewDesktop.style.top = '-9999px';
+                previewDesktop.style.left = '0';
+            }
+            preview.style.display = isMobile ? 'none' : 'block';
+        });
+    }, 500);
+}
 
-            // 使用舊版本的 PDF 生成邏輯
-            setTimeout(() => {
-                html2canvas(targetElement, {
-                    scale: 2,
-                    useCORS: true
-                }).then(canvas => {
-                    const imgData = canvas.toDataURL('image/png');
-                    const { jsPDF } = window.jspdf;
-                    const pdf = new jsPDF('p', 'mm', 'a4');
-                    const imgProps = pdf.getImageProperties(imgData);
-                    const pdfWidth = pdf.internal.pageSize.getWidth();
-                    const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-                    pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-                    pdf.save(`${quotationTitle}_${formattedDate}_${quotationNumber}.pdf`);
-
-                    if (isMobile) {
-                        previewDesktop.style.display = 'none';
-                        previewDesktop.style.top = '-9999px'; // 恢復隱藏狀態
-                        previewDesktop.style.left = '0';
-                    }
-                    preview.style.display = isMobile ? 'none' : 'block';
-                }).catch(error => {
-                    console.error('生成 PDF 失敗:', error);
-                    alert('生成 PDF 失敗，請稍後再試！');
-                    if (isMobile) {
-                        previewDesktop.style.display = 'none';
-                        previewDesktop.style.top = '-9999px';
-                        previewDesktop.style.left = '0';
-                    }
-                    preview.style.display = isMobile ? 'none' : 'block';
-                });
-            }, 500);
-        }
-
-        document.getElementById('add-item').addEventListener('click', addItem);
+document.getElementById('add-item').addEventListener('click', addItem);
     </script>
 </body>
 </html>
