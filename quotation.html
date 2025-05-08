@@ -927,6 +927,8 @@
             font-weight: bold;
             position: absolute;
             top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
             width: 100%;
             text-align: center;
         }
@@ -937,6 +939,8 @@
             font-size: 12px;
             position: absolute;
             top: 35px;
+            left: 50%;
+            transform: translateX(-50%);
             width: 100%;
             text-align: center;
         }
@@ -944,17 +948,18 @@
             font-size: 12px;
             position: absolute;
             top: 50px;
+            left: 50%;
+            transform: translateX(-50%);
             width: 100%;
             text-align: center;
         }
         #seal-preview .tax-id {
             font-size: 14px;
             font-weight: bold;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             position: absolute;
             top: 65px;
+            left: 50%;
+            transform: translateX(-50%);
             width: 100%;
             text-align: center;
         }
@@ -968,6 +973,8 @@
             font-size: 10px;
             position: absolute;
             top: 85px;
+            left: 50%;
+            transform: translateX(-50%);
             width: 100%;
             text-align: center;
         }
@@ -975,6 +982,8 @@
             font-size: 10px;
             position: absolute;
             top: 100px;
+            left: 50%;
+            transform: translateX(-50%);
             width: 100%;
             text-align: center;
         }
@@ -982,6 +991,8 @@
             font-size: 10px;
             position: absolute;
             bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
             width: 100%;
             text-align: center;
         }
@@ -1009,6 +1020,13 @@
             border: 1px solid #D1D5DB;
             border-radius: 6px;
             margin-top: 10px;
+        }
+        /* 灰色橫幅 */
+        .title-banner {
+            width: 100%;
+            height: 4px;
+            background-color: #D1D5DB;
+            margin: 10px 0;
         }
     </style>
 </head>
@@ -1204,6 +1222,7 @@
                 <img id="preview-logo" class="logo" style="display: none;">
                 <div class="title-section">
                     <h2 id="preview-quotation-title">報價單</h2>
+                    <div class="title-banner"></div>
                     <p class="number-align-left"><strong>報價單編號：</strong><span id="preview-quotation-number"></span></p>
                 </div>
                 <div class="company-info">
@@ -1262,6 +1281,7 @@
                 <img id="preview-logo-desktop" class="logo" style="display: none;">
                 <div class="title-section">
                     <h2 id="preview-quotation-title-desktop">報價單</h2>
+                    <div class="title-banner"></div>
                     <p class="number-align-left"><strong>報價單編號：</strong><span id="preview-quotation-number-desktop"></span></p>
                 </div>
                 <div class="company-info">
@@ -1679,16 +1699,16 @@
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td>${item.description || '未填寫'}</td>
-                    <td>${item.quantity}</td>
-                    <td>${item.price}<span class="currency-symbol">${currencySymbol}</span></td>
-                    <td>${item.subtotal}<span class="currency-symbol">${currencySymbol}</span></td>
+                    <td>${item.quantity.toLocaleString('en-US')}</td>
+                    <td>${item.price.toLocaleString('en-US')}<span class="currency-symbol">${currencySymbol}</span></td>
+                    <td>${item.subtotal.toLocaleString('en-US')}<span class="currency-symbol">${currencySymbol}</span></td>
                 `;
                 previewItemList.appendChild(row);
             });
-            previewTaxRate.textContent = roundedTaxRate;
-            previewTaxAmount.textContent = taxAmount;
+            previewTaxRate.textContent = roundedTaxRate.toLocaleString('en-US');
+            previewTaxAmount.textContent = taxAmount.toLocaleString('en-US');
             previewTaxCurrencySymbol.textContent = currencySymbol;
-            previewTotal.textContent = total;
+            previewTotal.textContent = total.toLocaleString('en-US');
             previewTotalCurrencySymbol.textContent = currencySymbol;
             previewNotes.textContent = notes || '無';
 
@@ -1715,16 +1735,16 @@
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td>${item.description || '未填寫'}</td>
-                    <td>${item.quantity}</td>
-                    <td>${item.price}<span class="currency-symbol">${currencySymbol}</span></td>
-                    <td>${item.subtotal}<span class="currency-symbol">${currencySymbol}</span></td>
+                    <td>${item.quantity.toLocaleString('en-US')}</td>
+                    <td>${item.price.toLocaleString('en-US')}<span class="currency-symbol">${currencySymbol}</span></td>
+                    <td>${item.subtotal.toLocaleString('en-US')}<span class="currency-symbol">${currencySymbol}</span></td>
                 `;
                 previewItemListDesktop.appendChild(row);
             });
-            previewTaxRateDesktop.textContent = roundedTaxRate;
-            previewTaxAmountDesktop.textContent = taxAmount;
+            previewTaxRateDesktop.textContent = roundedTaxRate.toLocaleString('en-US');
+            previewTaxAmountDesktop.textContent = taxAmount.toLocaleString('en-US');
             previewTaxCurrencySymbolDesktop.textContent = currencySymbol;
-            previewTotalDesktop.textContent = total;
+            previewTotalDesktop.textContent = total.toLocaleString('en-US');
             previewTotalCurrencySymbolDesktop.textContent = currencySymbol;
             previewNotesDesktop.textContent = notes || '無';
 
@@ -1773,5 +1793,5 @@
 
         document.getElementById('add-item').addEventListener('click', addItem);
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'93c480f99efdb057',t:'MTc0NjY2MDYxMi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</body>
 </html>
