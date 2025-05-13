@@ -103,7 +103,7 @@
             color: #4A4A4A;
             margin-bottom: 8px;
         }
-        input[type="password"], input[type="text"], select {
+        input[type="password"], input[type="text"], select, input[type="date"] {
             width: 100%;
             padding: 10px;
             border: 1px solid #D1D5DB;
@@ -113,7 +113,7 @@
             color: #333333;
             transition: border-color 0.2s ease;
         }
-        input[type="password"]:focus, input[type="text"]:focus, select:focus {
+        input[type="password"]:focus, input[type="text"]:focus, select:focus, input[type="date"]:focus {
             border-color: #2563EB;
             outline: none;
         }
@@ -303,6 +303,11 @@
                             <p id="fontsize-error" class="error">字體大小格式錯誤！</p>
                         </div>
                         <div class="input-group w-full">
+                            <label for="article-date">發布日期</label>
+                            <input type="date" id="article-date" placeholder="選擇發布日期">
+                            <p id="date-error" class="error">請選擇發布日期！</p>
+                        </div>
+                        <div class="input-group w-full">
                             <label>文章內容</label>
                             <div id="editor"></div>
                             <p id="content-error" class="error">請輸入文章內容！</p>
@@ -373,12 +378,18 @@
             const articleTitle = document.getElementById('article-title');
             const articleImages = document.getElementById('article-images');
             const articleFontSize = document.getElementById('article-fontsize');
+            const articleDate = document.getElementById('article-date');
             const articleCount = document.getElementById('article-count');
             const titleError = document.getElementById('title-error');
             const imagesError = document.getElementById('images-error');
             const fontsizeError = document.getElementById('fontsize-error');
+            const dateError = document.getElementById('date-error');
             const contentError = document.getElementById('content-error');
             const saveBtn = document.getElementById('save-btn');
+
+            // 設置預設日期為當前日期
+            const today = new Date().toISOString().split('T')[0];
+            articleDate.value = today;
 
             // 初始化 Quill 編輯器
             const quill = new Quill('#editor', {
@@ -488,12 +499,14 @@
                 articleTitle.value = ''; // 文章標題留空
                 articleImages.value = `${nextImageNumber}.jpg,${nextImageNumber}-1.jpg`;
                 articleFontSize.value = '16px';
+                articleDate.value = today; // 預設為當前日期
                 quill.root.innerHTML = ''; // 文章內容留空
                 updateArticleCount(); // 更新文章數量顯示
                 editSelectError.classList.remove('show');
                 titleError.classList.remove('show');
                 imagesError.classList.remove('show');
                 fontsizeError.classList.remove('show');
+                dateError.classList.remove('show');
                 contentError.classList.remove('show');
             });
 
@@ -506,12 +519,14 @@
                 articleTitle.value = '';
                 articleImages.value = '';
                 articleFontSize.value = '';
+                articleDate.value = ''; // 清空日期欄位
                 quill.setText('');
                 updateArticleCount(); // 更新文章數量顯示
                 editSelectError.classList.remove('show');
                 titleError.classList.remove('show');
                 imagesError.classList.remove('show');
                 fontsizeError.classList.remove('show');
+                dateError.classList.remove('show');
                 contentError.classList.remove('show');
             });
 
@@ -524,12 +539,14 @@
                     articleTitle.value = article.title;
                     articleImages.value = article.images.join(',');
                     articleFontSize.value = article.fontSize;
+                    articleDate.value = article.date || ''; // 顯示文章日期，若無則為空
                     quill.root.innerHTML = article.content;
                     editSelectError.classList.remove('show');
                 } else {
                     articleTitle.value = '';
                     articleImages.value = '';
                     articleFontSize.value = '';
+                    articleDate.value = '';
                     quill.setText('');
                     currentArticleIndex = -1;
                 }
@@ -580,11 +597,11 @@
                 const articles = [];
                 const entries = text.split('---').map(entry => entry.trim()).filter(entry => entry);
                 entries.forEach(entry => {
-                    const article = { content: '', images: [], fontSize: '' };
+                    const article = { content: '', images: [], fontSize: '', date: '' };
                     const lines = entry.split('\n');
                     let isContent = false;
                     lines.forEach(line => {
-                        if (line.startsWith('title:') || line.startsWith('images:') || line.startsWith('image:') || line.startsWith('fontSize:') || line.startsWith('content:')) {
+                        if (line.startsWith('title:') || line.startsWith('images:') || line.startsWith('image:') || line.startsWith('fontSize:') || line.startsWith('date:') || line.startsWith('content:')) {
                             const [key, value] = line.split(':').map(s => s.trim());
                             if (key === 'image') {
                                 article.images = [value];
@@ -673,7 +690,7 @@
             }
 
             // 儲存文章
-            async function saveArticle(pat, title, images, fontSize, content, isEdit = false, index = -1) {
+            async function saveArticle(pat, title, images, fontSize, date, content, isEdit = false, index = -1) {
                 try {
                     console.log('正在儲存文章:', title);
                     // 清理 HTML 內容
@@ -756,6 +773,7 @@
                             title: title,
                             images: images.split(',').map(img => img.trim()),
                             fontSize: fontSize,
+                            date: date,
                             content: updatedContent
                         };
                     } else {
@@ -763,6 +781,7 @@
                             title: title,
                             images: images.split(',').map(img => img.trim()),
                             fontSize: fontSize,
+                            date: date,
                             content: updatedContent
                         });
                     }
@@ -772,6 +791,7 @@
                         newContent += `title:${article.title}\n`;
                         newContent += `images:${article.images.join(',')}\n`;
                         newContent += `fontSize:${article.fontSize}\n`;
+                        newContent += `date:${article.date}\n`; // 新增日期欄位
                         newContent += `content:${article.content}\n`;
                         newContent += '\n'; // 空行
                         newContent += '---\n'; // 分隔符
@@ -819,6 +839,7 @@
                     const title = articleTitle.value.trim();
                     const images = articleImages.value.trim();
                     const fontSize = articleFontSize.value.trim();
+                    const date = articleDate.value.trim();
                     const content = quill.root.innerHTML.trim();
 
                     // 驗證輸入
@@ -842,17 +863,23 @@
                         alert('字體大小格式錯誤，請輸入如 16px 的格式！');
                         return;
                     }
+                    if (!date) {
+                        dateError.classList.add('show');
+                        alert('請選擇發布日期！');
+                        return;
+                    }
                     if (!content || content === '<p><br></p>') {
                         contentError.classList.add('show');
                         alert('請輸入文章內容！');
                         return;
                     }
 
-                    await saveArticle(pat, title, images, fontSize, content, isEditMode, parseInt(editSelect.value));
+                    await saveArticle(pat, title, images, fontSize, date, content, isEditMode, parseInt(editSelect.value));
                     alert(isEditMode ? '文章已成功更新！' : '文章已成功儲存！');
                     articleTitle.value = '';
                     articleImages.value = '';
                     articleFontSize.value = '';
+                    articleDate.value = today; // 重置為當前日期
                     quill.setText('');
                     editSelect.value = '';
                     currentArticleIndex = -1;
@@ -867,6 +894,7 @@
                     titleError.classList.remove('show');
                     imagesError.classList.remove('show');
                     fontsizeError.classList.remove('show');
+                    dateError.classList.remove('show');
                     contentError.classList.remove('show');
                 }
             });
