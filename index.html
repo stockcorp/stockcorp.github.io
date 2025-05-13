@@ -666,7 +666,7 @@
                 const lines = entry.split('\n');
                 let isContent = false;
                 lines.forEach(line => {
-                    if (line.startsWith('title:') || line.startsWith('images:') || line.startsWith('image:') || line.startsWith('fontSize:')) {
+                    if (line.startsWith('title:') || line.startsWith('images:') || line.startsWith('image:') || line.startsWith('fontSize:') || line.startsWith('date:')) {
                         const [key, value] = line.split(':').map(s => s.trim());
                         if (key === 'image') {
                             article.images = [value];
@@ -676,18 +676,20 @@
                             article[key] = value;
                         }
                         isContent = false;
-                    } else {
+                    } else if (isContent) {
+                        article.content += '\n' + line;
+                    } else if (line.startsWith('content:')) {
                         isContent = true;
-                        article.content += (article.content ? '\n' : '') + line;
+                        article.content = line.substring(8).trim(); // 移除 "content:"
                     }
                 });
                 article.content = article.content.trim();
-                if (article.title && article.images.length > 0) {
+                if (article.title && article.images.length > 0 && article.date) {
                     articles.push(article);
                 }
             });
-            // 反轉文章順序，最新文章在最上方
-            articles.reverse();
+            // 按日期排序，最新文章在最前
+            articles.sort((a, b) => new Date(b.date) - new Date(a.date));
             return articles;
         }
 
@@ -732,6 +734,7 @@
                 card.innerHTML = `
                     <h2>${article.title}</h2>
                     <p>${preview}...</p>
+                    <span style="position: absolute; bottom: 10px; right: 10px; font-size: 12px; color: #666;">發布日期：${article.date}</span>
                 `;
                 articlesDiv.appendChild(card);
 
@@ -833,8 +836,8 @@
             const mobileNav = document.getElementById('mobile-nav');
             mobileNav.classList.toggle('active');
         }
-        function toggleMobileDropdown() {
-            const dropdown = document.getElementById('mobile-dropdown');
+        function toggleMobileDropdown(id) {
+            const dropdown = document.getElementById(id);
             dropdown.classList.toggle('active');
         }
 
