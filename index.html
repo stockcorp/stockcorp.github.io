@@ -163,7 +163,6 @@
             margin: 4px;
             transition: background-color 0.3s ease;
             position: relative;
-            cursor: pointer; /* 添加指針，提示可點擊 */
         }
         .nav-tab:hover {
             background-color: #1e40af;
@@ -240,7 +239,6 @@
             color: #333333;
             text-decoration: none;
             font-size: 16px;
-            cursor: pointer; /* 添加指針，提示可點擊 */
         }
         .mobile-nav a:hover {
             background-color: #f5f5f5;
@@ -283,7 +281,6 @@
             width: 100%;
             height: 100%;
             background-color: #ffffff;
-            cursor: pointer;
         }
         .carousel-item.active {
             display: block;
@@ -339,7 +336,7 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             cursor: pointer;
             transition: transform 0.3s ease;
-            position: relative;
+            position: relative; /* 確保日期相對於卡片定位 */
         }
         .article-card:hover {
             transform: translateY(-5px);
@@ -352,13 +349,13 @@
         .article-card p {
             color: #666666;
             line-height: 1.6;
-            margin-bottom: 20px;
+            margin-bottom: 20px; /* 確保日期不會與內容重疊 */
         }
         /* 確保日期固定顯示 */
         .article-card .article-date {
             display: block !important;
             opacity: 1 !important;
-            font-size: 16px;
+			font-size: 16px; /* 調整字體大小 */
         }
         /* 文章內容 */
         .article-content {
@@ -385,18 +382,6 @@
             border-radius: 8px;
             display: block;
             margin: 0 auto;
-        }
-        /* 修正表格樣式 */
-        .article-content table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 10px 0;
-            border: 2px solid #333; /* 加粗邊框，深色 */
-        }
-        .article-content table td {
-            border: 2px solid #333; /* 加粗單元格邊框，深色 */
-            padding: 8px;
-            color: #333; /* 確保文字可見 */
         }
         /* 文章留言板 */
         .article-comments {
@@ -530,8 +515,8 @@
 
         <!-- 導航選單 -->
         <div class="nav-tabs">
-            <div class="nav-tab" onclick="navigateToArticle('news')">最新消息</div>
-            <div class="nav-tab" onclick="navigateToArticle('risk')">即時資產風險</div>
+            <a href="index.html" class="nav-tab">最新消息</a>
+            <a href="risk.html" class="nav-tab">即時資產風險</a>
             <div class="nav-tab dropdown">
                 投資理財計算機
                 <div class="dropdown-content">
@@ -551,15 +536,15 @@
                     <a href="quotation.html"><i class="fas fa-file-invoice-dollar"></i>報價單產生器</a>
                 </div>
             </div>
-            <div class="nav-tab" onclick="navigateToArticle('technical')">技術分析學習</div>
-            <div class="nav-tab" onclick="navigateToArticle('about')">關於我們</div>
+            <a href="technical.html" class="nav-tab active">技術分析學習</a>
+            <a href="about.html" class="nav-tab">關於我們</a>
         </div>
 
         <!-- 手機版導航 -->
         <div class="mobile-nav" id="mobile-nav">
-            <div onclick="navigateToArticle('news')">最新消息</div>
-            <div onclick="navigateToArticle('risk')">即時資產風險</div>
-            <div onclick="toggleMobileDropdown('investment-dropdown')">投資理財計算機</div>
+            <a href="index.html">最新消息</a>
+            <a href="risk.html">即時資產風險</a>
+            <a href="#" onclick="toggleMobileDropdown('investment-dropdown')">投資理財計算機</a>
             <div class="mobile-dropdown" id="investment-dropdown">
                 <a href="stock.html"><i class="fas fa-chart-line"></i>股票利潤計算機</a>
                 <a href="compound.html"><i class="fas fa-percentage"></i>複利計算機</a>
@@ -570,12 +555,12 @@
                 <a href="creditcard.html"><i class="fas fa-credit-card"></i>信用卡驗證</a>
                 <a href="bmi.html"><i class="fas fa-weight"></i>BMI計算機</a>
             </div>
-            <div onclick="toggleMobileDropdown('business-dropdown')">商業用產生器</div>
+            <a href="#" onclick="toggleMobileDropdown('business-dropdown')">商業用產生器</a>
             <div class="mobile-dropdown" id="business-dropdown">
                 <a href="quotation.html"><i class="fas fa-file-invoice-dollar"></i>報價單產生器</a>
             </div>
-            <div onclick="navigateToArticle('technical')">技術分析學習</div>
-            <div onclick="navigateToArticle('about')">關於我們</div>
+            <a href="technical.html" class="active">技術分析學習</a>
+            <a href="about.html">關於我們</a>
         </div>
 
         <!-- 輪播框 -->
@@ -629,36 +614,36 @@
           return cell !== '' && cell != null;
         }
         function loadFileData(filename) {
-            if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
-                try {
-                    var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
-                    var firstSheetName = workbook.SheetNames[0];
-                    var worksheet = workbook.Sheets[firstSheetName];
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
 
-                    // Convert sheet to JSON to filter blank rows
-                    var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
-                    // Filter out blank rows (rows where all cells are empty, null, or undefined)
-                    var filteredData = jsonData.filter(row => row.some(filledCell));
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
 
-                    // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
-                    var headerRowIndex = filteredData.findIndex((row, index) =>
-                      row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
-                    );
-                    // Fallback
-                    if (headerRowIndex === -1 || headerRowIndex > 25) {
-                      headerRowIndex = 0;
-                    }
-
-                    // Convert filtered JSON back to CSV
-                    var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex));
-                    csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
-                    return csv;
-                } catch (e) {
-                    console.error(e);
-                    return "";
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
                 }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex));
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
             }
-            return gk_fileData[filename] || "";
+        }
+        return gk_fileData[filename] || "";
         }
     </script>
 
@@ -674,6 +659,7 @@
                 renderArticles(articles);
             } catch (error) {
                 console.error('載入 content.txt 失敗:', error);
+                // 如果載入失敗，顯示錯誤訊息
                 const articlesDiv = document.getElementById('articles');
                 articlesDiv.innerHTML = '<p style="color: red;">無法載入文章，請檢查 content.txt 是否存在。</p>';
             }
@@ -719,28 +705,8 @@
         let currentPage = 0;
         const articlesPerPage = 20;
 
-        // 儲存文章數據以供輪播框點擊使用
-        let globalArticles = [];
-
-        // 導航點擊展開文章
-        function navigateToArticle(category) {
-            if (category === 'news') {
-                // 最新消息：展開第一篇文章（最新）
-                showArticle(0);
-            } else if (category === 'technical') {
-                // 技術分析學習：展開第一篇文章（可擴展為篩選相關文章）
-                showArticle(0); // 假設第一篇為技術分析相關，未來可添加篩選邏輯
-            } else if (category === 'risk' || category === 'about') {
-                // 即時資產風險、關於我們：暫無文章，顯示提示或第一篇
-                showArticle(0); // 未來可添加特定類別文章
-            }
-            // 關閉手機版導航（若打開）
-            document.getElementById('mobile-nav').classList.remove('active');
-        }
-
         // 渲染輪播框
         function renderCarousel(articles) {
-            globalArticles = articles; // 儲存文章數據
             const carousel = document.getElementById('carousel');
             carousel.innerHTML = '';
             articles.forEach((article, index) => {
@@ -750,8 +716,6 @@
                     <img src="img/content/${article.images[0]}" alt="${article.title}">
                     <h2 class="carousel-title">${article.title}</h2>
                 `;
-                // 添加點擊事件，顯示詳細內容
-                item.onclick = () => showArticle(index);
                 carousel.appendChild(item);
             });
             if (articles.length > 1) {
@@ -813,7 +777,7 @@
             prevButton.onclick = () => {
                 if (currentPage > 0) {
                     currentPage--;
-                    renderArticles(globalArticles);
+                    renderArticles(articles);
                 }
             };
             pagination.appendChild(prevButton);
@@ -825,7 +789,7 @@
                 pageButton.innerText = i + 1;
                 pageButton.onclick = () => {
                     currentPage = i;
-                    renderArticles(globalArticles);
+                    renderArticles(articles);
                 };
                 pagination.appendChild(pageButton);
             }
@@ -837,13 +801,13 @@
             nextButton.onclick = () => {
                 if (currentPage < totalPages - 1) {
                     currentPage++;
-                    renderArticles(globalArticles);
+                    renderArticles(articles);
                 }
             };
             pagination.appendChild(nextButton);
         }
 
-        // 顯示文章內容（輪播框和文章列表共用）
+        // 顯示文章內容
         function showArticle(index) {
             document.querySelectorAll('.article-content').forEach(content => {
                 content.classList.remove('active');
