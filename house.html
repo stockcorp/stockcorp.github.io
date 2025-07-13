@@ -40,6 +40,39 @@
         </script><!DOCTYPE html>
 <html lang="zh-TW">
 <head>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3440199491716602" crossorigin="anonymous"></script>
+    <!-- Google Tag Manager -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-Q32FFR42XT"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-Q32FFR42XT');
+    </script>
+    <!-- Facebook SDK -->
+    <script>
+      window.fbAsyncInit = function() {
+        FB.init({
+          appId      : 'YOUR_APP_ID',
+          xfbml      : true,
+          version    : 'v18.0'
+        });
+      };
+      (function(d, s, id){
+         var js, fjs = d.getElementsByTagName(s)[0];
+         if (d.getElementById(id)) {return;}
+         js = d.createElement(s); js.id = id;
+         js.src = "https://connect.facebook.net/zh_TW/sdk.js";
+         fjs.parentNode.insertBefore(js, fjs);
+       }(document, 'script', 'facebook-jssdk'));
+    </script>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js 圖表庫 -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- html2canvas 和 jsPDF 用於生成 PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="房地產投資報酬率計算器 - 股市企業研究院">
@@ -47,13 +80,30 @@
     <meta name="author" content="股市企業研究院">
     <meta name="robots" content="index, follow">
     <title>房地產投資報酬率計算器 - 股市企業研究院</title>
-    <!-- Google Fonts 支援中文 -->
+    <!-- Open Graph Meta Tags for Social Media -->
+    <meta property="og:title" content="房地產投資報酬率計算器 - 股市企業研究院">
+    <meta property="og:description" content="房地產投資報酬率計算器 - 股市企業研究院">
+    <meta property="og:url" content="https://stockcorp.github.io/realestate.html">
+    <meta property="og:type" content="website">
+    <!-- Structured Data (JSON-LD) for SEO -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "房地產投資報酬率計算器",
+        "url": "https://stockcorp.github.io/realestate.html",
+        "description": "房地產投資報酬率計算器 - 股市企業研究院",
+        "publisher": {
+            "@type": "Organization",
+            "name": "吉米理財學堂",
+            "url": "https://www.youtube.com/@吉米理財學堂",
+            "email": "xbon510@gmail.com"
+        },
+        "applicationCategory": "Finance"
+    }
+    </script>
+    <!-- 載入 Google Fonts 支援中文 -->
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
-    <!-- Chart.js 圖表庫 -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- html2canvas 和 jsPDF 用於生成 PDF -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
         body {
             font-family: Arial, 'Noto Sans TC', sans-serif;
@@ -71,17 +121,159 @@
         }
         .header {
             text-align: center;
-            background-color: #2563eb;
-            color: #ffffff;
+            background-image: url('/img/channels4_banner.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: relative;
             width: 100%;
+            height: 120px;
+            min-height: 80px;
+            max-height: 200px;
             padding: 20px;
             box-sizing: border-box;
         }
-        .header h1 {
-            margin: 0;
-            font-size: 28px;
+        @media screen and (max-width: 600px) {
+            .header {
+                height: 80px;
+                padding: 10px;
+                background-size: contain;
+                background-position: center center;
+            }
+        }
+        @media screen and (min-width: 601px) and (max-width: 900px) {
+            .header {
+                height: 100px;
+                padding: 15px;
+                background-size: cover;
+            }
+        }
+        @media screen and (min-width: 901px) {
+            .header {
+                height: 150px;
+                padding: 20px;
+            }
+        }
+        .nav-tabs {
+            display: flex;
+            width: 100%;
+            background-color: transparent;
+            margin-bottom: 20px;
+        }
+        .nav-tab {
+            flex: 1;
+            padding: 10px 0;
+            text-align: center;
+            text-decoration: none;
+            background-color: #2563eb;
+            color: #ffffff;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 4px;
+            margin: 4px;
+            transition: background-color 0.3s ease;
+            position: relative;
+        }
+        .nav-tab:hover {
+            background-color: #1e40af;
+        }
+        .nav-tab.active {
+            background-color: #1d4ed8;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+        .dropdown {
+            position: relative;
+        }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #eff6ff;
+            min-width: 220px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            border-radius: 6px;
+            z-index: 1;
+            top: 100%;
+            left: 0;
+            padding: 10px 0;
+            animation: fadeIn 0.3s ease;
+        }
+        .dropdown-content a {
+            color: #1e40af;
+            padding: 10px 16px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            transition: background-color 0.2s ease;
+        }
+        .dropdown-content a:hover {
+            background-color: #dbeafe;
+            border-radius: 4px;
+        }
+        .dropdown-content a i {
+            color: #2563eb;
+        }
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .hamburger {
+            display: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #2563eb;
+            padding: 10px;
+        }
+        .mobile-nav {
+            display: none;
+            background-color: #ffffff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-radius: 4px;
+            position: absolute;
+            top: 60px;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 10px 0;
+            animation: slideIn 0.3s ease;
+        }
+        .mobile-nav a {
+            display: block;
+            padding: 10px 20px;
+            color: #333333;
+            text-decoration: none;
+            font-size: 16px;
+        }
+        .mobile-nav a:hover {
+            background-color: #f5f5f5;
+        }
+        .mobile-dropdown {
+            padding-left: 20px;
+            display: none;
+        }
+        .mobile-dropdown.active {
+            display: block;
+        }
+        .mobile-dropdown a {
+            padding: 8px 20px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #1e40af;
+        }
+        .mobile-dropdown a i {
+            color: #2563eb;
+        }
+        @keyframes slideIn {
+            from { transform: translateY(-10px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
         }
         .content-section {
             width: 100%;
@@ -92,7 +284,7 @@
             text-align: center;
             margin-bottom: 20px;
         }
-        .content-section h2 {
+        .content-section h1 {
             font-size: 24px;
             margin-bottom: 20px;
             color: #2563eb;
@@ -120,6 +312,7 @@
             font-size: 16px;
             background-color: #f5f5f5;
             color: #333333;
+            transition: border-color 0.2s ease;
         }
         .form-group input:focus,
         .form-group select:focus {
@@ -129,6 +322,7 @@
         .form-row {
             display: flex;
             gap: 20px;
+            align-items: flex-end;
         }
         .form-row .form-group {
             flex: 1;
@@ -146,9 +340,11 @@
             border-radius: 8px;
             cursor: pointer;
             font-size: 18px;
+            transition: background-color 0.2s ease, transform 0.2s ease;
         }
         .button-group button:hover {
             background-color: #1e40af;
+            transform: scale(1.05);
         }
         #result {
             margin-top: 20px;
@@ -222,7 +418,41 @@
             border-radius: 6px;
             overflow-x: auto;
         }
+        .facebook-comments {
+            width: 100%;
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .facebook-comments h2 {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: #2563eb;
+        }
+        .facebook-comments p {
+            line-height: 1.6;
+            color: #666666;
+        }
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #000000;
+            width: 100%;
+        }
         @media screen and (max-width: 768px) {
+            .nav-tabs {
+                display: none;
+            }
+            .hamburger {
+                display: block;
+            }
+            .mobile-nav.active {
+                display: block;
+            }
             .form-row {
                 flex-direction: column;
                 gap: 15px;
@@ -232,15 +462,77 @@
                 gap: 10px;
             }
         }
+        @media screen and (min-width: 769px) {
+            .mobile-nav {
+                display: none;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <h1>房地產投資報酬率計算器</h1>
+        <!-- 橫幅 -->
+        <div style="width: 100%;">
+            <div class="header"></div>
         </div>
+
+        <!-- 漢堡選單按鈕 -->
+        <div class="hamburger" onclick="toggleMobileNav()">☰</div>
+
+        <!-- 導航選單 -->
+        <div class="nav-tabs">
+            <a href="index.html" class="nav-tab">最新消息</a>
+            <a href="risk.html" class="nav-tab">即時資產風險</a>
+            <div class="nav-tab dropdown">
+                投資理財計算機
+                <div class="dropdown-content">
+                    <a href="stock.html"><i class="fas fa-chart-line"></i>股票利潤計算機</a>
+                    <a href="compound.html"><i class="fas fa-percentage"></i>複利計算機</a>
+                    <a href="kelly.html"><i class="fas fa-calculator"></i>凱莉計算機</a>
+                    <a href="creditloan.html"><i class="fas fa-money-check-alt"></i>信貸計算機</a>
+                    <a href="loan.html"><i class="fas fa-home"></i>房貸計算機</a>
+                    <a href="car.html"><i class="fas fa-car"></i>車貸計算機</a>
+                    <a href="creditcard.html"><i class="fas fa-credit-card"></i>信用卡驗證</a>
+                    <a href="bmi.html"><i class="fas fa-weight"></i>BMI計算機</a>
+                </div>
+            </div>
+            <div class="nav-tab dropdown active">
+                商業用產生器
+                <div class="dropdown-content">
+				    <a href="quotation.html"><i class="fas fa-file-invoice-dollar"></i>報價單產生器</a>
+                    <a href="realestate.html"><i class="fas fa-home"></i>房地產投資報酬率計算器</a>
+                </div>
+            </div>
+            <a href="technical.html" class="nav-tab">技術分析學習</a>
+            <a href="about.html" class="nav-tab">關於我們</a>
+        </div>
+
+        <!-- 手機版導航 -->
+        <div class="mobile-nav" id="mobile-nav">
+            <a href="index.html">最新消息</a>
+            <a href="risk.html">即時資產風險</a>
+            <a href="#" onclick="toggleMobileDropdown('investment-dropdown')">投資理財計算機</a>
+            <div class="mobile-dropdown" id="investment-dropdown">
+                <a href="stock.html"><i class="fas fa-chart-line"></i>股票利潤計算機</a>
+                <a href="compound.html"><i class="fas fa-percentage"></i>複利計算機</a>
+                <a href="kelly.html"><i class="fas fa-calculator"></i>凱莉計算機</a>
+                <a href="creditloan.html"><i class="fas fa-money-check-alt"></i>信貸計算機</a>
+                <a href="loan.html"><i class="fas fa-home"></i>房貸計算機</a>
+                <a href="car.html"><i class="fas fa-car"></i>車貸計算機</a>
+                <a href="creditcard.html"><i class="fas fa-credit-card"></i>信用卡驗證</a>
+                <a href="bmi.html"><i class="fas fa-weight"></i>BMI計算機</a>
+            </div>
+            <a href="#" onclick="toggleMobileDropdown('business-dropdown')">商業用產生器</a>
+            <div class="mobile-dropdown" id="business-dropdown">
+                <a href="realestate.html"><i class="fas fa-home"></i>房地產投資報酬率計算器</a>
+            </div>
+            <a href="technical.html">技術分析學習</a>
+            <a href="about.html">關於我們</a>
+        </div>
+
+        <!-- 房地產投資報酬率計算器 -->
         <div class="content-section">
-            <h2>輸入投資資訊</h2>
+            <h1>房地產投資報酬率計算器</h1>
             <div class="investment-form">
                 <div class="form-group">
                     <label for="investment-type">投資類型</label>
@@ -269,7 +561,7 @@
                 <div class="form-row" id="loan-details" style="display: none;">
                     <div class="form-group">
                         <label for="loan-amount">貸款金額 (新台幣)</label>
-                        <input type="text" id="loan-amount" value="7,000,000" placeholder="輸入貸款金額">
+                        <input type="text" id="loan-amount" value="8,000,000" placeholder="輸入貸款金額">
                     </div>
                     <div class="form-group">
                         <label for="loan-term">貸款期限 (年)</label>
@@ -349,6 +641,17 @@
                         <input type="text" id="maintenance-amount" value="10,000" placeholder="輸入年維護費用">
                     </div>
                 </div>
+                <div class="form-group">
+                    <label for="renovation-option">裝潢成本</label>
+                    <select id="renovation-option">
+                        <option value="yes" selected>有</option>
+                        <option value="no">無</option>
+                    </select>
+                    <div id="renovation-amount-group">
+                        <label for="renovation-amount">裝潢成本金額 (新台幣)</label>
+                        <input type="text" id="renovation-amount" value="500,000" placeholder="輸入裝潢成本金額">
+                    </div>
+                </div>
                 <div class="form-group" id="rental-cost-group">
                     <label for="rental-cost-option">出租相關成本</label>
                     <select id="rental-cost-option">
@@ -370,6 +673,7 @@
                 <canvas id="roi-chart"></canvas>
             </div>
         </div>
+
         <!-- 說明區塊 -->
         <div class="explanation-section">
             <h2>房地產投資報酬率計算器使用說明</h2>
@@ -386,7 +690,7 @@
                 </a>
             </blockquote>
             <h3>概述</h3>
-            <p>本計算器幫助您評估全額或貸款買房的年化報酬率（CAGR），並與台北市CPI及其他資產（比特幣、S&P 500、0050、黃金、債券）進行比較。所有現實成本（如交易稅、仲介費、維護費用、出租成本）均納入計算，確保結果貼近實際。</p>
+            <p>本計算器幫助您評估全額或貸款買房的年化報酬率（CAGR），並與台北市CPI及其他資產（比特幣、S&P 500、0050、黃金、債券）進行比較。所有現實成本（如交易稅、仲介費、維護費用、出租成本、裝潢成本）均納入計算，確保結果貼近實際。</p>
             <h3>使用步驟</h3>
             <ol>
                 <li>選擇投資類型：全額買房或貸款買房。</li>
@@ -409,6 +713,7 @@
                         <li>買房仲介費：買房時的仲介費用（預設1.5%購買金額，150,000新台幣）。</li>
                         <li>賣房仲介費：賣房時的仲介費用（預設1.5%當前房價，180,000新台幣）。</li>
                         <li>房屋維護費用：持有期間的物業管理或維修費（預設每年10,000新台幣）。</li>
+                        <li>裝潢成本：房屋裝潢費用（預設500,000新台幣）。</li>
                         <li>出租相關成本：如空置率、維修費（預設年租金的10%，24,000新台幣/年）。</li>
                         <li>選擇「有」或「無」，若選擇「有」但未輸入金額，使用預設值；選擇「無」則費用為0。</li>
                     </ul>
@@ -419,7 +724,7 @@
             <h3>計算邏輯</h3>
             <h4>全額買房</h4>
             <ul>
-                <li>初始投資：購買金額 + 買房交易稅 + 買房仲介費</li>
+                <li>初始投資：購買金額 + 買房交易稅 + 買房仲介費 + 裝潢成本</li>
                 <li>總回報：
                     <ul>
                         <li>房價增值 = 當前房價 - 賣房交易稅 - 賣房仲介費 - 購買金額</li>
@@ -429,13 +734,13 @@
                 </li>
                 <li>年化報酬率（CAGR）：
                     <pre>
-CAGR = [(當前房價 - 賣房交易稅 - 賣房仲介費 + (年租金收入 - 出租相關成本) × 年數 - (房屋維護費用 × 年數)) / (購買金額 + 買房交易稅 + 買房仲介費)]^(1/年數) - 1
+CAGR = [(當前房價 - 賣房交易稅 - 賣房仲介費 + (年租金收入 - 出租相關成本) × 年數 - (房屋維護費用 × 年數)) / (購買金額 + 買房交易稅 + 買房仲介費 + 裝潢成本)]^(1/年數) - 1
                     </pre>
                 </li>
             </ul>
             <h4>貸款買房</h4>
             <ul>
-                <li>初始投資：購買金額 - 貸款金額 + 買房交易稅 + 買房仲介費</li>
+                <li>初始投資：購買金額 - 貸款金額 + 買房交易稅 + 買房仲介費 + 裝潢成本</li>
                 <li>總回報：
                     <ul>
                         <li>房價增值 = 當前房價 - 賣房交易稅 - 賣房仲介費 - 購買金額</li>
@@ -451,7 +756,7 @@ CAGR = [(當前房價 - 賣房交易稅 - 賣房仲介費 + (年租金收入 - �
                 </li>
                 <li>年化報酬率（CAGR）：
                     <pre>
-CAGR = [(當前房價 - 賣房交易稅 - 賣房仲介費 + (年租金收入 - 出租相關成本) × 年數 - 貸款總成本 - (房屋維護費用 × 年數)) / (購買金額 - 貸款金額 + 買房交易稅 + 買房仲介費)]^(1/年數) - 1
+CAGR = [(當前房價 - 賣房交易稅 - 賣房仲介費 + (年租金收入 - 出租相關成本) × 年數 - 貸款總成本 - (房屋維護費用 × 年數)) / (購買金額 - 貸款金額 + 買房交易稅 + 買房仲介費 + 裝潢成本)]^(1/年數) - 1
                     </pre>
                     若總回報為負，顯示「虧損」。
                 </li>
@@ -476,14 +781,22 @@ CPI CAGR = (結束年CPI / 開始年CPI)^(1/年數) - 1
                 <li>成本假設：預設值基於台北市房地產市場，實際情況可能不同。</li>
                 <li>貸款計算：假設固定利率，未考慮變動利率或提前還款。</li>
                 <li>PDF生成：若下載PDF失敗，可稍後重試或檢查瀏覽器設置。</li>
+				<li>免責聲明：本網站所提供之計算工具僅供資訊參考，並不構成任何形式之投資建議、財務諮詢或法律意見。使用者應依自身判斷與風險承擔責任，並建議諮詢持牌專業顧問。對於使用本工具所產生之任何損失或爭議，本站概不負任何法律或財務責任。</li>
             </ul>
-            <h3>聯繫方式</h3>
-            <p>如有問題，請聯繫<a href="https://www.youtube.com/@吉米理財學堂" target="_blank">吉米理財學堂</a>。</p>
         </div>
-        <footer style="width: 100%; text-align: center; margin-top: 20px;">
+
+        <!-- Facebook 留言板 -->
+        <div class="facebook-comments">
+            <h2>留言板</h2>
+            <div class="fb-comments" data-href="https://stockcorp.github.io/realestate.html" data-width="100%" data-numposts="5"></div>
+        </div>
+
+        <!-- 頁腳 -->
+        <footer style="width: 100%;">
             <p>© 2025 <a href="https://www.youtube.com/@吉米理財學堂" target="_blank">吉米理財學堂</a>。保留所有權利。</p>
         </footer>
     </div>
+
     <script>
         // 台北市CPI數據（1995-2024，假設數據）
         const cpiData = {
@@ -515,11 +828,6 @@ CPI CAGR = (結束年CPI / 開始年CPI)^(1/年數) - 1
                 startOption.value = year;
                 startOption.textContent = year;
                 startYearSelect.appendChild(startOption);
-
-                const endOption = document.createElement('option');
-                endOption.value = year;
-                endOption.textContent = year;
-                endYearSelect.appendChild(endOption);
             }
             startYearSelect.value = 2014;
             updateEndYearOptions();
@@ -552,7 +860,7 @@ CPI CAGR = (結束年CPI / 開始年CPI)^(1/年數) - 1
         }
 
         // 為輸入框添加會計格式處理
-        const numberInputs = ['purchase-price', 'rental-income', 'loan-amount', 'current-value', 'loan-term', 'interest-rate', 'buy-tax-amount', 'sell-tax-amount', 'buy-fee-amount', 'sell-fee-amount', 'maintenance-amount', 'rental-cost-amount'];
+        const numberInputs = ['purchase-price', 'rental-income', 'loan-amount', 'current-value', 'loan-term', 'interest-rate', 'buy-tax-amount', 'sell-tax-amount', 'buy-fee-amount', 'sell-fee-amount', 'maintenance-amount', 'renovation-amount', 'rental-cost-amount'];
         numberInputs.forEach(id => {
             const input = document.getElementById(id);
             input.addEventListener('input', function() {
@@ -594,6 +902,10 @@ CPI CAGR = (結束年CPI / 開始年CPI)^(1/年數) - 1
             document.getElementById('maintenance-amount-group').style.display = this.value === 'yes' ? 'block' : 'none';
         });
 
+        document.getElementById('renovation-option').addEventListener('change', function() {
+            document.getElementById('renovation-amount-group').style.display = this.value === 'yes' ? 'block' : 'none';
+        });
+
         document.getElementById('rental-cost-option').addEventListener('change', function() {
             document.getElementById('rental-cost-amount-group').style.display = this.value === 'yes' ? 'block' : 'none';
         });
@@ -615,12 +927,14 @@ CPI CAGR = (結束年CPI / 開始年CPI)^(1/年數) - 1
             const buyFeeOption = document.getElementById('buy-fee-option').value;
             const sellFeeOption = document.getElementById('sell-fee-option').value;
             const maintenanceOption = document.getElementById('maintenance-option').value;
+            const renovationOption = document.getElementById('renovation-option').value;
             const rentalCostOption = document.getElementById('rental-cost-option').value;
             const buyTaxAmount = buyTaxOption === 'yes' ? parseNumber(document.getElementById('buy-tax-amount').value) : 0;
             const sellTaxAmount = sellTaxOption === 'yes' ? parseNumber(document.getElementById('sell-tax-amount').value) : 0;
             const buyFeeAmount = buyFeeOption === 'yes' ? parseNumber(document.getElementById('buy-fee-amount').value) : 0;
             const sellFeeAmount = sellFeeOption === 'yes' ? parseNumber(document.getElementById('sell-fee-amount').value) : 0;
             const maintenanceAmount = maintenanceOption === 'yes' ? parseNumber(document.getElementById('maintenance-amount').value) : 0;
+            const renovationAmount = renovationOption === 'yes' ? parseNumber(document.getElementById('renovation-amount').value) : 0;
             const rentalCostPercentage = rentalCostOption === 'yes' ? parseNumber(document.getElementById('rental-cost-amount').value) / 100 : 0;
 
             if (!purchasePrice || !currentValue || startYear >= endYear) {
@@ -629,7 +943,7 @@ CPI CAGR = (結束年CPI / 開始年CPI)^(1/年數) - 1
             }
 
             const years = endYear - startYear;
-            let initialInvestment = purchasePrice + buyTaxAmount + buyFeeAmount;
+            let initialInvestment = purchasePrice + buyTaxAmount + buyFeeAmount + renovationAmount;
             let totalReturn = currentValue - sellTaxAmount - sellFeeAmount - purchasePrice;
 
             if (rentOption === 'yes') {
@@ -643,7 +957,7 @@ CPI CAGR = (結束年CPI / 開始年CPI)^(1/年數) - 1
                     alert('請填寫貸款相關欄位！');
                     return;
                 }
-                initialInvestment = purchasePrice - loanAmount + buyTaxAmount + buyFeeAmount;
+                initialInvestment = purchasePrice - loanAmount + buyTaxAmount + buyFeeAmount + renovationAmount;
                 const monthlyRate = interestRate / 12;
                 const monthlyPayment = (loanAmount * monthlyRate) / (1 - Math.pow(1 + monthlyRate, -loanTerm * 12));
                 const totalLoanCost = monthlyPayment * loanTerm * 12;
@@ -677,11 +991,11 @@ CPI CAGR = (結束年CPI / 開始年CPI)^(1/年數) - 1
                 <h3>其他資產回報比較</h3>
                 <p>若將相同資金（${initialInvestment.toLocaleString('zh-TW')} 新台幣）投資於其他資產，預計回報如下：</p>
                 <ul>
-                    <li>比特幣：${investmentReturns.bitcoin.toLocaleString('zh-TW')} 新台幣</li>
-                    <li>S&P 500：${investmentReturns.sp500.toLocaleString('zh-TW')} 新台幣</li>
-                    <li>0050：${investmentReturns.tw0050.toLocaleString('zh-TW')} 新台幣</li>
-                    <li>黃金：${investmentReturns.gold.toLocaleString('zh-TW')} 新台幣</li>
-                    <li>債券：${investmentReturns.bonds.toLocaleString('zh-TW')} 新台幣</li>
+					<li>比特幣：${Math.floor(investmentReturns.bitcoin).toLocaleString('zh-TW')} 新台幣</li>
+					<li>S&P 500：${Math.floor(investmentReturns.sp500).toLocaleString('zh-TW')} 新台幣</li>
+					<li>0050：${Math.floor(investmentReturns.tw0050).toLocaleString('zh-TW')} 新台幣</li>
+					<li>黃金：${Math.floor(investmentReturns.gold).toLocaleString('zh-TW')} 新台幣</li>
+					<li>債券：${Math.floor(investmentReturns.bonds).toLocaleString('zh-TW')} 新台幣</li>
                 </ul>
                 <table>
                     <thead>
@@ -787,6 +1101,17 @@ CPI CAGR = (結束年CPI / 開始年CPI)^(1/年數) - 1
                     alert('生成PDF失敗，請稍後再試！');
                 });
             }, 500);
+        }
+
+        // 漢堡選單控制
+        function toggleMobileNav() {
+            const mobileNav = document.getElementById('mobile-nav');
+            mobileNav.classList.toggle('active');
+        }
+
+        function toggleMobileDropdown(dropdownId) {
+            const dropdown = document.getElementById(dropdownId);
+            dropdown.classList.toggle('active');
         }
     </script>
 </body>
