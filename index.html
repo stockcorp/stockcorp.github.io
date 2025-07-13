@@ -535,8 +535,8 @@
             <div class="nav-tab dropdown">
                 商業用產生器
                 <div class="dropdown-content">
-                    			    <a href="quotation.html"><i class="fas fa-file-invoice-dollar"></i>報價單產生器</a>
-                <a href="house.html"><i class="fas fa-home"></i>房地產投資報酬率計算器</a>
+                    <a href="quotation.html"><i class="fas fa-file-invoice-dollar"></i>報價單產生器</a>
+                    <a href="house.html"><i class="fas fa-home"></i>房地產投資報酬率計算器</a>
                 </div>
             </div>
             <a href="technical.html" class="nav-tab active">技術分析學習</a>
@@ -560,7 +560,7 @@
             </div>
             <a href="#" onclick="toggleMobileDropdown('business-dropdown')">商業用產生器</a>
             <div class="mobile-dropdown" id="business-dropdown">
-                			    <a href="quotation.html"><i class="fas fa-file-invoice-dollar"></i>報價單產生器</a>
+                <a href="quotation.html"><i class="fas fa-file-invoice-dollar"></i>報價單產生器</a>
                 <a href="house.html"><i class="fas fa-home"></i>房地產投資報酬率計算器</a>
             </div>
             <a href="technical.html" class="active">技術分析學習</a>
@@ -615,39 +615,31 @@
         var gk_xlsxFileLookup = {};
         var gk_fileData = {};
         function filledCell(cell) {
-          return cell !== '' && cell != null;
+            return cell !== '' && cell != null;
         }
         function loadFileData(filename) {
-        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
-            try {
-                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
-                var firstSheetName = workbook.SheetNames[0];
-                var worksheet = workbook.Sheets[firstSheetName];
-
-                // Convert sheet to JSON to filter blank rows
-                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
-                // Filter out blank rows (rows where all cells are empty, null, or undefined)
-                var filteredData = jsonData.filter(row => row.some(filledCell));
-
-                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
-                var headerRowIndex = filteredData.findIndex((row, index) =>
-                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
-                );
-                // Fallback
-                if (headerRowIndex === -1 || headerRowIndex > 25) {
-                  headerRowIndex = 0;
+            if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+                try {
+                    var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                    var firstSheetName = workbook.SheetNames[0];
+                    var worksheet = workbook.Sheets[firstSheetName];
+                    var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                    var filteredData = jsonData.filter(row => row.some(filledCell));
+                    var headerRowIndex = filteredData.findIndex((row, index) =>
+                        row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                    );
+                    if (headerRowIndex === -1 || headerRowIndex > 25) {
+                        headerRowIndex = 0;
+                    }
+                    var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex));
+                    csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                    return csv;
+                } catch (e) {
+                    console.error(e);
+                    return "";
                 }
-
-                // Convert filtered JSON back to CSV
-                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex));
-                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
-                return csv;
-            } catch (e) {
-                console.error(e);
-                return "";
             }
-        }
-        return gk_fileData[filename] || "";
+            return gk_fileData[filename] || "";
         }
     </script>
 
@@ -663,7 +655,6 @@
                 renderArticles(articles);
             } catch (error) {
                 console.error('載入 content.txt 失敗:', error);
-                // 如果載入失敗，顯示錯誤訊息
                 const articlesDiv = document.getElementById('articles');
                 articlesDiv.innerHTML = '<p style="color: red;">無法載入文章，請檢查 content.txt 是否存在。</p>';
             }
@@ -692,7 +683,7 @@
                         article.content += '\n' + line;
                     } else if (line.startsWith('content:')) {
                         isContent = true;
-                        article.content = line.substring(8).trim(); // 移除 "content:"
+                        article.content = line.substring(8).trim();
                     }
                 });
                 article.content = article.content.trim();
@@ -700,14 +691,13 @@
                     articles.push(article);
                 }
             });
-            // 按日期排序，最新文章在最前
             articles.sort((a, b) => new Date(b.date) - new Date(a.date));
             return articles;
         }
 
         // 當前頁面
         let currentPage = 0;
-        const articlesPerPage = 20;
+        const articlesPerPage = 10; // 修改為每頁10篇文章
 
         // 渲染輪播框
         function renderCarousel(articles) {
