@@ -44,10 +44,10 @@
     <!-- Google Tag Manager -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-Q32FFR42XT"></script>
     <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-Q32FFR42XT');
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-Q32FFR42XT');
     </script>
     <!-- Facebook SDK -->
     <script>
@@ -73,6 +73,39 @@
     <!-- html2canvas 和 jsPDF 用於生成 PDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <!-- XLSX 處理 -->
+    <script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+            if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+                try {
+                    var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                    var firstSheetName = workbook.SheetNames[0];
+                    var worksheet = workbook.Sheets[firstSheetName];
+                    var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                    var filteredData = jsonData.filter(row => row.some(filledCell));
+                    var headerRowIndex = filteredData.findIndex((row, index) =>
+                        row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                    );
+                    if (headerRowIndex === -1 || headerRowIndex > 25) {
+                        headerRowIndex = 0;
+                    }
+                    var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex));
+                    csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                    return csv;
+                } catch (e) {
+                    console.error(e);
+                    return "";
+                }
+            }
+            return gk_fileData[filename] || "";
+        }
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="房地產投資報酬率計算器 - 股市企業研究院">
@@ -327,6 +360,18 @@
         .form-row .form-group {
             flex: 1;
         }
+        .cost-row {
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+        .cost-row .form-group {
+            flex: 1;
+        }
+        .cost-row .form-group select {
+            margin-bottom: 10px;
+        }
         .button-group {
             display: flex;
             gap: 20px;
@@ -453,7 +498,7 @@
             .mobile-nav.active {
                 display: block;
             }
-            .form-row {
+            .form-row, .cost-row {
                 flex-direction: column;
                 gap: 15px;
             }
@@ -499,8 +544,8 @@
             <div class="nav-tab dropdown active">
                 商業用產生器
                 <div class="dropdown-content">
-				    			    <a href="quotation.html"><i class="fas fa-file-invoice-dollar"></i>報價單產生器</a>
-                <a href="house.html"><i class="fas fa-home"></i>房地產投資報酬率計算器</a>
+                    <a href="quotation.html"><i class="fas fa-file-invoice-dollar"></i>報價單產生器</a>
+                    <a href="house.html"><i class="fas fa-home"></i>房地產投資報酬率計算器</a>
                 </div>
             </div>
             <a href="technical.html" class="nav-tab">技術分析學習</a>
@@ -524,7 +569,7 @@
             </div>
             <a href="#" onclick="toggleMobileDropdown('business-dropdown')">商業用產生器</a>
             <div class="mobile-dropdown" id="business-dropdown">
-			    			    <a href="quotation.html"><i class="fas fa-file-invoice-dollar"></i>報價單產生器</a>
+                <a href="quotation.html"><i class="fas fa-file-invoice-dollar"></i>報價單產生器</a>
                 <a href="house.html"><i class="fas fa-home"></i>房地產投資報酬率計算器</a>
             </div>
             <a href="technical.html">技術分析學習</a>
@@ -535,19 +580,23 @@
         <div class="content-section">
             <h1>房地產投資報酬率計算器</h1>
             <div class="investment-form">
-                <div class="form-group">
-                    <label for="investment-type">投資類型</label>
-                    <select id="investment-type">
-                        <option value="full" selected>全額買房</option>
-                        <option value="loan">貸款買房</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="rent-option">是否出租</label>
-                    <select id="rent-option">
-                        <option value="yes" selected>是</option>
-                        <option value="no">否</option>
-                    </select>
+			<hr/>
+			<h1>輸入基本資訊</h1>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="investment-type">投資類型</label>
+                        <select id="investment-type">
+                            <option value="full" selected>全額買房</option>
+                            <option value="loan">貸款買房</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="rent-option">是否出租</label>
+                        <select id="rent-option">
+                            <option value="yes" selected>是</option>
+                            <option value="no">否</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group">
@@ -555,8 +604,12 @@
                         <input type="text" id="purchase-price" value="10,000,000" placeholder="輸入購買金額">
                     </div>
                     <div class="form-group" id="rental-income-group">
-                        <label for="rental-income">年租金收入 (新台幣)</label>
-                        <input type="text" id="rental-income" value="240,000" placeholder="輸入年租金收入">
+                        <label for="rental-income">初始年租金收入 (新台幣)</label>
+                        <input type="text" id="rental-income" value="240,000" placeholder="輸入初始年租金收入">
+                    </div>
+                    <div class="form-group" id="rental-growth-group">
+                        <label for="rental-growth-rate">年租金增長率 (%)</label>
+                        <input type="text" id="rental-growth-rate" value="2" placeholder="輸入年租金增長率">
                     </div>
                 </div>
                 <div class="form-row" id="loan-details" style="display: none;">
@@ -569,8 +622,25 @@
                         <input type="text" id="loan-term" value="20" placeholder="輸入貸款期限">
                     </div>
                     <div class="form-group">
+                        <label for="interest-rate-type">利率類型</label>
+                        <select id="interest-rate-type">
+                            <option value="fixed" selected>固定利率</option>
+                            <option value="variable">浮動利率</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row" id="interest-rate-details">
+                    <div class="form-group">
                         <label for="interest-rate">年利率 (%)</label>
                         <input type="text" id="interest-rate" value="2.5" placeholder="輸入年利率">
+                    </div>
+                    <div class="form-group" id="variable-rate-group" style="display: none;">
+                        <label for="min-interest-rate">最低年利率 (%)</label>
+                        <input type="text" id="min-interest-rate" value="2.0" placeholder="輸入最低年利率">
+                    </div>
+                    <div class="form-group" id="max-interest-rate-group" style="display: none;">
+                        <label for="max-interest-rate">最高年利率 (%)</label>
+                        <input type="text" id="max-interest-rate" value="3.0" placeholder="輸入最高年利率">
                     </div>
                 </div>
                 <div class="form-row">
@@ -587,82 +657,109 @@
                         <input type="text" id="current-value" value="12,000,000" placeholder="輸入當前房價">
                     </div>
                 </div>
-                <div class="form-group">
-                    <label for="buy-tax-option">買房交易稅</label>
-                    <select id="buy-tax-option">
-                        <option value="yes" selected>有</option>
-                        <option value="no">無</option>
-                    </select>
-                    <div id="buy-tax-amount-group">
-                        <label for="buy-tax-amount">買房交易稅金額 (新台幣)</label>
-                        <input type="text" id="buy-tax-amount" value="200,000" placeholder="輸入買房交易稅金額">
+			<hr/>
+			<h1>輸入成本資訊</h1>
+                <div class="cost-row">
+                    <div class="form-group">
+                        <label for="buy-tax-option">買房交易稅</label>
+                        <select id="buy-tax-option">
+                            <option value="yes" selected>有</option>
+                            <option value="no">無</option>
+                        </select>
+                        <select id="buy-tax-type">
+                            <option value="percentage" selected>比例計算 (2%)</option>
+                            <option value="manual">手動輸入</option>
+                        </select>
+                        <div id="buy-tax-amount-group">
+                            <label for="buy-tax-amount">買房交易稅金額 (新台幣)</label>
+                            <input type="text" id="buy-tax-amount" value="200,000" placeholder="輸入買房交易稅金額">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="sell-tax-option">賣房交易稅</label>
+                        <select id="sell-tax-option">
+                            <option value="yes" selected>有</option>
+                            <option value="no">無</option>
+                        </select>
+                        <select id="sell-tax-type">
+                            <option value="percentage" selected>比例計算 (2%)</option>
+                            <option value="manual">手動輸入</option>
+                        </select>
+                        <div id="sell-tax-amount-group">
+                            <label for="sell-tax-amount">賣房交易稅金額 (新台幣)</label>
+                            <input type="text" id="sell-tax-amount" value="240,000" placeholder="輸入賣房交易稅金額">
+                        </div>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label for="sell-tax-option">賣房交易稅</label>
-                    <select id="sell-tax-option">
-                        <option value="yes" selected>有</option>
-                        <option value="no">無</option>
-                    </select>
-                    <div id="sell-tax-amount-group">
-                        <label for="sell-tax-amount">賣房交易稅金額 (新台幣)</label>
-                        <input type="text" id="sell-tax-amount" value="240,000" placeholder="輸入賣房交易稅金額">
+                <div class="cost-row">
+                    <div class="form-group">
+                        <label for="buy-fee-option">買房仲介費</label>
+                        <select id="buy-fee-option">
+                            <option value="yes" selected>有</option>
+                            <option value="no">無</option>
+                        </select>
+                        <select id="buy-fee-type">
+                            <option value="percentage" selected>比例計算 (1.5%)</option>
+                            <option value="manual">手動輸入</option>
+                        </select>
+                        <div id="buy-fee-amount-group">
+                            <label for="buy-fee-amount">買房仲介費金額 (新台幣)</label>
+                            <input type="text" id="buy-fee-amount" value="150,000" placeholder="輸入買房仲介費金額">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="sell-fee-option">賣房仲介費</label>
+                        <select id="sell-fee-option">
+                            <option value="yes" selected>有</option>
+                            <option value="no">無</option>
+                        </select>
+                        <select id="sell-fee-type">
+                            <option value="percentage" selected>比例計算 (1.5%)</option>
+                            <option value="manual">手動輸入</option>
+                        </select>
+                        <div id="sell-fee-amount-group">
+                            <label for="sell-fee-amount">賣房仲介費金額 (新台幣)</label>
+                            <input type="text" id="sell-fee-amount" value="180,000" placeholder="輸入賣房仲介費金額">
+                        </div>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label for="buy-fee-option">買房仲介費</label>
-                    <select id="buy-fee-option">
-                        <option value="yes" selected>有</option>
-                        <option value="no">無</option>
-                    </select>
-                    <div id="buy-fee-amount-group">
-                        <label for="buy-fee-amount">買房仲介費金額 (新台幣)</label>
-                        <input type="text" id="buy-fee-amount" value="150,000" placeholder="輸入買房仲介費金額">
+                <div class="cost-row">
+                    <div class="form-group">
+                        <label for="maintenance-option">房屋維護費用</label>
+                        <select id="maintenance-option">
+                            <option value="yes" selected>有</option>
+                            <option value="no">無</option>
+                        </select>
+                        <div id="maintenance-amount-group">
+                            <label for="maintenance-amount">年維護費用 (新台幣)</label>
+                            <input type="text" id="maintenance-amount" value="10,000" placeholder="輸入年維護費用">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="renovation-option">裝潢成本</label>
+                        <select id="renovation-option">
+                            <option value="yes" selected>有</option>
+                            <option value="no">無</option>
+                        </select>
+                        <div id="renovation-amount-group">
+                            <label for="renovation-amount">裝潢成本金額 (新台幣)</label>
+                            <input type="text" id="renovation-amount" value="500,000" placeholder="輸入裝潢成本金額">
+                        </div>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label for="sell-fee-option">賣房仲介費</label>
-                    <select id="sell-fee-option">
-                        <option value="yes" selected>有</option>
-                        <option value="no">無</option>
-                    </select>
-                    <div id="sell-fee-amount-group">
-                        <label for="sell-fee-amount">賣房仲介費金額 (新台幣)</label>
-                        <input type="text" id="sell-fee-amount" value="180,000" placeholder="輸入賣房仲介費金額">
+                <div class="cost-row">
+                    <div class="form-group" id="rental-cost-group">
+                        <label for="rental-cost-option">出租相關成本</label>
+                        <select id="rental-cost-option">
+                            <option value="yes" selected>有</option>
+                            <option value="no">無</option>
+                        </select>
+                        <div id="rental-cost-amount-group">
+                            <label for="rental-cost-amount">年出租成本比例 (%)</label>
+                            <input type="text" id="rental-cost-amount" value="10" placeholder="輸入年出租成本比例">
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label for="maintenance-option">房屋維護費用</label>
-                    <select id="maintenance-option">
-                        <option value="yes" selected>有</option>
-                        <option value="no">無</option>
-                    </select>
-                    <div id="maintenance-amount-group">
-                        <label for="maintenance-amount">年維護費用 (新台幣)</label>
-                        <input type="text" id="maintenance-amount" value="10,000" placeholder="輸入年維護費用">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="renovation-option">裝潢成本</label>
-                    <select id="renovation-option">
-                        <option value="yes" selected>有</option>
-                        <option value="no">無</option>
-                    </select>
-                    <div id="renovation-amount-group">
-                        <label for="renovation-amount">裝潢成本金額 (新台幣)</label>
-                        <input type="text" id="renovation-amount" value="500,000" placeholder="輸入裝潢成本金額">
-                    </div>
-                </div>
-                <div class="form-group" id="rental-cost-group">
-                    <label for="rental-cost-option">出租相關成本</label>
-                    <select id="rental-cost-option">
-                        <option value="yes" selected>有</option>
-                        <option value="no">無</option>
-                    </select>
-                    <div id="rental-cost-amount-group">
-                        <label for="rental-cost-amount">年出租成本比例 (%)</label>
-                        <input type="text" id="rental-cost-amount" value="10" placeholder="輸入年出租成本比例">
-                    </div>
+                    <div class="form-group"></div> <!-- 占位符，保持佈局平衡 -->
                 </div>
                 <div class="button-group">
                     <button onclick="calculateROI()">計算報酬率</button>
@@ -695,28 +792,29 @@
             <h3>使用步驟</h3>
             <ol>
                 <li>選擇投資類型：全額買房或貸款買房。</li>
-                <li>選擇是否出租：若選擇「是」，輸入年租金收入；若選擇「否」，租金收入為0。</li>
+                <li>選擇是否出租：若選擇「是」，輸入初始年租金收入及年租金增長率；若選擇「否」，租金收入為0。</li>
                 <li>輸入基本資訊：
                     <ul>
                         <li>購買金額：房屋購入價格（預設10,000,000新台幣）。</li>
                         <li>當前房價：當前房屋市場價值（預設12,000,000新台幣）。</li>
-                        <li>年租金收入：出租房屋的年租金（預設240,000新台幣）。</li>
-                        <li>貸款金額（貸款買房）：借貸金額（預設7,000,000新台幣）。</li>
+                        <li>初始年租金收入：出租房屋的初始年租金（預設240,000新台幣）。</li>
+                        <li>年租金增長率：租金每年增長百分比（預設2%）。</li>
+                        <li>貸款金額（貸款買房）：借貸金額（預設8,000,000新台幣）。</li>
                         <li>貸款期限（貸款買房）：貸款還款年限（預設20年）。</li>
-                        <li>年利率（貸款買房）：貸款年利率（預設2.5%）。</li>
-                        <li>投資開始與結束年份：選擇投資期間（預設2014-2024）。</li>
+                        <li>利率類型（貸款買房）：選擇固定或浮動利率。若選擇浮動利率，輸入最低與最高年利率（預設2.0%-3.0%）。</li>
+                        <li>投資開始與結束年份：選擇投資期間（預設2014-2024，範圍1998-2024）。</li>
                     </ul>
                 </li>
                 <li>輸入成本資訊：
                     <ul>
-                        <li>買房交易稅：如契稅（預設2%購買金額，200,000新台幣）。</li>
-                        <li>賣房交易稅：如增值稅（預設2%當前房價，240,000新台幣）。</li>
-                        <li>買房仲介費：買房時的仲介費用（預設1.5%購買金額，150,000新台幣）。</li>
-                        <li>賣房仲介費：賣房時的仲介費用（預設1.5%當前房價，180,000新台幣）。</li>
+                        <li>買房交易稅：如契稅（預設2%購買金額，200,000新台幣，可選比例計算或手動輸入）。</li>
+                        <li>賣房交易稅：如增值稅（預設2%當前房價，240,000新台幣，可選比例計算或手動輸入）。</li>
+                        <li>買房仲介費：買房時的仲介費用（預設1.5%購買金額，150,000新台幣，可選比例計算或手動輸入）。</li>
+                        <li>賣房仲介費：賣房時的仲介費用（預設1.5%當前房價，180,000新台幣，可選比例計算或手動輸入）。</li>
                         <li>房屋維護費用：持有期間的物業管理或維修費（預設每年10,000新台幣）。</li>
                         <li>裝潢成本：房屋裝潢費用（預設500,000新台幣）。</li>
                         <li>出租相關成本：如空置率、維修費（預設年租金的10%，24,000新台幣/年）。</li>
-                        <li>選擇「有」或「無」，若選擇「有」但未輸入金額，使用預設值；選擇「無」則費用為0。</li>
+                        <li>選擇「有」或「無」，若選擇「有」但未輸入金額，使用預設值或比例計算值；選擇「無」則費用為0。</li>
                     </ul>
                 </li>
                 <li>點擊「計算報酬率」按鈕，生成報告，顯示年化報酬率、CPI比較、其他資產回報及圖表。</li>
@@ -728,14 +826,14 @@
                 <li>初始投資：購買金額 + 買房交易稅 + 買房仲介費 + 裝潢成本</li>
                 <li>總回報：
                     <ul>
-                        <li>房價增值 = 當前房價 - 賣房交易稅 - 賣房仲介費 - 購買金額</li>
-                        <li>租金收入 = (年租金收入 - 出租相關成本) × 年數</li>
+                        <li>房價增值 = 當前房價 - 賣房交易稅 - 賣房仲介費 - 原始交易總成本（購買金額 + 買房交易稅 + 買房仲介費 + 裝潢成本）</li>
+                        <li>租金收入 = Σ[(初始年租金收入 × (1 + 年租金增長率)^t) × (1 - 出租成本比例)]，t從0到年數-1</li>
                         <li>總回報 = 房價增值 + 租金收入 - (房屋維護費用 × 年數)</li>
                     </ul>
                 </li>
                 <li>年化報酬率（CAGR）：
                     <pre>
-CAGR = [(當前房價 - 賣房交易稅 - 賣房仲介費 + (年租金收入 - 出租相關成本) × 年數 - (房屋維護費用 × 年數)) / (購買金額 + 買房交易稅 + 買房仲介費 + 裝潢成本)]^(1/年數) - 1
+CAGR = [(當前房價 - 賣房交易稅 - 賣房仲介費 + 租金收入 - (房屋維護費用 × 年數)) / (購買金額 + 買房交易稅 + 買房仲介費 + 裝潢成本)]^(1/年數) - 1
                     </pre>
                 </li>
             </ul>
@@ -744,27 +842,28 @@ CAGR = [(當前房價 - 賣房交易稅 - 賣房仲介費 + (年租金收入 - �
                 <li>初始投資：購買金額 - 貸款金額 + 買房交易稅 + 買房仲介費 + 裝潢成本</li>
                 <li>總回報：
                     <ul>
-                        <li>房價增值 = 當前房價 - 賣房交易稅 - 賣房仲介費 - 購買金額</li>
-                        <li>租金收入 = (年租金收入 - 出租相關成本) × 年數</li>
+                        <li>房價增值 = 當前房價 - 賣房交易稅 - 賣房仲介費 - 原始交易總成本（購買金額 + 買房交易稅 + 買房仲介費 + 裝潢成本）</li>
+                        <li>租金收入 = Σ[(初始年租金收入 × (1 + 年租金增長率)^t) × (1 - 出租成本比例)]，t從0到年數-1</li>
                         <li>貸款總成本 = 月付金額 × 貸款期限 × 12</li>
-                        <li>月付金額：
+                        <li>月付金額（固定利率）：
                             <pre>
 月付金額 = [貸款金額 × (年利率 / 12)] / [1 - (1 + 年利率 / 12)^(-貸款期限 × 12)]
                             </pre>
                         </li>
+                        <li>月付金額（浮動利率）：使用平均利率（(最低利率 + 最高利率) / 2）計算</li>
                         <li>總回報 = 房價增值 + 租金收入 - 貸款總成本 - (房屋維護費用 × 年數)</li>
                     </ul>
                 </li>
                 <li>年化報酬率（CAGR）：
                     <pre>
-CAGR = [(當前房價 - 賣房交易稅 - 賣房仲介費 + (年租金收入 - 出租相關成本) × 年數 - 貸款總成本 - (房屋維護費用 × 年數)) / (購買金額 - 貸款金額 + 買房交易稅 + 買房仲介費 + 裝潢成本)]^(1/年數) - 1
+CAGR = [(當前房價 - 賣房交易稅 - 賣房仲介費 + 租金收入 - 貸款總成本 - (房屋維護費用 × 年數)) / (購買金額 - 貸款金額 + 買房交易稅 + 買房仲介費 + 裝潢成本)]^(1/年數) - 1
                     </pre>
                     若總回報為負，顯示「虧損」。
                 </li>
             </ul>
             <h4>台北市CPI年化增長率</h4>
             <ul>
-                <li>使用1998-2024年『真實』CPI數據。</li>
+                <li>使用1998-2024年真實CPI數據。</li>
                 <li>
                     <pre>
 CPI CAGR = (結束年CPI / 開始年CPI)^(1/年數) - 1
@@ -778,11 +877,12 @@ CPI CAGR = (結束年CPI / 開始年CPI)^(1/年數) - 1
             </ul>
             <h3>注意事項</h3>
             <ul>
-                <li>數據來源：CPI與資產報酬率為假設值，實際應用需使用官方數據。</li>
+                <li>數據來源：CPI為真實數據（1998-2024），其他資產報酬率為假設值，實際應用需使用官方數據。</li>
                 <li>成本假設：預設值基於台北市房地產市場，實際情況可能不同。</li>
-                <li>貸款計算：假設固定利率，未考慮變動利率或提前還款。</li>
+                <li>租金增長：假設每年固定增長率，未考慮市場波動。</li>
+                <li>貸款計算：固定利率使用單一年利率，浮動利率使用平均利率，未考慮提前還款或利率變動頻率。</li>
                 <li>PDF生成：若下載PDF失敗，可稍後重試或檢查瀏覽器設置。</li>
-				<li>免責聲明：本網站所提供之計算工具僅供資訊參考，並不構成任何形式之投資建議、財務諮詢或法律意見。使用者應依自身判斷與風險承擔責任，並建議諮詢持牌專業顧問。對於使用本工具所產生之任何損失或爭議，本站概不負任何法律或財務責任。</li>
+                <li>免責聲明：本網站所提供之計算工具僅供資訊參考，並不構成任何形式之投資建議、財務諮詢或法律意見。使用者應依自身判斷與風險承擔責任，並建議諮詢持牌專業顧問。對於使用本工具所產生之任何損失或爭議，本站概不負任何法律或財務責任。</li>
             </ul>
         </div>
 
@@ -799,35 +899,35 @@ CPI CAGR = (結束年CPI / 開始年CPI)^(1/年數) - 1
     </div>
 
     <script>
-        // 台北市CPI數據（1995-2024，假設數據）
+        // 台北市CPI數據（1998-2024，真實數據）
         const cpiData = {
-           1998: 79.77,
-        1999: 80.08,
-        2000: 81.35,
-        2001: 81.70,
-        2002: 81.47,
-        2003: 81.35,
-        2004: 83.26,
-        2005: 85.24,
-        2006: 85.82,
-        2007: 87.46,
-        2008: 90.43,
-        2009: 89.55,
-        2010: 89.99,
-        2011: 91.29,
-        2012: 92.77,
-        2013: 93.53,
-        2014: 95.10,
-        2015: 95.10,
-        2016: 96.31,
-        2017: 96.89,
-        2018: 97.85,
-        2019: 98.66,
-        2020: 98.48,
-        2021: 100.00,
-        2022: 102.69,
-        2023: 106.81,
-        2024: 108.73
+            1998: 79.77,
+            1999: 80.08,
+            2000: 81.35,
+            2001: 81.70,
+            2002: 81.47,
+            2003: 81.35,
+            2004: 83.26,
+            2005: 85.24,
+            2006: 85.82,
+            2007: 87.46,
+            2008: 90.43,
+            2009: 89.55,
+            2010: 89.99,
+            2011: 91.29,
+            2012: 92.77,
+            2013: 93.53,
+            2014: 95.10,
+            2015: 95.10,
+            2016: 96.31,
+            2017: 96.89,
+            2018: 97.85,
+            2019: 98.66,
+            2020: 98.48,
+            2021: 100.00,
+            2022: 102.69,
+            2023: 106.81,
+            2024: 108.73
         };
 
         // 其他資產平均年化報酬率（假設數據）
@@ -882,42 +982,113 @@ CPI CAGR = (結束年CPI / 開始年CPI)^(1/年數) - 1
         }
 
         // 為輸入框添加會計格式處理
-        const numberInputs = ['purchase-price', 'rental-income', 'loan-amount', 'current-value', 'loan-term', 'interest-rate', 'buy-tax-amount', 'sell-tax-amount', 'buy-fee-amount', 'sell-fee-amount', 'maintenance-amount', 'renovation-amount', 'rental-cost-amount'];
+        const numberInputs = [
+            'purchase-price', 'rental-income', 'rental-growth-rate', 'loan-amount', 'current-value',
+            'loan-term', 'interest-rate', 'min-interest-rate', 'max-interest-rate',
+            'buy-tax-amount', 'sell-tax-amount', 'buy-fee-amount', 'sell-fee-amount',
+            'maintenance-amount', 'renovation-amount', 'rental-cost-amount'
+        ];
         numberInputs.forEach(id => {
             const input = document.getElementById(id);
-            input.addEventListener('input', function() {
-                if (id !== 'loan-term' && id !== 'interest-rate' && id !== 'rental-cost-amount') {
-                    this.value = formatNumber(this.value);
-                }
-            });
+            if (input) {
+                input.addEventListener('input', function() {
+                    if (id !== 'loan-term' && id !== 'interest-rate' && id !== 'min-interest-rate' && id !== 'max-interest-rate' && id !== 'rental-cost-amount' && id !== 'rental-growth-rate') {
+                        this.value = formatNumber(this.value);
+                    }
+                });
+            }
         });
 
         // 動態顯示/隱藏輸入欄位
         document.getElementById('investment-type').addEventListener('change', function() {
             document.getElementById('loan-details').style.display = this.value === 'loan' ? 'flex' : 'none';
+            document.getElementById('interest-rate-details').style.display = this.value === 'loan' ? 'flex' : 'none';
         });
 
         document.getElementById('rent-option').addEventListener('change', function() {
             const rentalIncomeGroup = document.getElementById('rental-income-group');
+            const rentalGrowthGroup = document.getElementById('rental-growth-group');
             const rentalCostGroup = document.getElementById('rental-cost-group');
             rentalIncomeGroup.style.display = this.value === 'yes' ? 'block' : 'none';
+            rentalGrowthGroup.style.display = this.value === 'yes' ? 'block' : 'none';
             rentalCostGroup.style.display = this.value === 'yes' ? 'block' : 'none';
+        });
+
+        document.getElementById('interest-rate-type').addEventListener('change', function() {
+            const variableRateGroup = document.getElementById('variable-rate-group');
+            const maxInterestRateGroup = document.getElementById('max-interest-rate-group');
+            variableRateGroup.style.display = this.value === 'variable' ? 'block' : 'none';
+            maxInterestRateGroup.style.display = this.value === 'variable' ? 'block' : 'none';
         });
 
         document.getElementById('buy-tax-option').addEventListener('change', function() {
             document.getElementById('buy-tax-amount-group').style.display = this.value === 'yes' ? 'block' : 'none';
+            document.getElementById('buy-tax-type').style.display = this.value === 'yes' ? 'block' : 'none';
         });
 
         document.getElementById('sell-tax-option').addEventListener('change', function() {
             document.getElementById('sell-tax-amount-group').style.display = this.value === 'yes' ? 'block' : 'none';
+            document.getElementById('sell-tax-type').style.display = this.value === 'yes' ? 'block' : 'none';
         });
 
         document.getElementById('buy-fee-option').addEventListener('change', function() {
             document.getElementById('buy-fee-amount-group').style.display = this.value === 'yes' ? 'block' : 'none';
+            document.getElementById('buy-fee-type').style.display = this.value === 'yes' ? 'block' : 'none';
         });
 
         document.getElementById('sell-fee-option').addEventListener('change', function() {
             document.getElementById('sell-fee-amount-group').style.display = this.value === 'yes' ? 'block' : 'none';
+            document.getElementById('sell-fee-type').style.display = this.value === 'yes' ? 'block' : 'none';
+        });
+
+        document.getElementById('buy-tax-type').addEventListener('change', function() {
+            const purchasePrice = parseNumber(document.getElementById('purchase-price').value);
+            if (this.value === 'percentage' && purchasePrice) {
+                document.getElementById('buy-tax-amount').value = formatNumber(purchasePrice * 0.02);
+            }
+        });
+
+        document.getElementById('sell-tax-type').addEventListener('change', function() {
+            const currentValue = parseNumber(document.getElementById('current-value').value);
+            if (this.value === 'percentage' && currentValue) {
+                document.getElementById('sell-tax-amount').value = formatNumber(currentValue * 0.02);
+            }
+        });
+
+        document.getElementById('buy-fee-type').addEventListener('change', function() {
+            const purchasePrice = parseNumber(document.getElementById('purchase-price').value);
+            if (this.value === 'percentage' && purchasePrice) {
+                document.getElementById('buy-fee-amount').value = formatNumber(purchasePrice * 0.015);
+            }
+        });
+
+        document.getElementById('sell-fee-type').addEventListener('change', function() {
+            const currentValue = parseNumber(document.getElementById('current-value').value);
+            if (this.value === 'percentage' && currentValue) {
+                document.getElementById('sell-fee-amount').value = formatNumber(currentValue * 0.015);
+            }
+        });
+
+        document.getElementById('purchase-price').addEventListener('input', function() {
+            if (document.getElementById('buy-tax-type').value === 'percentage') {
+                const purchasePrice = parseNumber(this.value);
+                document.getElementById('buy-tax-amount').value = formatNumber(purchasePrice * 0.02);
+            }
+            if (document.getElementById('buy-fee-type').value === 'percentage') {
+                const purchasePrice = parseNumber(this.value);
+                document.getElementById('buy-fee-amount').value = formatNumber(purchasePrice * 0.015);
+            }
+        });
+
+        document.getElementById('current-value').addEventListener('input', function() {
+            if (document.getElementById('sell-tax-type').value === 'percentage') {
+                const currentValue = parseNumber(this.value);
+                document.getElementById('sell-tax-amount').value = formatNumber(currentValue * 0.02);
+            }
+            if (document.getElementById('sell-fee-type').value === 'percentage') {
+                const currentValue = parseNumber(this.value);
+                document.getElementById('sell-fee-amount').value = formatNumber(currentValue * 0.015);
+            }
         });
 
         document.getElementById('maintenance-option').addEventListener('change', function() {
@@ -938,9 +1109,16 @@ CPI CAGR = (結束年CPI / 開始年CPI)^(1/年數) - 1
             const rentOption = document.getElementById('rent-option').value;
             const purchasePrice = parseNumber(document.getElementById('purchase-price').value);
             const rentalIncome = parseNumber(document.getElementById('rental-income').value);
+            const rentalGrowthRate = parseNumber(document.getElementById('rental-growth-rate').value) / 100;
             const loanAmount = parseNumber(document.getElementById('loan-amount').value);
             const loanTerm = parseNumber(document.getElementById('loan-term').value);
-            const interestRate = parseNumber(document.getElementById('interest-rate').value) / 100;
+            const interestRateType = document.getElementById('interest-rate-type').value;
+            let interestRate = parseNumber(document.getElementById('interest-rate').value) / 100;
+            if (interestRateType === 'variable') {
+                const minInterestRate = parseNumber(document.getElementById('min-interest-rate').value) / 100;
+                const maxInterestRate = parseNumber(document.getElementById('max-interest-rate').value) / 100;
+                interestRate = (minInterestRate + maxInterestRate) / 2;
+            }
             const startYear = parseInt(document.getElementById('start-year').value);
             const endYear = parseInt(document.getElementById('end-year').value);
             const currentValue = parseNumber(document.getElementById('current-value').value);
@@ -951,10 +1129,14 @@ CPI CAGR = (結束年CPI / 開始年CPI)^(1/年數) - 1
             const maintenanceOption = document.getElementById('maintenance-option').value;
             const renovationOption = document.getElementById('renovation-option').value;
             const rentalCostOption = document.getElementById('rental-cost-option').value;
-            const buyTaxAmount = buyTaxOption === 'yes' ? parseNumber(document.getElementById('buy-tax-amount').value) : 0;
-            const sellTaxAmount = sellTaxOption === 'yes' ? parseNumber(document.getElementById('sell-tax-amount').value) : 0;
-            const buyFeeAmount = buyFeeOption === 'yes' ? parseNumber(document.getElementById('buy-fee-amount').value) : 0;
-            const sellFeeAmount = sellFeeOption === 'yes' ? parseNumber(document.getElementById('sell-fee-amount').value) : 0;
+            const buyTaxType = document.getElementById('buy-tax-type').value;
+            const sellTaxType = document.getElementById('sell-tax-type').value;
+            const buyFeeType = document.getElementById('buy-fee-type').value;
+            const sellFeeType = document.getElementById('sell-fee-type').value;
+            const buyTaxAmount = buyTaxOption === 'yes' ? (buyTaxType === 'percentage' ? purchasePrice * 0.02 : parseNumber(document.getElementById('buy-tax-amount').value)) : 0;
+            const sellTaxAmount = sellTaxOption === 'yes' ? (sellTaxType === 'percentage' ? currentValue * 0.02 : parseNumber(document.getElementById('sell-tax-amount').value)) : 0;
+            const buyFeeAmount = buyFeeOption === 'yes' ? (buyFeeType === 'percentage' ? purchasePrice * 0.015 : parseNumber(document.getElementById('buy-fee-amount').value)) : 0;
+            const sellFeeAmount = sellFeeOption === 'yes' ? (sellFeeType === 'percentage' ? currentValue * 0.015 : parseNumber(document.getElementById('sell-fee-amount').value)) : 0;
             const maintenanceAmount = maintenanceOption === 'yes' ? parseNumber(document.getElementById('maintenance-amount').value) : 0;
             const renovationAmount = renovationOption === 'yes' ? parseNumber(document.getElementById('renovation-amount').value) : 0;
             const rentalCostPercentage = rentalCostOption === 'yes' ? parseNumber(document.getElementById('rental-cost-amount').value) / 100 : 0;
@@ -966,10 +1148,15 @@ CPI CAGR = (結束年CPI / 開始年CPI)^(1/年數) - 1
 
             const years = endYear - startYear;
             let initialInvestment = purchasePrice + buyTaxAmount + buyFeeAmount + renovationAmount;
-            let totalReturn = currentValue - sellTaxAmount - sellFeeAmount - purchasePrice;
+            const originalTotalCost = purchasePrice + buyTaxAmount + buyFeeAmount + renovationAmount;
+            let totalReturn = currentValue - sellTaxAmount - sellFeeAmount - originalTotalCost;
 
             if (rentOption === 'yes') {
-                totalReturn += (rentalIncome * (1 - rentalCostPercentage)) * years;
+                let totalRentalIncome = 0;
+                for (let t = 0; t < years; t++) {
+                    totalRentalIncome += rentalIncome * Math.pow(1 + rentalGrowthRate, t) * (1 - rentalCostPercentage);
+                }
+                totalReturn += totalRentalIncome;
             }
 
             totalReturn -= maintenanceAmount * years;
@@ -1013,11 +1200,11 @@ CPI CAGR = (結束年CPI / 開始年CPI)^(1/年數) - 1
                 <h3>其他資產回報比較</h3>
                 <p>若將相同資金（${initialInvestment.toLocaleString('zh-TW')} 新台幣）投資於其他資產，預計回報如下：</p>
                 <ul>
-					<li>比特幣：${Math.floor(investmentReturns.bitcoin).toLocaleString('zh-TW')} 新台幣</li>
-					<li>S&P 500：${Math.floor(investmentReturns.sp500).toLocaleString('zh-TW')} 新台幣</li>
-					<li>0050：${Math.floor(investmentReturns.tw0050).toLocaleString('zh-TW')} 新台幣</li>
-					<li>黃金：${Math.floor(investmentReturns.gold).toLocaleString('zh-TW')} 新台幣</li>
-					<li>債券：${Math.floor(investmentReturns.bonds).toLocaleString('zh-TW')} 新台幣</li>
+                    <li>比特幣：${Math.floor(investmentReturns.bitcoin).toLocaleString('zh-TW')} 新台幣</li>
+                    <li>S&P 500：${Math.floor(investmentReturns.sp500).toLocaleString('zh-TW')} 新台幣</li>
+                    <li>0050：${Math.floor(investmentReturns.tw0050).toLocaleString('zh-TW')} 新台幣</li>
+                    <li>黃金：${Math.floor(investmentReturns.gold).toLocaleString('zh-TW')} 新台幣</li>
+                    <li>債券：${Math.floor(investmentReturns.bonds).toLocaleString('zh-TW')} 新台幣</li>
                 </ul>
                 <table>
                     <thead>
@@ -1028,12 +1215,12 @@ CPI CAGR = (結束年CPI / 開始年CPI)^(1/年數) - 1
                     </thead>
                     <tbody>
                         <tr><td>房地產</td><td>${cagr}</td></tr>
-                        <tr><td>台北CPI</td><td>${cpiCagr.toFixed(2)}%</td></tr>
-                        <tr><td>比特幣</td><td>${(assetReturns.bitcoin * 100).toFixed(2)}%</td></tr>
-                        <tr><td>S&P 500</td><td>${(assetReturns.sp500 * 100).toFixed(2)}%</td></tr>
-                        <tr><td>0050</td><td>${(assetReturns.tw0050 * 100).toFixed(2)}%</td></tr>
-                        <tr><td>黃金</td><td>${(assetReturns.gold * 100).toFixed(2)}%</td></tr>
-                        <tr><td>債券</td><td>${(assetReturns.bonds * 100).toFixed(2)}%</td></tr>
+                        <tr><td>台北CPI</td><td>${cpiCagr.toFixed(2)}</td></tr>
+                        <tr><td>比特幣</td><td>${(assetReturns.bitcoin * 100).toFixed(2)}</td></tr>
+                        <tr><td>S&P 500</td><td>${(assetReturns.sp500 * 100).toFixed(2)}</td></tr>
+                        <tr><td>0050</td><td>${(assetReturns.tw0050 * 100).toFixed(2)}</td></tr>
+                        <tr><td>黃金</td><td>${(assetReturns.gold * 100).toFixed(2)}</td></tr>
+                        <tr><td>債券</td><td>${(assetReturns.bonds * 100).toFixed(2)}</td></tr>
                     </tbody>
                 </table>
             `;
