@@ -1,0 +1,793 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="房地產投資報酬率計算器 - 股市企業研究院">
+    <meta name="keywords" content="房地產投資, 年化報酬率, 台北CPI">
+    <meta name="author" content="股市企業研究院">
+    <meta name="robots" content="index, follow">
+    <title>房地產投資報酬率計算器 - 股市企業研究院</title>
+    <!-- Google Fonts 支援中文 -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Chart.js 圖表庫 -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- html2canvas 和 jsPDF 用於生成 PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, 'Noto Sans TC', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f7f9fc;
+            color: #333333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .header {
+            text-align: center;
+            background-color: #2563eb;
+            color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            width: 100%;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+        .content-section {
+            width: 100%;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .content-section h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #2563eb;
+        }
+        .investment-form {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: left;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 500;
+            color: #4A4A4A;
+            margin-bottom: 8px;
+        }
+        .form-group input[type="text"],
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #D1D5DB;
+            border-radius: 6px;
+            font-size: 16px;
+            background-color: #f5f5f5;
+            color: #333333;
+        }
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #2563eb;
+            outline: none;
+        }
+        .form-row {
+            display: flex;
+            gap: 20px;
+        }
+        .form-row .form-group {
+            flex: 1;
+        }
+        .button-group {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+        .button-group button {
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+        }
+        .button-group button:hover {
+            background-color: #1e40af;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #fafafa;
+            border-radius: 8px;
+            text-align: left;
+        }
+        #result h3 {
+            color: #2563eb;
+            margin-bottom: 10px;
+        }
+        #result table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        #result table th,
+        #result table td {
+            padding: 10px;
+            border: 1px solid #D1D5DB;
+            text-align: center;
+        }
+        #result table th {
+            background-color: #2563eb;
+            color: #ffffff;
+        }
+        .cpi-comparison {
+            padding: 5px;
+            border-radius: 4px;
+        }
+        .cpi-win {
+            background-color: #EF4444;
+            color: #ffffff;
+        }
+        .cpi-lose {
+            background-color: #10B981;
+            color: #ffffff;
+        }
+        #chart-container {
+            margin-top: 20px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .explanation-section {
+            width: 100%;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .explanation-section h2 {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: #2563eb;
+        }
+        .explanation-section p, .explanation-section li {
+            line-height: 1.6;
+            color: #666666;
+        }
+        .explanation-section h3 {
+            font-size: 16px;
+            margin-top: 15px;
+            color: #2563eb;
+        }
+        .explanation-section pre {
+            background-color: #f5f5f5;
+            padding: 10px;
+            border-radius: 6px;
+            overflow-x: auto;
+        }
+        @media screen and (max-width: 768px) {
+            .form-row {
+                flex-direction: column;
+                gap: 15px;
+            }
+            .button-group {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>房地產投資報酬率計算器</h1>
+        </div>
+        <div class="content-section">
+            <h2>輸入投資資訊</h2>
+            <div class="investment-form">
+                <div class="form-group">
+                    <label for="investment-type">投資類型</label>
+                    <select id="investment-type">
+                        <option value="full" selected>全額買房</option>
+                        <option value="loan">貸款買房</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="rent-option">是否出租</label>
+                    <select id="rent-option">
+                        <option value="yes" selected>是</option>
+                        <option value="no">否</option>
+                    </select>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="purchase-price">購買金額 (新台幣)</label>
+                        <input type="text" id="purchase-price" value="10,000,000" placeholder="輸入購買金額">
+                    </div>
+                    <div class="form-group" id="rental-income-group">
+                        <label for="rental-income">年租金收入 (新台幣)</label>
+                        <input type="text" id="rental-income" value="240,000" placeholder="輸入年租金收入">
+                    </div>
+                </div>
+                <div class="form-row" id="loan-details" style="display: none;">
+                    <div class="form-group">
+                        <label for="loan-amount">貸款金額 (新台幣)</label>
+                        <input type="text" id="loan-amount" value="7,000,000" placeholder="輸入貸款金額">
+                    </div>
+                    <div class="form-group">
+                        <label for="loan-term">貸款期限 (年)</label>
+                        <input type="text" id="loan-term" value="20" placeholder="輸入貸款期限">
+                    </div>
+                    <div class="form-group">
+                        <label for="interest-rate">年利率 (%)</label>
+                        <input type="text" id="interest-rate" value="2.5" placeholder="輸入年利率">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="start-year">投資開始年份</label>
+                        <select id="start-year"></select>
+                    </div>
+                    <div class="form-group">
+                        <label for="end-year">投資結束年份</label>
+                        <select id="end-year"></select>
+                    </div>
+                    <div class="form-group">
+                        <label for="current-value">當前房價 (新台幣)</label>
+                        <input type="text" id="current-value" value="12,000,000" placeholder="輸入當前房價">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="buy-tax-option">買房交易稅</label>
+                    <select id="buy-tax-option">
+                        <option value="yes" selected>有</option>
+                        <option value="no">無</option>
+                    </select>
+                    <div id="buy-tax-amount-group">
+                        <label for="buy-tax-amount">買房交易稅金額 (新台幣)</label>
+                        <input type="text" id="buy-tax-amount" value="200,000" placeholder="輸入買房交易稅金額">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="sell-tax-option">賣房交易稅</label>
+                    <select id="sell-tax-option">
+                        <option value="yes" selected>有</option>
+                        <option value="no">無</option>
+                    </select>
+                    <div id="sell-tax-amount-group">
+                        <label for="sell-tax-amount">賣房交易稅金額 (新台幣)</label>
+                        <input type="text" id="sell-tax-amount" value="240,000" placeholder="輸入賣房交易稅金額">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="buy-fee-option">買房仲介費</label>
+                    <select id="buy-fee-option">
+                        <option value="yes" selected>有</option>
+                        <option value="no">無</option>
+                    </select>
+                    <div id="buy-fee-amount-group">
+                        <label for="buy-fee-amount">買房仲介費金額 (新台幣)</label>
+                        <input type="text" id="buy-fee-amount" value="150,000" placeholder="輸入買房仲介費金額">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="sell-fee-option">賣房仲介費</label>
+                    <select id="sell-fee-option">
+                        <option value="yes" selected>有</option>
+                        <option value="no">無</option>
+                    </select>
+                    <div id="sell-fee-amount-group">
+                        <label for="sell-fee-amount">賣房仲介費金額 (新台幣)</label>
+                        <input type="text" id="sell-fee-amount" value="180,000" placeholder="輸入賣房仲介費金額">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="maintenance-option">房屋維護費用</label>
+                    <select id="maintenance-option">
+                        <option value="yes" selected>有</option>
+                        <option value="no">無</option>
+                    </select>
+                    <div id="maintenance-amount-group">
+                        <label for="maintenance-amount">年維護費用 (新台幣)</label>
+                        <input type="text" id="maintenance-amount" value="10,000" placeholder="輸入年維護費用">
+                    </div>
+                </div>
+                <div class="form-group" id="rental-cost-group">
+                    <label for="rental-cost-option">出租相關成本</label>
+                    <select id="rental-cost-option">
+                        <option value="yes" selected>有</option>
+                        <option value="no">無</option>
+                    </select>
+                    <div id="rental-cost-amount-group">
+                        <label for="rental-cost-amount">年出租成本比例 (%)</label>
+                        <input type="text" id="rental-cost-amount" value="10" placeholder="輸入年出租成本比例">
+                    </div>
+                </div>
+                <div class="button-group">
+                    <button onclick="calculateROI()">計算報酬率</button>
+                    <button onclick="downloadReport()">下載報告</button>
+                </div>
+            </div>
+            <div id="result" style="display: none;"></div>
+            <div id="chart-container">
+                <canvas id="roi-chart"></canvas>
+            </div>
+        </div>
+        <!-- 說明區塊 -->
+        <div class="explanation-section">
+            <h2>房地產投資報酬率計算器使用說明</h2>
+            <!-- 贊助區塊 -->
+            <blockquote>
+                <style data-styled="true" data-styled-version="5.3.3">
+                    .eDynhg{display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-align-items:center;-webkit-box-align:center;-ms-flex-align:center;align-items:center;-webkit-box-pack:center;-webkit-justify-content:center;-ms-flex-pack:center;justify-content:center;width:164px;height:40px;padding:8px 16px;-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);border-radius:12px;color:white;-webkit-text-decoration:none !important;text-decoration:none !important;}
+                    .eDynhg:hover{-webkit-text-decoration:none !important;text-decoration:none !important;}
+                    data-styled.g160[id="sc-1ykasxb-0"]{content:"eDynhg,"}
+                </style>
+                <a style="background-color:#AD5138;color:#F8E0BE;border:none" href="https://stockcorp.bobaboba.me" target="_blank" class="sc-1ykasxb-0 eDynhg">
+                    <img height="100%" src="https://s3.ap-southeast-1.amazonaws.com/media.anyonelab.com/images/boba/boba-embed-icon.png" alt="boba-icon"/>
+                    <div style="flex:1;text-align:center">請我喝珍奶！</div>
+                </a>
+            </blockquote>
+            <h3>概述</h3>
+            <p>本計算器幫助您評估全額或貸款買房的年化報酬率（CAGR），並與台北市CPI及其他資產（比特幣、S&P 500、0050、黃金、債券）進行比較。所有現實成本（如交易稅、仲介費、維護費用、出租成本）均納入計算，確保結果貼近實際。</p>
+            <h3>使用步驟</h3>
+            <ol>
+                <li>選擇投資類型：全額買房或貸款買房。</li>
+                <li>選擇是否出租：若選擇「是」，輸入年租金收入；若選擇「否」，租金收入為0。</li>
+                <li>輸入基本資訊：
+                    <ul>
+                        <li>購買金額：房屋購入價格（預設10,000,000新台幣）。</li>
+                        <li>當前房價：當前房屋市場價值（預設12,000,000新台幣）。</li>
+                        <li>年租金收入：出租房屋的年租金（預設240,000新台幣）。</li>
+                        <li>貸款金額（貸款買房）：借貸金額（預設7,000,000新台幣）。</li>
+                        <li>貸款期限（貸款買房）：貸款還款年限（預設20年）。</li>
+                        <li>年利率（貸款買房）：貸款年利率（預設2.5%）。</li>
+                        <li>投資開始與結束年份：選擇投資期間（預設2014-2024）。</li>
+                    </ul>
+                </li>
+                <li>輸入成本資訊：
+                    <ul>
+                        <li>買房交易稅：如契稅（預設2%購買金額，200,000新台幣）。</li>
+                        <li>賣房交易稅：如增值稅（預設2%當前房價，240,000新台幣）。</li>
+                        <li>買房仲介費：買房時的仲介費用（預設1.5%購買金額，150,000新台幣）。</li>
+                        <li>賣房仲介費：賣房時的仲介費用（預設1.5%當前房價，180,000新台幣）。</li>
+                        <li>房屋維護費用：持有期間的物業管理或維修費（預設每年10,000新台幣）。</li>
+                        <li>出租相關成本：如空置率、維修費（預設年租金的10%，24,000新台幣/年）。</li>
+                        <li>選擇「有」或「無」，若選擇「有」但未輸入金額，使用預設值；選擇「無」則費用為0。</li>
+                    </ul>
+                </li>
+                <li>點擊「計算報酬率」按鈕，生成報告，顯示年化報酬率、CPI比較、其他資產回報及圖表。</li>
+                <li>點擊「下載報告」按鈕，將報告與圖表生成為PDF（需先計算報酬率）。</li>
+            </ol>
+            <h3>計算邏輯</h3>
+            <h4>全額買房</h4>
+            <ul>
+                <li>初始投資：購買金額 + 買房交易稅 + 買房仲介費</li>
+                <li>總回報：
+                    <ul>
+                        <li>房價增值 = 當前房價 - 賣房交易稅 - 賣房仲介費 - 購買金額</li>
+                        <li>租金收入 = (年租金收入 - 出租相關成本) × 年數</li>
+                        <li>總回報 = 房價增值 + 租金收入 - (房屋維護費用 × 年數)</li>
+                    </ul>
+                </li>
+                <li>年化報酬率（CAGR）：
+                    <pre>
+CAGR = [(當前房價 - 賣房交易稅 - 賣房仲介費 + (年租金收入 - 出租相關成本) × 年數 - (房屋維護費用 × 年數)) / (購買金額 + 買房交易稅 + 買房仲介費)]^(1/年數) - 1
+                    </pre>
+                </li>
+            </ul>
+            <h4>貸款買房</h4>
+            <ul>
+                <li>初始投資：購買金額 - 貸款金額 + 買房交易稅 + 買房仲介費</li>
+                <li>總回報：
+                    <ul>
+                        <li>房價增值 = 當前房價 - 賣房交易稅 - 賣房仲介費 - 購買金額</li>
+                        <li>租金收入 = (年租金收入 - 出租相關成本) × 年數</li>
+                        <li>貸款總成本 = 月付金額 × 貸款期限 × 12</li>
+                        <li>月付金額：
+                            <pre>
+月付金額 = [貸款金額 × (年利率 / 12)] / [1 - (1 + 年利率 / 12)^(-貸款期限 × 12)]
+                            </pre>
+                        </li>
+                        <li>總回報 = 房價增值 + 租金收入 - 貸款總成本 - (房屋維護費用 × 年數)</li>
+                    </ul>
+                </li>
+                <li>年化報酬率（CAGR）：
+                    <pre>
+CAGR = [(當前房價 - 賣房交易稅 - 賣房仲介費 + (年租金收入 - 出租相關成本) × 年數 - 貸款總成本 - (房屋維護費用 × 年數)) / (購買金額 - 貸款金額 + 買房交易稅 + 買房仲介費)]^(1/年數) - 1
+                    </pre>
+                    若總回報為負，顯示「虧損」。
+                </li>
+            </ul>
+            <h4>台北市CPI年化增長率</h4>
+            <ul>
+                <li>使用1995-2024年假設CPI數據。</li>
+                <li>
+                    <pre>
+CPI CAGR = (結束年CPI / 開始年CPI)^(1/年數) - 1
+                    </pre>
+                </li>
+            </ul>
+            <h4>其他資產回報</h4>
+            <ul>
+                <li>假設年化報酬率：比特幣25%、S&P 500 10%、0050 8%、黃金5%、債券3%</li>
+                <li>回報 = 初始投資 × [(1 + 年化報酬率)^年數 - 1]</li>
+            </ul>
+            <h3>注意事項</h3>
+            <ul>
+                <li>數據來源：CPI與資產報酬率為假設值，實際應用需使用官方數據。</li>
+                <li>成本假設：預設值基於台北市房地產市場，實際情況可能不同。</li>
+                <li>貸款計算：假設固定利率，未考慮變動利率或提前還款。</li>
+                <li>PDF生成：若下載PDF失敗，可稍後重試或檢查瀏覽器設置。</li>
+            </ul>
+            <h3>聯繫方式</h3>
+            <p>如有問題，請聯繫<a href="https://www.youtube.com/@吉米理財學堂" target="_blank">吉米理財學堂</a>。</p>
+        </div>
+        <footer style="width: 100%; text-align: center; margin-top: 20px;">
+            <p>© 2025 <a href="https://www.youtube.com/@吉米理財學堂" target="_blank">吉米理財學堂</a>。保留所有權利。</p>
+        </footer>
+    </div>
+    <script>
+        // 台北市CPI數據（1995-2024，假設數據）
+        const cpiData = {
+            1995: 100.0, 1996: 101.2, 1997: 102.1, 1998: 103.7, 1999: 104.2,
+            2000: 105.8, 2001: 105.9, 2002: 105.7, 2003: 105.4, 2004: 106.9,
+            2005: 109.3, 2006: 110.1, 2007: 111.9, 2008: 115.8, 2009: 114.9,
+            2010: 116.0, 2011: 117.6, 2012: 119.9, 2013: 120.8, 2014: 122.3,
+            2015: 121.9, 2016: 123.6, 2017: 124.3, 2018: 126.0, 2019: 127.7,
+            2020: 127.2, 2021: 129.7, 2022: 133.6, 2023: 136.9, 2024: 140.2
+        };
+
+        // 其他資產平均年化報酬率（假設數據）
+        const assetReturns = {
+            bitcoin: 0.25, // 25%
+            sp500: 0.10,   // 10%
+            tw0050: 0.08,  // 8%
+            gold: 0.05,    // 5%
+            bonds: 0.03    // 3%
+        };
+
+        // 動態生成年份選項
+        const startYearSelect = document.getElementById('start-year');
+        const endYearSelect = document.getElementById('end-year');
+        function populateYearOptions() {
+            startYearSelect.innerHTML = '';
+            endYearSelect.innerHTML = '';
+            for (let year = 1995; year <= 2024; year++) {
+                const startOption = document.createElement('option');
+                startOption.value = year;
+                startOption.textContent = year;
+                startYearSelect.appendChild(startOption);
+
+                const endOption = document.createElement('option');
+                endOption.value = year;
+                endOption.textContent = year;
+                endYearSelect.appendChild(endOption);
+            }
+            startYearSelect.value = 2014;
+            updateEndYearOptions();
+        }
+
+        function updateEndYearOptions() {
+            const startYear = parseInt(startYearSelect.value);
+            endYearSelect.innerHTML = '';
+            for (let year = startYear + 1; year <= 2024; year++) {
+                const option = document.createElement('option');
+                option.value = year;
+                option.textContent = year;
+                endYearSelect.appendChild(option);
+            }
+            endYearSelect.value = 2024;
+        }
+
+        startYearSelect.addEventListener('change', updateEndYearOptions);
+        populateYearOptions();
+
+        // 格式化數字為會計格式
+        function formatNumber(value) {
+            if (!value) return '';
+            return parseFloat(value.replace(/,/g, '')).toLocaleString('zh-TW');
+        }
+
+        // 解析會計格式數字
+        function parseNumber(value) {
+            return parseFloat(value.replace(/,/g, '')) || 0;
+        }
+
+        // 為輸入框添加會計格式處理
+        const numberInputs = ['purchase-price', 'rental-income', 'loan-amount', 'current-value', 'loan-term', 'interest-rate', 'buy-tax-amount', 'sell-tax-amount', 'buy-fee-amount', 'sell-fee-amount', 'maintenance-amount', 'rental-cost-amount'];
+        numberInputs.forEach(id => {
+            const input = document.getElementById(id);
+            input.addEventListener('input', function() {
+                if (id !== 'loan-term' && id !== 'interest-rate' && id !== 'rental-cost-amount') {
+                    this.value = formatNumber(this.value);
+                }
+            });
+        });
+
+        // 動態顯示/隱藏輸入欄位
+        document.getElementById('investment-type').addEventListener('change', function() {
+            document.getElementById('loan-details').style.display = this.value === 'loan' ? 'flex' : 'none';
+        });
+
+        document.getElementById('rent-option').addEventListener('change', function() {
+            const rentalIncomeGroup = document.getElementById('rental-income-group');
+            const rentalCostGroup = document.getElementById('rental-cost-group');
+            rentalIncomeGroup.style.display = this.value === 'yes' ? 'block' : 'none';
+            rentalCostGroup.style.display = this.value === 'yes' ? 'block' : 'none';
+        });
+
+        document.getElementById('buy-tax-option').addEventListener('change', function() {
+            document.getElementById('buy-tax-amount-group').style.display = this.value === 'yes' ? 'block' : 'none';
+        });
+
+        document.getElementById('sell-tax-option').addEventListener('change', function() {
+            document.getElementById('sell-tax-amount-group').style.display = this.value === 'yes' ? 'block' : 'none';
+        });
+
+        document.getElementById('buy-fee-option').addEventListener('change', function() {
+            document.getElementById('buy-fee-amount-group').style.display = this.value === 'yes' ? 'block' : 'none';
+        });
+
+        document.getElementById('sell-fee-option').addEventListener('change', function() {
+            document.getElementById('sell-fee-amount-group').style.display = this.value === 'yes' ? 'block' : 'none';
+        });
+
+        document.getElementById('maintenance-option').addEventListener('change', function() {
+            document.getElementById('maintenance-amount-group').style.display = this.value === 'yes' ? 'block' : 'none';
+        });
+
+        document.getElementById('rental-cost-option').addEventListener('change', function() {
+            document.getElementById('rental-cost-amount-group').style.display = this.value === 'yes' ? 'block' : 'none';
+        });
+
+        // 計算年化報酬率並顯示報告
+        function calculateROI() {
+            const investmentType = document.getElementById('investment-type').value;
+            const rentOption = document.getElementById('rent-option').value;
+            const purchasePrice = parseNumber(document.getElementById('purchase-price').value);
+            const rentalIncome = parseNumber(document.getElementById('rental-income').value);
+            const loanAmount = parseNumber(document.getElementById('loan-amount').value);
+            const loanTerm = parseNumber(document.getElementById('loan-term').value);
+            const interestRate = parseNumber(document.getElementById('interest-rate').value) / 100;
+            const startYear = parseInt(document.getElementById('start-year').value);
+            const endYear = parseInt(document.getElementById('end-year').value);
+            const currentValue = parseNumber(document.getElementById('current-value').value);
+            const buyTaxOption = document.getElementById('buy-tax-option').value;
+            const sellTaxOption = document.getElementById('sell-tax-option').value;
+            const buyFeeOption = document.getElementById('buy-fee-option').value;
+            const sellFeeOption = document.getElementById('sell-fee-option').value;
+            const maintenanceOption = document.getElementById('maintenance-option').value;
+            const rentalCostOption = document.getElementById('rental-cost-option').value;
+            const buyTaxAmount = buyTaxOption === 'yes' ? parseNumber(document.getElementById('buy-tax-amount').value) : 0;
+            const sellTaxAmount = sellTaxOption === 'yes' ? parseNumber(document.getElementById('sell-tax-amount').value) : 0;
+            const buyFeeAmount = buyFeeOption === 'yes' ? parseNumber(document.getElementById('buy-fee-amount').value) : 0;
+            const sellFeeAmount = sellFeeOption === 'yes' ? parseNumber(document.getElementById('sell-fee-amount').value) : 0;
+            const maintenanceAmount = maintenanceOption === 'yes' ? parseNumber(document.getElementById('maintenance-amount').value) : 0;
+            const rentalCostPercentage = rentalCostOption === 'yes' ? parseNumber(document.getElementById('rental-cost-amount').value) / 100 : 0;
+
+            if (!purchasePrice || !currentValue || startYear >= endYear) {
+                alert('請確保購買金額、當前房價已填寫，且結束年份晚於開始年份！');
+                return;
+            }
+
+            const years = endYear - startYear;
+            let initialInvestment = purchasePrice + buyTaxAmount + buyFeeAmount;
+            let totalReturn = currentValue - sellTaxAmount - sellFeeAmount - purchasePrice;
+
+            if (rentOption === 'yes') {
+                totalReturn += (rentalIncome * (1 - rentalCostPercentage)) * years;
+            }
+
+            totalReturn -= maintenanceAmount * years;
+
+            if (investmentType === 'loan') {
+                if (!loanAmount || !loanTerm || !interestRate) {
+                    alert('請填寫貸款相關欄位！');
+                    return;
+                }
+                initialInvestment = purchasePrice - loanAmount + buyTaxAmount + buyFeeAmount;
+                const monthlyRate = interestRate / 12;
+                const monthlyPayment = (loanAmount * monthlyRate) / (1 - Math.pow(1 + monthlyRate, -loanTerm * 12));
+                const totalLoanCost = monthlyPayment * loanTerm * 12;
+                totalReturn -= totalLoanCost;
+            }
+
+            let cagr = '虧損';
+            if (totalReturn >= 0) {
+                cagr = (Math.pow((totalReturn + initialInvestment) / initialInvestment, 1 / years) - 1) * 100;
+                cagr = cagr.toFixed(2) + '%';
+            }
+
+            const cpiStart = cpiData[startYear];
+            const cpiEnd = cpiData[endYear];
+            const cpiCagr = (Math.pow(cpiEnd / cpiStart, 1 / years) - 1) * 100;
+
+            const investmentReturns = {};
+            for (const [asset, rate] of Object.entries(assetReturns)) {
+                investmentReturns[asset] = initialInvestment * (Math.pow(1 + rate, years) - 1);
+            }
+
+            const resultDiv = document.getElementById('result');
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = `
+                <h3>投資報酬率分析</h3>
+                <p>房地產投資年化報酬率：${cagr}</p>
+                <p>台北市CPI年化增長率：${cpiCagr.toFixed(2)}%</p>
+                <p class="cpi-comparison ${cagr === '虧損' || parseFloat(cagr) <= cpiCagr ? 'cpi-lose' : 'cpi-win'}">
+                    房地產投資是否跑贏CPI：${cagr === '虧損' || parseFloat(cagr) <= cpiCagr ? '否' : '是'}
+                </p>
+                <h3>其他資產回報比較</h3>
+                <p>若將相同資金（${initialInvestment.toLocaleString('zh-TW')} 新台幣）投資於其他資產，預計回報如下：</p>
+                <ul>
+                    <li>比特幣：${investmentReturns.bitcoin.toLocaleString('zh-TW')} 新台幣</li>
+                    <li>S&P 500：${investmentReturns.sp500.toLocaleString('zh-TW')} 新台幣</li>
+                    <li>0050：${investmentReturns.tw0050.toLocaleString('zh-TW')} 新台幣</li>
+                    <li>黃金：${investmentReturns.gold.toLocaleString('zh-TW')} 新台幣</li>
+                    <li>債券：${investmentReturns.bonds.toLocaleString('zh-TW')} 新台幣</li>
+                </ul>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>資產</th>
+                            <th>年化報酬率 (%)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>房地產</td><td>${cagr}</td></tr>
+                        <tr><td>台北CPI</td><td>${cpiCagr.toFixed(2)}</td></tr>
+                        <tr><td>比特幣</td><td>${(assetReturns.bitcoin * 100).toFixed(2)}</td></tr>
+                        <tr><td>S&P 500</td><td>${(assetReturns.sp500 * 100).toFixed(2)}</td></tr>
+                        <tr><td>0050</td><td>${(assetReturns.tw0050 * 100).toFixed(2)}</td></tr>
+                        <tr><td>黃金</td><td>${(assetReturns.gold * 100).toFixed(2)}</td></tr>
+                        <tr><td>債券</td><td>${(assetReturns.bonds * 100).toFixed(2)}</td></tr>
+                    </tbody>
+                </table>
+            `;
+
+            const ctx = document.getElementById('roi-chart').getContext('2d');
+            if (window.roiChart) window.roiChart.destroy();
+            window.roiChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['房地產', '台北CPI', '比特幣', 'S&P 500', '0050', '黃金', '債券'],
+                    datasets: [{
+                        label: '年化報酬率 (%)',
+                        data: [
+                            cagr === '虧損' ? 0 : parseFloat(cagr),
+                            cpiCagr,
+                            assetReturns.bitcoin * 100,
+                            assetReturns.sp500 * 100,
+                            assetReturns.tw0050 * 100,
+                            assetReturns.gold * 100,
+                            assetReturns.bonds * 100
+                        ],
+                        backgroundColor: [
+                            '#2563eb', // 房地產
+                            '#6b7280', // CPI
+                            '#f59e0b', // 比特幣
+                            '#10b981', // S&P 500
+                            '#3b82f6', // 0050
+                            '#eab308', // 黃金
+                            '#6d28d9'  // 債券
+                        ],
+                        borderColor: ['#1e40af', '#4b5563', '#d97706', '#059669', '#2563eb', '#ca8a04', '#5b21b6'],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: { beginAtZero: true, title: { display: true, text: '年化報酬率 (%)' } }
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+
+        // 下載報告為PDF
+        function downloadReport() {
+            const resultDiv = document.getElementById('result');
+            const chartContainer = document.getElementById('chart-container');
+            if (resultDiv.style.display === 'none') {
+                alert('請先點擊「計算報酬率」生成報告！');
+                return;
+            }
+
+            resultDiv.style.display = 'block';
+            chartContainer.style.display = 'block';
+
+            setTimeout(() => {
+                html2canvas(resultDiv, { scale: 2, useCORS: true }).then(resultCanvas => {
+                    html2canvas(chartContainer, { scale: 2, useCORS: true }).then(chartCanvas => {
+                        const { jsPDF } = window.jspdf;
+                        const pdf = new jsPDF('p', 'mm', 'a4');
+                        const pdfWidth = pdf.internal.pageSize.getWidth();
+                        let position = 10;
+
+                        const resultImgData = resultCanvas.toDataURL('image/png');
+                        const resultImgProps = pdf.getImageProperties(resultImgData);
+                        const resultHeight = (resultImgProps.height * pdfWidth) / resultImgProps.width;
+                        pdf.addImage(resultImgData, 'PNG', 0, position, pdfWidth, resultHeight);
+                        position += resultHeight + 10;
+
+                        const chartImgData = chartCanvas.toDataURL('image/png');
+                        const chartImgProps = pdf.getImageProperties(chartImgData);
+                        const chartHeight = (chartImgProps.height * pdfWidth) / chartImgProps.width;
+                        if (position + chartHeight < pdf.internal.pageSize.getHeight()) {
+                            pdf.addImage(chartImgData, 'PNG', 0, position, pdfWidth, chartHeight);
+                        } else {
+                            pdf.addPage();
+                            pdf.addImage(chartImgData, 'PNG', 0, 10, pdfWidth, chartHeight);
+                        }
+
+                        pdf.save('投資報酬率報告.pdf');
+                    }).catch(error => {
+                        console.error('生成圖表PDF失敗:', error);
+                        alert('生成PDF失敗，請稍後再試！');
+                    });
+                }).catch(error => {
+                    console.error('生成報告PDF失敗:', error);
+                    alert('生成PDF失敗，請稍後再試！');
+                });
+            }, 500);
+        }
+    </script>
+</body>
+</html>
