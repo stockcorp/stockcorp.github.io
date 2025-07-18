@@ -1,0 +1,1049 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3440199491716602" crossorigin="anonymous"></script>
+    <!-- Google Tag Manager -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-Q32FFR42XT"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-Q32FFR42XT');
+    </script>
+    <!-- Facebook SDK -->
+    <script>
+        window.fbAsyncInit = function() {
+            FB.init({
+                appId: 'YOUR_APP_ID', // 請替換為您的 Facebook App ID
+                xfbml: true,
+                version: 'v18.0'
+            });
+        };
+        (function(d, s, id){
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) {return;}
+            js = d.createElement(s); js.id = id;
+            js.src = "https://connect.facebook.net/zh_TW/sdk.js";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+    </script>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js for charts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- html2canvas and jsPDF for PDF generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <!-- XLSX handling -->
+    <script>
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+            return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+            if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+                try {
+                    var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                    var firstSheetName = workbook.SheetNames[0];
+                    var worksheet = workbook.Sheets[firstSheetName];
+                    var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                    var filteredData = jsonData.filter(row => row.some(filledCell));
+                    var headerRowIndex = filteredData.findIndex((row, index) =>
+                        row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                    );
+                    if (headerRowIndex === -1 || headerRowIndex > 25) {
+                        headerRowIndex = 0;
+                    }
+                    var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex));
+                    csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                    return csv;
+                } catch (e) {
+                    console.error(e);
+                    return "";
+                }
+            }
+            return gk_fileData[filename] || "";
+        }
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="加密貨幣槓桿計算機 - 股市企業研究院">
+    <meta name="keywords" content="加密貨幣, 槓桿交易, 獲利金額, 投資報酬率, 吉米理財學堂">
+    <meta name="author" content="股市企業研究院">
+    <meta name="robots" content="index, follow">
+    <title>加密貨幣槓桿計算機 - 股市企業研究院</title>
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="加密貨幣槓桿計算機 - 股市企業研究院">
+    <meta property="og:description" content="專業的加密貨幣槓桿計算機，快速計算槓桿交易的獲利金額與投資報酬率。">
+    <meta property="og:url" content="https://stockcorp.github.io/crypto_leverage.html">
+    <meta property="og:type" content="website">
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "加密貨幣槓桿計算機",
+        "url": "https://stockcorp.github.io/crypto_leverage.html",
+        "description": "專業的加密貨幣槓桿計算機，快速計算槓桿交易的獲利金額與投資報酬率。",
+        "publisher": {
+            "@type": "Organization",
+            "name": "吉米理財學堂",
+            "url": "https://www.youtube.com/@吉米理財學堂",
+            "email": "xbon510@gmail.com"
+        },
+        "applicationCategory": "Finance"
+    }
+    </script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, 'Noto Sans TC', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f7f9fc;
+            color: #333333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .left-column {
+            flex: 1;
+            min-width: 300px;
+        }
+        .right-column {
+            flex: 2;
+            min-width: 300px;
+        }
+        .header {
+            text-align: center;
+            background-image: url('/img/channels4_banner.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: relative;
+            width: 100%;
+            height: 120px;
+            min-height: 80px;
+            max-height: 200px;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        @media screen and (max-width: 600px) {
+            .header {
+                height: 80px;
+                padding: 10px;
+                background-size: contain;
+            }
+        }
+        @media screen and (min-width: 601px) and (max-width: 900px) {
+            .header {
+                height: 100px;
+                padding: 15px;
+            }
+        }
+        @media screen and (min-width: 901px) {
+            .header {
+                height: 150px;
+                padding: 20px;
+            }
+        }
+        .nav-tabs {
+            display: flex;
+            width: 100%;
+            background-color: transparent;
+            margin-bottom: 20px;
+        }
+        .nav-tab {
+            flex: 1;
+            padding: 10px 0;
+            text-align: center;
+            text-decoration: none;
+            background-color: #2563eb;
+            color: #ffffff;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 4px;
+            margin: 4px;
+            transition: background-color 0.3s ease;
+            position: relative;
+        }
+        .nav-tab:hover {
+            background-color: #1e40af;
+        }
+        .nav-tab.active {
+            background-color: #1d4ed8;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+        .dropdown {
+            position: relative;
+        }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #eff6ff;
+            min-width: 220px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            border-radius: 6px;
+            z-index: 1;
+            top: 100%;
+            left: 0;
+            padding: 10px 0;
+            animation: fadeIn 0.3s ease;
+        }
+        .dropdown-content a {
+            color: #1e40af;
+            padding: 10px 16px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            transition: background-color 0.2s ease;
+        }
+        .dropdown-content a:hover {
+            background-color: #dbeafe;
+            border-radius: 4px;
+        }
+        .dropdown-content a i {
+            color: #2563eb;
+        }
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .hamburger {
+            display: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #2563eb;
+            padding: 10px;
+        }
+        .mobile-nav {
+            display: none;
+            background-color: #ffffff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-radius: 4px;
+            position: absolute;
+            top: 60px;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 10px 0;
+            animation: slideIn 0.3s ease;
+        }
+        .mobile-nav a {
+            display: block;
+            padding: 10px 20px;
+            color: #333333;
+            text-decoration: none;
+            font-size: 16px;
+        }
+        .mobile-nav a:hover {
+            background-color: #f5f5f5;
+        }
+        .mobile-dropdown {
+            padding-left: 20px;
+            display: none;
+        }
+        .mobile-dropdown.active {
+            display: block;
+        }
+        .mobile-dropdown a {
+            padding: 8px 20px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #1e40af;
+        }
+        .mobile-dropdown a i {
+            color: #2563eb;
+        }
+        @keyframes slideIn {
+            from { transform: translateY(-10px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .form-section {
+            background-color: #ffffff;
+            padding: 24px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .form-section h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #2563eb;
+        }
+        .result-section {
+            margin-top: 20px;
+            padding: 24px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        .result-section h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #333333;
+        }
+        .result-section p {
+            font-size: 18px;
+            line-height: 1.6;
+            color: #000000;
+        }
+        .guide-section {
+            margin-top: 20px;
+            padding: 24px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            text-align: left;
+        }
+        .guide-section h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #2563eb;
+        }
+        .guide-section h2 {
+            font-size: 18px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            color: #2563eb;
+        }
+        .guide-section p, .guide-section li {
+            line-height: 1.6;
+            color: #000000;
+            font-size: 18px;
+        }
+        .privacy-section {
+            margin-top: 20px;
+            padding: 24px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            text-align: left;
+        }
+        .privacy-section h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #2563eb;
+        }
+        .privacy-section p {
+            line-height: 1.6;
+            color: #000000;
+            font-size: 18px;
+        }
+        .facebook-comments {
+            margin-top: 20px;
+            padding: 24px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .facebook-comments h2 {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: #2563eb;
+        }
+        .facebook-comments p {
+            line-height: 1.6;
+            color: #000000;
+            font-size: 18px;
+        }
+        input, select {
+            padding: 10px;
+            margin: 5px 0;
+            width: 100%;
+            box-sizing: border-box;
+            background-color: #f5f5f5;
+            color: #333333;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        .row {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+        }
+        .row > div {
+            flex: 1;
+        }
+        button {
+            padding: 10px;
+            margin: 5px 0;
+            width: 100%;
+            background-color: #2563eb;
+            color: #ffffff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #3b82f6;
+        }
+        .button-container {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .download-button, .line-button, .facebook-button {
+            width: 32px;
+            height: 32px;
+            background-size: cover;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            margin: 0;
+            border-radius: 4px;
+        }
+        .download-button {
+            background-image: url('img/download.jpg');
+            background-color: transparent;
+        }
+        .line-button {
+            background-image: url('https://upload.wikimedia.org/wikipedia/commons/4/41/LINE_logo.svg');
+        }
+        .facebook-button {
+            background-image: url('https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg');
+        }
+        .button-with-text {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 5px;
+            cursor: pointer;
+        }
+        .button-with-text span {
+            color: #333333;
+            font-size: 12px;
+            line-height: 1;
+        }
+        .profit-positive {
+            background-color: #ff4444;
+            color: #ffffff;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+        .profit-negative {
+            background-color: #00cc00;
+            color: #ffffff;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+        #screenshot-container {
+            position: absolute;
+            top: -9999px;
+            left: -9999px;
+            background-color: #f7f9fc;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            width: 300px;
+        }
+        #chart-container {
+            margin-top: 20px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #000000;
+            width: 100%;
+        }
+        @media screen and (max-width: 768px) {
+            .nav-tabs {
+                display: none;
+            }
+            .hamburger {
+                display: block;
+            }
+            .mobile-nav.active {
+                display: block;
+            }
+            .row {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+        @media screen and (min-width: 769px) {
+            .mobile-nav {
+                display: none;
+            }
+        }
+        .header-section .site-title h1 {
+            font-size: 24px;
+            color: #2563eb;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .site-title {
+            background-color: white;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 4px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 橫幅 -->
+        <div style="width: 100%;">
+            <div class="header"></div>
+        </div>
+
+        <!-- 漢堡選單按鈕 -->
+        <div class="hamburger" onclick="toggleMobileNav()">☰</div>
+
+        <!-- 導航選單 -->
+        <div class="nav-tabs">
+            <a href="index.html" class="nav-tab">最新消息</a>
+            <a href="risk.html" class="nav-tab">即時資產風險</a>
+            <div class="nav-tab dropdown">
+                投資理財計算機
+                <div class="dropdown-content">
+					<a href="crypto_leverage.html"><i class="fas fa-coins"></i>加密貨幣槓桿計算機</a>
+                    <a href="stock.html"><i class="fas fa-chart-line"></i>股票利潤計算機</a>
+                    <a href="compound.html"><i class="fas fa-percentage"></i>複利計算機</a>
+                    <a href="kelly.html"><i class="fas fa-calculator"></i>凱莉計算機</a>
+                    <a href="creditloan.html"><i class="fas fa-money-check-alt"></i>信貸計算機</a>
+                    <a href="loan.html"><i class="fas fa-home"></i>房貸計算機</a>
+                    <a href="car.html"><i class="fas fa-car"></i>車貸計算機</a>
+                    <a href="creditcard.html"><i class="fas fa-credit-card"></i>信用卡驗證</a>
+                    <a href="bmi.html"><i class="fas fa-weight"></i>BMI計算機</a>
+                </div>
+            </div>
+            <div class="nav-tab dropdown active">
+                商業用產生器
+                <div class="dropdown-content">
+                    <a href="quotation.html"><i class="fas fa-file-invoice-dollar"></i>報價單產生器</a>
+                    <a href="house.html"><i class="fas fa-home"></i>房地產投資報酬率計算器</a>
+                    <a href="crypto_leverage.html"><i class="fas fa-coins"></i>加密貨幣槓桿計算機</a>
+                </div>
+            </div>
+            <a href="technical.html" class="nav-tab">技術分析學習</a>
+            <a href="about.html" class="nav-tab">關於我們</a>
+        </div>
+
+        <!-- 手機版導航 -->
+        <div class="mobile-nav" id="mobile-nav">
+            <a href="index.html">最新消息</a>
+            <a href="risk.html">即時資產風險</a>
+            <a href="#" onclick="toggleMobileDropdown('investment-dropdown')">投資理財計算機</a>
+            <div class="mobile-dropdown" id="investment-dropdown">
+			    <a href="crypto_leverage.html"><i class="fas fa-coins"></i>加密貨幣槓桿計算機</a>
+                <a href="stock.html"><i class="fas fa-chart-line"></i>股票利潤計算機</a>
+                <a href="compound.html"><i class="fas fa-percentage"></i>複利計算機</a>
+                <a href="kelly.html"><i class="fas fa-calculator"></i>凱莉計算機</a>
+                <a href="creditloan.html"><i class="fas fa-money-check-alt"></i>信貸計算機</a>
+                <a href="loan.html"><i class="fas fa-home"></i>房貸計算機</a>
+                <a href="car.html"><i class="fas fa-car"></i>車貸計算機</a>
+                <a href="creditcard.html"><i class="fas fa-credit-card"></i>信用卡驗證</a>
+                <a href="bmi.html"><i class="fas fa-weight"></i>BMI計算機</a>
+            </div>
+            <a href="#" onclick="toggleMobileDropdown('business-dropdown')">商業用產生器</a>
+            <div class="mobile-dropdown" id="business-dropdown">
+                <a href="quotation.html"><i class="fas fa-file-invoice-dollar"></i>報價單產生器</a>
+                <a href="house.html"><i class="fas fa-home"></i>房地產投資報酬率計算器</a>
+            </div>
+            <a href="technical.html">技術分析學習</a>
+            <a href="about.html">關於我們</a>
+        </div>
+
+        <!-- 左側欄：標題與計算區域 -->
+        <div class="left-column">
+            <!-- 標題 -->
+            <div class="header-section">
+                <div class="site-title">
+                    <h1>stockcorp.github.io</h1>
+                </div>
+            </div>
+
+            <!-- 輸入表單 -->
+            <div class="form-section">
+                <h2>加密貨幣槓桿計算機</h2>
+                <hr>
+                <label for="trade-type">投資方式:</label>
+                <select id="trade-type">
+                    <option value="long" selected>做多</option>
+                    <option value="short">做空</option>
+                </select>
+                <div class="row">
+                    <div>
+                        <label for="initial-capital">投入本金:</label>
+                        <input type="text" id="initial-capital" placeholder="輸入本金 (正整數)" value="100000" min="1" step="1">
+                    </div>
+                    <div>
+                        <label for="currency">貨幣單位:</label>
+                        <select id="currency">
+                            <option value="TWD" selected>新台幣(TWD)</option>
+                            <option value="USD">美元(USD)</option>
+                            <option value="EUR">歐元(EUR)</option>
+                            <option value="JPY">日圓(JPY)</option>
+                            <option value="GBP">英鎊(GBP)</option>
+                            <option value="AUD">澳幣(AUD)</option>
+                            <option value="CAD">加拿大幣(CAD)</option>
+                            <option value="CHF">瑞士法郎(CHF)</option>
+                            <option value="CNY">人民幣(CNY)</option>
+                            <option value="HKD">港幣(HKD)</option>
+                        </select>
+                    </div>
+                </div>
+                <label for="buy-price">買進價格 (TWD):</label>
+                <input type="text" id="buy-price" placeholder="輸入買進價格 (正整數)" value="100000" min="1" step="1">
+                <label for="sell-price">賣出價格 (TWD):</label>
+                <input type="text" id="sell-price" placeholder="輸入賣出價格 (正整數)" value="120000" min="1" step="1">
+                <label for="leverage">槓桿倍數:</label>
+                <input type="number" id="leverage" placeholder="輸入槓桿倍數 (1-150)" value="5" min="1" max="150" step="1">
+                <button onclick="calculateProfit()">計算利潤</button>
+                <div class="button-container">
+                    <div class="button-with-text" onclick="downloadResultAsPDF()">
+                        <button class="download-button" aria-label="下載報告"></button>
+                        <span>下載報告</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 計算結果 -->
+            <div class="result-section" id="result">
+                <h2>槓桿交易報告</h2>
+                <p>投資方式: <span id="result-trade-type">-</span></p>
+                <p>初始本金: <span id="result-capital">-</span> TWD</p>
+                <p>總交易金額: <span id="result-trade-amount">-</span> TWD</p>
+                <p>槓桿後曝險金額: <span id="result-exposure">-</span> TWD</p>
+                <p>獲利金額: <span id="result-profit">-</span> TWD</p>
+                <p>投資報酬率 (ROI): <span id="result-roi">-</span></p>
+                <div id="chart-container">
+                    <canvas id="roi-chart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- 右側欄：說明與其他內容 -->
+        <div class="right-column">
+            <!-- 使用說明 -->
+            <div class="guide-section">
+                <h1>歡迎體驗「加密貨幣槓桿計算機」 - 您的加密交易最佳助手！</h1>
+                <p>想快速了解加密貨幣槓桿交易的潛在收益與風險？「加密貨幣槓桿計算機」幫您一鍵計算做多或做空的獲利金額與投資報酬率（ROI），簡單易用，專業可靠！無論您是新手還是資深交易者，這款免費工具都能讓您輕鬆掌握交易全貌。以下是使用秘訣，快來試試吧！</p>
+                <h2>Step 1：輸入交易資訊</h2>
+                <ul>
+                    <li><strong>投資方式</strong>：選擇「做多」（預期價格上漲）或「做空」（預期價格下跌），預設為做多。</li>
+                    <li><strong>投入本金</strong>：輸入正整數本金（預設100,000，例如300、5,000、10,000,000），選擇貨幣單位（新台幣(TWD)、美元(USD)、歐元(EUR)、日圓(JPY)、英鎊(GBP)、澳幣(AUD)、加拿大幣(CAD)、瑞士法郎(CHF)、人民幣(CNY)、港幣(HKD)）。非TWD貨幣將自動轉換為TWD（例如1美元(USD) = 30 TWD）。</li>
+                    <li><strong>買進價格 (TWD)</strong>：輸入正整數買進價格（預設100,000，例如300、5,000、10,000,000）。</li>
+                    <li><strong>賣出價格 (TWD)</strong>：輸入正整數賣出價格（預設120,000，例如300、5,000、10,000,000）。</li>
+                    <li><strong>槓桿倍數</strong>：輸入整數槓桿倍數（1-150，預設5）。</li>
+                </ul>
+                <h2>Step 2：一鍵計算，結果秒現</h2>
+                <p>點擊「計算利潤」按鈕，立即生成詳細報告，包含以下資訊：</p>
+                <ul>
+                    <li><strong>投資方式</strong>：做多或做空。</li>
+                    <li><strong>初始本金</strong>：投入本金（TWD，自動轉換）。</li>
+                    <li><strong>總交易金額</strong>：初始本金 × 槓桿倍數，反映槓桿後的交易規模。</li>
+                    <li><strong>槓桿後曝險金額</strong>：槓桿放大後的總交易價值。</li>
+                    <li><strong>獲利金額</strong>：做多為（賣出價格 - 買進價格）× 槓桿倍數 × 初始本金 / 買進價格；做空為（買進價格 - 賣出價格）× 槓桿倍數 × 初始本金 / 買進價格。紅色表示獲利，綠色表示虧損。</li>
+                    <li><strong>投資報酬率 (ROI)</strong>：獲利金額 / 初始本金 × 100%，整數顯示，若為負顯示「虧損」。</li>
+                    <li><strong>圖表</strong>：柱狀圖直觀顯示ROI（正為藍色，負為紅色）。</li>
+                </ul>
+                <h2>Step 3：下載與分享</h2>
+                <p>點擊「下載報告」按鈕，將輸入資訊與報告保存為PDF。使用Line或Facebook分享按鈕，生成報告圖片並下載，方便手動分享至社群平台。</p>
+                <h2>開始吧！</h2>
+                <blockquote>
+                    <style data-styled="true" data-styled-version="5.3.3">
+                        .eDynhg{display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-align-items:center;-webkit-box-align:center;-ms-flex-align:center;align-items:center;-webkit-box-pack:center;-webkit-justify-content:center;-ms-flex-pack:center;justify-content:center;width:164px;height:40px;padding:8px 16px;-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);border-radius:12px;color:white;-webkit-text-decoration:none !important;text-decoration:none !important;}
+                        .eDynhg:hover{-webkit-text-decoration:none !important;text-decoration:none !important;}
+                        data-styled.g160[id="sc-1ykasxb-0"]{content:"eDynhg,"}
+                    </style>
+                    <a style="background-color:#AD5138;color:#F8E0BE;border:none" href="https://stockcorp.bobaboba.me" target="_blank" class="sc-1ykasxb-0 eDynhg">
+                        <img height="100%" src="https://s3.ap-southeast-1.amazonaws.com/media.anyonelab.com/images/boba/boba-embed-icon.png" alt="boba-icon"/>
+                        <div style="flex:1;text-align:center">請我喝珍奶！</div>
+                    </a>
+                </blockquote>
+                <h2>計算邏輯</h2>
+                <ul>
+                    <li><strong>初始本金</strong>：若貨幣單位非新台幣(TWD)，轉換為TWD（匯率：1美元(USD) = 30 TWD, 1歐元(EUR) = 33 TWD, 1日圓(JPY) = 0.22 TWD, 1英鎊(GBP) = 39 TWD, 1澳幣(AUD) = 21 TWD, 1加拿大幣(CAD) = 22 TWD, 1瑞士法郎(CHF) = 34 TWD, 1人民幣(CNY) = 4.3 TWD, 1港幣(HKD) = 3.9 TWD）。</li>
+                    <li><strong>總交易金額</strong>：初始本金 × 槓桿倍數</li>
+                    <li><strong>槓桿後曝險金額</strong>：總交易金額</li>
+                    <li><strong>獲利金額</strong>：
+                        <pre>
+做多：(賣出價格 - 買進價格) × 槓桿倍數 × 初始本金 / 買進價格
+做空：(買進價格 - 賣出價格) × 槓桿倍數 × 初始本金 / 買進價格
+                        </pre>
+                    </li>
+                    <li><strong>投資報酬率 (ROI)</strong>：
+                        <pre>
+ROI = 獲利金額 / 初始本金 × 100% (整數)
+                        </pre>
+                        若獲利金額為負，顯示「虧損」。
+                    </li>
+                </ul>
+                <h2>注意事項</h2>
+                <ul>
+                    <li>本計算機假設無交易手續費、資金費用率或其他成本，實際交易需納入這些因素。</li>
+                    <li>槓桿交易具高風險，價格波動可能放大虧損，甚至超過初始本金。</li>
+                    <li>匯率為假設值（例如1美元(USD) = 30 TWD），實際應用需使用當前市場匯率。</li>
+                    <li>本金、買進與賣出價格需為正整數（例如300、5,000、10,000,000），無最大值限制，但極大數值可能導致計算溢位，請謹慎輸入。</li>
+                    <li>PDF生成或分享若失敗，可稍後重試或檢查瀏覽器設置。</li>
+                    <li>免責聲明：本工具僅供參考與資訊分析之用，並非專業投資建議或財務顧問服務。使用者應自行評估並承擔投資決策相關風險。本網站對任何因使用本工具所導致的直接或間接損失不承擔任何責任，請謹慎使用並諮詢專業財務顧問。</li>
+                </ul>
+            </div>
+
+            <!-- 隱私權政策 -->
+            <div class="privacy-section">
+                <h1>隱私權政策</h1>
+                <p>我們的應用程式不會收集個人資訊。</p>
+                <p>理財工具系列作品由 <a href="https://www.youtube.com/@吉米理財學堂" target="_blank">吉米理財學堂</a> 授權 股市企業研究院 開發</p>
+                <p>如有任何問題，請聯絡我們：<a href="/cdn-cgi/l/email-protection#5028323f3e65616010373d31393c7e333f3d"><span class="__cf_email__" data-cfemail="58607a77762d2928587f75797174367b7775">[email&#160;protected]</span></a></p>
+            </div>
+
+            <!-- Facebook 留言板 -->
+            <div class="facebook-comments">
+                <h2>留言板</h2>
+                <div class="fb-comments" data-href="https://stockcorp.github.io/crypto_leverage.html" data-width="100%" data-numposts="5"></div>
+            </div>
+        </div>
+
+        <!-- 頁腳 -->
+        <footer style="width: 100%;">
+            <p>© 2025 <a href="https://www.youtube.com/@吉米理財學堂" target="_blank">吉米理財學堂</a>。保留所有權利。</p>
+        </footer>
+    </div>
+
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+        // 格式化數字為千位分隔符
+        function formatNumber(num) {
+            if (!num) return '';
+            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+
+        // 解析數字
+        function parseNumber(value) {
+            const parsed = parseInt(value.replace(/,/g, ''));
+            return isNaN(parsed) ? 0 : parsed;
+        }
+
+        // 為輸入框添加整數與會計格式處理
+        const numberInputs = ['initial-capital', 'buy-price', 'sell-price', 'leverage'];
+        numberInputs.forEach(id => {
+            const input = document.getElementById(id);
+            input.addEventListener('input', function(e) {
+                // 保存當前光標位置
+                const start = this.selectionStart;
+                const valLength = this.value.length;
+                // 移除非數字字符
+                let value = this.value.replace(/[^0-9]/g, '');
+                // 格式化金額（除了槓桿倍數）
+                if (id !== 'leverage' && value) {
+                    value = formatNumber(value);
+                }
+                this.value = value;
+                // 計算光標偏移（考慮逗點數量）
+                const commasBefore = (this.value.slice(0, start).match(/,/g) || []).length;
+                const newCommas = (value.slice(0, start + (value.length - valLength)).match(/,/g) || []).length;
+                const newPosition = start + (value.length - valLength) + (newCommas - commasBefore);
+                this.setSelectionRange(newPosition, newPosition);
+            });
+        });
+
+        // 貨幣單位切換時更新本金顯示
+        document.getElementById('currency').addEventListener('change', function() {
+            const capitalInput = document.getElementById('initial-capital');
+            const value = parseNumber(capitalInput.value);
+            if (value) {
+                capitalInput.value = formatNumber(value);
+            }
+        });
+
+        // 計算利潤
+        function calculateProfit() {
+            const tradeType = document.getElementById('trade-type').value;
+            const initialCapital = parseNumber(document.getElementById('initial-capital').value);
+            const currency = document.getElementById('currency').value;
+            const buyPrice = parseNumber(document.getElementById('buy-price').value);
+            const sellPrice = parseNumber(document.getElementById('sell-price').value);
+            const leverage = parseInt(document.getElementById('leverage').value) || 0;
+
+            // 錯誤驗證
+            if (initialCapital < 1) {
+                alert('請輸入有效的投入本金（正整數）！');
+                return;
+            }
+            if (buyPrice < 1) {
+                alert('請輸入有效的買進價格（正整數）！');
+                return;
+            }
+            if (sellPrice < 1) {
+                alert('請輸入有效的賣出價格（正整數）！');
+                return;
+            }
+            if (leverage < 1 || leverage > 150) {
+                alert('請輸入有效的槓桿倍數（1-150）！');
+                return;
+            }
+
+            // 貨幣轉換
+            const exchangeRates = {
+                'TWD': 1,
+                'USD': 30,
+                'EUR': 33,
+                'JPY': 0.22,
+                'GBP': 39,
+                'AUD': 21,
+                'CAD': 22,
+                'CHF': 34,
+                'CNY': 4.3,
+                'HKD': 3.9
+            };
+            const capitalInTWD = Math.floor(initialCapital * exchangeRates[currency]);
+
+            // 計算
+            const totalTradeAmount = capitalInTWD * leverage;
+            const exposure = totalTradeAmount;
+            let profit = 0;
+            if (tradeType === 'long') {
+                profit = Math.floor((sellPrice - buyPrice) * leverage * capitalInTWD / buyPrice);
+            } else {
+                profit = Math.floor((buyPrice - sellPrice) * leverage * capitalInTWD / buyPrice);
+            }
+            const roi = profit >= 0 ? Math.floor((profit / capitalInTWD) * 100) : '虧損';
+
+            // 更新報告
+            const resultDiv = document.getElementById('result');
+            resultDiv.style.display = 'block';
+            document.getElementById('result-trade-type').innerText = tradeType === 'long' ? '做多' : '做空';
+            document.getElementById('result-capital').innerText = formatNumber(capitalInTWD);
+            document.getElementById('result-trade-amount').innerText = formatNumber(totalTradeAmount);
+            document.getElementById('result-exposure').innerText = formatNumber(exposure);
+            document.getElementById('result-profit').innerText = formatNumber(profit);
+            document.getElementById('result-profit').className = profit >= 0 ? 'profit-positive' : 'profit-negative';
+            document.getElementById('result-roi').innerText = roi + (roi !== '虧損' ? '%' : '');
+            document.getElementById('result-roi').className = profit >= 0 ? 'profit-positive' : 'profit-negative';
+
+            // 生成圖表
+            const ctx = document.getElementById('roi-chart').getContext('2d');
+            if (window.roiChart) window.roiChart.destroy();
+            window.roiChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['投資報酬率 (ROI)'],
+                    datasets: [{
+                        label: 'ROI (%)',
+                        data: [roi === '虧損' ? 0 : roi],
+                        backgroundColor: roi === '虧損' ? '#ff4444' : '#2563eb',
+                        borderColor: roi === '虧損' ? '#cc0000' : '#1e40af',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: { display: true, text: '報酬率 (%)' }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
+            });
+        }
+
+        // 下載報告為PDF
+        function downloadResultAsPDF() {
+            const resultDiv = document.getElementById('result');
+            const formSection = document.querySelector('.form-section');
+            if (resultDiv.style.display === 'none') {
+                alert('請先點擊「計算利潤」生成報告！');
+                return;
+            }
+
+            let tempContainer = document.getElementById('screenshot-container');
+            if (!tempContainer) {
+                tempContainer = document.createElement('div');
+                tempContainer.id = 'screenshot-container';
+                document.body.appendChild(tempContainer);
+            }
+
+            tempContainer.innerHTML = '';
+            const formClone = formSection.cloneNode(true);
+            const resultClone = resultDiv.cloneNode(true);
+            tempContainer.appendChild(formClone);
+            tempContainer.appendChild(resultClone);
+
+            const buttonContainer = tempContainer.querySelector('.button-container');
+            if (buttonContainer) buttonContainer.remove();
+
+            html2canvas(tempContainer, { scale: 2 }).then(canvas => {
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF('p', 'mm', 'a4');
+                const pdfWidth = pdf.internal.pageSize.getWidth();
+                const imgData = canvas.toDataURL('image/png');
+                const imgProps = pdf.getImageProperties(imgData);
+                const imgHeight = (imgProps.height * pdfWidth) / imgProps.width;
+                pdf.addImage(imgData, 'PNG', 0, 10, pdfWidth, imgHeight);
+                pdf.save('槓桿交易報告.pdf');
+                tempContainer.innerHTML = '';
+            }).catch(error => {
+                console.error('生成PDF失敗:', error);
+                alert('生成PDF失敗，請稍後再試！');
+            });
+        }
+
+        // 分享到Line
+        function shareToLine() {
+            const resultDiv = document.getElementById('result');
+            const formSection = document.querySelector('.form-section');
+            if (resultDiv.style.display === 'none') {
+                alert('請先點擊「計算利潤」生成報告！');
+                return;
+            }
+
+            let tempContainer = document.getElementById('screenshot-container');
+            if (!tempContainer) {
+                tempContainer = document.createElement('div');
+                tempContainer.id = 'screenshot-container';
+                document.body.appendChild(tempContainer);
+            }
+
+            tempContainer.innerHTML = '';
+            const formClone = formSection.cloneNode(true);
+            const resultClone = resultDiv.cloneNode(true);
+            tempContainer.appendChild(formClone);
+            tempContainer.appendChild(resultClone);
+
+            const buttonContainer = tempContainer.querySelector('.button-container');
+            if (buttonContainer) buttonContainer.remove();
+
+            html2canvas(tempContainer).then(canvas => {
+                const imageData = canvas.toDataURL('image/png');
+                const url = 'https://stockcorp.github.io/crypto_leverage.html';
+                const text = `我的加密貨幣槓桿交易報告，請查看：${url}`;
+                const encodedText = encodeURIComponent(text);
+                const lineUrl = `https://line.me/R/msg/text/?${encodedText}`;
+                window.open(lineUrl, '_blank');
+                alert('Line不支援直接分享圖片，請下載圖片後手動分享至Line。圖片已自動下載。');
+                const link = document.createElement('a');
+                link.download = 'crypto_leverage_result.png';
+                link.href = imageData;
+                link.click();
+                tempContainer.innerHTML = '';
+            });
+        }
+
+        // 分享到Facebook
+        function shareToFacebook() {
+            const resultDiv = document.getElementById('result');
+            const formSection = document.querySelector('.form-section');
+            if (resultDiv.style.display === 'none') {
+                alert('請先點擊「計算利潤」生成報告！');
+                return;
+            }
+
+            let tempContainer = document.getElementById('screenshot-container');
+            if (!tempContainer) {
+                tempContainer = document.createElement('div');
+                tempContainer.id = 'screenshot-container';
+                document.body.appendChild(tempContainer);
+            }
+
+            tempContainer.innerHTML = '';
+            const formClone = formSection.cloneNode(true);
+            const resultClone = resultDiv.cloneNode(true);
+            tempContainer.appendChild(formClone);
+            tempContainer.appendChild(resultClone);
+
+            const buttonContainer = tempContainer.querySelector('.button-container');
+            if (buttonContainer) buttonContainer.remove();
+
+            html2canvas(tempContainer).then(canvas => {
+                const imageData = canvas.toDataURL('image/png');
+                const url = 'https://stockcorp.github.io/crypto_leverage.html';
+                const encodedUrl = encodeURIComponent(url);
+                const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`;
+                window.open(facebookUrl, '_blank');
+                alert('Facebook不支援直接分享圖片，請下載圖片後手動上傳至Facebook。圖片已自動下載。');
+                const link = document.createElement('a');
+                link.download = 'crypto_leverage_result.png';
+                link.href = imageData;
+                link.click();
+                tempContainer.innerHTML = '';
+            });
+        }
+
+        // 漢堡選單控制
+        function toggleMobileNav() {
+            const mobileNav = document.getElementById('mobile-nav');
+            mobileNav.classList.toggle('active');
+        }
+
+        function toggleMobileDropdown(dropdownId) {
+            const dropdown = document.getElementById(dropdownId);
+            dropdown.classList.toggle('active');
+        }
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'961301a83ac5f234',t:'MTc1Mjg1MjQ4MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
