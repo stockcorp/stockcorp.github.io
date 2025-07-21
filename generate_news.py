@@ -1,8 +1,4 @@
-# 重新產生適用於 GitHub Actions 的 generate_news.py，不含 /mnt/data 相關路徑操作
-clean_path = "/mnt/data/github_ready_package"
-os.makedirs(clean_path, exist_ok=True)
 
-generate_news_py_clean = '''
 import os
 import openai
 import feedparser
@@ -66,7 +62,7 @@ def main():
     raw_news = fetch_latest_article(category)
     article = summarize_with_gpt(raw_news)
 
-    new_block = f"[{datetime.now().strftime('%Y-%m-%d')}][{category}]\\n{article}\\n原始連結：{raw_news['link']}\\n"
+    new_block = f"[{datetime.now().strftime('%Y-%m-%d')}][{category}]\n{article}\n原始連結：{raw_news['link']}\n"
 
     if os.path.exists("content.txt"):
         with open("content.txt", "r", encoding="utf-8") as f:
@@ -75,7 +71,7 @@ def main():
         old = ""
 
     with open("content.txt", "w", encoding="utf-8") as f:
-        f.write(new_block + "\\n" + old)
+        f.write(new_block + "\n" + old)
 
     img_path = get_next_image_filename()
     os.makedirs(os.path.dirname(img_path), exist_ok=True)
@@ -86,11 +82,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-'''
-
-# 寫入清理後的版本
-py_path = f"{clean_path}/generate_news.py"
-with open(py_path, "w", encoding="utf-8") as f:
-    f.write(generate_news_py_clean)
-
-py_path
