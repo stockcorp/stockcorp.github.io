@@ -36,4 +36,4 @@ jobs:
         git pull origin main
         git add content.txt last_image_id.txt img/content/
         git commit -m "自動每日更新新聞 $(date +'%Y-%m-%d %H:%M:%S')" || echo "No changes to commit"
-        git push origin HEAD:main
+        git remote set-url origin https://x-access-token:${GH_PAT}@github.com/${{ github.repository }}
