@@ -1,13 +1,8 @@
-import os
-import shutil
+# 重新產生適用於 GitHub Actions 的 generate_news.py，不含 /mnt/data 相關路徑操作
+clean_path = "/mnt/data/github_ready_package"
+os.makedirs(clean_path, exist_ok=True)
 
-# 打包完整修正版本，保證 generate_news.py 會寫入正確目錄、圖片與內容能部署
-base_path = "/mnt/data/auto_news_package"
-os.makedirs(base_path + "/img/content", exist_ok=True)
-os.makedirs(base_path + "/.github/workflows", exist_ok=True)
-
-# generate_news.py
-generate_news_py = '''
+generate_news_py_clean = '''
 import os
 import openai
 import feedparser
@@ -73,8 +68,11 @@ def main():
 
     new_block = f"[{datetime.now().strftime('%Y-%m-%d')}][{category}]\\n{article}\\n原始連結：{raw_news['link']}\\n"
 
-    with open("content.txt", "r", encoding="utf-8") as f:
-        old = f.read() if os.path.exists("content.txt") else ""
+    if os.path.exists("content.txt"):
+        with open("content.txt", "r", encoding="utf-8") as f:
+            old = f.read()
+    else:
+        old = ""
 
     with open("content.txt", "w", encoding="utf-8") as f:
         f.write(new_block + "\\n" + old)
@@ -82,7 +80,7 @@ def main():
     img_path = get_next_image_filename()
     os.makedirs(os.path.dirname(img_path), exist_ok=True)
     with open(img_path, "wb") as f:
-        f.write(b"PLACEHOLDER_IMAGE")  # 你可替換為真正圖片生成
+        f.write(b"PLACEHOLDER_IMAGE")  # 這裡你之後可替換成真實圖片生成程式
 
     print(f"✅ 新聞與圖片已寫入：{img_path}")
 
@@ -90,57 +88,9 @@ if __name__ == "__main__":
     main()
 '''
 
-# GitHub Actions workflow yml
-workflow_yml = '''
-name: 每日自動更新新聞與圖片
+# 寫入清理後的版本
+py_path = f"{clean_path}/generate_news.py"
+with open(py_path, "w", encoding="utf-8") as f:
+    f.write(generate_news_py_clean)
 
-on:
-  schedule:
-    - cron: '0 1 * * 1-6'  # 台灣時間早上 9 點
-  workflow_dispatch:
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
-
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.10'
-
-    - name: Install dependencies
-      run: pip install openai feedparser
-
-    - name: Run script
-      env:
-        OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-      run: python3 generate_news.py
-
-    - name: Commit and Push
-      run: |
-        git config --global user.name "github-actions"
-        git config --global user.email "github-actions@users.noreply.github.com"
-        git add content.txt last_image_id.txt img/content/*
-        git commit -m "每日自動更新新聞與圖片 $(date '+%F %T')" || echo "Nothing to commit"
-        git push https://x-access-token:${{ secrets.PERSONAL_TOKEN }}@github.com/${{ github.repository }} HEAD:main
-'''
-
-# 寫入檔案
-with open(f"{base_path}/generate_news.py", "w", encoding="utf-8") as f:
-    f.write(generate_news_py)
-
-with open(f"{base_path}/.github/workflows/update-news.yml", "w", encoding="utf-8") as f:
-    f.write(workflow_yml)
-
-# 加入 .gitkeep 確保資料夾可部署
-with open(f"{base_path}/img/content/.gitkeep", "w") as f:
-    f.write("")
-
-# 打包為 zip
-shutil.make_archive("/mnt/data/auto_news_system", "zip", base_path)
-
-"/mnt/data/auto_news_system.zip"
+py_path
