@@ -18,7 +18,7 @@ jobs:
           python-version: 3.11
 
       - name: Install dependencies
-        run: pip install openai requests feedparser
+        run: pip install openai==0.28.1 requests feedparser
 
       - name: Run Generator
         env:
