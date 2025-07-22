@@ -27,7 +27,7 @@ jobs:
       run: python3 generate_news.py
 
     - name: Commit 並推送更新內容
-      env:
+env:
         GH_PAT: ${{ secrets.GH_PAT }}
       run: |
         git config --global user.name "github-actions"
