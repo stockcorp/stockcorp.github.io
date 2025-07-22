@@ -8,11 +8,11 @@ from datetime import datetime
 client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 CATEGORY_SOURCES = {
-    "台股": ["https://www.cnyes.com/rss/news/cat/tw_stock", "https://tw.stock.yahoo.com/rss/sitemap.xml"],  # 更新 Yahoo 為有效 sitemap RSS (可解析新聞連結)
+    "台股": ["https://www.cnyes.com/rss/news/cat/tw_stock", "https://tw.stock.yahoo.com/rss/sitemap.xml"],
     "幣圈": ["https://decrypt.co/feed", "https://cointelegraph.com/rss", "https://news.bitcoin.com/feed/"],
     "美股": ["https://www.marketwatch.com/rss/topstories", "https://www.cnbc.com/id/100003114/device/rss/rss.html"],
-    "ETF": ["https://www.etftrends.com/feed/", "https://seekingalpha.com/tag/etf.rss"],  # 更新 Seeking Alpha 為有效 ETF tag RSS
-    "黃金": ["https://www.kitco.com/news/category/mining/rss", "https://www.kitco.com/rss/gold-live.xml"]  # 更新為 Kitco 有效金礦與金價 RSS (gold.org 無效，移除)
+    "ETF": ["https://www.etftrends.com/feed/", "https://seekingalpha.com/tag/etf.rss"],
+    "黃金": ["https://www.kitco.com/news/category/mining/rss", "https://www.kitco.com/rss/gold-live.xml"]
 }
 
 def get_today_category():
@@ -35,7 +35,7 @@ def fetch_latest_article(category):
     return {"title": "找不到新聞", "summary": "請檢查來源或稍後重試。", "link": ""}
 
 def summarize_with_gpt(news):
-    prompt = f"""你是一位財經新聞編輯，請根據以下新聞標題與摘要，撰寫一篇全新、自然、有條理、約 500～1000 字的中文財經新聞，避免抄襲，語氣自然易讀，可補充背景與分析觀點。
+    prompt = f"""你是一位財經新聞編輯，請根據以下新聞標題與摘要，撰寫一篇全新、自然、有條理、約 500～1000 字的中文財經新聞，避免抄襲，語氣自然易讀，可補充背景與分析觀點。用 HTML 標籤（<h2>, <p>）組織內容，包含簡短引言、分析和結論。
 
 新聞標題：{news["title"]}
 新聞摘要：{news["summary"]}
@@ -71,16 +71,29 @@ def get_next_image_filename():
     next_id = last_id + 1
     with open("last_image_id.txt", "w") as f:
         f.write(str(next_id))
-    return f"img/content/{next_id}.jpg"
+    return f"{next_id}.jpg", f"{next_id}-1.jpg"
 
 def main():
     category = get_today_category()
     print(f"▶️ 今日主題：{category}")
     raw_news = fetch_latest_article(category)
     article = summarize_with_gpt(raw_news)
+    image_name, image_name_alt = get_next_image_filename()
+    img_path = f"img/content/{image_name}"
 
-    new_block = f"[{datetime.now().strftime('%Y-%m-%d')}][{category}]\n{article}\n原始連結：{raw_news['link']}\n"
+    # 生成標準格式
+    current_date = datetime.now().strftime('%Y-%m-%d')
+    title = raw_news["title"][:50] + "..." if len(raw_news["title"]) > 50 else raw_news["title"]
+    new_block = f"""[2025-07-22][{category}]
+title: {title}
+images: {image_name},{image_name_alt}
+fontSize: 16px
+date: {current_date}
+content: {article}<p><img src="/img/content/{image_name}"></p><p>原始連結：<a href="{raw_news['link']}">{raw_news['link']}</a></p>
+---
+"""
 
+    # 讀取現有內容並追加
     if os.path.exists("content.txt"):
         with open("content.txt", "r", encoding="utf-8") as f:
             old = f.read()
@@ -90,7 +103,7 @@ def main():
     with open("content.txt", "w", encoding="utf-8") as f:
         f.write(new_block + "\n" + old)
 
-    img_path = get_next_image_filename()
+    # 保存圖片
     os.makedirs(os.path.dirname(img_path), exist_ok=True)
     image_data = generate_image(raw_news["title"], article)
     with open(img_path, "wb") as f:
