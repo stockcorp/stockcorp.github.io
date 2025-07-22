@@ -34,25 +34,27 @@ def fetch_latest_article(category):
             print(f"Error fetching {url}: {e}")
     return {"title": "找不到新聞", "summary": "請檢查來源或稍後重試。", "link": ""}
 
-def summarize_with_gpt(news):
-    prompt = f"""
-你是一位專業財經新聞編輯，請根據以下新聞標題與摘要，撰寫一篇全新的、深度的、自然流暢且具備觀點的中文財經新聞報導：
+def generate_chinese_title(raw_title):
+    prompt = f"請將以下英文新聞標題翻譯成吸引人的中文標題，適合財經新聞，保持原意但更生動：{raw_title}"
+    response = client.chat.completions.create(
+        model="gpt-3.5-turbo",
+        messages=[{"role": "user", "content": prompt}],
+        temperature=0.7,
+    )
+    return response.choices[0].message.content.strip()
 
-1. 使用 HTML 格式（<h2>、<p>、<ol>、<li>）。
-2. 嚴禁抄襲，應使用你自己的語言改寫並擴展。
-3. 文章長度需達 1200 至 2000 字。
-4. 應包含引言、現況、深度分析、未來展望、結論與免責聲明等段落。
+def summarize_with_gpt(news):
+    prompt = f"""你是一位財經新聞編輯，請根據以下新聞標題與摘要，撰寫一篇全新、自然、有條理、約1200～2000字的中文財經新聞，避免抄襲，語氣自然易讀，可補充背景與分析觀點。用自己的話擴充內容，使其豐富不空洞，包括詳細的背景介紹、數據分析、專家觀點、潛在影響和投資建議。用 HTML 標籤（<h2>, <p>, <ol>, <li>, <strong> 等）組織內容，包含引言、正文分析、結論，並在結尾添加免責聲明：'<p><strong>注意</strong>：本文僅提供分析和資訊，不構成投資建議。投資者應根據自身風險偏好和市場條件進行決策。</p>'。
 
 新聞標題：{news["title"]}
 新聞摘要：{news["summary"]}
 
-請撰寫新聞全文（1200~2000 字）：
+請開始撰寫：
 """
     response = client.chat.completions.create(
-        model="gpt-4o",
+        model="gpt-3.5-turbo",
         messages=[{"role": "user", "content": prompt}],
         temperature=0.7,
-        max_tokens=4096
     )
     return response.choices[0].message.content.strip()
 
@@ -73,8 +75,8 @@ def get_next_image_filename():
     try:
         with open("last_image_id.txt", "r") as f:
             last_id = int(f.read().strip())
-    except FileNotFoundError:
-        last_id = 12
+    except:
+        last_id = 12  # 從12開始，下一個是13
     next_id = last_id + 1
     with open("last_image_id.txt", "w") as f:
         f.write(str(next_id))
@@ -84,19 +86,21 @@ def main():
     category = get_today_category()
     print(f"▶️ 今日主題：{category}")
     raw_news = fetch_latest_article(category)
+    chinese_title = generate_chinese_title(raw_news["title"])
     article = summarize_with_gpt(raw_news)
 
     img_path = get_next_image_filename()
     os.makedirs(os.path.dirname(img_path), exist_ok=True)
-    image_data = generate_image(raw_news["title"], article)
+    image_data = generate_image(chinese_title, article)
     with open(img_path, "wb") as f:
         f.write(image_data)
 
+    # 生成標準格式的新塊
     current_date = datetime.now().strftime('%Y-%m-%d')
-    title = raw_news["title"][:50] + "..." if len(raw_news["title"]) > 50 else raw_news["title"]
     image_name = os.path.basename(img_path)
-    new_block = f"""title: {title}
-images: {image_name},{image_name.replace('.jpg', '-1.jpg')}
+    image_alt = image_name.replace('.jpg', '-1.jpg')  # 假設第二張圖是-1
+    new_block = f"""title: {chinese_title}
+images: {image_name},{image_alt}
 fontSize:16px
 date:{current_date}
 content:{article}
@@ -105,6 +109,7 @@ content:{article}
 ---
 """
 
+    # 追加到 content.txt
     if os.path.exists("content.txt"):
         with open("content.txt", "r", encoding="utf-8") as f:
             old = f.read()
