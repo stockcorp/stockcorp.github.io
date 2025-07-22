@@ -37,14 +37,14 @@ def fetch_latest_article(category):
 def generate_chinese_title(raw_title):
     prompt = f"請將以下英文新聞標題翻譯成吸引人的中文標題，適合財經新聞，保持原意但更生動：{raw_title}"
     response = client.chat.completions.create(
-        model="gpt-3.5-turbo",
+        model="gpt-4o",
         messages=[{"role": "user", "content": prompt}],
         temperature=0.7,
     )
     return response.choices[0].message.content.strip()
 
 def summarize_with_gpt(news):
-    prompt = f"""你是一位財經新聞編輯，請根據以下新聞標題與摘要，撰寫一篇全新、自然、有條理、約1200～2000字的中文財經新聞，避免抄襲，語氣自然易讀，可補充背景與分析觀點。用自己的話擴充內容，使其豐富不空洞，包括詳細的背景介紹、數據分析、專家觀點、潛在影響和投資建議。用 HTML 標籤（<h2>, <p>, <ol>, <li>, <strong> 等）組織內容，包含引言、正文分析、結論，並在結尾添加免責聲明：'<p><strong>注意</strong>：本文僅提供分析和資訊，不構成投資建議。投資者應根據自身風險偏好和市場條件進行決策。</p>'。
+    prompt = f"""你是一位財經新聞編輯，請根據以下新聞標題與摘要，撰寫一篇全新、自然、有條理、至少1200～2000字的中文財經新聞，避免抄襲，語氣自然易讀，可補充背景與分析觀點。用自己的話擴充內容，使其豐富不空洞，包括詳細的背景介紹、數據分析、專家觀點、潛在影響和投資建議。用 HTML 標籤（<h2>, <p>, <ol>, <li>, <strong> 等）組織內容，包含引言、正文分析、結論，並在結尾添加免責聲明：'<p><strong>注意</strong>：本文僅提供分析和資訊，不構成投資建議。投資者應根據自身風險偏好和市場條件進行決策。</p>'。確保內容詳細、邏輯流暢，避免空洞描述。
 
 新聞標題：{news["title"]}
 新聞摘要：{news["summary"]}
@@ -52,11 +52,14 @@ def summarize_with_gpt(news):
 請開始撰寫：
 """
     response = client.chat.completions.create(
-        model="gpt-3.5-turbo",
+        model="gpt-4o",
         messages=[{"role": "user", "content": prompt}],
         temperature=0.7,
+        max_tokens=4096
     )
-    return response.choices[0].message.content.strip()
+    article = response.choices[0].message.content.strip()
+    article = article.replace("\n", "").replace("  ", " ").strip()
+    return article
 
 def generate_image(news_title, article_summary):
     image_prompt = f"生成一張與這篇中文財經新聞相關的專業插圖，風格現代、吸引人：{news_title} - {article_summary[:200]}"
@@ -76,7 +79,7 @@ def get_next_image_filename():
         with open("last_image_id.txt", "r") as f:
             last_id = int(f.read().strip())
     except:
-        last_id = 12  # 從12開始，下一個是13
+        last_id = 12
     next_id = last_id + 1
     with open("last_image_id.txt", "w") as f:
         f.write(str(next_id))
@@ -95,21 +98,18 @@ def main():
     with open(img_path, "wb") as f:
         f.write(image_data)
 
-    # 生成標準格式的新塊
     current_date = datetime.now().strftime('%Y-%m-%d')
     image_name = os.path.basename(img_path)
-    image_alt = image_name.replace('.jpg', '-1.jpg')  # 假設第二張圖是-1
+    image_alt = image_name.replace('.jpg', '-1.jpg')
     new_block = f"""title: {chinese_title}
 images: {image_name},{image_alt}
 fontSize:16px
 date:{current_date}
-content:{article}
-<p>原始連結：{raw_news['link']}</p>
+content: {article}<p>原始連結：{raw_news['link']}</p>
 
 ---
 """
 
-    # 追加到 content.txt
     if os.path.exists("content.txt"):
         with open("content.txt", "r", encoding="utf-8") as f:
             old = f.read()
