@@ -746,7 +746,6 @@
                 content.id = `content-${i}`;
                 const fontSizeStyle = article.fontSize ? `font-size: ${article.fontSize};` : '';
                 content.innerHTML = `
-                    <h2>${article.title}</h2>
                     <div style="${fontSizeStyle}">${article.content}</div>
                     <div class="article-comments">
                         <h3>文章留言</h3>
@@ -809,6 +808,8 @@
             });
             document.getElementById(`content-${index}`).classList.add('active');
             window.scrollTo({ top: document.getElementById(`content-${index}`).offsetTop, behavior: 'smooth' });
+    document.title = articles[index].title + " - 股市企業研究院";
+    history.replaceState(null, "", "#article-" + index);
         }
 
         // 輪播框控制
