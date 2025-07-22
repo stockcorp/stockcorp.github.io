@@ -57,7 +57,18 @@ def summarize_with_gpt(news):
         temperature=0.7,
         max_tokens=4096
     )
+
     article = response.choices[0].message.content.strip()
+
+    # ✅ 移除開頭的 ```html 或 ```，避免多餘格式符號污染
+    if article.startswith("```html"):
+        article = article[7:]
+    if article.startswith("```"):
+        article = article[3:]
+    if article.endswith("```"):
+        article = article[:-3]
+
+    # ✅ 壓縮多餘換行空白（但保留 HTML 結構）
     article = article.replace("\n", "").replace("  ", " ").strip()
     return article
 
