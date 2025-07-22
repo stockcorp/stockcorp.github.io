@@ -35,7 +35,7 @@ def fetch_latest_article(category):
     return {"title": "找不到新聞", "summary": "請檢查來源或稍後重試。", "link": ""}
 
 def summarize_with_gpt(news):
-    prompt = f"""你是一位財經新聞編輯，請根據以下新聞標題與摘要，撰寫一篇全新、自然、有條理、約 500～1000 字的中文財經新聞，避免抄襲，語氣自然易讀，可補充背景與分析觀點。用 HTML 標籤（<h2>, <p>）組織內容，包含簡短引言、分析和結論。
+    prompt = f"""你是一位財經新聞編輯，請根據以下新聞標題與摘要，撰寫一篇全新、自然、有條理、約 500～1000 字的中文財經新聞，避免抄襲，語氣自然易讀，可補充背景與分析觀點。用 HTML 標籤（<h2>, <p>, <ol>, <li> 等）組織內容，包含引言、正文分析、結論和免責聲明。
 
 新聞標題：{news["title"]}
 新聞摘要：{news["summary"]}
@@ -66,34 +66,40 @@ def get_next_image_filename():
     try:
         with open("last_image_id.txt", "r") as f:
             last_id = int(f.read().strip())
-    except:
-        last_id = 12
+    except FileNotFoundError:
+        last_id = 12  # 從12開始，下一個是13
     next_id = last_id + 1
     with open("last_image_id.txt", "w") as f:
         f.write(str(next_id))
-    return f"{next_id}.jpg", f"{next_id}-1.jpg"
+    return f"img/content/{next_id}.jpg"
 
 def main():
     category = get_today_category()
     print(f"▶️ 今日主題：{category}")
     raw_news = fetch_latest_article(category)
     article = summarize_with_gpt(raw_news)
-    image_name, image_name_alt = get_next_image_filename()
-    img_path = f"img/content/{image_name}"
 
-    # 生成標準格式
+    img_path = get_next_image_filename()
+    os.makedirs(os.path.dirname(img_path), exist_ok=True)
+    image_data = generate_image(raw_news["title"], article)
+    with open(img_path, "wb") as f:
+        f.write(image_data)
+
+    # 生成標準格式的新塊
     current_date = datetime.now().strftime('%Y-%m-%d')
     title = raw_news["title"][:50] + "..." if len(raw_news["title"]) > 50 else raw_news["title"]
-    new_block = f"""[2025-07-22][{category}]
-title: {title}
-images: {image_name},{image_name_alt}
-fontSize: 16px
-date: {current_date}
-content: {article}<p><img src="/img/content/{image_name}"></p><p>原始連結：<a href="{raw_news['link']}">{raw_news['link']}</a></p>
+    image_name = os.path.basename(img_path)
+    new_block = f"""title: {title}
+images: {image_name},{image_name.replace('.jpg', '-1.jpg')}
+fontSize:16px
+date:{current_date}
+content:{article}
+<p>原始連結：{raw_news['link']}</p>
+
 ---
 """
 
-    # 讀取現有內容並追加
+    # 追加到 content.txt
     if os.path.exists("content.txt"):
         with open("content.txt", "r", encoding="utf-8") as f:
             old = f.read()
@@ -102,12 +108,6 @@ content: {article}<p><img src="/img/content/{image_name}"></p><p>原始連結：
 
     with open("content.txt", "w", encoding="utf-8") as f:
         f.write(new_block + "\n" + old)
-
-    # 保存圖片
-    os.makedirs(os.path.dirname(img_path), exist_ok=True)
-    image_data = generate_image(raw_news["title"], article)
-    with open(img_path, "wb") as f:
-        f.write(image_data)
 
     print(f"✅ 新聞與圖片已寫入：{img_path}")
 
