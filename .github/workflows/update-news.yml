@@ -2,7 +2,7 @@ name: 每日自動更新新聞與圖片
 
 on:
   schedule:
-    - cron: '0 1 * * 1-6'  # 台灣時間早上 9 點
+    - cron: '0 1 * * 1-6'  # UTC 01:00，等於台灣時間早上 9 點（周一到周六）
   workflow_dispatch:
 
 jobs:
@@ -19,7 +19,7 @@ jobs:
         python-version: '3.10'
 
     - name: 安裝依賴套件
-      run: pip install openai==0.28.1 requests feedparser
+      run: pip install openai requests feedparser
 
     - name: 執行每日新聞生成腳本
       env:
@@ -27,7 +27,7 @@ jobs:
       run: python3 generate_news.py
 
     - name: Commit 並推送更新內容
-env:
+      env:
         GH_PAT: ${{ secrets.GH_PAT }}
       run: |
         git config --global user.name "github-actions"
@@ -35,5 +35,5 @@ env:
         git remote set-url origin https://x-access-token:${GH_PAT}@github.com/${{ github.repository }}
         git pull origin main
         git add content.txt last_image_id.txt img/content/
-        git commit -m "自動每日更新新聞 $(date +'%Y-%m-%d %H:%M:%S')" || echo "No changes to commit"
+        git commit -m "自動每日更新新聞與圖片 $(date +'%Y-%m-%d %H:%M:%S')" || echo "No changes to commit"
         git push
