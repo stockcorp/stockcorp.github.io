@@ -60,15 +60,10 @@ def summarize_with_gpt(news, img_id):
         max_tokens=4096
     )
     article = res.choices[0].message.content.strip()
-    # 移除程式碼區塊 
-html 與
-
-    for token in ["
-html", "
-"]:
+    # 移除程式碼區塊 ```html 與 ```
+    for token in ["```html", "```"]:
         if article.startswith(token): article = article[len(token):]
-        if article.endswith("
-"): article = article[:-3]
+        if article.endswith("```"): article = article[:-3]
     # 插入圖片標籤
     image_tag = f'<img src="/img/content/{img_id}">'
     if "<p>" in article:
