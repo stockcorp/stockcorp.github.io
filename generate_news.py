@@ -59,9 +59,8 @@ def generate_chinese_title(raw_title):
     return res.choices[0].message.content.strip()
 
 def summarize_with_gpt(news, img_id):
-    prompt = f"""你是一位財經新聞編輯，請根據以下新聞標題與摘要，撰寫一篇全新、自然、有條理、至少1200～2000字的中文財經新聞。避免抄襲，語氣自然易讀，可補充背景與分析觀點。用 HTML 結構（<h2>, <p>, <ol>, <li>, <strong>）組織，包含引言、分析、結論，最後加上：'<p><strong>注意</strong>：本文僅提供分析和資訊，不構成投資建議。投資者應根據自身風險偏好和市場條件進行決策。</p>'。
+    prompt = f"""你是一位財經新聞編輯，請根據以下新聞摘要，撰寫一篇全新、自然、有條理、至少1200～2000字的中文財經新聞。避免抄襲，語氣自然易讀，可補充背景與分析觀點。用 HTML 結構（<h2>, <p>, <ol>, <li>, <strong>）組織，包含引言、分析、結論，最後加上：'<p><strong>注意</strong>：本文僅提供分析和資訊，不構成投資建議。投資者應根據自身風險偏好和市場條件進行決策。</p>'。
 
-新聞標題：{news["title"]}
 新聞摘要：{news["summary"]}
 
 請開始撰寫：
@@ -86,9 +85,9 @@ def summarize_with_gpt(news, img_id):
 
 def generate_image(prompt_text, person_name=None):
     if person_name:
-        full_prompt = f"{person_name} 的剪影，黑色高對比風格，背景具戲劇張力，模擬高質感財經電影海報"
+        full_prompt = f"{person_name} 的黑色剪影，站立於背景中央，構圖簡潔有力，背景使用深色戲劇光影，整體風格如電影宣傳海報，符合主題：{prompt_text}"
     else:
-        full_prompt = f"與下列主題相關的專業財經插圖，現代風格、有張力、有設計感、以新聞重點為中心：{prompt_text[:200]}"
+        full_prompt = f"財經新聞主題「{prompt_text}」的簡潔插圖，構圖強烈，深色背景、中心主題明確，風格如高質感電影海報，具有專業感與戲劇張力"
     try:
         res = client.images.generate(
             model="dall-e-3",
