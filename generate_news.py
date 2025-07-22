@@ -60,10 +60,15 @@ def summarize_with_gpt(news, img_id):
         max_tokens=4096
     )
     article = res.choices[0].message.content.strip()
-    # 移除程式碼區塊 ```html 與 ```
-    for token in ["```html", "```"]:
+    # 移除程式碼區塊 
+html 與
+
+    for token in ["
+html", "
+"]:
         if article.startswith(token): article = article[len(token):]
-        if article.endswith("```"): article = article[:-3]
+        if article.endswith("
+"): article = article[:-3]
     # 插入圖片標籤
     image_tag = f'<img src="/img/content/{img_id}">'
     if "<p>" in article:
@@ -74,14 +79,7 @@ def summarize_with_gpt(news, img_id):
     return article.replace("\n", "").replace("  ", " ").strip()
 
 def generate_image(prompt_text):
-    image_prompt = (
-        f"以電影海報風格呈現這則中文財經新聞，要能夠符合財金新聞專業性"
-        f"如沒有提告任何知名人物，則單純以該新聞主題產生專業財金新聞圖片，"
-        f"如有提到知名人物，包含相關人物（如新聞中提及的國際領袖、金融名人或政商代表），"
-        f"人物以剪影黑影方式呈現，不露臉但具代表性。"
-        f"背景具戲劇張力、高對比光影，包含金融、科技、政經氛圍。"
-        f"風格現代、專業、吸睛，主題：{prompt_text[:200]}"
-    )
+    image_prompt = f"生成一張與這篇中文財經新聞相關的專業插圖，風格現代、吸引人：{prompt_text[:200]}"
     res = client.images.generate(
         model="dall-e-3",
         prompt=image_prompt,
@@ -89,6 +87,8 @@ def generate_image(prompt_text):
         quality="standard",
         n=1,
     )
+    image_url = res.data[0].url
+    return requests.get(image_url).content
 
 def get_next_image_id():
     try:
@@ -121,7 +121,7 @@ def main():
 images: {img_name},{img_alt}
 fontSize:16px
 date:{today}
-content: {article}<p>原始連結：<a href="{news['link']}">點此查看</a></p>
+content: {article}<p>原始連結：{news['link']}</p>
 
 ---
 """
