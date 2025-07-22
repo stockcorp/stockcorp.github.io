@@ -116,7 +116,7 @@ def main():
 images: {img_name},{img_alt}
 fontSize:16px
 date:{today}
-content: {article}<p>原始連結：{news['link']}</p>
+content: {article}<p>原始連結：<a href="{news['link']}">點此查看</a></p>
 
 ---
 """
