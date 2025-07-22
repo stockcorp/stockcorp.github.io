@@ -1,17 +1,18 @@
-
 import os
 import openai
 import feedparser
+import requests
 from datetime import datetime
 
-openai.api_key = os.getenv("OPENAI_API_KEY")
+# 初始化 OpenAI client
+client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 CATEGORY_SOURCES = {
-    "台股": ["https://www.cnyes.com/rss/news/cat/tw_stock", "https://tw.stock.yahoo.com/rss"],
+    "台股": ["https://www.cnyes.com/rss/news/cat/tw_stock", "https://tw.stock.yahoo.com/rss/sitemap.xml"],  # 更新 Yahoo 為有效 sitemap RSS (可解析新聞連結)
     "幣圈": ["https://decrypt.co/feed", "https://cointelegraph.com/rss", "https://news.bitcoin.com/feed/"],
     "美股": ["https://www.marketwatch.com/rss/topstories", "https://www.cnbc.com/id/100003114/device/rss/rss.html"],
-    "ETF": ["https://www.etftrends.com/feed/", "https://seekingalpha.com/market-outlook/etfs.xml"],
-    "黃金": ["https://www.kitco.com/rss/", "https://www.gold.org/rss"]
+    "ETF": ["https://www.etftrends.com/feed/", "https://seekingalpha.com/tag/etf.rss"],  # 更新 Seeking Alpha 為有效 ETF tag RSS
+    "黃金": ["https://www.kitco.com/news/category/mining/rss", "https://www.kitco.com/rss/gold-live.xml"]  # 更新為 Kitco 有效金礦與金價 RSS (gold.org 無效，移除)
 }
 
 def get_today_category():
@@ -20,15 +21,18 @@ def get_today_category():
 
 def fetch_latest_article(category):
     for url in CATEGORY_SOURCES.get(category, []):
-        feed = feedparser.parse(url)
-        if feed.entries:
-            entry = feed.entries[0]
-            return {
-                "title": entry.title,
-                "summary": entry.get("summary", ""),
-                "link": entry.link
-            }
-    return {"title": "找不到新聞", "summary": "", "link": ""}
+        try:
+            feed = feedparser.parse(url)
+            if feed.entries:
+                entry = feed.entries[0]
+                return {
+                    "title": entry.title,
+                    "summary": entry.get("summary", ""),
+                    "link": entry.link
+                }
+        except Exception as e:
+            print(f"Error fetching {url}: {e}")
+    return {"title": "找不到新聞", "summary": "請檢查來源或稍後重試。", "link": ""}
 
 def summarize_with_gpt(news):
     prompt = f"""你是一位財經新聞編輯，請根據以下新聞標題與摘要，撰寫一篇全新、自然、有條理、約 500～1000 字的中文財經新聞，避免抄襲，語氣自然易讀，可補充背景與分析觀點。
@@ -38,12 +42,25 @@ def summarize_with_gpt(news):
 
 請開始撰寫：
 """
-    response = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo-16k",
+    response = client.chat.completions.create(
+        model="gpt-3.5-turbo",
         messages=[{"role": "user", "content": prompt}],
         temperature=0.7,
     )
     return response.choices[0].message.content.strip()
+
+def generate_image(news_title, article_summary):
+    image_prompt = f"生成一張與這篇中文財經新聞相關的專業插圖，風格現代、吸引人：{news_title} - {article_summary[:200]}"
+    image_response = client.images.generate(
+        model="dall-e-3",
+        prompt=image_prompt,
+        size="1024x1024",
+        quality="standard",
+        n=1,
+    )
+    image_url = image_response.data[0].url
+    image_data = requests.get(image_url).content
+    return image_data
 
 def get_next_image_filename():
     try:
@@ -75,8 +92,9 @@ def main():
 
     img_path = get_next_image_filename()
     os.makedirs(os.path.dirname(img_path), exist_ok=True)
+    image_data = generate_image(raw_news["title"], article)
     with open(img_path, "wb") as f:
-        f.write(b"PLACEHOLDER_IMAGE")  # 這裡你之後可替換成真實圖片生成程式
+        f.write(image_data)
 
     print(f"✅ 新聞與圖片已寫入：{img_path}")
 
