@@ -137,4 +137,4 @@ content: {article}<p>原始連結：{news['link']}</p>
     print(f"✅ 產出完成：{img_path}")
 
 if __name__ == "__main__":
-    main() 
+    main()
