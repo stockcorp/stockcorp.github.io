@@ -33,8 +33,17 @@ def fetch_random_article(category):
         except Exception as e:
             print(f"❌ Error fetching {url}: {e}")
     return random.choice(articles) if articles else {
-        "title": "找不到新聞", "summary": "請檢查來源或稍後重試。", "link": ""
+        "title": "找不到新聞", "summary": "請檢查來源或繳後重試。", "link": ""
     }
+
+def extract_main_person(news):
+    prompt = f"""以下是一篇財經新聞的標題與摘要，請找出是否提及明確的主角人物（例如總統、首相、財經名人等），並輸出該人物姓名。若沒有諁明人物，請只答「無」。\n\n標題：{news["title"]}\n摘要：{news["summary"]}\n\n請只輸出人物姓名或「無」："
+    response = client.chat.completions.create(
+        model="gpt-4o",
+        messages=[{"role": "user", "content": prompt}],
+        temperature=0.2
+    )
+    return response.choices[0].message.content.strip()
 
 def generate_chinese_title(raw_title):
     prompt = f"請將以下英文新聞標題翻譯成吸引人的中文標題，適合財經新聞，保持原意但更生動：{raw_title}"
@@ -46,13 +55,10 @@ def generate_chinese_title(raw_title):
     return res.choices[0].message.content.strip()
 
 def summarize_with_gpt(news, img_id):
-    prompt = f"""你是一位財經新聞編輯，請根據以下新聞標題與摘要，撰寫一篇全新、自然、有條理、至少1200～2000字的中文財經新聞。避免抄襲，語氣自然易讀，可補充背景與分析觀點。用 HTML 結構（<h2>, <p>, <ol>, <li>, <strong>）組織，包含引言、分析、結論，最後加上：'<p><strong>注意</strong>：本文僅提供分析和資訊，不構成投資建議。投資者應根據自身風險偏好和市場條件進行決策。</p>'。
-
+    prompt = f"""...
 新聞標題：{news["title"]}
 新聞摘要：{news["summary"]}
-
-請開始撰寫：
-"""
+請開始撰寫："""
     res = client.chat.completions.create(
         model="gpt-4o",
         messages=[{"role": "user", "content": prompt}],
@@ -60,16 +66,9 @@ def summarize_with_gpt(news, img_id):
         max_tokens=4096
     )
     article = res.choices[0].message.content.strip()
-    # 移除程式碼區塊 
-html 與
-
-    for token in ["
-html", "
-"]:
+    for token in ["```html", "```"]:
         if article.startswith(token): article = article[len(token):]
-        if article.endswith("
-"): article = article[:-3]
-    # 插入圖片標籤
+        if article.endswith("```"): article = article[:-3]
     image_tag = f'<img src="/img/content/{img_id}">'
     if "<p>" in article:
         parts = article.split("</p>", 1)
@@ -78,17 +77,29 @@ html", "
         article = image_tag + article
     return article.replace("\n", "").replace("  ", " ").strip()
 
-def generate_image(prompt_text):
-    image_prompt = f"生成一張與這篇中文財經新聞相關的專業插圖，風格現代、吸引人：{prompt_text[:200]}"
-    res = client.images.generate(
-        model="dall-e-3",
-        prompt=image_prompt,
-        size="1024x1024",
-        quality="standard",
-        n=1,
-    )
-    image_url = res.data[0].url
-    return requests.get(image_url).content
+def generate_image(prompt_text, person_name=None):
+    if person_name and person_name != "無":
+        image_prompt = (
+            f"{person_name} 的電影海報風格剪影圖，"
+            f"以黑影方式呈現人物，背景具有戰略感與財經象徵，風格現代、專業、吸眺"
+        )
+    else:
+        image_prompt = (
+            f"生成與以下財經主題相關的專業高質感描繪圖，風格現代、科技、戰略：{prompt_text[:200]}"
+        )
+    try:
+        res = client.images.generate(
+            model="dall-e-3",
+            prompt=image_prompt,
+            size="1024x1024",
+            quality="standard",
+            n=1,
+        )
+        image_url = res.data[0].url
+        return requests.get(image_url).content
+    except Exception as e:
+        print(f"❌ 產圖失敗：{e}")
+        return None
 
 def get_next_image_id():
     try:
@@ -105,6 +116,7 @@ def main():
     category = get_today_category()
     print(f"▶️ 今日分類：{category}")
     news = fetch_random_article(category)
+    person = extract_main_person(news)
     img_id = get_next_image_id()
     img_name = f"{img_id}.jpg"
     img_alt = f"{img_id}-1.jpg"
@@ -113,19 +125,22 @@ def main():
 
     img_path = f"img/content/{img_name}"
     os.makedirs(os.path.dirname(img_path), exist_ok=True)
+    image_data = generate_image(title, person)
+    if image_data is None:
+        print("❌ 圖片產生失敗，不更新")
+        return
     with open(img_path, "wb") as f:
-        f.write(generate_image(title))
+        f.write(image_data)
 
     today = datetime.now().strftime('%Y-%m-%d')
     block = f"""title: {title}
 images: {img_name},{img_alt}
 fontSize:16px
 date:{today}
-content: {article}<p>原始連結：{news['link']}</p>
+content: {article}<p>原始連結：<a href=\"{news['link']}\">點此查看</a></p>
 
 ---
 """
-    # 插入到 content.txt 頂部
     if os.path.exists("content.txt"):
         with open("content.txt", "r", encoding="utf-8") as f:
             old = f.read()
