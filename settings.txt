@@ -3,7 +3,7 @@
     "title": "股市企業研究院 - 最專業的財經與商業應用網站",
     "description": "股市企業研究院 - 最專業的財經與商業應用網站",
     "keywords": "",
-    "author": "",
+    "author": "股市企業研究院",
     "publisherName": "吉米理財學堂",
     "publisherUrl": "https://www.youtube.com/@%E5%90%89%E7%B1%B3%E7%90%86%E8%B2%A1%E5%AD%B8%E5%A0%82",
     "publisherEmail": "xbon510@gmail.com"
