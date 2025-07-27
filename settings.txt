@@ -6,11 +6,11 @@
   "seo": {
     "title": "專業最專業的財經與商業應用網站，提供最新資訊與深入文章，來自股市企業研究院。",
     "description": "專業最專業的財經與商業應用網站，提供最新資訊與深入文章，來自股市企業研究院。",
-    "keywords": "財經新聞,投資爆料,股票分析,理財爆報,財經新聞爆爆報",
-    "author": "財經新聞爆爆報",
-    "publisherName": "財經新聞爆爆報",
-    "publisherUrl": "https://www.youtube.com/@financeburst",
-    "publisherEmail": ""
+    "keywords": "最專業的財經與商業應用網站, 台股, 投資理財, 吉米理財學堂",
+    "author": "股市企業研究院",
+    "publisherName": "股市企業研究院",
+    "publisherUrl": "https://www.youtube.com/@%E5%90%89%E7%B1%B3%E7%90%86%E8%B2%A1%E5%AD%B8%E5%A0%82",
+    "publisherEmail": "xbon510@gmail.com"
   },
   "contentConfig": {
     "maxArticlesPerFeed": 5,
