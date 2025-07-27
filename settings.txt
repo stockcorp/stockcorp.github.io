@@ -6,7 +6,7 @@
     "author": "",
     "publisherName": "吉米理財學堂",
     "publisherUrl": "https://www.youtube.com/@%E5%90%89%E7%B1%B3%E7%90%86%E8%B2%A1%E5%AD%B8%E5%A0%82",
-    "publisherEmail": ""
+    "publisherEmail": "xbon510@gmail.com"
   },
   "newsTab": "",
   "technicalTab": "",
