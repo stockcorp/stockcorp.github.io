@@ -1,6 +1,6 @@
 {
   "seo": {
-    "title": "",
+    "title": "股市企業研究院 - 最專業的財經與商業應用網站",
     "description": "",
     "keywords": "",
     "author": "",
