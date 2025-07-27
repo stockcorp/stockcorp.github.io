@@ -122,7 +122,6 @@
     }
   ],
   "scheduleConfig": {
-    "time": "08:00",
     "count": 1
   }
 }
