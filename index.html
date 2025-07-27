@@ -40,8 +40,7 @@
         </script><!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3440199491716602"
-     crossorigin="anonymous"></script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3440199491716602" crossorigin="anonymous"></script>
     <!-- Google Tag Manager -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-Q32FFR42XT"></script>
     <script>
@@ -50,58 +49,41 @@
         gtag('js', new Date());
         gtag('config', 'G-Q32FFR42XT');
     </script>
-
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
     <!-- Facebook SDK -->
     <script>
-      window.fbAsyncInit = function() {
-        FB.init({
-          appId      : 'YOUR_APP_ID', // 請替換為您的 Facebook App ID
-          xfbml      : true,
-          version    : 'v18.0'
-        });
-      };
-      (function(d, s, id){
-         var js, fjs = d.getElementsByTagName(s)[0];
-         if (d.getElementById(id)) {return;}
-         js = d.createElement(s); js.id = id;
-         js.src = "https://connect.facebook.net/zh_TW/sdk.js";
-         fjs.parentNode.insertBefore(js, fjs);
-       }(document, 'script', 'facebook-jssdk'));
+        window.fbAsyncInit = function() {
+            FB.init({
+                appId: 'YOUR_APP_ID', // 請替換為您的 Facebook App ID
+                xfbml: true,
+                version: 'v18.0'
+            });
+        };
+        (function(d, s, id){
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) {return;}
+            js = d.createElement(s); js.id = id;
+            js.src = "https://connect.facebook.net/zh_TW/sdk.js";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
     </script>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="專業最專業的財經與商業應用網站，提供最新資訊與深入文章，來自股市企業研究院。">
-    <meta name="keywords" content="最專業的財經與商業應用網站, 台股, 投資理財, 吉米理財學堂">
-    <meta name="author" content="股市企業研究院">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="author" content="">
     <meta name="robots" content="index, follow">
-    <title>股市企業研究院 - 最專業的財經與商業應用網站</title>
-
+    <title></title>
     <!-- Open Graph Meta Tags -->
-    <meta property="og:title" content="股市企業研究院 - 最專業的財經與商業應用網站">
-    <meta property="og:description" content="探索最新財經資訊與深入文章，來自吉米理財學堂。">
-    <meta property="og:url" content="https://stockcorp.github.io/">
+    <meta property="og:title" content="">
+    <meta property="og:description" content="">
+    <meta property="og:url" content="">
     <meta property="og:type" content="website">
-
     <!-- Structured Data (JSON-LD) -->
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "Blog",
-        "name": "股市企業研究院最專業的財經與商業應用網站",
-        "url": "https://stockcorp.github.io/",
-        "description": "專業最專業的財經與商業應用網站，提供最新資訊與深入文章。",
-        "publisher": {
-            "@type": "Organization",
-            "name": "吉米理財學堂",
-            "url": "https://www.youtube.com/@吉米理財學堂"
-        }
-    }
-    </script>
-
+    <script type="application/ld+json"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: Arial, 'Noto Sans TC', sans-serif;
@@ -114,16 +96,13 @@
             max-width: 1200px;
             margin: 0 auto;
         }
-        /* Banner */
         .header {
             text-align: center;
-            background-image: url('/img/channels4_banner.jpg');
+            background-image: url('/img/banner.jpg');
             background-size: cover;
             background-position: center;
-            background-repeat: no-repeat;
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            position: relative;
             width: 100%;
             height: 150px;
             padding: 20px;
@@ -135,17 +114,14 @@
                 height: 80px;
                 padding: 10px;
                 background-size: contain;
-                background-position: center center;
             }
         }
         @media screen and (min-width: 601px) and (max-width: 900px) {
             .header {
                 height: 100px;
                 padding: 15px;
-                background-size: cover;
             }
         }
-        /* 導航選單 */
         .nav-tabs {
             display: flex;
             width: 100%;
@@ -164,7 +140,6 @@
             border-radius: 4px;
             margin: 4px;
             transition: background-color 0.3s ease;
-            position: relative;
         }
         .nav-tab:hover {
             background-color: #1e40af;
@@ -267,7 +242,6 @@
             from { transform: translateY(-10px); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
         }
-        /* 輪播框 */
         .carousel {
             position: relative;
             width: 100%;
@@ -304,7 +278,6 @@
             padding: 10px 15px;
             border-radius: 4px;
             text-shadow: 0 1px 2px rgba(0,0,0,0.5);
-            z-index: 10;
             text-align: center;
         }
         .carousel-button {
@@ -325,7 +298,6 @@
         .carousel-button.next {
             right: 10px;
         }
-        /* 文章列表 */
         .articles {
             display: flex;
             flex-direction: column;
@@ -338,7 +310,7 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             cursor: pointer;
             transition: transform 0.3s ease;
-            position: relative; /* 確保日期相對於卡片定位 */
+            position: relative;
         }
         .article-card:hover {
             transform: translateY(-5px);
@@ -351,15 +323,16 @@
         .article-card p {
             color: #666666;
             line-height: 1.6;
-            margin-bottom: 20px; /* 確保日期不會與內容重疊 */
+            margin-bottom: 20px;
         }
-        /* 確保日期固定顯示 */
         .article-card .article-date {
-            display: block !important;
-            opacity: 1 !important;
-			font-size: 16px; /* 調整字體大小 */
+            display: block;
+            font-size: 16px;
+            color: #666;
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
         }
-        /* 文章內容 */
         .article-content {
             display: none;
             background-color: #ffffff;
@@ -372,20 +345,40 @@
         .article-content.active {
             display: block;
         }
-        .article-content p, .article-content div {
-            margin: 10px 0;
-            line-height: 1.6;
-        }
-        /* 修改文章內容中的圖片樣式 */
         .article-content img {
             max-width: 100%;
             height: auto;
             object-fit: contain;
             border-radius: 8px;
             display: block;
-            margin: 0 auto;
+            margin: 10px auto;
         }
-        /* 文章留言板 */
+        .article-share {
+            margin-top: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+        .article-share a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: #ffffff;
+            border-radius: 50%;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+        .article-share a:hover {
+            background-color: #e0e0e0;
+            transform: scale(1.1);
+        }
+        .article-share img {
+            vertical-align: middle;
+            width: 32px;
+            height: 32px;
+        }
         .article-comments {
             margin-top: 20px;
             padding: 15px;
@@ -399,7 +392,6 @@
             color: #2563eb;
             margin-bottom: 10px;
         }
-        /* 全站留言板 */
         .facebook-comments {
             margin-top: 20px;
             padding: 20px;
@@ -413,7 +405,6 @@
             color: #2563eb;
             margin-bottom: 10px;
         }
-        /* 分頁 */
         .pagination {
             display: flex;
             justify-content: center;
@@ -445,13 +436,11 @@
             background-color: #d1d5db;
             cursor: not-allowed;
         }
-        /* 頁腳 */
         footer {
             text-align: center;
             margin-top: 20px;
             font-size: 14px;
             color: #666666;
-            width: 100%;
         }
         a {
             color: #2563eb;
@@ -461,31 +450,6 @@
         a:hover {
             color: #3b82f6;
         }
-        /* 響應式設計 */
-        @media screen and (max-width: 768px) {
-            .nav-tabs {
-                display: none;
-            }
-            .hamburger {
-                display: block;
-            }
-            .mobile-nav.active {
-                display: block;
-            }
-            .carousel {
-                height: 200px;
-            }
-            .carousel-title {
-                font-size: 20px;
-                padding: 8px 10px;
-            }
-        }
-        @media screen and (min-width: 769px) {
-            .mobile-nav {
-                display: none;
-            }
-        }
-        /* 浮動分享按鈕樣式 */
         .share-buttons {
             position: fixed;
             bottom: 20px;
@@ -498,12 +462,44 @@
         .share-button {
             display: inline-block;
             transition: opacity 0.2s;
+            background-color: #ffffff;
+            border-radius: 4px;
         }
         .share-button:hover {
             opacity: 0.8;
+            background-color: #e0e0e0;
         }
         .share-button img {
             vertical-align: middle;
+            width: 32px;
+            height: 32px;
+        }
+        @media screen and (max-width: 768px) {
+            .carousel {
+                height: 200px;
+            }
+            .carousel-title {
+                font-size: 20px;
+                padding: 8px 10px;
+            }
+            .share-buttons {
+                bottom: 10px;
+                left: 10px;
+            }
+            .nav-tabs {
+                display: none;
+            }
+            .hamburger {
+                display: block;
+            }
+            .mobile-nav.active {
+                display: block;
+            }
+        }
+        @media screen and (min-width: 769px) {
+            .mobile-nav {
+                display: none;
+            }
         }
     </style>
 </head>
@@ -517,12 +513,12 @@
 
         <!-- 導航選單 -->
         <div class="nav-tabs">
-            <a href="index.html" class="nav-tab">財經新聞</a>
+            <a href="index.html" class="nav-tab active">財經新聞</a>
             <a href="risk.html" class="nav-tab">即時資產風險</a>
             <div class="nav-tab dropdown">
                 投資理財計算機
                 <div class="dropdown-content">
-					<a href="crypto_leverage.html"><i class="fas fa-coins"></i>加密貨幣槓桿計算機</a>
+                    <a href="crypto_leverage.html"><i class="fas fa-coins"></i>加密貨幣槓桿計算機</a>
                     <a href="stock.html"><i class="fas fa-chart-line"></i>股票利潤計算機</a>
                     <a href="compound.html"><i class="fas fa-percentage"></i>複利計算機</a>
                     <a href="kelly.html"><i class="fas fa-calculator"></i>凱莉計算機</a>
@@ -540,7 +536,7 @@
                     <a href="house.html"><i class="fas fa-home"></i>房地產投資報酬率計算器</a>
                 </div>
             </div>
-            <a href="technical.html" class="nav-tab active">技術分析學習</a>
+            <a href="technical.html" class="nav-tab">技術分析學習</a>
             <a href="about.html" class="nav-tab">關於我們</a>
         </div>
 
@@ -550,6 +546,7 @@
             <a href="risk.html">即時資產風險</a>
             <a href="#" onclick="toggleMobileDropdown('investment-dropdown')">投資理財計算機</a>
             <div class="mobile-dropdown" id="investment-dropdown">
+                <a href="crypto_leverage.html"><i class="fas fa-coins"></i>加密貨幣槓桿計算機</a>
                 <a href="stock.html"><i class="fas fa-chart-line"></i>股票利潤計算機</a>
                 <a href="compound.html"><i class="fas fa-percentage"></i>複利計算機</a>
                 <a href="kelly.html"><i class="fas fa-calculator"></i>凱莉計算機</a>
@@ -564,51 +561,45 @@
                 <a href="quotation.html"><i class="fas fa-file-invoice-dollar"></i>報價單產生器</a>
                 <a href="house.html"><i class="fas fa-home"></i>房地產投資報酬率計算器</a>
             </div>
-            <a href="technical.html" class="active">技術分析學習</a>
+            <a href="technical.html">技術分析學習</a>
             <a href="about.html">關於我們</a>
         </div>
 
         <!-- 輪播框 -->
-        <div class="carousel" id="carousel">
-            <!-- 動態生成 -->
-        </div>
+        <div class="carousel" id="carousel"></div>
 
         <!-- 文章列表 -->
-        <div class="articles" id="articles">
-            <!-- 動態生成 -->
-        </div>
+        <div class="articles" id="articles"></div>
 
         <!-- 分頁 -->
-        <div class="pagination" id="pagination">
-            <!-- 動態生成 -->
-        </div>
+        <div class="pagination" id="pagination"></div>
 
         <!-- 全站 Facebook 留言板 -->
         <div class="facebook-comments">
             <h2>留言板</h2>
-            <div class="fb-comments" data-href="https://stockcorp.github.io/" data-width="100%" data-numposts="5"></div>
+            <div class="fb-comments" data-href="" data-width="100%" data-numposts="5"></div>
         </div>
 
         <!-- 頁腳 -->
         <footer>
-            <p>© 2025 <a href="https://www.youtube.com/@吉米理財學堂" target="_blank">吉米理財學堂</a>。保留所有權利。</p>
+            <p>© 2025 <a href="" target="_blank"></a>。保留所有權利。</p>
         </footer>
-    </div>
 
-    <!-- 浮動分享按鈕 -->
-    <div class="share-buttons">
-        <a href="https://www.facebook.com/sharer/sharer.php?u=https://stockcorp.github.io/" target="_blank" class="share-button facebook">
-            <img src="https://cdnjs.cloudflare.com/ajax/libs/simple-icons/10.0.0/facebook.svg" alt="Facebook Share" width="32" height="32">
-        </a>
-        <a href="https://x.com/intent/tweet?url=https://stockcorp.github.io/" target="_blank" class="share-button x">
-            <img src="https://cdnjs.cloudflare.com/ajax/libs/simple-icons/10.0.0/x.svg" alt="X Share" width="32" height="32">
-        </a>
-        <a href="https://www.instagram.com/?url=https://stockcorp.github.io/" target="_blank" class="share-button instagram">
-            <img src="https://cdnjs.cloudflare.com/ajax/libs/simple-icons/10.0.0/instagram.svg" alt="Instagram Share" width="32" height="32">
-        </a>
-        <a href="https://line.me/R/msg/text/?股票企業研究院%0D%0Ahttps://stockcorp.github.io/" target="_blank" class="share-button line">
-            <img src="https://cdnjs.cloudflare.com/ajax/libs/simple-icons/10.0.0/line.svg" alt="Line Share" width="32" height="32">
-        </a>
+        <!-- 浮動分享按鈕 -->
+        <div class="share-buttons">
+            <a href="https://www.facebook.com/sharer/sharer.php?u=" target="_blank" class="share-button facebook" title="分享到 Facebook">
+                <img src="https://cdnjs.cloudflare.com/ajax/libs/simple-icons/10.0.0/facebook.svg" alt="Facebook Share" width="32" height="32">
+            </a>
+            <a href="https://x.com/intent/tweet?url=" target="_blank" class="share-button x" title="分享到 X">
+                <img src="https://cdnjs.cloudflare.com/ajax/libs/simple-icons/10.0.0/x.svg" alt="X Share" width="32" height="32">
+            </a>
+            <a href="https://www.instagram.com/?url=" target="_blank" class="share-button instagram" title="分享到 Instagram">
+                <img src="https://cdnjs.cloudflare.com/ajax/libs/simple-icons/10.0.0/instagram.svg" alt="Instagram Share" width="32" height="32">
+            </a>
+            <a href="https://line.me/R/msg/text/?股市企業研究院%0D%0A" target="_blank" class="share-button line" title="分享到 Line">
+                <img src="https://cdnjs.cloudflare.com/ajax/libs/simple-icons/10.0.0/line.svg" alt="Line Share" width="32" height="32">
+            </a>
+        </div>
     </div>
 
     <script type="text/javascript">
@@ -645,7 +636,81 @@
     </script>
 
     <script>
-        // 讀取 content.txt
+        let settings = {};
+
+        async function loadSettings() {
+            try {
+                const response = await fetch('settings.txt');
+                if (response.ok) {
+                    const text = await response.text();
+                    settings = JSON.parse(text);
+                    updateSeo();
+                    updateFooter();
+                    updateFacebookComments();
+                    updateShareButtons();
+                } else {
+                    console.error('載入 settings.txt 失敗，使用空白值');
+                    // 設定為空值
+                    updateSeo();
+                    updateFooter();
+                    updateFacebookComments();
+                    updateShareButtons();
+                }
+            } catch (error) {
+                console.error('載入 settings.txt 失敗:', error);
+                // 設定為空值
+                updateSeo();
+                updateFooter();
+                updateFacebookComments();
+                updateShareButtons();
+            }
+            loadContent();
+        }
+
+        function updateSeo() {
+            document.querySelector('meta[name="description"]').content = settings.seo?.description || '';
+            document.querySelector('meta[name="keywords"]').content = settings.seo?.keywords || '';
+            document.querySelector('meta[name="author"]').content = settings.seo?.author || '';
+            document.title = settings.seo?.title || '';
+            document.querySelector('meta[property="og:title"]').content = settings.seo?.ogTitle || '';
+            document.querySelector('meta[property="og:description"]').content = settings.seo?.ogDescription || '';
+            document.querySelector('meta[property="og:url"]').content = settings.seo?.ogUrl || '';
+            document.querySelector('script[type="application/ld+json"]').innerHTML = JSON.stringify({
+                "@context": "https://schema.org",
+                "@type": "Blog",
+                "name": settings.seo?.title || '',
+                "url": settings.seo?.ogUrl || '',
+                "description": settings.seo?.description || '',
+                "publisher": {
+                    "@type": "Organization",
+                    "name": settings.seo?.publisherName || '',
+                    "url": settings.seo?.publisherUrl || ''
+                }
+            }, null, 2);
+        }
+
+        function updateFooter() {
+            const footerLink = document.querySelector('footer a');
+            footerLink.textContent = settings.seo?.publisherName || '';
+            footerLink.href = settings.seo?.publisherUrl || '';
+            document.querySelector('footer p').innerHTML = `© 2025 <a href="${settings.seo?.publisherUrl || ''}" target="_blank">${settings.seo?.publisherName || ''}</a>。保留所有權利。`;
+        }
+
+        function updateFacebookComments() {
+            document.querySelector('.facebook-comments .fb-comments').setAttribute('data-href', settings.baseUrl || '');
+            if (typeof FB !== 'undefined') {
+                FB.XFBML.parse();
+            }
+        }
+
+        function updateShareButtons() {
+            const shareButtons = document.querySelectorAll('.share-buttons a');
+            shareButtons[0].href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(settings.baseUrl || '')}`;
+            shareButtons[1].href = `https://x.com/intent/tweet?url=${encodeURIComponent(settings.baseUrl || '')}`;
+            shareButtons[2].href = `https://www.instagram.com/?url=${encodeURIComponent(settings.baseUrl || '')}`;
+            shareButtons[3].href = `https://line.me/R/msg/text/?${encodeURIComponent((settings.seo?.title || '') + '\n' + (settings.baseUrl || ''))}`;
+        }
+
         async function loadContent() {
             try {
                 const response = await fetch('content.txt');
@@ -656,16 +721,14 @@
                 renderArticles(articles);
             } catch (error) {
                 console.error('載入 content.txt 失敗:', error);
-                const articlesDiv = document.getElementById('articles');
-                articlesDiv.innerHTML = '<p style="color: red;">無法載入文章，請檢查 content.txt 是否存在。</p>';
+                document.getElementById('articles').innerHTML = '<p style="color: red;">無法載入文章，請檢查 content.txt 是否存在。</p>';
             }
         }
 
-        // 解析 content.txt
         function parseContent(text) {
             const articles = [];
             const entries = text.split('---').map(entry => entry.trim()).filter(entry => entry);
-            entries.forEach(entry => {
+            entries.forEach((entry, index) => {
                 const article = { content: '', images: [] };
                 const lines = entry.split('\n');
                 let isContent = false;
@@ -675,7 +738,10 @@
                         if (key === 'image') {
                             article.images = [value];
                         } else if (key === 'images') {
-                            article.images = value.split(',').map(s => s.trim());
+                            article.images = value.split(',').map((s, i) => {
+                                if (i === 0) return `${index + 1}.jpg`;
+                                return `${index + 1}-${i}.jpg`;
+                            });
                         } else {
                             article[key] = value;
                         }
@@ -696,11 +762,9 @@
             return articles;
         }
 
-        // 當前頁面
         let currentPage = 0;
-        const articlesPerPage = 10; // 修改為每頁10篇文章
+        const articlesPerPage = 10;
 
-        // 渲染輪播框
         function renderCarousel(articles) {
             const carousel = document.getElementById('carousel');
             carousel.innerHTML = '';
@@ -722,7 +786,6 @@
             }
         }
 
-        // 渲染文章列表
         function renderArticles(articles) {
             const articlesDiv = document.getElementById('articles');
             articlesDiv.innerHTML = '';
@@ -732,42 +795,84 @@
                 const article = articles[i];
                 const card = document.createElement('div');
                 card.className = 'article-card';
-                card.onclick = () => showArticle(i);
+                card.onclick = () => showArticle(i, articles);
                 const preview = article.content.replace(/<[^>]+>/g, '').substring(0, 100);
                 card.innerHTML = `
                     <h2>${article.title}</h2>
                     <p>${preview}...</p>
-                    <span class="article-date" style="position: absolute; bottom: 10px; right: 10px; font-size: 12px; color: #666; display: block; opacity: 1;">發布日期：${article.date}</span>
+                    <span class="article-date">發布日期：${article.date}</span>
                 `;
                 articlesDiv.appendChild(card);
+
+                // 加強移除標題：全局移除所有匹配的標題（不只開頭）
+                let cleanedContent = article.content;
+                const titleRegex = new RegExp(`<h2>${article.title}</h2>|${article.title}\\n`, 'gi'); // 添加 'g' 旗標，全局替換，'i' 忽略大小寫
+                cleanedContent = cleanedContent.replace(titleRegex, '').trim();
 
                 const content = document.createElement('div');
                 content.className = 'article-content';
                 content.id = `content-${i}`;
                 const fontSizeStyle = article.fontSize ? `font-size: ${article.fontSize};` : '';
+
+                // 檢查 cleanedContent 是否已包含 <img> 標籤，如果有，則不添加 imagesHtml 以避免重複
+                let imagesHtml = '';
+                if (!/<img\s/i.test(cleanedContent)) { // 如果內容中沒有 <img>，才添加
+                    imagesHtml = article.images.map(img => `<img src="img/content/${img}" alt="${article.title}">`).join('');
+                } else {
+                    console.log(`Article ${i} content already has images, skipping additional imagesHtml.`);
+                }
+
                 content.innerHTML = `
-                    <div style="${fontSizeStyle}">${article.content}</div>
+                    <div style="${fontSizeStyle}">${cleanedContent}</div>
+                    ${imagesHtml}
+                    <div class="article-share">
+                        <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(settings.baseUrl + '#article-' + i)}" target="_blank" title="分享到 Facebook">
+                            <img src="https://cdnjs.cloudflare.com/ajax/libs/simple-icons/10.0.0/facebook.svg" alt="Facebook Share" width="32" height="32">
+                        </a>
+                        <a href="https://x.com/intent/tweet?url=${encodeURIComponent(settings.baseUrl + '#article-' + i)}" target="_blank" title="分享到 X">
+                            <img src="https://cdnjs.cloudflare.com/ajax/libs/simple-icons/10.0.0/x.svg" alt="X Share" width="32" height="32">
+                        </a>
+                        <a href="https://www.instagram.com/?url=${encodeURIComponent(settings.baseUrl + '#article-' + i)}" target="_blank" title="分享到 Instagram">
+                            <img src="https://cdnjs.cloudflare.com/ajax/libs/simple-icons/10.0.0/instagram.svg" alt="Instagram Share" width="32" height="32">
+                        </a>
+                        <a href="https://line.me/R/msg/text/?${encodeURIComponent(article.title + '\n' + settings.baseUrl + '#article-' + i)}" target="_blank" title="分享到 Line">
+                            <img src="https://cdnjs.cloudflare.com/ajax/libs/simple-icons/10.0.0/line.svg" alt="Line Share" width="32" height="32">
+                        </a>
+                    </div>
                     <div class="article-comments">
                         <h3>文章留言</h3>
-                        <div class="fb-comments" data-href="https://stockcorp.github.io/#article-${i}" data-width="100%" data-numposts="5"></div>
+                        <div class="fb-comments" data-href="${settings.baseUrl + '#article-' + i}" data-width="100%" data-numposts="5"></div>
                     </div>
                 `;
                 articlesDiv.appendChild(content);
             }
             renderPagination(articles);
+            // 重新解析動態生成的 Facebook 留言板
+            if (typeof FB !== 'undefined') {
+                FB.XFBML.parse();
+            }
         }
 
-        // 渲染分頁
         function renderPagination(articles) {
             const pagination = document.getElementById('pagination');
+            const totalArticles = articles.length;
+            const totalPages = Math.ceil(totalArticles / articlesPerPage);
             pagination.innerHTML = '';
-            const totalPages = Math.ceil(articles.length / articlesPerPage);
-            if (totalPages <= 1) return;
 
-            // 上一頁
+            const firstButton = document.createElement('button');
+            firstButton.className = `page-button ${currentPage === 0 ? 'disabled' : ''}`;
+            firstButton.innerText = '«';
+            firstButton.onclick = () => {
+                if (currentPage > 0) {
+                    currentPage = 0;
+                    renderArticles(articles);
+                }
+            };
+            pagination.appendChild(firstButton);
+
             const prevButton = document.createElement('button');
             prevButton.className = `page-button ${currentPage === 0 ? 'disabled' : ''}`;
-            prevButton.innerText = '❮';
+            prevButton.innerText = '<';
             prevButton.onclick = () => {
                 if (currentPage > 0) {
                     currentPage--;
@@ -776,8 +881,14 @@
             };
             pagination.appendChild(prevButton);
 
-            // 頁數按鈕
-            for (let i = 0; i < totalPages; i++) {
+            const displayPages = Math.min(totalPages, 5);
+            let startPage = Math.max(0, currentPage - Math.floor(displayPages / 2));
+            let endPage = Math.min(startPage + displayPages, totalPages);
+            if (endPage - startPage < displayPages) {
+                startPage = Math.max(0, endPage - displayPages);
+            }
+
+            for (let i = startPage; i < endPage; i++) {
                 const pageButton = document.createElement('button');
                 pageButton.className = `page-button ${i === currentPage ? 'active' : ''}`;
                 pageButton.innerText = i + 1;
@@ -788,10 +899,9 @@
                 pagination.appendChild(pageButton);
             }
 
-            // 下一頁
             const nextButton = document.createElement('button');
             nextButton.className = `page-button ${currentPage === totalPages - 1 ? 'disabled' : ''}`;
-            nextButton.innerText = '❯';
+            nextButton.innerText = '>';
             nextButton.onclick = () => {
                 if (currentPage < totalPages - 1) {
                     currentPage++;
@@ -799,20 +909,33 @@
                 }
             };
             pagination.appendChild(nextButton);
+
+            const lastButton = document.createElement('button');
+            lastButton.className = `page-button ${currentPage === totalPages - 1 ? 'disabled' : ''}`;
+            lastButton.innerText = '»';
+            lastButton.onclick = () => {
+                if (currentPage < totalPages - 1) {
+                    currentPage = totalPages - 1;
+                    renderArticles(articles);
+                }
+            };
+            pagination.appendChild(lastButton);
         }
 
-        // 顯示文章內容
-        function showArticle(index) {
+        function showArticle(index, articles) {
             document.querySelectorAll('.article-content').forEach(content => {
                 content.classList.remove('active');
             });
             document.getElementById(`content-${index}`).classList.add('active');
             window.scrollTo({ top: document.getElementById(`content-${index}`).offsetTop, behavior: 'smooth' });
-    document.title = articles[index].title + " - 股市企業研究院";
-    history.replaceState(null, "", "#article-" + index);
+            document.title = (articles[index].title || '') + " - " + (settings.seo?.title || '');
+            history.replaceState(null, "", "#article-" + index);
+            // 重新解析單篇文章的 Facebook 留言板
+            if (typeof FB !== 'undefined') {
+                FB.XFBML.parse(document.getElementById(`content-${index}`));
+            }
         }
 
-        // 輪播框控制
         let currentSlide = 0;
         function showSlide(index) {
             const slides = document.querySelectorAll('.carousel-item');
@@ -821,18 +944,19 @@
             slides.forEach(slide => slide.classList.remove('active'));
             slides[currentSlide].classList.add('active');
         }
+
         function nextSlide() {
             currentSlide++;
             showSlide(currentSlide);
         }
+
         function prevSlide() {
             currentSlide--;
             showSlide(currentSlide);
         }
+
         function startCarousel() {
-            setInterval(() => {
-                nextSlide();
-            }, 5000);
+            setInterval(nextSlide, 5000);
         }
 
         // 漢堡選單控制
@@ -840,15 +964,13 @@
             const mobileNav = document.getElementById('mobile-nav');
             mobileNav.classList.toggle('active');
         }
+
         function toggleMobileDropdown(id) {
             const dropdown = document.getElementById(id);
             dropdown.classList.toggle('active');
         }
 
-        // 初始化
-        loadContent();
+        loadSettings();
     </script>
-    <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'936a27071eae8978',t:'MTc0NTcxMzIwOS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
-    <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'93bacd8cdf5a7168',t:'MTc0NjU1ODg5MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
 </body>
 </html>

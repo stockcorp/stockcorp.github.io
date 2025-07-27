@@ -1,108 +1,50 @@
-<script type="text/javascript">
-        var gk_isXlsx = false;
-        var gk_xlsxFileLookup = {};
-        var gk_fileData = {};
-        function filledCell(cell) {
-          return cell !== '' && cell != null;
-        }
-        function loadFileData(filename) {
-        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
-            try {
-                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
-                var firstSheetName = workbook.SheetNames[0];
-                var worksheet = workbook.Sheets[firstSheetName];
-
-                // Convert sheet to JSON to filter blank rows
-                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
-                // Filter out blank rows (rows where all cells are empty, null, or undefined)
-                var filteredData = jsonData.filter(row => row.some(filledCell));
-
-                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
-                var headerRowIndex = filteredData.findIndex((row, index) =>
-                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
-                );
-                // Fallback
-                if (headerRowIndex === -1 || headerRowIndex > 25) {
-                  headerRowIndex = 0;
-                }
-
-                // Convert filtered JSON back to CSV
-                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
-                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
-                return csv;
-            } catch (e) {
-                console.error(e);
-                return "";
-            }
-        }
-        return gk_fileData[filename] || "";
-        }
-        </script><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3440199491716602"
-     crossorigin="anonymous"></script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3440199491716602" crossorigin="anonymous"></script>
     <!-- Google Tag Manager -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-Q32FFR42XT"></script>
     <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-Q32FFR42XT');
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-Q32FFR42XT');
     </script>
-
-    <!-- Facebook SDK -->
-    <script>
-      window.fbAsyncInit = function() {
-        FB.init({
-          appId      : 'YOUR_APP_ID',
-          xfbml      : true,
-          version    : 'v18.0'
-        });
-      };
-      (function(d, s, id){
-         var js, fjs = d.getElementsByTagName(s)[0];
-         if (d.getElementById(id)) {return;}
-         js = d.createElement(s); js.id = id;
-         js.src = "https://connect.facebook.net/zh_TW/sdk.js";
-         fjs.parentNode.insertBefore(js, fjs);
-       }(document, 'script', 'facebook-jssdk'));
-    </script>
-
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
+    <!-- Facebook SDK -->
+    <script>
+        window.fbAsyncInit = function() {
+            FB.init({
+                appId: 'YOUR_APP_ID', // 請替換為您的 Facebook App ID
+                xfbml: true,
+                version: 'v18.0'
+            });
+        };
+        (function(d, s, id){
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) {return;}
+            js = d.createElement(s); js.id = id;
+            js.src = "https://connect.facebook.net/zh_TW/sdk.js";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="技術分析學習 - 股市企業研究院">
-    <meta name="keywords" content="技術分析學習, 股市企業研究院">
-    <meta name="author" content="股市企業研究院">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="author" content="">
     <meta name="robots" content="index, follow">
-    <title>技術分析學習 - 股市企業研究院</title>
-    <!-- Open Graph Meta Tags for Social Media -->
-    <meta property="og:title" content="技術分析學習 - 股市企業研究院">
-    <meta property="og:description" content="技術分析學習 - 股市企業研究院">
-    <meta property="og:url" content="https://stockcorp.github.io/technical.html">
+    <title></title>
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="">
+    <meta property="og:description" content="">
+    <meta property="og:url" content="">
     <meta property="og:type" content="website">
-    <!-- Structured Data (JSON-LD) for SEO -->
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "WebApplication",
-        "name": "技術分析學習",
-        "url": "https://stockcorp.github.io/technical.html",
-        "description": "技術分析學習 - 股市企業研究院",
-        "publisher": {
-            "@type": "Organization",
-            "name": "吉米理財學堂",
-            "url": "https://www.youtube.com/@吉米理財學堂",
-            "email": "xbon510@gmail.com"
-        },
-        "applicationCategory": "Finance"
-    }
-    </script>
-    <!-- 載入 Google Fonts 支援中文 -->
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=block" rel="stylesheet">
     <style>
         body {
             font-family: Arial, 'Noto Sans TC', sans-serif;
@@ -114,53 +56,40 @@
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
         }
         .header {
             text-align: center;
-            background-image: url('/img/channels4_banner.jpg');
+            background-image: url('/img/banner.jpg');
             background-size: cover;
             background-position: center;
-            background-repeat: no-repeat;
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            position: relative;
             width: 100%;
-            height: 120px;
-            min-height: 80px;
-            max-height: 200px;
+            height: 150px;
             padding: 20px;
             box-sizing: border-box;
+            margin-bottom: 20px;
         }
         @media screen and (max-width: 600px) {
             .header {
                 height: 80px;
                 padding: 10px;
                 background-size: contain;
-                background-position: center center;
             }
         }
         @media screen and (min-width: 601px) and (max-width: 900px) {
             .header {
                 height: 100px;
                 padding: 15px;
-                background-size: cover;
             }
         }
-        @media screen and (min-width: 901px) {
-            .header {
-                height: 150px;
-                padding: 20px;
-            }
-        }
-        /* 導航選單 */
         .nav-tabs {
             display: flex;
             width: 100%;
             background-color: transparent;
             margin-bottom: 20px;
+			flex-basis: 100%;
+            flex-shrink: 0;
         }
         .nav-tab {
             flex: 1;
@@ -277,7 +206,6 @@
             from { transform: translateY(-10px); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
         }
-        /* 內容區域 */
         .content-section {
             width: 100%;
             display: flex;
@@ -327,10 +255,10 @@
         }
         .accordion-item {
             margin-bottom: 10px;
-            border-bottom: 1px solid #D1D5DB;
+            border-bottom: 1px solid #d1d5db;
         }
         .accordion-header {
-            background-color: #d1d5db; /* 深灰色背景 */
+            background-color: #d1d5db;
             padding: 15px;
             font-size: 18px;
             font-weight: 500;
@@ -339,14 +267,14 @@
             transition: background-color 0.3s ease;
         }
         .accordion-header:hover {
-            background-color: #b0b7c2; /* 懸停時更深灰色 */
+            background-color: #b0b7c2;
         }
         .accordion-content {
             display: none;
             padding: 15px;
             font-size: 16px;
             line-height: 1.6;
-            color: #000000; /* 改為黑色 */
+            color: #000000;
         }
         .accordion-content.active {
             display: block;
@@ -357,25 +285,38 @@
             padding: 10px;
             border-radius: 4px;
             overflow-x: auto;
+            white-space: pre-wrap; /* 確保預格式化文字換行 */
         }
-        /* Facebook 留言板 */
+        .accordion-content h3 {
+            margin-top: 10px;
+            color: #2563eb;
+        }
+        .accordion-content ul {
+            margin-left: 20px;
+            list-style-type: disc;
+        }
+        .accordion-content ul li {
+            margin-bottom: 5px;
+        }
         .facebook-comments {
             width: 100%;
             margin-top: 20px;
-            padding: 20px;
+            padding: 0;  /* Remove padding to prevent extra space causing protrusion */
             background-color: #ffffff;
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             text-align: center;
+            box-sizing: border-box;  /* Ensure padding/borders are included in width */
         }
         .facebook-comments h2 {
             font-size: 20px;
             margin-bottom: 10px;
             color: #2563eb;
+            padding: 20px 20px 0;  /* Add top padding to h2 instead */
         }
-        .facebook-comments p {
-            line-height: 1.6;
-            color: #666666;
+        .facebook-comments .fb-comments {
+            padding: 0 20px 20px;  /* Add padding only to the Facebook widget */
+            box-sizing: border-box;
         }
         footer {
             text-align: center;
@@ -384,7 +325,38 @@
             color: #000000;
             width: 100%;
         }
-        /* 響應式設計 */
+        a {
+            color: #2563eb;
+            text-decoration: underline;
+            transition: color 0.3s ease;
+        }
+        a:hover {
+            color: #3b82f6;
+        }
+        .share-buttons {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 1000;
+        }
+        .share-button {
+            display: inline-block;
+            transition: opacity 0.2s;
+            background-color: #ffffff;
+            border-radius: 4px;
+        }
+        .share-button:hover {
+            opacity: 0.8;
+            background-color: #e0e0e0;
+        }
+        .share-button img {
+            vertical-align: middle;
+            width: 32px;
+            height: 32px;
+        }
         @media screen and (max-width: 768px) {
             .nav-tabs {
                 display: none;
@@ -401,6 +373,13 @@
             .sidebar, .accordion {
                 width: 100%;
             }
+            .share-buttons {
+                bottom: 10px;
+                left: 10px;
+            }
+            .facebook-comments {
+                padding: 0;
+            }
         }
         @media screen and (min-width: 769px) {
             .mobile-nav {
@@ -410,11 +389,10 @@
     </style>
 </head>
 <body>
+
     <div class="container">
-        <!-- 橫幅 -->
-        <div style="width: 100%;">
-            <div class="header"></div>
-        </div>
+        <!-- Banner -->
+        <div class="header"></div>
 
         <!-- 漢堡選單按鈕 -->
         <div class="hamburger" onclick="toggleMobileNav()">☰</div>
@@ -426,7 +404,7 @@
             <div class="nav-tab dropdown">
                 投資理財計算機
                 <div class="dropdown-content">
-					<a href="crypto_leverage.html"><i class="fas fa-coins"></i>加密貨幣槓桿計算機</a>
+                    <a href="crypto_leverage.html"><i class="fas fa-coins"></i>加密貨幣槓桿計算機</a>
                     <a href="stock.html"><i class="fas fa-chart-line"></i>股票利潤計算機</a>
                     <a href="compound.html"><i class="fas fa-percentage"></i>複利計算機</a>
                     <a href="kelly.html"><i class="fas fa-calculator"></i>凱莉計算機</a>
@@ -440,8 +418,8 @@
             <div class="nav-tab dropdown">
                 商業用產生器
                 <div class="dropdown-content">
-                    			    <a href="quotation.html"><i class="fas fa-file-invoice-dollar"></i>報價單產生器</a>
-                <a href="house.html"><i class="fas fa-home"></i>房地產投資報酬率計算器</a>
+                    <a href="quotation.html"><i class="fas fa-file-invoice-dollar"></i>報價單產生器</a>
+                    <a href="house.html"><i class="fas fa-home"></i>房地產投資報酬率計算器</a>
                 </div>
             </div>
             <a href="technical.html" class="nav-tab active">技術分析學習</a>
@@ -454,6 +432,7 @@
             <a href="risk.html">即時資產風險</a>
             <a href="#" onclick="toggleMobileDropdown('investment-dropdown')">投資理財計算機</a>
             <div class="mobile-dropdown" id="investment-dropdown">
+                <a href="crypto_leverage.html"><i class="fas fa-coins"></i>加密貨幣槓桿計算機</a>
                 <a href="stock.html"><i class="fas fa-chart-line"></i>股票利潤計算機</a>
                 <a href="compound.html"><i class="fas fa-percentage"></i>複利計算機</a>
                 <a href="kelly.html"><i class="fas fa-calculator"></i>凱莉計算機</a>
@@ -465,7 +444,7 @@
             </div>
             <a href="#" onclick="toggleMobileDropdown('business-dropdown')">商業用產生器</a>
             <div class="mobile-dropdown" id="business-dropdown">
-                			    <a href="quotation.html"><i class="fas fa-file-invoice-dollar"></i>報價單產生器</a>
+                <a href="quotation.html"><i class="fas fa-file-invoice-dollar"></i>報價單產生器</a>
                 <a href="house.html"><i class="fas fa-home"></i>房地產投資報酬率計算器</a>
             </div>
             <a href="technical.html" class="active">技術分析學習</a>
@@ -477,601 +456,39 @@
             <!-- 左側目錄 -->
             <div class="sidebar">
                 <h2>技術分析指標</h2>
-                <ul>
-                    <li><a href="#rsi" class="active" onclick="showAccordion('rsi')">RSI (相對強弱指數)</a></li>
-                    <li><a href="#mvrv" onclick="showAccordion('mvrv')">MVRV (市場價值與實現價值比)</a></li>
-                    <li><a href="#macd" onclick="showAccordion('macd')">MACD (移動平均線收斂-發散指標)</a></li>
-                    <li><a href="#bollinger" onclick="showAccordion('bollinger')">Bollinger Bands (布林帶)</a></li>
-                    <li><a href="#ma" onclick="showAccordion('ma')">Moving Average (移動平均線)</a></li>
-                    <li><a href="#stochastic" onclick="showAccordion('stochastic')">Stochastic Oscillator (隨機震盪指標)</a></li>
-                    <li><a href="#fibonacci" onclick="showAccordion('fibonacci')">Fibonacci Retracement (斐波那契回撤)</a></li>
-                    <li><a href="#volume" onclick="showAccordion('volume')">Volume (成交量)</a></li>
-                    <li><a href="#ichimoku" onclick="showAccordion('ichimoku')">Ichimoku Cloud (一目均衡表)</a></li>
-                    <li><a href="#adx" onclick="showAccordion('adx')">ADX (平均趨勢指數)</a></li>
-                    <li><a href="#cci" onclick="showAccordion('cci')">CCI (商品通道指數)</a></li>
-                    <li><a href="#atr" onclick="showAccordion('atr')">ATR (平均真實波幅)</a></li>
-                    <li><a href="#obv" onclick="showAccordion('obv')">OBV (成交量淨額)</a></li>
-                    <li><a href="#parabolic_sar" onclick="showAccordion('parabolic_sar')">Parabolic SAR (拋物線指標)</a></li>
-                    <li><a href="#williams_r" onclick="showAccordion('williams_r')">Williams %R (威廉指標)</a></li>
-                </ul>
+                <ul id="sidebar-menu"></ul>
             </div>
 
             <!-- 右側手風琴 -->
-            <div class="accordion">
-                <div class="accordion-item" id="rsi">
-                    <div class="accordion-header" onclick="toggleAccordion('rsi')">RSI (相對強弱指數)</div>
-                    <div class="accordion-content active">
-                        <h3>定義</h3>
-                        <p>相對強弱指數（RSI）是一種動量指標，用於衡量價格變動的強度和速度，幫助交易者判斷市場是否處於超買或超賣狀態。RSI 的值範圍在 0 到 100 之間，通常以 14 天為計算週期。</p>
-
-                        <h3>計算方式</h3>
-                        <p>RSI 的計算公式如下：</p>
-                        <p>RSI = 100 - (100 / (1 + RS))</p>
-                        <p>其中，RS = 平均上漲幅度 / 平均下跌幅度</p>
-                        <ul>
-                            <li>平均上漲幅度 = 過去 14 天內上漲日的總漲幅 / 14</li>
-                            <li>平均下跌幅度 = 過去 14 天內下跌日的總跌幅 / 14</li>
-                        </ul>
-
-                        <h3>示意圖</h3>
-                        <pre>
-價格走勢：  ---***---***---***---***---***---***---***---
-RSI 曲線：      _______/      \_______/      \_______/
-超買線 (70)： ----------------70-------------------
-超賣線 (30)： ----------------30-------------------
-                        </pre>
-                        <p>圖示說明：當 RSI 曲線突破 70（超買線），表示市場可能過熱；跌破 30（超賣線），表示市場可能過冷。</p>
-
-                        <h3>使用場景</h3>
-                        <ul>
-                            <li><strong>超買/超賣判斷</strong>：RSI > 70 時，可能進入超買區，價格可能回落；RSI < 30 時，可能進入超賣區，價格可能反彈。</li>
-                            <li><strong>趨勢反轉</strong>：當 RSI 從超買區下跌或從超賣區上升時，可能預示價格反轉。</li>
-                            <li><strong>背離信號</strong>：價格創新高但 RSI 未創新高（頂背離），可能預示下跌；價格創新低但 RSI 未創新低（底背離），可能預示上漲。</li>
-                        </ul>
-
-                        <h3>注意事項</h3>
-                        <ul>
-                            <li>RSI 在強勢趨勢中可能長時間處於超買或超賣區，此時不宜單獨作為交易信號。</li>
-                            <li>建議結合其他指標（如移動平均線）或價格形態進行確認。</li>
-                            <li>RSI 的週期參數（通常為 14）可根據市場特性調整，例如短期交易可使用 9 天，長期交易可使用 21 天。</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="accordion-item" id="mvrv">
-                    <div class="accordion-header" onclick="toggleAccordion('mvrv')">MVRV (市場價值與實現價值比)</div>
-                    <div class="accordion-content">
-                        <h3>定義</h3>
-                        <p>MVRV（Market Value to Realized Value）比是市場價值（市值）與實現價值（投資者實際支付的價值）的比率，用於評估資產是否被高估或低估，主要用於加密貨幣市場（如比特幣）。</p>
-
-                        <h3>計算方式</h3>
-                        <p>MVRV = 市場價值 / 實現價值</p>
-                        <ul>
-                            <li>市場價值（Market Value）：當前價格 × 總流通量</li>
-                            <li>實現價值（Realized Value）：每個代幣最後一次交易的價格總和 / 總流通量</li>
-                        </ul>
-
-                        <h3>示意圖</h3>
-                        <pre>
-MVRV 曲線：   ---***---***---***---***---***---***---
-高估區 (>3.5)：----------------3.5-----------------
-低估區 (<1)：  ----------------1-------------------
-                        </pre>
-                        <p>圖示說明：MVRV 曲線高於 3.5 時，表示市場可能過熱；低於 1 時，表示市場可能低估。</p>
-
-                        <h3>使用場景</h3>
-                        <ul>
-                            <li><strong>高估判斷</strong>：MVRV > 3.5 時，表示市場過熱，可能接近頂部，適合賣出。</li>
-                            <li><strong>低估判斷</strong>：MVRV < 1 時，表示市場低估，可能接近底部，適合買入。</li>
-                            <li><strong>長期趨勢分析</strong>：MVRV 可幫助判斷市場週期，例如牛市頂部或熊市底部。</li>
-                        </ul>
-
-                        <h3>注意事項</h3>
-                        <ul>
-                            <li>MVRV 主要適用於加密貨幣市場，對傳統股票市場的適用性有限。</li>
-                            <li>需要結合其他指標（如 RSI 或成交量）進行綜合分析。</li>
-                            <li>MVRV 的歷史數據可能因市場環境變化而失效，需根據當前市場調整判斷標準。</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="accordion-item" id="macd">
-                    <div class="accordion-header" onclick="toggleAccordion('macd')">MACD (移動平均線收斂-發散指標)</div>
-                    <div class="accordion-content">
-                        <h3>定義</h3>
-                        <p>MACD（Moving Average Convergence Divergence）是一種趨勢追蹤和動量指標，通過計算不同週期的移動平均線之間的差異，來識別價格趨勢的方向和可能的反轉點。</p>
-
-                        <h3>計算方式</h3>
-                        <p>MACD 由三個主要部分組成：</p>
-                        <ul>
-                            <li>MACD 線 = 12 日 EMA - 26 日 EMA</li>
-                            <li>訊號線 = MACD 線的 9 日 EMA</li>
-                            <li>柱狀圖 = MACD 線 - 訊號線</li>
-                        </ul>
-                        <p>EMA 表示指數移動平均線，給予近期價格更高的權重。</p>
-
-                        <h3>示意圖</h3>
-                        <pre>
-MACD 線：      ---***---***---***---***---***---***---
-訊號線：      ---___---___---___---___---___---___---
-柱狀圖：       |  ||  ||  ||  ||  ||  ||  ||  ||  |
-零線：         ----------------0-------------------
-                        </pre>
-                        <p>圖示說明：MACD 線上穿訊號線時（柱狀圖變正），為買入信號；下穿時（柱狀圖變負），為賣出信號。</p>
-
-                        <h3>使用場景</h3>
-                        <ul>
-                            <li><strong>趨勢確認</strong>：MACD 線位於零線上方且上行，表示看漲趨勢；位於零線下方且下行，表示看跌趨勢。</li>
-                            <li><strong>交叉信號</strong>：MACD 線上穿訊號線（金叉），為買入信號；下穿（死叉），為賣出信號。</li>
-                            <li><strong>背離信號</strong>：價格創新高但 MACD 未創新高（頂背離），可能預示下跌；價格創新低但 MACD 未創新低（底背離），可能預示上漲。</li>
-                        </ul>
-
-                        <h3>注意事項</h3>
-                        <ul>
-                            <li>MACD 在震盪市場中可能產生較多假信號，適合用於趨勢明顯的市場。</li>
-                            <li>建議結合其他指標（如 RSI 或布林帶）進行確認。</li>
-                            <li>MACD 參數（12、26、9）可根據交易風格調整，例如短期交易可使用 (5、13、1)。</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="accordion-item" id="bollinger">
-                    <div class="accordion-header" onclick="toggleAccordion('bollinger')">Bollinger Bands (布林帶)</div>
-                    <div class="accordion-content">
-                        <h3>定義</h3>
-                        <p>布林帶（Bollinger Bands）是一種波動性指標，由三條線組成：中間的移動平均線（通常為 20 日 SMA）以及上下兩條標準差線，用於衡量價格的波動範圍和潛在反轉點。</p>
-
-                        <h3>計算方式</h3>
-                        <ul>
-                            <li>中軌 = 20 日簡單移動平均線 (SMA)</li>
-                            <li>上軌 = 中軌 + (2 × 20 日價格標準差)</li>
-                            <li>下軌 = 中軌 - (2 × 20 日價格標準差)</li>
-                        </ul>
-
-                        <h3>示意圖</h3>
-                        <pre>
-上軌：         ----------------***----------------
-中軌 (SMA)：   ------***------***------***------
-下軌：         ----------------***----------------
-價格走勢：     ---***---***---***---***---***---***---
-                        </pre>
-                        <p>圖示說明：價格觸及上軌時，可能超買；觸及下軌時，可能超賣。布林帶收窄表示波動性降低，可能即將出現大波動。</p>
-
-                        <h3>使用場景</h3>
-                        <ul>
-                            <li><strong>超買/超賣</strong>：價格觸及上軌，可能超買，考慮賣出；觸及下軌，可能超賣，考慮買入。</li>
-                            <li><strong>波動性預測</strong>：布林帶收窄（「擠壓」）通常預示著大波動即將發生。</li>
-                            <li><strong>趨勢反轉</strong>：價格突破上軌後回落，或跌破下軌後反彈，可能預示反轉。</li>
-                        </ul>
-
-                        <h3>注意事項</h3>
-                        <ul>
-                            <li>布林帶在強勢趨勢中可能失效，價格可能長時間貼近上軌或下軌。</li>
-                            <li>建議結合其他指標（如 RSI 或成交量）確認信號。</li>
-                            <li>布林帶參數（20、2）可調整，例如 (10、1.5) 適用於短期交易。</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="accordion-item" id="ma">
-                    <div class="accordion-header" onclick="toggleAccordion('ma')">Moving Average (移動平均線)</div>
-                    <div class="accordion-content">
-                        <h3>定義</h3>
-                        <p>移動平均線（MA）是一種平滑價格數據的指標，用於識別趨勢方向和潛在支撐/阻力位。常見類型包括簡單移動平均線（SMA）和指數移動平均線（EMA）。</p>
-
-                        <h3>計算方式</h3>
-                        <ul>
-                            <li>簡單移動平均線 (SMA) = 過去 N 天收盤價總和 / N</li>
-                            <li>指數移動平均線 (EMA) = (當日收盤價 × 權重) + (前一日 EMA × (1 - 權重))</li>
-                            <li>權重 = 2 / (N + 1)，N 為天數</li>
-                        </ul>
-
-                        <h3>示意圖</h3>
-                        <pre>
-價格走勢：     ---***---***---***---***---***---***---
-短期 MA (10日)：------***------***------***------
-長期 MA (50日)：---------***---------***---------
-金叉：               ^ (短期 MA 上穿長期 MA)
-死叉：                     ^ (短期 MA 下穿長期 MA)
-                        </pre>
-                        <p>圖示說明：短期 MA 上穿長期 MA（金叉），為買入信號；下穿（死叉），為賣出信號。</p>
-
-                        <h3>使用場景</h3>
-                        <ul>
-                            <li><strong>趨勢確認</strong>：價格位於 MA 上方且 MA 上行，表示看漲；反之表示看跌。</li>
-                            <li><strong>交叉信號</strong>：短期 MA 上穿長期 MA（金叉），為買入信號；下穿（死叉），為賣出信號。</li>
-                            <li><strong>支撐/阻力</strong>：MA 線可作為動態支撐或阻力位，價格常在 MA 附近反彈或回落。</li>
-                        </ul>
-
-                        <h3>注意事項</h3>
-                        <ul>
-                            <li>MA 在震盪市場中可能產生假信號，適合用於趨勢市場。</li>
-                            <li>EMA 對近期價格更敏感，適合短期交易；SMA 更平滑，適合長期趨勢分析。</li>
-                            <li>MA 的週期選擇（例如 10 日、50 日、200 日）應根據交易策略調整。</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="accordion-item" id="stochastic">
-                    <div class="accordion-header" onclick="toggleAccordion('stochastic')">Stochastic Oscillator (隨機震盪指標)</div>
-                    <div class="accordion-content">
-                        <h3>定義</h3>
-                        <p>隨機震盪指標（Stochastic Oscillator）是一種動量指標，通過比較當前收盤價與一段時間內價格範圍的關係，判斷市場是否處於超買或超賣狀態。</p>
-
-                        <h3>計算方式</h3>
-                        <ul>
-                            <li>%K = (當前收盤價 - 最低價) / (最高價 - 最低價) × 100</li>
-                            <li>%D = %K 的 3 日簡單移動平均線</li>
-                            <li>通常以 14 天為計算週期</li>
-                        </ul>
-
-                        <h3>示意圖</h3>
-                        <pre>
-%K 線：        ---***---***---***---***---***---***---
-%D 線：        ---___---___---___---___---___---___---
-超買線 (80)：  ----------------80-------------------
-超賣線 (20)：  ----------------20-------------------
-                        </pre>
-                        <p>圖示說明：%K 線上穿 %D 線，且位於超賣區（<20），為買入信號；下穿 %D 線，且位於超買區（>80），為賣出信號。</p>
-
-                        <h3>使用場景</h3>
-                        <ul>
-                            <li><strong>超買/超賣</strong>：%K 和 %D 高於 80 時，可能超買；低於 20 時，可能超賣。</li>
-                            <li><strong>交叉信號</strong>：%K 上穿 %D 時，為買入信號；下穿時，為賣出信號。</li>
-                            <li><strong>背離信號</strong>：價格創新高但隨機指標未創新高，可能預示下跌；反之可能預示上漲。</li>
-                        </ul>
-
-                        <h3>注意事項</h3>
-                        <ul>
-                            <li>隨機指標在震盪市場中效果較好，但在強勢趨勢中可能產生假信號。</li>
-                            <li>建議結合趨勢指標（如 MA 或 ADX）使用。</li>
-                            <li>週期參數（通常為 14、3）可根據市場調整，例如 (5、3) 適用於短期交易。</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="accordion-item" id="fibonacci">
-                    <div class="accordion-header" onclick="toggleAccordion('fibonacci')">Fibonacci Retracement (斐波那契回撤)</div>
-                    <div class="accordion-content">
-                        <h3>定義</h3>
-                        <p>斐波那契回撤（Fibonacci Retracement）是一種基於斐波那契數列的技術工具，用於預測價格的支撐和阻力位，幫助交易者找到潛在的反轉點。</p>
-
-                        <h3>計算方式</h3>
-                        <p>斐波那契回撤水平基於價格的高點和低點，常用比例包括 23.6%、38.2%、50%、61.8% 和 100%。</p>
-                        <ul>
-                            <li>上漲趨勢：從低點到高點，回撤水平 = 高點 - (價格範圍 × 回撤比例)</li>
-                            <li>下跌趨勢：從高點到低點，回撤水平 = 低點 + (價格範圍 × 回撤比例)</li>
-                        </ul>
-
-                        <h3>示意圖</h3>
-                        <pre>
-高點 (100%)：  ----------------100%----------------
-61.8%：        ----------------61.8%---------------
-50%：          ----------------50%-----------------
-38.2%：        ----------------38.2%---------------
-低點 (0%)：    ----------------0%------------------
-價格走勢：     ***-------***-------***-------***-----
-                        </pre>
-                        <p>圖示說明：價格從高點回落，可能在 61.8%、50% 或 38.2% 水平找到支撐並反彈。</p>
-
-                        <h3>使用場景</h3>
-                        <ul>
-                            <li><strong>支撐/阻力</strong>：斐波那契水平可作為潛在的支撐或阻力位，價格常在這些水平附近反轉。</li>
-                            <li><strong>入場點</strong>：在回撤至 61.8% 或 50% 水平時，尋找反彈機會，設置止損在下一個水平下方。</li>
-                            <li><strong>目標價位</strong>：價格突破某一水平後，可能繼續朝下一個斐波那契水平運行。</li>
-                        </ul>
-
-                        <h3>注意事項</h3>
-                        <ul>
-                            <li>斐波那契水平並非絕對，需結合其他指標（如成交量或 RSI）確認信號。</li>
-                            <li>在強勢趨勢中，價格可能直接突破關鍵水平，需注意趨勢方向。</li>
-                            <li>選擇正確的高點和低點至關重要，應基於顯著的價格波動點。</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="accordion-item" id="volume">
-                    <div class="accordion-header" onclick="toggleAccordion('volume')">Volume (成交量)</div>
-                    <div class="accordion-content">
-                        <h3>定義</h3>
-                        <p>成交量（Volume）是衡量市場活躍度的指標，表示在特定時間內交易的資產數量。成交量通常與價格走勢結合分析，用於確認趨勢強度或預測反轉。</p>
-
-                        <h3>計算方式</h3>
-                        <p>成交量是直接數據，無需計算，直接從市場數據中獲取。例如，日成交量表示某一天內交易的總股數或代幣數量。</p>
-
-                        <h3>示意圖</h3>
-                        <pre>
-價格走勢：     ---***---***---***---***---***---***---
-成交量：       ||  |||  ||||  ||  ||  ||||  ||  |||
-趨勢確認：     ^ (成交量上升伴隨價格上漲，看漲)
-突破：               ^ (成交量突增，突破阻力)
-                        </pre>
-                        <p>圖示說明：成交量上升伴隨價格上漲，表示趨勢強勁；成交量突增通常伴隨價格突破關鍵水平。</p>
-
-                        <h3>使用場景</h3>
-                        <ul>
-                            <li><strong>趨勢確認</strong>：成交量上升伴隨價格上漲，表示看漲趨勢強勁；成交量下降伴隨價格上漲，可能表示趨勢疲軟。</li>
-                            <li><strong>突破確認</strong>：價格突破支撐或阻力時，若成交量顯著增加，則突破更可信。</li>
-                            <li><strong>反轉信號</strong>：成交量突增伴隨價格反轉，可能預示趨勢改變。</li>
-                        </ul>
-
-                        <h3>注意事項</h3>
-                        <ul>
-                            <li>成交量需結合價格走勢分析，單獨使用可能誤導。</li>
-                            <li>不同市場的成交量特性不同，例如加密貨幣市場可能受假量影響，需謹慎判斷。</li>
-                            <li>成交量異常變化可能是市場操縱或重大事件的前兆，需關注新聞和基本面。</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="accordion-item" id="ichimoku">
-                    <div class="accordion-header" onclick="toggleAccordion('ichimoku')">Ichimoku Cloud (一目均衡表)</div>
-                    <div class="accordion-content">
-                        <h3>定義</h3>
-                        <p>一目均衡表（Ichimoku Cloud）是一種綜合性技術指標，包含多條線和雲層，用於判斷趨勢方向、支撐/阻力位和動量信號。</p>
-
-                        <h3>計算方式</h3>
-                        <ul>
-                            <li>轉換線 = (過去 9 日最高價 + 最低價) / 2</li>
-                            <li>基準線 = (過去 26 日最高價 + 最低價) / 2</li>
-                            <li>領先跨度 A = (轉換線 + 基準線) / 2，向前平移 26 日</li>
-                            <li>領先跨度 B = (過去 52 日最高價 + 最低價) / 2，向前平移 26 日</li>
-                            <li>雲層 = 領先跨度 A 和 B 之間的區域</li>
-                            <li>滯後跨度 = 當前價格，向後平移 26 日</li>
-                        </ul>
-
-                        <h3>示意圖</h3>
-                        <pre>
-雲層 (A/B)：   =====(看漲)=====     =====(看跌)=====
-價格走勢：     ---***---***---***---***---***---***---
-轉換線：       ------***------***------***------***---
-基準線：       --------***--------***--------***-----
-滯後跨度：     ***------***------***------***------
-                        </pre>
-                        <p>圖示說明：價格位於雲層上方且雲層為綠色（A>B），表示看漲；位於雲層下方且雲層為紅色（B>A），表示看跌。</p>
-
-                        <h3>使用場景</h3>
-                        <ul>
-                            <li><strong>趨勢判斷</strong>：價格位於雲層上方且雲層為綠色，表示看漲；反之表示看跌。</li>
-                            <li><strong>支撐/阻力</strong>：雲層可作為動態支撐或阻力，價格常在雲層邊緣反彈或突破。</li>
-                            <li><strong>交叉信號</strong>：轉換線上穿基準線，為買入信號；下穿為賣出信號。</li>
-                        </ul>
-
-                        <h3>注意事項</h3>
-                        <ul>
-                            <li>一目均衡表在震盪市場中可能產生假信號，適合用於趨勢市場。</li>
-                            <li>雲層厚度和顏色變化可反映趨勢強度，厚雲表示強支撐/阻力，薄雲表示弱支撐/阻力。</li>
-                            <li>滯後跨度可用於確認趨勢，若滯後跨度位於價格上方，表示看跌；反之表示看漲。</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="accordion-item" id="adx">
-                    <div class="accordion-header" onclick="toggleAccordion('adx')">ADX (平均趨勢指數)</div>
-                    <div class="accordion-content">
-                        <h3>定義</h3>
-                        <p>平均趨勢指數（ADX，Average Directional Index）是一種趨勢強度指標，用於衡量趨勢的強弱，而非方向，常與 +DI 和 -DI 結合使用。</p>
-
-                        <h3>計算方式</h3>
-                        <ul>
-                            <li>+DI = (當前高點 - 前日高點) / 真實波幅 × 100</li>
-                            <li>-DI = (前日低點 - 當前低點) / 真實波幅 × 100</li>
-                            <li>ADX = (過去 14 日的 +DI 和 -DI 差值的絕對值平滑平均) / 真實波幅 × 100</li>
-                        </ul>
-
-                        <h3>示意圖</h3>
-                        <pre>
-ADX 線：       ---***---***---***---***---***---***---
-+DI 線：       ------***------***------***------***---
--DI 線：       ---***------***------***------***-----
-強趨勢 (25)：  ----------------25-------------------
-弱趨勢 (20)：  ----------------20-------------------
-                        </pre>
-                        <p>圖示說明：ADX 高於 25 表示強趨勢，+DI 上穿 -DI 表示看漲；ADX 低於 20 表示趨勢弱，可能進入震盪。</p>
-
-                        <h3>使用場景</h3>
-                        <ul>
-                            <li><strong>趨勢強度</strong>：ADX > 25 表示強趨勢，適合趨勢交易；ADX < 20 表示趨勢弱，適合區間交易。</li>
-                            <li><strong>趨勢方向</strong>：+DI 上穿 -DI，表示看漲趨勢；-DI 上穿 +DI，表示看跌趨勢。</li>
-                            <li><strong>趨勢反轉</strong>：ADX 達到高點後回落，可能預示趨勢減弱或反轉。</li>
-                        </ul>
-
-                        <h3>注意事項</h3>
-                        <ul>
-                            <li>ADX 僅衡量趨勢強度，不指示方向，需結合 +DI 和 -DI 使用。</li>
-                            <li>ADX 反應較慢，可能滯後於價格變動，適合長期趨勢分析。</li>
-                            <li>建議結合其他指標（如 MA 或 RSI）確認趨勢方向和入場點。</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="accordion-item" id="cci">
-                    <div class="accordion-header" onclick="toggleAccordion('cci')">CCI (商品通道指數)</div>
-                    <div class="accordion-content">
-                        <h3>定義</h3>
-                        <p>商品通道指數（CCI，Commodity Channel Index）是一種動量指標，用於識別價格的超買或超賣狀態，並檢測趨勢的開始或反轉。CCI 適用於週期性市場，範圍通常在 -100 到 +100 之間。</p>
-
-                        <h3>計算方式</h3>
-                        <p>CCI = (典型價格 - 典型價格的 N 日移動平均) / (0.015 × 典型價格的 N 日平均偏差)</p>
-                        <ul>
-                            <li>典型價格 = (最高價 + 最低價 + 收盤價) / 3</li>
-                            <li>平均偏差 = Σ|典型價格 - 移動平均| / N</li>
-                            <li>N 通常設為 20</li>
-                        </ul>
-
-                        <h3>示意圖</h3>
-                        <pre>
-CCI 曲線：     ---***---***---***---***---***---***---
-超買線 (+100)：----------------+100-----------------
-中線 (0)：     ----------------0-------------------
-超賣線 (-100)：-----------------100-----------------
-                        </pre>
-                        <p>圖示說明：CCI 高於 +100 表示超買，可能回落；低於 -100 表示超賣，可能反彈。</p>
-
-                        <h3>使用場景</h3>
-                        <ul>
-                            <li><strong>超買/超賣</strong>：CCI > +100 時，可能超買；CCI < -100 時，可能超賣。</li>
-                            <li><strong>趨勢反轉</strong>：CCI 從超買區下跌至中線以下，或從超賣區上升至中線以上，可能預示反轉。</li>
-                            <li><strong>趨勢開始</strong>：CCI 突破 ±100 並持續運行，可能表示新趨勢開始。</li>
-                        </ul>
-
-                        <h3>注意事項</h3>
-                        <ul>
-                            <li>CCI 在強勢趨勢中可能長時間處於極端值，需結合其他指標確認。</li>
-                            <li>週期參數（通常為 20）可根據市場調整，例如短期交易可使用 10，長期交易可使用 30。</li>
-                            <li>CCI 適用於週期性市場，在非週期性市場中可能產生假信號。</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="accordion-item" id="atr">
-                    <div class="accordion-header" onclick="toggleAccordion('atr')">ATR (平均真實波幅)</div>
-                    <div class="accordion-content">
-                        <h3>定義</h3>
-                        <p>平均真實波幅（ATR，Average True Range）是一種波動性指標，用於衡量價格波動的幅度，幫助交易者設置止損點或判斷市場活躍度。ATR 不指示趨勢方向，只反映波動程度。</p>
-
-                        <h3>計算方式</h3>
-                        <ul>
-                            <li>真實波幅（TR）= Max(當前高點 - 當前低點, |當前高點 - 前日收盤|, |當前低點 - 前日收盤|)</li>
-                            <li>ATR = 過去 N 日真實波幅的移動平均（通常 N = 14）</li>
-                        </ul>
-
-                        <h3>示意圖</h3>
-                        <pre>
-價格走勢：     ---***---***---***---***---***---***---
-ATR 曲線：     ---___---___---___---___---___---___---
-高波動：       ^ (ATR 上升，表示波動增加)
-低波動：             ^ (ATR 下降，表示波動減少)
-                        </pre>
-                        <p>圖示說明：ATR 上升表示市場波動增加，可能即將出現大行情；ATR 下降表示市場平靜。</p>
-
-                        <h3>使用場景</h3>
-                        <ul>
-                            <li><strong>止損設置</strong>：止損點可設為當前價格 ± N × ATR，例如 2 倍 ATR。</li>
-                            <li><strong>波動性判斷</strong>：ATR 上升表示波動增加，適合突破策略；ATR 下降表示波動減少，適合區間交易。</li>
-                            <li><strong>入場時機</strong>：ATR 突增可能預示大行情，結合其他指標尋找入場點。</li>
-                        </ul>
-
-                        <h3>注意事項</h3>
-                        <ul>
-                            <li>ATR 不指示趨勢方向，需結合其他趨勢指標使用。</li>
-                            <li>ATR 的週期（通常為 14）可調整，短期交易可使用 7，長期交易可使用 21。</li>
-                            <li>ATR 值隨市場特性不同，需根據歷史數據調整使用標準。</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="accordion-item" id="obv">
-                    <div class="accordion-header" onclick="toggleAccordion('obv')">OBV (成交量淨額)</div>
-                    <div class="accordion-content">
-                        <h3>定義</h3>
-                        <p>成交量淨額（OBV，On-Balance Volume）是一種動量指標，通過累計成交量來預測價格變動，基於成交量與價格的關係，判斷資金流向。</p>
-
-                        <h3>計算方式</h3>
-                        <ul>
-                            <li>若當日收盤價 > 前日收盤價，OBV = 前日 OBV + 當日成交量</li>
-                            <li>若當日收盤價 < 前日收盤價，OBV = 前日 OBV - 當日成交量</li>
-                            <li>若當日收盤價 = 前日收盤價，OBV 不變</li>
-                            <li>初始 OBV 通常設為 0</li>
-                        </ul>
-
-                        <h3>示意圖</h3>
-                        <pre>
-價格走勢：     ---***---***---***---***---***---***---
-OBV 曲線：     ---___---___---___---___---___---___---
-看漲背離：     ^ (價格下跌，OBV 上升，可能反彈)
-看跌背離：           ^ (價格上升，OBV 下跌，可能回落)
-                        </pre>
-                        <p>圖示說明：OBV 與價格背離可能預示反轉，OBV 上升表示資金流入，OBV 下降表示資金流出。</p>
-
-                        <h3>使用場景</h3>
-                        <ul>
-                            <li><strong>趨勢確認</strong>：OBV 上升伴隨價格上漲，確認看漲趨勢；OBV 下降伴隨價格下跌，確認看跌趨勢。</li>
-                            <li><strong>背離信號</strong>：價格創新高但 OBV 未創新高，可能預示下跌；價格創新低但 OBV 未創新低，可能預示上漲。</li>
-                            <li><strong>突破確認</strong>：價格突破關鍵水平時，OBV 同步上升或下降，增加突破可信度。</li>
-                        </ul>
-
-                        <h3>注意事項</h3>
-                        <ul>
-                            <li>OBV 可能受成交量數據質量影響，需注意市場假量問題。</li>
-                            <li>OBV 更適合用於趨勢確認，單獨使用可能不夠準確。</li>
-                            <li>建議結合價格形態或其他指標（如 RSI）進行分析。</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="accordion-item" id="parabolic_sar">
-                    <div class="accordion-header" onclick="toggleAccordion('parabolic_sar')">Parabolic SAR (拋物線指標)</div>
-                    <div class="accordion-content">
-                        <h3>定義</h3>
-                        <p>拋物線指標（Parabolic SAR，Stop and Reverse）是一種趨勢追蹤指標，用於識別趨勢方向並提供潛在的止損點。SAR 點位以拋物線形式出現在價格圖表上。</p>
-
-                        <h3>計算方式</h3>
-                        <ul>
-                            <li>SAR = 前日 SAR + AF × (極端點 - 前日 SAR)</li>
-                            <li>AF（加速因子）初始值通常為 0.02，每創新高/低增加 0.02，最大為 0.2</li>
-                            <li>極端點：看漲趨勢時為最高價，看跌趨勢時為最低價</li>
-                        </ul>
-
-                        <h3>示意圖</h3>
-                        <pre>
-價格走勢：     ---***---***---***---***---***---***---
-SAR 點位：     ...      ...      ...      ...      ...
-看漲：         ^ (SAR 在價格下方)
-看跌：               ^ (SAR 在價格上方)
-                        </pre>
-                        <p>圖示說明：SAR 點位在價格下方表示看漲趨勢，點位在價格上方表示看跌趨勢。</p>
-
-                        <h3>使用場景</h3>
-                        <ul>
-                            <li><strong>趨勢判斷</strong>：SAR 在價格下方，表示看漲趨勢；SAR 在價格上方，表示看跌趨勢。</li>
-                            <li><strong>止損設置</strong>：SAR 點位可用作動態止損點，隨著趨勢發展逐漸靠近價格。</li>
-                            <li><strong>反轉信號</strong>：價格穿越 SAR 點位，可能預示趨勢反轉。</li>
-                        </ul>
-
-                        <h3>注意事項</h3>
-                        <ul>
-                            <li>Parabolic SAR 在震盪市場中可能產生較多假信號，適合用於趨勢市場。</li>
-                            <li>AF 參數（0.02, 0.2）可調整，增加 AF 會使 SAR 更敏感。</li>
-                            <li>建議結合其他趨勢指標（如 ADX）確認趨勢強度。</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="accordion-item" id="williams_r">
-                    <div class="accordion-header" onclick="toggleAccordion('williams_r')">Williams %R (威廉指標)</div>
-                    <div class="accordion-content">
-                        <h3>定義</h3>
-                        <p>威廉指標（Williams %R）是一種動量指標，用於識別超買和超賣狀態，與隨機震盪指標類似，但範圍為 0 到 -100，通常以 14 天為計算週期。</p>
-
-                        <h3>計算方式</h3>
-                        <p>%R = (最高價 - 當前收盤價) / (最高價 - 最低價) × -100</p>
-                        <ul>
-                            <li>最高價和最低價為過去 N 日（通常 N = 14）的價格範圍</li>
-                        </ul>
-
-                        <h3>示意圖</h3>
-                        <pre>
-%R 曲線：      ---***---***---***---***---***---***---
-超買線 (-20)： -----------------20------------------
-超賣線 (-80)： -----------------80------------------
-                        </pre>
-                        <p>圖示說明：%R 高於 -20 表示超買，可能回落；低於 -80 表示超賣，可能反彈。</p>
-
-                        <h3>使用場景</h3>
-                        <ul>
-                            <li><strong>超買/超賣</strong>：%R > -20 時，可能超買；%R < -80 時，可能超賣。</li>
-                            <li><strong>趨勢反轉</strong>：%R 從超買區下跌至中線以下，或從超賣區上升至中線以上，可能預示反轉。</li>
-                            <li><strong>背離信號</strong>：價格創新高但 %R 未創新高，可能預示下跌；價格創新低但 %R 未創新低，可能預示上漲。</li>
-                        </ul>
-
-                        <h3>注意事項</h3>
-                        <ul>
-                            <li>Williams %R 在震盪市場中效果較好，但在強勢趨勢中可能產生假信號。</li>
-                            <li>週期參數（通常為 14）可調整，短期交易可使用 10，長期交易可使用 20。</li>
-                            <li>建議結合其他指標（如 MA 或成交量）確認信號。</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
+            <div class="accordion" id="accordion-container"></div>
         </div>
 
         <!-- Facebook 留言板 -->
         <div class="facebook-comments">
             <h2>留言板</h2>
-            <div class="fb-comments" data-href="https://stockcorp.github.io/technical.html" data-width="100%" data-numposts="5"></div>
+            <div class="fb-comments" data-href="" data-width="100%" data-numposts="5"></div>
         </div>
 
         <!-- 頁腳 -->
-        <footer style="width: 100%;">
-            <p>© 2025 <a href="https://www.youtube.com/@吉米理財學堂" target="_blank">吉米理財學堂</a>。保留所有權利。</p>
+        <footer>
+            <p>© 2025 <a href="" target="_blank"></a>。保留所有權利。</p>
         </footer>
+
+        <!-- 浮動分享按鈕 -->
+        <div class="share-buttons">
+            <a href="https://www.facebook.com/sharer/sharer.php?u=" target="_blank" class="share-button facebook" title="分享到 Facebook">
+                <img src="https://cdnjs.cloudflare.com/ajax/libs/simple-icons/10.0.0/facebook.svg" alt="Facebook Share" width="32" height="32">
+            </a>
+            <a href="https://x.com/intent/tweet?url=" target="_blank" class="share-button x" title="分享到 X">
+                <img src="https://cdnjs.cloudflare.com/ajax/libs/simple-icons/10.0.0/x.svg" alt="X Share" width="32" height="32">
+            </a>
+            <a href="https://www.instagram.com/?url=" target="_blank" class="share-button instagram" title="分享到 Instagram">
+                <img src="https://cdnjs.cloudflare.com/ajax/libs/simple-icons/10.0.0/instagram.svg" alt="Instagram Share" width="32" height="32">
+            </a>
+            <a href="https://line.me/R/msg/text/?技術分析學習%0D%0A" target="_blank" class="share-button line" title="分享到 Line">
+                <img src="https://cdnjs.cloudflare.com/ajax/libs/simple-icons/10.0.0/line.svg" alt="Line Share" width="32" height="32">
+            </a>
+        </div>
     </div>
 
     <script type="text/javascript">
@@ -1090,10 +507,10 @@ SAR 點位：     ...      ...      ...      ...      ...
                     var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
                     var filteredData = jsonData.filter(row => row.some(filledCell));
                     var headerRowIndex = filteredData.findIndex((row, index) =>
-                      row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                        row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
                     );
                     if (headerRowIndex === -1 || headerRowIndex > 25) {
-                      headerRowIndex = 0;
+                        headerRowIndex = 0;
                     }
                     var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex));
                     csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
@@ -1108,6 +525,159 @@ SAR 點位：     ...      ...      ...      ...      ...
     </script>
 
     <script>
+        let settings = {};
+        let accordionContent = [];
+
+        async function loadSettings() {
+            try {
+                const response = await fetch('settings.txt');
+                if (response.ok) {
+                    const text = await response.text();
+                    settings = JSON.parse(text);
+                    updateSeo();
+                    updateNavTabs();
+                    updateFooter();
+                    updateFacebookComments();
+                    updateShareButtons();
+                } else {
+                    throw new Error('無法載入 settings.txt');
+                }
+            } catch (error) {
+                console.error('載入 settings.txt 失敗:', error);
+                updateSeo();
+                updateNavTabs();
+                updateFooter();
+                updateFacebookComments();
+                updateShareButtons();
+            }
+        }
+
+        async function loadTechWiki() {
+            try {
+                const response = await fetch('tech-wiki.txt');
+                if (response.ok) {
+                    const text = await response.text();
+                    accordionContent = JSON.parse(text);
+                    renderAccordion();
+                } else {
+                    throw new Error('無法載入 tech-wiki.txt');
+                }
+            } catch (error) {
+                console.error('載入 tech-wiki.txt 失敗:', error);
+                renderAccordion(); // 使用空陣列作為預設值
+            }
+        }
+
+        function updateSeo() {
+            document.querySelector('meta[name="description"]').content = settings.technicalSeo?.description || '';
+            document.querySelector('meta[name="keywords"]').content = settings.technicalSeo?.keywords || '';
+            document.querySelector('meta[name="author"]').content = settings.technicalSeo?.author || '';
+            document.title = settings.technicalSeo?.title || '技術分析學習 - 股市企業研究院';
+            document.querySelector('meta[property="og:title"]').content = settings.technicalSeo?.ogTitle || '技術分析學習 - 股市企業研究院';
+            document.querySelector('meta[property="og:description"]').content = settings.technicalSeo?.ogDescription || '';
+            document.querySelector('meta[property="og:url"]').content = settings.technicalSeo?.ogUrl || 'https://stockcorp.github.io/technical.html';
+            document.querySelector('script[type="application/ld+json"]').innerHTML = JSON.stringify({
+                "@context": "https://schema.org",
+                "@type": "WebApplication",
+                "name": settings.technicalSeo?.title || '技術分析學習 - 股市企業研究院',
+                "url": settings.technicalSeo?.ogUrl || 'https://stockcorp.github.io/technical.html',
+                "description": settings.technicalSeo?.description || '',
+                "publisher": {
+                    "@type": "Organization",
+                    "name": settings.technicalSeo?.publisherName || '股市企業研究院',
+                    "url": settings.technicalSeo?.publisherUrl || '',
+                    "email": settings.technicalSeo?.publisherEmail || ''
+                },
+                "applicationCategory": "Finance"
+            }, null, 2);
+        }
+
+        function updateNavTabs() {
+            document.getElementById('nav-news').textContent = settings.newsTab ;
+            document.getElementById('nav-technical').textContent = settings.technicalTab ;
+            document.getElementById('nav-personal').textContent = settings.personalTab ;
+        }
+
+        function updateFooter() {
+            const footerLink = document.querySelector('footer a');
+            footerLink.textContent = settings.technicalSeo?.publisherName || '股市企業研究院';
+            footerLink.href = settings.technicalSeo?.publisherUrl || 'https://stockcorp.github.io';
+            document.querySelector('footer p').innerHTML = `© 2025 <a href="${settings.technicalSeo?.publisherUrl || 'https://stockcorp.github.io'}" target="_blank">${settings.technicalSeo?.publisherName || '股市企業研究院'}</a>。保留所有權利。`;
+        }
+
+        function updateFacebookComments() {
+            document.querySelector('.facebook-comments .fb-comments').setAttribute('data-href', settings.technicalSeo?.ogUrl || 'https://stockcorp.github.io/technical.html');
+        }
+
+        function updateShareButtons() {
+            const shareButtons = document.querySelectorAll('.share-buttons a');
+            shareButtons[0].href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(settings.baseUrl + '/technical.html' || 'https://stockcorp.github.io/technical.html')}`;
+            shareButtons[1].href = `https://x.com/intent/tweet?url=${encodeURIComponent(settings.baseUrl + '/technical.html' || 'https://stockcorp.github.io/technical.html')}`;
+            shareButtons[2].href = `https://www.instagram.com/?url=${encodeURIComponent(settings.baseUrl + '/technical.html' || 'https://stockcorp.github.io/technical.html')}`;
+            shareButtons[3].href = `https://line.me/R/msg/text/?${encodeURIComponent((settings.technicalSeo?.title || '技術分析學習') + '\n' + (settings.baseUrl + '/technical.html' || 'https://stockcorp.github.io/technical.html'))}`;
+        }
+
+        function renderAccordion() {
+            const sidebarMenu = document.getElementById('sidebar-menu');
+            const accordionContainer = document.getElementById('accordion-container');
+            sidebarMenu.innerHTML = '';
+            accordionContainer.innerHTML = '';
+
+            accordionContent.forEach((item, index) => {
+                // 側邊欄選單
+                const li = document.createElement('li');
+                const link = document.createElement('a');
+                link.href = `#${item.id || ''}`;
+                link.className = index === 0 ? 'active' : '';
+                link.textContent = item.title || '';
+                link.onclick = () => showAccordion(item.id || '');
+                li.appendChild(link);
+                sidebarMenu.appendChild(li);
+
+                // 手風琴項目
+                const accordionItem = document.createElement('div');
+                accordionItem.className = 'accordion-item';
+                accordionItem.id = item.id || '';
+                const header = document.createElement('div');
+                header.className = 'accordion-header';
+                header.textContent = item.title || '';
+                header.onclick = () => toggleAccordion(item.id || '');
+                const content = document.createElement('div');
+                content.className = 'accordion-content';
+                if (index === 0) content.classList.add('active');
+                content.innerHTML = item.content || ''; // 確保作為 HTML 渲染
+                accordionItem.appendChild(header);
+                accordionItem.appendChild(content);
+                accordionContainer.appendChild(accordionItem);
+            });
+
+            // 處理 URL hash
+            const hash = window.location.hash.substring(1);
+            if (hash && document.getElementById(hash)) {
+                toggleAccordion(hash);
+            } else if (accordionContent.length > 0) {
+                toggleAccordion(accordionContent[0].id);
+            }
+        }
+
+        function toggleAccordion(id) {
+            const content = document.querySelector(`#${id} .accordion-content`);
+            const allContents = document.querySelectorAll('.accordion-content');
+            const allHeaders = document.querySelectorAll('.sidebar a');
+
+            allContents.forEach(item => item.classList.remove('active'));
+            allHeaders.forEach(header => header.classList.remove('active'));
+
+            if (content) content.classList.add('active');
+            const correspondingLink = document.querySelector(`.sidebar a[href="#${id}"]`);
+            if (correspondingLink) correspondingLink.classList.add('active');
+        }
+
+        function showAccordion(id) {
+            toggleAccordion(id);
+            window.location.hash = id;
+        }
+
         // 漢堡選單控制
         function toggleMobileNav() {
             const mobileNav = document.getElementById('mobile-nav');
@@ -1119,39 +689,16 @@ SAR 點位：     ...      ...      ...      ...      ...
             dropdown.classList.toggle('active');
         }
 
-        // 手風琴展開/收起
-        function toggleAccordion(id) {
-            const content = document.querySelector(`#${id} .accordion-content`);
-            const allContents = document.querySelectorAll('.accordion-content');
-            const allHeaders = document.querySelectorAll('.sidebar a');
+        // 初始化
+        loadSettings().then(loadTechWiki);
 
-            // 關閉所有手風琴內容
-            allContents.forEach(item => {
-                item.classList.remove('active');
-            });
-
-            // 移除所有目錄項目的 active 類
-            allHeaders.forEach(header => {
-                header.classList.remove('active');
-            });
-
-            // 展開點擊的手風琴內容
-            content.classList.add('active');
-
-            // 為對應的目錄項目添加 active 類
-            const correspondingLink = document.querySelector(`.sidebar a[href="#${id}"]`);
-            correspondingLink.classList.add('active');
+        // 確保 XLSX 庫加載（如果需要）
+        if (typeof XLSX === 'undefined') {
+            const script = document.createElement('script');
+            script.src = 'https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js';
+            script.onload = loadTechWiki;
+            document.head.appendChild(script);
         }
-
-        // 點擊左側目錄展開對應手風琴
-        function showAccordion(id) {
-            toggleAccordion(id);
-        }
-
-        // 預設展開第一個手風琴項目
-        document.addEventListener('DOMContentLoaded', () => {
-            showAccordion('rsi');
-        });
     </script>
 </body>
 </html>
