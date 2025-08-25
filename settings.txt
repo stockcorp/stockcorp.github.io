@@ -64,13 +64,13 @@
   "dailyCategories": [
     {
       "day": "周一",
-      "category": "台股",
+      "category": "幣圈",
       "feeds": [
-        "https://news.cnyes.com/rss",
-        "https://tw.stock.yahoo.com/rss/index",
-        "https://www.taiwannews.com.tw/rss/economy.xml",
-        "https://focustaiwan.tw/rss/business.xml",
-        "https://www.bnext.com.tw/rss"
+        "https://decrypt.co/feed",
+        "https://cointelegraph.com/rss",
+        "https://news.bitcoin.com/feed/",
+        "https://www.coindesk.com/arc/outboundfeeds/rss/",
+        "https://www.newsbtc.com/feed/"
       ]
     },
     {
