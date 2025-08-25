@@ -130,13 +130,13 @@
     },
     {
       "day": "周日",
-      "category": "黃金",
+      "category": "美股",
       "feeds": [
-        "https://www.kitco.com/news/category/mining/rss",
-        "https://www.kitco.com/rss/gold-live.xml",
-        "https://www.fxstreet.com/news/commodities/gold/rss",
-        "https://www.investing.com/rss/commodities_Gold.rss",
-        "https://goldprice.org/gold-price-rss-feed.xml"
+        "https://www.marketwatch.com/rss/topstories",
+        "https://www.cnbc.com/id/100003114/device/rss/rss.html",
+        "https://www.nasdaq.com/feed/rssoutbound?category=US+Markets",
+        "https://seekingalpha.com/market-news.xml",
+        "https://feeds.a.dj.com/rss/RSSMarketsMain.xml"
       ]
     }
   ],
