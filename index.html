@@ -694,10 +694,7 @@
                         if (key === 'image') {
                             article.images = [value];
                         } else if (key === 'images') {
-                            article.images = value.split(',').map((s, i) => {
-                                if (i === 0) return `${index + 1}.jpg`;
-                                return `${index + 1}-${i}.jpg`;
-                            });
+                            article.images = value.split(',').map(s => s.trim());
                         } else {
                             article[key] = value;
                         }
