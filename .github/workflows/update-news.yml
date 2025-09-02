@@ -2,7 +2,7 @@ name: 每日自動更新新聞與圖片
 
 on:
   schedule:
-    - cron: '0 1 * * *  # UTC 01:00，等於台灣時間早上 9 點（周一到周六）
+    - cron: '0 1 * * 1-7'  # UTC 01:00，等於台灣時間早上 9 點（周一到周六）
   workflow_dispatch:
 
 jobs:
