@@ -1,9 +1,47 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
 
-<!DOCTYPE html>
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3440199491716602"
-         crossorigin="anonymous"></script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3440199491716602"
+     crossorigin="anonymous"></script>
     <!-- Google Tag Manager -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-Q32FFR42XT"></script>
     <script>
@@ -36,14 +74,14 @@
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="即時資產風險分析工具，動態調整投資組合並顯示多資產 RSI 趨勢。支援加密貨幣巨鯨錢包追蹤功能。">
-    <meta name="keywords" content="資產配置, RSI 分析, 投資工具, 巨鯨錢包追蹤, 吉米理財學堂, 股市企業研究院">
+    <meta name="description" content="即時資產風險分析工具，動態調整投資組合並顯示多資產 RSI 趨勢。">
+    <meta name="keywords" content="資產配置, RSI 分析, 投資工具, 吉米理財學堂, 股市企業研究院">
     <meta name="author" content="股市企業研究院">
     <meta name="robots" content="index, follow">
     <title>股市企業研究院 - 即時資產風險 - 吉米理財學堂</title>
     <!-- Open Graph Meta Tags for Social Media -->
     <meta property="og:title" content="股市企業研究院 - 即時資產風險 - 吉米理財學堂">
-    <meta property="og:description" content="即時資產風險分析工具，動態調整投資組合並顯示多資產 RSI 趨勢。支援加密貨幣巨鯨錢包追蹤功能。">
+    <meta property="og:description" content="即時資產風險分析工具，動態調整投資組合並顯示多資產 RSI 趨勢。">
     <meta property="og:url" content="https://stockcorp.github.io/risk.html">
     <meta property="og:type" content="website">
     <!-- Structured Data (JSON-LD) for SEO -->
@@ -53,7 +91,7 @@
         "@type": "WebApplication",
         "name": "即時資產風險",
         "url": "https://stockcorp.github.io/risk.html",
-        "description": "一款動態調整資產配置並顯示多資產 RSI 趨勢的分析工具，支援加密貨幣巨鯨錢包追蹤。",
+        "description": "一款動態調整資產配置並顯示多資產 RSI 趨勢的分析工具。",
         "publisher": {
             "@type": "Organization",
             "name": "吉米理財學堂",
@@ -405,42 +443,6 @@
         .share-button img {
             vertical-align: middle;
         }
-        /* 查詢輸入樣式 */
-        .query-section {
-            width: 100%;
-            background-color: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-        .query-section input, .query-section select {
-            width: calc(100% - 20px);
-            padding: 10px;
-            margin-bottom: 10px;
-            border: 1px solid #e0e0e0;
-            border-radius: 4px;
-        }
-        .query-section button {
-            padding: 10px 20px;
-            background-color: #2563eb;
-            color: #ffffff;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-        .query-section button:hover {
-            background-color: #1e40af;
-        }
-        .result-container {
-            width: 100%;
-            background-color: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            padding: 20px;
-            margin-bottom: 20px;
-        }
     </style>
 </head>
 <body>
@@ -453,20 +455,14 @@
         <!-- 漢堡選單按鈕 -->
         <div class="hamburger" onclick="toggleMobileNav()">☰</div>
 
-        <!-- 導航選單 -->
+         <!-- 導航選單 -->
         <div class="nav-tabs">
             <a href="index.html" class="nav-tab">財經新聞</a>
-            <div class="nav-tab dropdown active">
-                即時資產風險
-                <div class="dropdown-content">
-                    <a href="#asset"><i class="fas fa-chart-pie"></i>1. 資產風險配置</a>
-                    <a href="#whale"><i class="fas fa-wallet"></i>2. 加密貨幣巨鯨錢包追蹤</a>
-                </div>
-            </div>
+            <a href="risk.html" class="nav-tab">即時資產風險</a>
             <div class="nav-tab dropdown">
                 投資理財計算機
                 <div class="dropdown-content">
-                    <a href="crypto_leverage.html"><i class="fas fa-coins"></i>加密貨幣槓桿計算機</a>
+					<a href="crypto_leverage.html"><i class="fas fa-coins"></i>加密貨幣槓桿計算機</a>
                     <a href="stock.html"><i class="fas fa-chart-line"></i>股票利潤計算機</a>
                     <a href="compound.html"><i class="fas fa-percentage"></i>複利計算機</a>
                     <a href="kelly.html"><i class="fas fa-calculator"></i>凱莉計算機</a>
@@ -480,22 +476,18 @@
             <div class="nav-tab dropdown">
                 商業用產生器
                 <div class="dropdown-content">
-                    <a href="quotation.html"><i class="fas fa-file-invoice-dollar"></i>報價單產生器</a>
-                    <a href="house.html"><i class="fas fa-home"></i>房地產投資報酬率計算器</a>
+                    			    <a href="quotation.html"><i class="fas fa-file-invoice-dollar"></i>報價單產生器</a>
+                <a href="house.html"><i class="fas fa-home"></i>房地產投資報酬率計算器</a>
                 </div>
             </div>
-            <a href="technical.html" class="nav-tab">技術分析學習</a>
+            <a href="technical.html" class="nav-tab active">技術分析學習</a>
             <a href="about.html" class="nav-tab">關於我們</a>
         </div>
 
         <!-- 手機版導航 -->
         <div class="mobile-nav" id="mobile-nav">
             <a href="index.html">財經新聞</a>
-            <a href="#" onclick="toggleMobileDropdown('risk-dropdown')">即時資產風險</a>
-            <div class="mobile-dropdown" id="risk-dropdown">
-                <a href="#asset"><i class="fas fa-chart-pie"></i>1. 資產風險配置</a>
-                <a href="#whale"><i class="fas fa-wallet"></i>2. 加密貨幣巨鯨錢包追蹤</a>
-            </div>
+            <a href="risk.html">即時資產風險</a>
             <a href="#" onclick="toggleMobileDropdown('investment-dropdown')">投資理財計算機</a>
             <div class="mobile-dropdown" id="investment-dropdown">
                 <a href="stock.html"><i class="fas fa-chart-line"></i>股票利潤計算機</a>
@@ -509,166 +501,133 @@
             </div>
             <a href="#" onclick="toggleMobileDropdown('business-dropdown')">商業用產生器</a>
             <div class="mobile-dropdown" id="business-dropdown">
-                <a href="quotation.html"><i class="fas fa-file-invoice-dollar"></i>報價單產生器</a>
+                			    <a href="quotation.html"><i class="fas fa-file-invoice-dollar"></i>報價單產生器</a>
                 <a href="house.html"><i class="fas fa-home"></i>房地產投資報酬率計算器</a>
             </div>
-            <a href="technical.html">技術分析學習</a>
+            <a href="technical.html" class="active">技術分析學習</a>
             <a href="about.html">關於我們</a>
         </div>
 
-        <!-- 資產風險配置部分 -->
-        <div id="asset" style="display: block; width: 100%;">
-            <!-- 圓餅圖：動態資產配置 -->
-            <div class="pie-chart-container">
-                <h2>動態資產配置圖</h2>
-                <div id="allocation-pie-chart"></div>
-            </div>
-
-            <!-- 當天 RSI 表格 -->
-            <div class="rsi-table-container">
-                <h2>當天 90 天 RSI 值</h2>
-                <table class="rsi-table">
-                    <thead>
-                        <tr>
-                            <th>資產</th>
-                            <th>RSI 值</th>
-                        </tr>
-                    </thead>
-                    <tbody id="rsi-table-body">
-                        <!-- 表格內容將由 JavaScript 動態生成 -->
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- 規則說明 -->
-            <div class="rules-section">
-                <h2>資產配置與 RSI 分析規則說明</h2>
-                <p>本頁面提供動態資產配置和 RSI 趨勢分析，規則如下：</p>
-                <ul>
-                    <li><strong>資產配置初始比例</strong>：VT 25%、S&P500 26%、AGG 21%、黃金SPDR 15%、比特幣 3%、現金 10%。</li>
-                    <li><strong>現金比例</strong>：在 10%~20% 區間活動。</li>
-                    <li><strong>比特幣比例</strong>：在 3%~6% 區間活動。</li>
-                    <li><strong>黃金SPDR比例</strong>：在 10%~15% 區間活動。</li>
-                    <li><strong>動態調整規則</strong>：
-                        <ul>
-                            <li>根據最近一天的 90 天 RSI 調整五種資產（VT、S&P500、AGG、黃金SPDR、比特幣）的比例。</li>
-                            <li>當某資產的 90 天 RSI 小於 20 時，增加 5% 比例；小於 30 時，增加 2% 比例（超賣，買入信號）。</li>
-                            <li>當某資產的 90 天 RSI 大於 80 時，減少 5% 比例；大於 70 時，減少 2% 比例（超買，賣出信號）。</li>
-                            <li>增加比例時，從其他資產中 RSI 最高的資產減少相應比例；減少比例時，分配給 RSI 最低的資產。</li>
-                            <li>調整後確保所有資產比例不為負數，且總和為 100%。</li>
-                        </ul>
-                    </li>
-                </ul>
-
-                <h3>RSI 指標的詳細使用方法</h3>
-                <p>RSI（Relative Strength Index，相對強弱指數）是一種廣泛使用的技術分析指標，由 J. Welles Wilder 於 1978 年提出，用於衡量資產價格的動量和超買/超賣狀態。RSI 的數值範圍在 0 到 100 之間，通過比較一段時間內價格的漲幅和跌幅，來判斷資產是否處於過度買入（超買）或過度賣出（超賣）的狀態。以下是 RSI 指標的詳細使用方法：</p>
-                <ul>
-                    <li><strong>計算方法</strong>：RSI 通常以 14 天為基準周期（本頁面使用 90 天周期），計算公式如下：
-                        <ul>
-                            <li>首先計算過去 90 天內每日價格的漲跌變化（當日收盤價減去前一日收盤價）。</li>
-                            <li>將漲幅（正數變化）和跌幅（負數變化）分別累加，計算平均漲幅（Avg Gain）和平均跌幅（Avg Loss）。</li>
-                            <li>計算相對強弱（RS）：RS = 平均漲幅 / 平均跌幅。</li>
-                            <li>最終 RSI 公式：RSI = 100 - (100 / (1 + RS))。</li>
-                        </ul>
-                    </li>
-                    <li><strong>超買與超賣判斷</strong>：
-                        <ul>
-                            <li><strong>超買（Overbought）</strong>：當 RSI 高於 70 時，表示資產價格可能過熱，市場情緒過於樂觀，價格可能已漲過頭，短期內可能出現回調或下跌。這是一個賣出信號。</li>
-                            <li><strong>超賣（Oversold）</strong>：當 RSI 低於 30 時，表示資產價格可能被過度拋售，市場情緒過於悲觀，價格可能已跌過頭，短期內可能出現反彈或上漲。這是一個買入信號。</li>
-                            <li>更極端的情況下，RSI 高於 80（極度超買）或低於 20（極度超賣）時，價格反轉的可能性更高。</li>
-                        </ul>
-                    </li>
-                    <li><strong>趨勢確認</strong>：
-                        <ul>
-                            <li>RSI 在 40~60 之間時，通常表示市場處於中性狀態，沒有明顯的超買或超賣信號。</li>
-                            <li>在強勢趨勢中，RSI 可能長期處於高位（例如牛市中 RSI 持續在 70 以上）或低位（例如熊市中 RSI 持續在 30 以下）。此時，RSI 可用於確認趨勢方向，而不一定是反轉信號。</li>
-                        </ul>
-                    </li>
-                    <li><strong>背離（Divergence）分析</strong>：
-                        <ul>
-                            <li><strong>看漲背離</strong>：當資產價格創出新低，但 RSI 反而形成更高的低點時，稱為看漲背離，表明下跌動能減弱，可能預示價格反彈。</li>
-                            <li><strong>看跌背離</strong>：當資產價格創出新高，但 RSI 反而形成更低的高點時，稱為看跌背離，表明上漲動能減弱，可能預示價格回調。</li>
-                        </ul>
-                    </li>
-                    <li><strong>其他應用</strong>：
-                        <ul>
-                            <li><strong>中軸線（50）分析</strong>：RSI 高於 50 通常表示市場處於上行趨勢，低於 50 表示下行趨勢。RSI 突破 50 可以作為趨勢轉換的信號。</li>
-                            <li><strong>時間周期選擇</strong>：短期交易者可能使用 7 天或 14 天 RSI 以捕捉快速波動；長期投資者可能使用 90 天或更長周期（如本頁面）以觀察更穩定的趨勢。</li>
-                        </ul>
-                    </li>
-                    <li><strong>局限性</strong>：
-                        <ul>
-                            <li>RSI 是一個滯後指標，基於歷史價格數據，可能無法及時反映市場最新變化。</li>
-                            <li>在強勢趨勢市場中，RSI 可能長期處於超買或超賣狀態，導致誤判。例如，在牛市中 RSI 可能持續高於 70，但價格仍繼續上漲。</li>
-                            <li>RSI 單獨使用時可能產生假信號，建議結合其他指標（如移動平均線、MACD 或成交量）或基本面分析來提高準確性。</li>
-                        </ul>
-                    </li>
-                </ul>
-
-                <h3>為何使用 20、30、70、80 作為判斷閾值</h3>
-                <p>在本頁面的資產配置策略中，我們根據 RSI 指標的超買與超賣原理，選用了 20、30、70、80 作為判斷資產比例增減的閾值，具體原因如下：</p>
-                <ul>
-                    <li><strong>RSI 低於 30 或 20（超賣，增加比例）</strong>：
-                        <ul>
-                            <li>當 RSI 低於 30 時，資產價格可能已被過度拋售，市場情緒過於悲觀，價格可能低於其內在價值，短期內有較高機率出現反彈或上漲。此時增加資產比例（例如增加 2%）可以抓住潛在的價格反彈機會，符合「低買」的投資原則。</li>
-                            <li>當 RSI 進一步低於 20 時，表示極度超賣狀態，反彈的可能性更高，因此我們進一步加大比例（例如增加 5%），以更積極地捕捉價格反轉的機會。</li>
-                            <li>這種策略基於 RSI 的核心原理：超賣狀態通常是市場情緒過度反應的結果，價格往往會在短期內回歸均值（mean reversion），為投資者提供低位買入的機會。</li>
-                        </ul>
-                    </li>
-                    <li><strong>RSI 高於 70 或 80（超買，減少比例）</strong>：
-                        <ul>
-                            <li>當 RSI 高於 70 時，資產價格可能過熱，市場情緒過於樂觀，價格可能已漲過頭，短期內有較高機率出現回調或下跌。此時減少資產比例（例如減少 2%）可以降低持倉風險，避免價格高位回調時的損失，符合「高賣」的投資原則。</li>
-                            <li>當 RSI 進一步高於 80 時，表示極度超買狀態，回調的可能性更高，因此我們進一步加大減少幅度（例如減少 5%），以更積極地規避潛在下跌風險。</li>
-                            <li>這種策略同樣基於 RSI 的核心原理：超買狀態通常是市場情緒過度亢奮的結果，價格往往會在短期內回歸均值，為投資者提供高位賣出的機會。</li>
-                        </ul>
-                    </li>
-                    <li><strong>選擇 20 和 80 作為極端閾值的原因</strong>：
-                        <ul>
-                            <li>傳統上，RSI 使用 30 和 70 作為超賣和超買的標準閾值。然而，為了捕捉更顯著的價格反轉機會，我們選用了更極端的閾值 20 和 80。當 RSI 達到這些極端值時，市場情緒的過度反應更為明顯，價格反轉的概率更高，適合用於動態調整資產比例。</li>
-                            <li>例如，RSI 低於 20 時，資產可能處於極度低估狀態，反彈潛力更大；RSI 高於 80 時，資產可能處於極度高估狀態，回調風險更大。這種極端閾值的設置使得我們的策略更具針對性，能更好地捕捉顯著的價格波動。</li>
-                        </ul>
-                    </li>
-                    <li><strong>90 天 RSI 的選擇</strong>：
-                        <ul>
-                            <li>我們選擇 90 天作為 RSI 的計算周期，主要是為了捕捉中長期的價格趨勢和市場情緒變化。相較於傳統的 14 天 RSI，90 天 RSI 更能反映長期動量，減少短期價格波動的噪音影響，適合用於資產配置的動態調整。</li>
-                            <li>90 天 RSI 的超買/超賣信號更具穩定性，能更好地反映資產的中期價值偏離情況，為我們的比例調整提供更可靠的依據。</li>
-                        </ul>
-                    </li>
-                </ul>
-                <p>總之，我們的策略利用 RSI 的超買與超賣原理，通過 20、30、70、80 這些閾值來判斷市場情緒的極端狀態，並據此動態調整資產比例，以期在價格低位增加持倉捕捉反彈，在價格高位減少持倉規避回調，從而優化投資組合的風險與收益平衡。</p>
-
-                <p class="disclaimer">本站全部資訊僅供參考用，請勿用於實際投資，投資還是要自行判斷決策。</p>
-            </div>
+        <!-- 圓餅圖：動態資產配置 -->
+        <div class="pie-chart-container">
+            <h2>動態資產配置圖</h2>
+            <div id="allocation-pie-chart"></div>
         </div>
 
-        <!-- 加密貨幣巨鯨錢包追蹤部分 -->
-        <div id="whale" style="display: none; width: 100%;">
-            <div class="rules-section">
-                <h2>加密貨幣巨鯨錢包追蹤</h2>
-                <p>本功能支援公開的100組巨鯨錢包地址（以比特幣為例，可擴展），此外還支援自己輸入錢包地址與選擇鏈查詢功能。支援市面上常見的20種鏈與加密貨幣。點擊查詢後會生成區塊鏈瀏覽器的連結，直接查看錢包詳情，無需 API key。</p>
-                <p class="disclaimer">本站全部資訊僅供參考用，請勿用於實際投資，投資還是要自行判斷決策。</p>
-            </div>
+        <!-- 當天 RSI 表格 -->
+        <div class="rsi-table-container">
+            <h2>當天 90 天 RSI 值</h2>
+            <table class="rsi-table">
+                <thead>
+                    <tr>
+                        <th>資產</th>
+                        <th>RSI 值</th>
+                    </tr>
+                </thead>
+                <tbody id="rsi-table-body">
+                    <!-- 表格內容將由 JavaScript 動態生成 -->
+                </tbody>
+            </table>
+        </div>
 
-            <!-- 公開巨鯨錢包 -->
-            <div class="query-section">
-                <h3>公開巨鯨錢包列表</h3>
-                <select id="whale-select">
-                    <option value="">選擇一個巨鯨錢包</option>
-                </select>
-                <button onclick="queryWhale()">查詢</button>
-            </div>
-            <div id="whale-result" class="result-container"></div>
+        <!-- 規則說明 -->
+        <div class="rules-section">
+            <h2>資產配置與 RSI 分析規則說明</h2>
+            <p>本頁面提供動態資產配置和 RSI 趨勢分析，規則如下：</p>
+            <ul>
+                <li><strong>資產配置初始比例</strong>：VT 25%、S&P500 26%、AGG 21%、黃金SPDR 15%、比特幣 3%、現金 10%。</li>
+                <li><strong>現金比例</strong>：在 10%~20% 區間活動。</li>
+                <li><strong>比特幣比例</strong>：在 3%~6% 區間活動。</li>
+                <li><strong>黃金SPDR比例</strong>：在 10%~15% 區間活動。</li>
+                <li><strong>動態調整規則</strong>：
+                    <ul>
+                        <li>根據最近一天的 90 天 RSI 調整五種資產（VT、S&P500、AGG、黃金SPDR、比特幣）的比例。</li>
+                        <li>當某資產的 90 天 RSI 小於 20 時，增加 5% 比例；小於 30 時，增加 2% 比例（超賣，買入信號）。</li>
+                        <li>當某資產的 90 天 RSI 大於 80 時，減少 5% 比例；大於 70 時，減少 2% 比例（超買，賣出信號）。</li>
+                        <li>增加比例時，從其他資產中 RSI 最高的資產減少相應比例；減少比例時，分配給 RSI 最低的資產。</li>
+                        <li>調整後確保所有資產比例不為負數，且總和為 100%。</li>
+                    </ul>
+                </li>
+            </ul>
 
-            <!-- 自訂查詢 -->
-            <div class="query-section">
-                <h3>自訂錢包查詢</h3>
-                <input id="custom-address" placeholder="輸入錢包地址" type="text">
-                <select id="chain-select">
-                    <option value="">選擇鏈</option>
-                </select>
-                <button onclick="queryCustom()">查詢</button>
-            </div>
-            <div id="custom-result" class="result-container"></div>
+            <h3>RSI 指標的詳細使用方法</h3>
+            <p>RSI（Relative Strength Index，相對強弱指數）是一種廣泛使用的技術分析指標，由 J. Welles Wilder 於 1978 年提出，用於衡量資產價格的動量和超買/超賣狀態。RSI 的數值範圍在 0 到 100 之間，通過比較一段時間內價格的漲幅和跌幅，來判斷資產是否處於過度買入（超買）或過度賣出（超賣）的狀態。以下是 RSI 指標的詳細使用方法：</p>
+            <ul>
+                <li><strong>計算方法</strong>：RSI 通常以 14 天為基準周期（本頁面使用 90 天周期），計算公式如下：
+                    <ul>
+                        <li>首先計算過去 90 天內每日價格的漲跌變化（當日收盤價減去前一日收盤價）。</li>
+                        <li>將漲幅（正數變化）和跌幅（負數變化）分別累加，計算平均漲幅（Avg Gain）和平均跌幅（Avg Loss）。</li>
+                        <li>計算相對強弱（RS）：RS = 平均漲幅 / 平均跌幅。</li>
+                        <li>最終 RSI 公式：RSI = 100 - (100 / (1 + RS))。</li>
+                    </ul>
+                </li>
+                <li><strong>超買與超賣判斷</strong>：
+                    <ul>
+                        <li><strong>超買（Overbought）</strong>：當 RSI 高於 70 時，表示資產價格可能過熱，市場情緒過於樂觀，價格可能已漲過頭，短期內可能出現回調或下跌。這是一個賣出信號。</li>
+                        <li><strong>超賣（Oversold）</strong>：當 RSI 低於 30 時，表示資產價格可能被過度拋售，市場情緒過於悲觀，價格可能已跌過頭，短期內可能出現反彈或上漲。這是一個買入信號。</li>
+                        <li>更極端的情況下，RSI 高於 80（極度超買）或低於 20（極度超賣）時，價格反轉的可能性更高。</li>
+                    </ul>
+                </li>
+                <li><strong>趨勢確認</strong>：
+                    <ul>
+                        <li>RSI 在 40~60 之間時，通常表示市場處於中性狀態，沒有明顯的超買或超賣信號。</li>
+                        <li>在強勢趨勢中，RSI 可能長期處於高位（例如牛市中 RSI 持續在 70 以上）或低位（例如熊市中 RSI 持續在 30 以下）。此時，RSI 可用於確認趨勢方向，而不一定是反轉信號。</li>
+                    </ul>
+                </li>
+                <li><strong>背離（Divergence）分析</strong>：
+                    <ul>
+                        <li><strong>看漲背離</strong>：當資產價格創出新低，但 RSI 反而形成更高的低點時，稱為看漲背離，表明下跌動能減弱，可能預示價格反彈。</li>
+                        <li><strong>看跌背離</strong>：當資產價格創出新高，但 RSI 反而形成更低的高點時，稱為看跌背離，表明上漲動能減弱，可能預示價格回調。</li>
+                    </ul>
+                </li>
+                <li><strong>其他應用</strong>：
+                    <ul>
+                        <li><strong>中軸線（50）分析</strong>：RSI 高於 50 通常表示市場處於上行趨勢，低於 50 表示下行趨勢。RSI 突破 50 可以作為趨勢轉換的信號。</li>
+                        <li><strong>時間周期選擇</strong>：短期交易者可能使用 7 天或 14 天 RSI 以捕捉快速波動；長期投資者可能使用 90 天或更長周期（如本頁面）以觀察更穩定的趨勢。</li>
+                    </ul>
+                </li>
+                <li><strong>局限性</strong>：
+                    <ul>
+                        <li>RSI 是一個滯後指標，基於歷史價格數據，可能無法及時反映市場最新變化。</li>
+                        <li>在強勢趨勢市場中，RSI 可能長期處於超買或超賣狀態，導致誤判。例如，在牛市中 RSI 可能持續高於 70，但價格仍繼續上漲。</li>
+                        <li>RSI 單獨使用時可能產生假信號，建議結合其他指標（如移動平均線、MACD 或成交量）或基本面分析來提高準確性。</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h3>為何使用 20、30、70、80 作為判斷閾值</h3>
+            <p>在本頁面的資產配置策略中，我們根據 RSI 指標的超買與超賣原理，選用了 20、30、70、80 作為判斷資產比例增減的閾值，具體原因如下：</p>
+            <ul>
+                <li><strong>RSI 低於 30 或 20（超賣，增加比例）</strong>：
+                    <ul>
+                        <li>當 RSI 低於 30 時，資產價格可能已被過度拋售，市場情緒過於悲觀，價格可能低於其內在價值，短期內有較高機率出現反彈或上漲。此時增加資產比例（例如增加 2%）可以抓住潛在的價格反彈機會，符合「低買」的投資原則。</li>
+                        <li>當 RSI 進一步低於 20 時，表示極度超賣狀態，反彈的可能性更高，因此我們進一步加大比例（例如增加 5%），以更積極地捕捉價格反轉的機會。</li>
+                        <li>這種策略基於 RSI 的核心原理：超賣狀態通常是市場情緒過度反應的結果，價格往往會在短期內回歸均值（mean reversion），為投資者提供低位買入的機會。</li>
+                    </ul>
+                </li>
+                <li><strong>RSI 高於 70 或 80（超買，減少比例）</strong>：
+                    <ul>
+                        <li>當 RSI 高於 70 時，資產價格可能過熱，市場情緒過於樂觀，價格可能已漲過頭，短期內有較高機率出現回調或下跌。此時減少資產比例（例如減少 2%）可以降低持倉風險，避免價格高位回調時的損失，符合「高賣」的投資原則。</li>
+                        <li>當 RSI 進一步高於 80 時，表示極度超買狀態，回調的可能性更高，因此我們進一步加大減少幅度（例如減少 5%），以更積極地規避潛在下跌風險。</li>
+                        <li>這種策略同樣基於 RSI 的核心原理：超買狀態通常是市場情緒過度亢奮的結果，價格往往會在短期內回歸均值，為投資者提供高位賣出的機會。</li>
+                    </ul>
+                </li>
+                <li><strong>選擇 20 和 80 作為極端閾值的原因</strong>：
+                    <ul>
+                        <li>傳統上，RSI 使用 30 和 70 作為超賣和超買的標準閾值。然而，為了捕捉更顯著的價格反轉機會，我們選用了更極端的閾值 20 和 80。當 RSI 達到這些極端值時，市場情緒的過度反應更為明顯，價格反轉的概率更高，適合用於動態調整資產比例。</li>
+                        <li>例如，RSI 低於 20 時，資產可能處於極度低估狀態，反彈潛力更大；RSI 高於 80 時，資產可能處於極度高估狀態，回調風險更大。這種極端閾值的設置使得我們的策略更具針對性，能更好地捕捉顯著的價格波動。</li>
+                    </ul>
+                </li>
+                <li><strong>90 天 RSI 的選擇</strong>：
+                    <ul>
+                        <li>我們選擇 90 天作為 RSI 的計算周期，主要是為了捕捉中長期的價格趨勢和市場情緒變化。相較於傳統的 14 天 RSI，90 天 RSI 更能反映長期動量，減少短期價格波動的噪音影響，適合用於資產配置的動態調整。</li>
+                        <li>90 天 RSI 的超買/超賣信號更具穩定性，能更好地反映資產的中期價值偏離情況，為我們的比例調整提供更可靠的依據。</li>
+                    </ul>
+                </li>
+            </ul>
+            <p>總之，我們的策略利用 RSI 的超買與超賣原理，通過 20、30、70、80 這些閾值來判斷市場情緒的極端狀態，並據此動態調整資產比例，以期在價格低位增加持倉捕捉反彈，在價格高位減少持倉規避回調，從而優化投資組合的風險與收益平衡。</p>
+
+            <p class="disclaimer">本站全部資訊僅供參考用，請勿用於實際投資，投資還是要自行判斷決策。</p>
         </div>
 
         <!-- Facebook 留言板 -->
@@ -733,167 +692,8 @@
     </script>
 
     <script>
-        // Alpha Vantage API Key for asset risk
+        // Alpha Vantage API Key
         const apiKey = 'A5XBYNGDTUZ4ZRWK';
-
-        // Supported chains (20 common chains)
-        const chains = [
-            { name: 'Bitcoin', id: 'btc-mainnet', currency: 'BTC' },
-            { name: 'Ethereum', id: 'eth-mainnet', currency: 'ETH' },
-            { name: 'Binance Smart Chain', id: 'bsc-mainnet', currency: 'BNB' },
-            { name: 'Polygon', id: 'matic-mainnet', currency: 'MATIC' },
-            { name: 'Avalanche', id: 'avalanche-mainnet', currency: 'AVAX' },
-            { name: 'Solana', id: 'solana-mainnet', currency: 'SOL' },
-            { name: 'Tron', id: 'tron-mainnet', currency: 'TRX' },
-            { name: 'Cardano', id: 'cardano-mainnet', currency: 'ADA' },
-            { name: 'Arbitrum', id: 'arbitrum-mainnet', currency: 'ETH' },
-            { name: 'Optimism', id: 'optimism-mainnet', currency: 'ETH' },
-            { name: 'Base', id: 'base-mainnet', currency: 'ETH' },
-            { name: 'Cronos', id: 'cronos-mainnet', currency: 'CRO' },
-            { name: 'Fantom', id: 'fantom-mainnet', currency: 'FTM' },
-            { name: 'Gnosis', id: 'gnosis-mainnet', currency: 'xDAI' },
-            { name: 'Harmony', id: 'harmony-mainnet', currency: 'ONE' },
-            { name: 'Moonbeam', id: 'moonbeam-mainnet', currency: 'GLMR' },
-            { name: 'Celo', id: 'celo-mainnet', currency: 'CELO' },
-            { name: 'Aptos', id: 'aptos-mainnet', currency: 'APT' },
-            { name: 'Sui', id: 'sui-mainnet', currency: 'SUI' },
-            { name: 'Near', id: 'near-mainnet', currency: 'NEAR' }
-        ];
-
-        // Blockchain explorers for each chain
-        const explorers = {
-            'btc-mainnet': 'https://www.blockchain.com/explorer/addresses/btc/',
-            'eth-mainnet': 'https://etherscan.io/address/',
-            'bsc-mainnet': 'https://bscscan.com/address/',
-            'matic-mainnet': 'https://polygonscan.com/address/',
-            'avalanche-mainnet': 'https://snowtrace.io/address/',
-            'solana-mainnet': 'https://solscan.io/account/',
-            'tron-mainnet': 'https://tronscan.org/#/address/',
-            'cardano-mainnet': 'https://cardanoscan.io/address/',
-            'arbitrum-mainnet': 'https://arbiscan.io/address/',
-            'optimism-mainnet': 'https://optimistic.etherscan.io/address/',
-            'base-mainnet': 'https://basescan.org/address/',
-            'cronos-mainnet': 'https://cronoscan.com/address/',
-            'fantom-mainnet': 'https://ftmscan.com/address/',
-            'gnosis-mainnet': 'https://gnosisscan.io/address/',
-            'harmony-mainnet': 'https://explorer.harmony.one/address/',
-            'moonbeam-mainnet': 'https://moonscan.io/address/',
-            'celo-mainnet': 'https://celoscan.io/address/',
-            'aptos-mainnet': 'https://aptscan.ai/accounts/',
-            'sui-mainnet': 'https://suiscan.xyz/mainnet/account/',
-            'near-mainnet': 'https://nearblocks.io/address/'
-        };
-
-        // Public whale wallets (100 from Bitcoin rich list)
-        const publicWhales = [
-            { chain: 'btc-mainnet', address: '34xp4vRoCGJym3xR7yCVPFHoCNxv4Twseo', note: 'wallet: Binance-coldwallet', balanceNote: '248,598 BTC' },
-            { chain: 'btc-mainnet', address: 'bc1ql49ydapnjafl5t2cp9zqpjwe6pdgmxy98859v2', note: 'wallet: Robinhood-coldwallet', balanceNote: '140,575 BTC' },
-            { chain: 'btc-mainnet', address: 'bc1qgdjqv0av3q56jvd82tkdjpy7gdp9ut8tlqmgrpmv24sq90ecnvqqjwvw97', note: 'wallet: Bitfinex-coldwallet', balanceNote: '130,010 BTC' },
-            { chain: 'btc-mainnet', address: '3M219KR5vEneNb47ewrPfWyb5jQ2DjxRP6', note: 'wallet: Binance-coldwallet', balanceNote: '120,353 BTC' },
-            { chain: 'btc-mainnet', address: 'bc1qazcm763858nkj2dj986etajv6wquslv8uxwczt', note: 'wallet: Bitfinex-Hack-Recovery', balanceNote: '94,643 BTC' },
-            { chain: 'btc-mainnet', address: 'bc1qjasf9z3h7w3jspkhtgatgpyvvzgpa2wwd2lr0eh5tx44reyn2k7sfc27a4', note: 'wallet: Tether', balanceNote: '86,335 BTC' },
-            { chain: 'btc-mainnet', address: 'bc1qd4ysezhmypwty5dnw7c8nqy5h5nxg0xqsvaefd0qn5kq32vwnwqqgv4rzr', note: '', balanceNote: '83,000 BTC' },
-            { chain: 'btc-mainnet', address: '1FeexV6bAHb8ybZjqQMjJrcCrHGW9sb6uF', note: 'wallet: MtGox-Hack', balanceNote: '79,957 BTC' },
-            { chain: 'btc-mainnet', address: 'bc1q8yj0herd4r4yxszw3nkfvt53433thk0f5qst4g', note: '', balanceNote: '78,317 BTC' },
-            { chain: 'btc-mainnet', address: 'bc1qa5wkgaew2dkv56kfvj49j0av5nml45x9ek9hz6', note: 'wallet: SilkRoad-FBI-Confiscated', balanceNote: '69,370 BTC' },
-            { chain: 'btc-mainnet', address: '3LYJfcfHPXYJreMsASk2jkn69LWEYKzexb', note: 'wallet: Binance-BTCB-Reserve', balanceNote: '68,200 BTC' },
-            { chain: 'btc-mainnet', address: '1Ay8vMC7R1UbyCCZRVULMV7iQpHSAbguJP', note: 'wallet: Mr.100', balanceNote: '55,139 BTC' },
-            { chain: 'btc-mainnet', address: '1LdRcdxfbSnmCYYNdeYpUnztiYzVfBEQeC', note: '', balanceNote: '53,880 BTC' },
-            { chain: 'btc-mainnet', address: '1AC4fMwgY8j9onSbXEWeH6Zan8QGMSdmtA', note: '', balanceNote: '51,830 BTC' },
-            { chain: 'btc-mainnet', address: '3MgEAFWu1HKSnZ5ZsC8qf61ZW18xrP5pgd', note: 'wallet: OKEx', balanceNote: '47,236 BTC' },
-            { chain: 'btc-mainnet', address: 'bc1qa2eu6p5rl9255e3xz7fcgm6snn4wl5kdfh7zpt05qp5fad9dmsys0qjg0e', note: '', balanceNote: '44,194 BTC' },
-            { chain: 'btc-mainnet', address: '1LruNZjwamWJXThX2Y8C2d47QqhAkkc5os', note: '', balanceNote: '44,000 BTC' },
-            { chain: 'btc-mainnet', address: 'bc1q0ymzksy046tv4z88ts5nmu7s574umnwmdev3rt', note: '', balanceNote: '42,658 BTC' },
-            { chain: 'btc-mainnet', address: 'bc1q4j7fcl8zx5yl56j00nkqez9zf3f6ggqchwzzcs5hjxwqhsgxvavq3qfgpr', note: 'wallet: Coincheck', balanceNote: '41,466 BTC' },
-            { chain: 'btc-mainnet', address: 'bc1qy3uw2kk45uj9vsy52rjfhydm2tnd6hreu8vha3', note: '', balanceNote: '40,984 BTC' },
-            { chain: 'btc-mainnet', address: '3LQUu4v9z6KNch71j7kbj8GPeAGUo1FW6a', note: 'wallet: Binance-coldwallet', balanceNote: '37,927 BTC' },
-            { chain: 'btc-mainnet', address: 'bc1q7ydrtdn8z62xhslqyqtyt38mm4e2c4h3mxjkug', note: 'wallet: UK-Gov-Confiscated', balanceNote: '36,000 BTC' },
-            { chain: 'btc-mainnet', address: 'bc1qk4m9zv5tnxf2pddd565wugsjrkqkfn90aa0wypj2530f4f7tjwrqntpens', note: 'wallet: BITMEX-coldwallet', balanceNote: '35,277 BTC' },
-            { chain: 'btc-mainnet', address: 'bc1qws342rlkhszh58rtn35zrw7w076puz83gkcufy', note: '', balanceNote: '32,050 BTC' },
-            { chain: 'btc-mainnet', address: 'bc1qx9t2l3pyny2spqpqlye8svce70nppwtaxwdrp4', note: 'wallet: Binance-Pool', balanceNote: '31,643 BTC' },
-            { chain: 'btc-mainnet', address: '3FHNBLobJnbCTFTVakh5TXmEneyf5PT61B', note: 'wallet: Binance-coldwallet', balanceNote: '31,275 BTC' },
-            { chain: 'btc-mainnet', address: '12ib7dApVFvg82TXKycWBNpN8kFyiAN1dr', note: 'wallet: 967', balanceNote: '31,000 BTC' },
-            { chain: 'btc-mainnet', address: '3FuhQLprN9s9MR3bZzR5da7mw75fuahsaU', note: '', balanceNote: '29,359 BTC' },
-            { chain: 'btc-mainnet', address: '12tkqA9xSoowkzoERHMWNKsTey55YEBqkv', note: '', balanceNote: '28,151 BTC' },
-            { chain: 'btc-mainnet', address: 'bc1q8taf2eca7pn9wu4czt8fgftqm288xtfxdyt33syzxuexxty733xsszghzk', note: '', balanceNote: '27,500 BTC' },
-            { chain: 'btc-mainnet', address: 'bc1q7uq3u829ahn22sdlpac0h0lurq3a9yfd3ew69f', note: '', balanceNote: '27,495 BTC' },
-            { chain: 'btc-mainnet', address: '12XqeqZRVkBDgmPLVY4ZC6Y4ruUUEug8Fx', note: '', balanceNote: '27,321 BTC' },
-            { chain: 'btc-mainnet', address: '3EMVdMehEq5SFipQ5UfbsfMsH223sSz9A9', note: '4-of-8', balanceNote: '26,984 BTC' },
-            { chain: 'btc-mainnet', address: '39eYrpgAgDhp4tTjrSb1ppZ5kdAc1ikBYw', note: '', balanceNote: '26,139 BTC' },
-            { chain: 'btc-mainnet', address: '3JZq4atUahhuA9rLhXLMhhTo133J9rF97j', note: 'wallet: Bitfinex-coldwallet', balanceNote: '25,515 BTC' },
-            { chain: 'btc-mainnet', address: '1N7jWmv63mkMdsYzbNUVHbEYDQfcq1u8Yp', note: '', balanceNote: '24,052 BTC' },
-            { chain: 'btc-mainnet', address: '15cHRgVrGKz7qp2JL2N5mkB2MCFGLcnHxv', note: '', balanceNote: '23,600 BTC' },
-            { chain: 'btc-mainnet', address: 'bc1q0y5m6wdxjre0fs9m3u0j3pv2fcja6qw3a2f6ql', note: '', balanceNote: '23,000 BTC' },
-            { chain: 'btc-mainnet', address: 'bc1qysj2w7xsw09datsy9mt9x50jn7qjd6qde6d66qm3ce0a4y9uzdpqcavdr0', note: '', balanceNote: '22,928 BTC' },
-            { chain: 'btc-mainnet', address: 'bc1qcpflj68s3ahy4xajez4d8v3vk28pvf7qte2jmlftvxzfke2u6mqsg3gvh', note: '', balanceNote: '21,691 BTC' },
-            { chain: 'btc-mainnet', address: 'bc1qukw69mjxwp30adfqddv6gcyva26laxz562rhlk', note: '', balanceNote: '20,561 BTC' },
-            { chain: 'btc-mainnet', address: 'bc1qhk0ghcywv0mlmcmz408sdaxudxuk9tvng9xx8g', note: 'wallet: 92995586', balanceNote: '20,057 BTC' },
-            { chain: 'btc-mainnet', address: '17rm2dvb439dZqyMe2d4D6AQJSgg6yeNRn', note: '', balanceNote: '20,008 BTC' },
-            { chain: 'btc-mainnet', address: 'bc1q32lyrhp9zpww22phqjwwmelta0c8a5q990ghs6', note: 'wallet: Ceffu-coldwallet', balanceNote: '19,929 BTC' },
-            { chain: 'btc-mainnet', address: 'bc1qx2x5cqhymfcnjtg902ky6u5t5htmt7fvqztdsm028hkrvxcl4t2sjtpd9l', note: 'wallet: Bitbank-coldwallet', balanceNote: '19,548 BTC' },
-            { chain: 'btc-mainnet', address: '1PeizMg76Cf96nUQrYg8xuoZWLQozU5zGW', note: '', balanceNote: '19,414 BTC' },
-            { chain: 'btc-mainnet', address: 'bc1q8qpfmpf6hcu3tgfvp8dgtf534rws8uhsl9vtk6p2f3r2gnqdz5sqxmty6q', note: '', balanceNote: '18,423 BTC' },
-            { chain: 'btc-mainnet', address: 'bc1qr4dl5wa7kl8yu792dceg9z5knl2gkn220lk7a9', note: 'wallet: Crypto.com-coldwallet', balanceNote: '18,419 BTC' },
-            { chain: 'btc-mainnet', address: '1PJiGp2yDLvUgqeBsuZVCBADArNsk6XEiw', note: 'wallet: Binance-coldwallet', balanceNote: '16,818 BTC' },
-            { chain: 'btc-mainnet', address: '3FM9vDYsN2iuMPKWjAcqgyahdwdrUxhbJ3', note: 'wallet: OKEx', balanceNote: '16,814 BTC' },
-            { chain: 'btc-mainnet', address: 'bc1qfnv2t4ntuhu52ykp06u6uy3nj7ctm2388cs80e', note: '', balanceNote: '16,450 BTC' },
-            { chain: 'btc-mainnet', address: '34HpHYiyQwg69gFmCq2BGHjF1DZnZnBeBP', note: 'wallet: Binance-coldwallet', balanceNote: '16,307 BTC' },
-            { chain: 'btc-mainnet', address: '1GR9qNz7zgtaW5HwwVpEJWMnGWhsbsieCG', note: '', balanceNote: '15,746 BTC' },
-            { chain: 'btc-mainnet', address: '38UmuUqPCrFmQo4khkomQwZ4VbY2nZMJ67', note: 'wallet: OKEx (2-of-6)', balanceNote: '15,067 BTC' },
-            { chain: 'btc-mainnet', address: 'bc1qlt5nm3kflne7rht4alsnzdzad878ld5rcu4na0', note: '', balanceNote: '14,647 BTC' },
-            { chain: 'btc-mainnet', address: '17MWdxfjPYP2PYhdy885QtihfbW181r1rn', note: '', balanceNote: '14,495 BTC' },
-            { chain: 'btc-mainnet', address: '1CNtkWbb4grh8xtb8mhoZ6armNE9PHgzA8', note: '', balanceNote: '14,108 BTC' },
-            { chain: 'btc-mainnet', address: 'bc1q72nyp6mzxjxm02j7t85pg0pq24684zdj2wuweu', note: '', balanceNote: '13,764 BTC' },
-            { chain: 'btc-mainnet', address: 'bc1qcfkga3lyvflf53vt0n2hjd9mr03870pvjw2z72', note: '', balanceNote: '13,514 BTC' },
-            { chain: 'btc-mainnet', address: 'bc1qchctnvmdva5z9vrpxkkxck64v7nmzdtyxsrq64', note: 'wallet: BitMEX', balanceNote: '13,333 BTC' },
-            { chain: 'btc-mainnet', address: 'bc1qvrwzs8unvu35kcred2z5ujjef36s5jgf3y6tp8', note: '', balanceNote: '13,108 BTC' },
-            { chain: 'btc-mainnet', address: 'bc1q4vxn43l44h30nkluqfxd9eckf45vr2awz38lwa', note: 'wallet: UK-Gov-Confiscated', balanceNote: '13,003 BTC' },
-            { chain: 'btc-mainnet', address: 'bc1qkmk4v2xn29yge68fq6zh7gvfdqrvpq3v3p3y0s', note: 'wallet: Bitfinex-Hack-Recovery', balanceNote: '12,267 BTC' },
-            { chain: 'btc-mainnet', address: 'bc1pdscqxcegedsmkwda427yzcwvszu0xeannh85jkzxfg4ehll2e9lqexmvgn', note: '', balanceNote: '11,556 BTC' },
-            { chain: 'btc-mainnet', address: '1F34duy2eeMz5mSrvFepVzy7Y1rBsnAyWC', note: '', balanceNote: '10,771 BTC' },
-            { chain: 'btc-mainnet', address: '1DcoAJJmCexsYCF8h9qBzduNDo2cXAWXFe', note: '', balanceNote: '10,608 BTC' },
-            { chain: 'btc-mainnet', address: 'bc1qxlth5har0qasqvattsjvgp80st2x402u5shuud', note: '', balanceNote: '10,500 BTC' },
-            { chain: 'btc-mainnet', address: 'bc1qpzt4m58zzqgp84ktyuj5tz8g8k8ssg2g2d5eeerwhx4gxulqq5mqjzm5gc', note: '', balanceNote: '10,500 BTC' },
-            { chain: 'btc-mainnet', address: '1Pzaqw98PeRfyHypfqyEgg5yycJRsENrE7', note: 'wallet: Binance-coldwallet', balanceNote: '10,458 BTC' },
-            { chain: 'btc-mainnet', address: '1Q8QR5k32hexiMQnRgkJ6fmmjn5yMWhdv9', note: 'wallet: Binance-Pool', balanceNote: '10,217 BTC' },
-            { chain: 'btc-mainnet', address: '39gUvGynQ7Re3i15G3J2gp9DEB9LnLFPMN', note: '', balanceNote: '10,137 BTC' },
-            { chain: 'btc-mainnet', address: 'bc1q0qqv452e5etk8w58y5gsk5zj4qkp78z3t4tduh', note: 'wallet: Bitfinex-Hack-Recovery', balanceNote: '10,000 BTC' },
-            { chain: 'btc-mainnet', address: 'bc1qlsye5yq2j6n45r7p3tqyv722v0tw9s2j5tltg7', note: '', balanceNote: '10,000 BTC' },
-            { chain: 'btc-mainnet', address: 'bc1qfqezp4q4m2jw4hp3l2lh2q4kdq4l3q5h4w0k0w', note: '', balanceNote: '10,000 BTC' },
-            { chain: 'btc-mainnet', address: 'bc1qklpm6e3l2qh8ttav3fcy4y6c7tlnpwpk9n2c95', note: '', balanceNote: '10,000 BTC' },
-            { chain: 'btc-mainnet', address: 'bc1q4u9g0z8v92uz8cwn4a7y2t3m9h0lh9vqk9gfw', note: '', balanceNote: '10,000 BTC' },
-            { chain: 'btc-mainnet', address: 'bc1q2c7a2t2s5m2xsc7grd5t8ef8l7zq9lhufz9r4', note: '', balanceNote: '10,000 BTC' },
-            { chain: 'btc-mainnet', address: 'bc1q7k2v5g2j3ndd9x3w3scc4c3xcz8y0z', note: '', balanceNote: '10,000 BTC' },
-            { chain: 'btc-mainnet', address: 'bc1q5kjyk2t6n9z8q0m2zknq4ct4p5n2fw', note: '', balanceNote: '10,000 BTC' },
-            { chain: 'btc-mainnet', address: 'bc1q5ts7j0z5r4yxc0qvfsz38nmfh3y4s4', note: '', balanceNote: '10,000 BTC' },
-            { chain: 'btc-mainnet', address: 'bc1q2l3l6u0z0u6j3w8g2y5z99z3zqfhf2', note: '', balanceNote: '10,000 BTC' },
-            { chain: 'btc-mainnet', address: 'bc1q3g5n8yng3fhv6mxg5g5kpxvdp3lfpg', note: '', balanceNote: '10,000 BTC' },
-            { chain: 'btc-mainnet', address: 'bc1q4kqnj0q3zrt8gch0wyzqdzzrtvnzu4', note: '', balanceNote: '10,000 BTC' },
-            { chain: 'btc-mainnet', address: 'bc1q6k7g0eugk28xv7q8g2hpyuqk99y97d', note: '', balanceNote: '10,000 BTC' },
-            { chain: 'btc-mainnet', address: 'bc1q8hglk3jn9kpxqa8st73sdk6vsts3p2', note: '', balanceNote: '10,000 BTC' },
-            { chain: 'btc-mainnet', address: 'bc1q9l2cyuq3lhsu4nzzttsws6e852czq9', note: '', balanceNote: '10,000 BTC' },
-            { chain: 'btc-mainnet', address: 'bc1q0qqv452e5etk8w58y5gsk5zj4qkp78z3t4tduh', note: '', balanceNote: '10,000 BTC' },
-            { chain: 'btc-mainnet', address: 'bc1q2l3l6u0z0u6j3w8g2y5z99z3zqfhf2', note: '', balanceNote: '10,000 BTC' },
-            { chain: 'btc-mainnet', address: 'bc1q3g5n8yng3fhv6mxg5g5kpxvdp3lfpg', note: '', balanceNote: '10,000 BTC' },
-            { chain: 'btc-mainnet', address: 'bc1q4kqnj0q3zrt8gch0wyzqdzzrtvnzu4', note: '', balanceNote: '10,000 BTC' },
-            { chain: 'btc-mainnet', address: 'bc1q6k7g0eugk28xv7q8g2hpyuqk99y97d', note: '', balanceNote: '10,000 BTC' },
-            { chain: 'btc-mainnet', address: 'bc1q8hglk3jn9kpxqa8st73sdk6vsts3p2', note: '', balanceNote: '10,000 BTC' },
-            { chain: 'btc-mainnet', address: 'bc1q9l2cyuq3lhsu4nzzttsws6e852czq9', note: '', balanceNote: '10,000 BTC' },
-            { chain: 'btc-mainnet', address: 'bc1q0qqv452e5etk8w58y5gsk5zj4qkp78z3t4tduh', note: '', balanceNote: '10,000 BTC' },
-            { chain: 'btc-mainnet', address: 'bc1q2l3l6u0z0u6j3w8g2y5z99z3zqfhf2', note: '', balanceNote: '10,000 BTC' },
-            { chain: 'btc-mainnet', address: 'bc1q3g5n8yng3fhv6mxg5g5kpxvdp3lfpg', note: '', balanceNote: '10,000 BTC' },
-            { chain: 'btc-mainnet', address: 'bc1q4kqnj0q3zrt8gch0wyzqdzzrtvnzu4', note: '', balanceNote: '10,000 BTC' },
-            { chain: 'btc-mainnet', address: 'bc1q6k7g0eugk28xv7q8g2hpyuqk99y97d', note: '', balanceNote: '10,000 BTC' },
-            { chain: 'btc-mainnet', address: 'bc1q8hglk3jn9kpxqa8st73sdk6vsts3p2', note: '', balanceNote: '10,000 BTC' },
-            { chain: 'btc-mainnet', address: 'bc1q9l2cyuq3lhsu4nzzttsws6e852czq9', note: '', balanceNote: '10,000 BTC' },
-            { chain: 'btc-mainnet', address: 'bc1q0qqv452e5etk8w58y5gsk5zj4qkp78z3t4tduh', note: '', balanceNote: '10,000 BTC' },
-            { chain: 'btc-mainnet', address: 'bc1q2l3l6u0z0u6j3w8g2y5z99z3zqfhf2', note: '', balanceNote: '10,000 BTC' },
-            { chain: 'btc-mainnet', address: 'bc1q3g5n8yng3fhv6mxg5g5kpxvdp3lfpg', note: '', balanceNote: '10,000 BTC' },
-            { chain: 'btc-mainnet', address: 'bc1q4kqnj0q3zrt8gch0wyzqdzzrtvnzu4', note: '', balanceNote: '10,000 BTC' },
-            { chain: 'btc-mainnet', address: 'bc1q6k7g0eugk28xv7q8g2hpyuqk99y97d', note: '', balanceNote: '10,000 BTC' },
-            { chain: 'btc-mainnet', address: 'bc1q8hglk3jn9kpxqa8st73sdk6vsts3p2', note: '', balanceNote: '10,000 BTC' },
-            { chain: 'btc-mainnet', address: 'bc1q9l2cyuq3lhsu4nzzttsws6e852czq9', note: '', balanceNote: '10,000 BTC' }
-        ];
 
         // 資產清單與對應的 Alpha Vantage 符號
         const assets = [
@@ -1163,7 +963,7 @@
                         { value: allocation['現金'], name: '現金', itemStyle: { color: '#00cc00' } }
                     ],
                     label: {
-                        show: true;
+                        show: true,
                         position: 'inside',
                         formatter: '{b}: {c}%',
                         fontSize: 12,
@@ -1208,79 +1008,13 @@
             mobileNav.classList.toggle('active');
         }
 
-        function toggleMobileDropdown(id) {
-            const dropdown = document.getElementById(id);
+        function toggleMobileDropdown() {
+            const dropdown = document.getElementById('mobile-dropdown');
             dropdown.classList.toggle('active');
         }
 
-        // 顯示指定部分
-        function showSection(section) {
-            const assetSection = document.getElementById('asset');
-            const whaleSection = document.getElementById('whale');
-            if (section === 'whale') {
-                assetSection.style.display = 'none';
-                whaleSection.style.display = 'block';
-            } else {
-                assetSection.style.display = 'block';
-                whaleSection.style.display = 'none';
-            }
-        }
-
-        // 查詢公開巨鯨
-        function queryWhale() {
-            const val = document.getElementById('whale-select').value;
-            if (!val) return;
-            const [chainId, address] = val.split('|');
-            const whale = publicWhales.find(w => w.address === address);
-            let html = '<h3>錢包詳情</h3>';
-            html += `<p>地址: ${address}</p>`;
-            if (whale.note) html += `<p>註記: ${whale.note}</p>`;
-            if (whale.balanceNote) html += `<p>餘額 (參考): ${whale.balanceNote}</p>`;
-            html += `<a href="${explorers[chainId] + address}" target="_blank">在區塊鏈瀏覽器查看詳情</a>`;
-            document.getElementById('whale-result').innerHTML = html;
-        }
-
-        // 查詢自訂錢包
-        function queryCustom() {
-            const address = document.getElementById('custom-address').value.trim();
-            const chainId = document.getElementById('chain-select').value;
-            if (!address || !chainId) return;
-            let html = '<h3>錢包詳情</h3>';
-            html += `<p>地址: ${address}</p>`;
-            html += `<a href="${explorers[chainId] + address}" target="_blank">在區塊鏈瀏覽器查看詳情</a>`;
-            document.getElementById('custom-result').innerHTML = html;
-        }
-
-        // 初始化
-        document.addEventListener('DOMContentLoaded', () => {
-            fetchAndCalculateRSI();
-
-            // 填充鏈選單
-            const chainSelect = document.getElementById('chain-select');
-            chains.forEach(chain => {
-                const option = document.createElement('option');
-                option.value = chain.id;
-                option.text = chain.name;
-                chainSelect.appendChild(option);
-            });
-
-            // 填充公開巨鯨選單
-            const whaleSelect = document.getElementById('whale-select');
-            publicWhales.forEach(whale => {
-                const option = document.createElement('option');
-                option.value = `${whale.chain}|${whale.address}`;
-                option.text = `${whale.note ? whale.note + ' - ' : ''}${whale.address.slice(0, 10)}... (${whale.balanceNote})`;
-                whaleSelect.appendChild(option);
-            });
-
-            // 初始顯示基於 hash
-            showSection(window.location.hash.substring(1));
-
-            // 監聽 hash 變化
-            window.addEventListener('hashchange', () => {
-                showSection(window.location.hash.substring(1));
-            });
-        });
+        // 執行數據抓取和圖表初始化
+        document.addEventListener('DOMContentLoaded', fetchAndCalculateRSI);
     </script>
 <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'93bafbe4cd30c567',t:'MTc0NjU2MDc4OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
 </body>
