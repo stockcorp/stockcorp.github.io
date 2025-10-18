@@ -405,7 +405,6 @@
                     <div id="settings-container" class="settings-container hidden">
                         <div class="settings-tabs">
                             <button class="tab-button active" data-target="seo-settings">SEO 設定</button>
-                            <button class="tab-button" data-target="basic-settings">導航按鈕設定</button>
                             <button class="tab-button" data-target="brand-settings">部落格介紹設定</button>
                             <button class="tab-button" data-target="auto-post-settings">自動發文設定</button>
                         </div>
@@ -450,26 +449,6 @@
                                 </div>
                             </div>
                         </div>
-                        <div id="basic-settings" class="tab-content">
-                            <h2 class="text-xl font-semibold mb-4">導航按鈕設定</h2>
-                            <div class="settings-grid">
-                                <div class="input-group">
-                                    <label for="news-tab">新聞頁標籤</label>
-                                    <input type="text" id="news-tab" placeholder="輸入新聞頁標籤">
-                                    <p class="hint">例如：財經快訊</p>
-                                </div>
-                                <div class="input-group">
-                                    <label for="technical-tab">技術分析頁標籤</label>
-                                    <input type="text" id="technical-tab" placeholder="輸入技術分析頁標籤">
-                                    <p class="hint">例如：市場技術分析</p>
-                                </div>
-                                <div class="input-group">
-                                    <label for="personal-tab">品牌頁標籤</label>
-                                    <input type="text" id="personal-tab" placeholder="輸入品牌頁標籤">
-                                    <p class="hint">例如：關於我們</p>
-                                </div>
-                            </div>
-                        </div>
                         <div id="brand-settings" class="tab-content">
                             <h2 class="text-xl font-semibold mb-4">部落格介紹設定</h2>
                             <div class="settings-grid">
@@ -477,18 +456,13 @@
                                     <label for="personal-image">個人照片或品牌 LOGO</label>
                                     <input type="file" id="personal-image" accept="image/*">
                                     <img id="image-preview" class="image-preview hidden" src="" alt="圖片預覽">
-                                    <p class="hint">建議尺寸 200x200 像素</p>
-                                </div>
-                                <div class="input-group">
-                                    <label for="personal-content">品牌介紹內容</label>
-                                    <textarea id="personal-content" placeholder="輸入品牌介紹內容"></textarea>
-                                    <p class="hint">支援 HTML 格式</p>
+                                    <p class="hint">建議尺寸 200x200 像素，檔案將上傳為 img/about.jpg</p>
                                 </div>
                                 <div class="input-group">
                                     <label for="banner-image">橫幅圖片</label>
                                     <input type="file" id="banner-image" accept="image/*">
                                     <img id="banner-preview" class="image-preview hidden" src="" alt="橫幅預覽">
-                                    <p class="hint">建議尺寸 1200x300 像素，檔案將上傳為 img/banner.jpg</p>
+                                    <p class="hint">建議尺寸 1200x300 像素，檔案將上傳為 img/channels4_banner.jpg</p>
                                 </div>
                             </div>
                         </div>
@@ -728,9 +702,6 @@
             const addWikiBtn = document.getElementById('add-wiki-btn');
             const saveWikiBtn = document.getElementById('save-wiki-btn');
             const saveSettingsBtn = document.getElementById('save-settings-btn');
-            const newsTabInput = document.getElementById('news-tab');
-            const technicalTabInput = document.getElementById('technical-tab');
-            const personalTabInput = document.getElementById('personal-tab');
             const seoTitleInput = document.getElementById('seo-title');
             const seoDescriptionInput = document.getElementById('seo-description');
             const seoDescriptionCount = document.getElementById('seo-description-count');
@@ -742,7 +713,6 @@
             const seoPublisherEmailInput = document.getElementById('seo-publisher-email');
             const personalImageInput = document.getElementById('personal-image');
             const imagePreview = document.getElementById('image-preview');
-            const personalContentInput = document.getElementById('personal-content');
             const bannerImageInput = document.getElementById('banner-image');
             const bannerPreview = document.getElementById('banner-preview');
             const postCountInput = document.getElementById('post-count');
@@ -1034,14 +1004,10 @@ wordCountMaxInput.addEventListener('blur', () => {
                 seoPublisherUrlInput.value = settings.seo?.publisherUrl || '';
                 seoPublisherEmailInput.value = settings.seo?.publisherEmail || '';
                 seoDescriptionCount.textContent = `${seoDescriptionInput.value.length}/160`;
-                newsTabInput.value = settings.newsTab || '';
-                technicalTabInput.value = settings.technicalTab || '';
-                personalTabInput.value = settings.personalTab || '';
                 imagePreview.src = settings.personalImage || '';
                 imagePreview.classList.toggle('hidden', !settings.personalImage);
                 bannerPreview.src = settings.bannerImage || '';
                 bannerPreview.classList.toggle('hidden', !settings.bannerImage);
-                personalContentInput.value = settings.personalContent || '';
                 postCountInput.value = Math.min(settings.scheduleConfig?.count || 1, 5);
                 wordCountMinInput.value = Math.max(settings.contentConfig?.wordCountMin || 1200, 500);
                 wordCountMaxInput.value = Math.min(settings.contentConfig?.wordCountMax || 2000, 3500);
@@ -1684,10 +1650,6 @@ wordCountMaxInput.addEventListener('blur', () => {
                         publisherUrl: seoPublisherUrlInput.value.trim(),
                         publisherEmail: seoPublisherEmailInput.value.trim()
                     };
-                    settings.newsTab = newsTabInput.value.trim();
-                    settings.technicalTab = technicalTabInput.value.trim();
-                    settings.personalTab = personalTabInput.value.trim();
-                    settings.personalContent = personalContentInput.value.trim();
                     settings.scheduleConfig = {
                         count: Math.min(parseInt(postCountInput.value) || 1, 5)
                     };
@@ -1717,7 +1679,7 @@ wordCountMaxInput.addEventListener('blur', () => {
                             reader.onload = () => resolve(reader.result.split(',')[1]);
                             reader.readAsDataURL(file);
                         });
-                        const filename = 'burst-logo.jpg';
+                        const filename = 'about.jpg';
                         let imageSha = null;
                         try {
                             console.log(`檢查現有圖片 ${filename} 以獲取 SHA...`);
@@ -1764,7 +1726,7 @@ wordCountMaxInput.addEventListener('blur', () => {
                             reader.onload = () => resolve(reader.result.split(',')[1]);
                             reader.readAsDataURL(file);
                         });
-                        const filename = 'banner.jpg';
+                        const filename = 'channels4_banner.jpg';
                         let bannerSha = null;
                         try {
                             console.log(`檢查現有橫幅圖片 ${filename} 以獲取 SHA...`);
