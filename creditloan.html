@@ -697,7 +697,11 @@
         <!-- 手機版導航 -->
         <div class="mobile-nav" id="mobile-nav">
             <a href="index.html">財經新聞</a>
-            <a href="risk.html">即時資產風險</a>
+            <a href="#" onclick="toggleMobileDropdown('risk-dropdown')">加密貨幣實用工具</a>
+            <div class="mobile-dropdown" id="risk-dropdown">
+                <a href="risk.html"><i class="fas fa-chart-pie"></i>資產風險配置</a>
+                <a href="wallet.html"><i class="fas fa-wallet"></i>加密貨幣巨鯨錢包追蹤</a>
+            </div>
             <a href="#" onclick="toggleMobileDropdown('investment-dropdown')">投資理財計算機</a>
             <div class="mobile-dropdown" id="investment-dropdown">
                 <a href="stock.html"><i class="fas fa-chart-line"></i>股票利潤計算機</a>
