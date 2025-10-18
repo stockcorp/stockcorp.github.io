@@ -1,4 +1,4 @@
-name: 更新比特幣前100錢包
+name: 每日更新比特幣前100大錢包狀態
 
 on:
   schedule:
@@ -35,4 +35,5 @@ jobs:
           git push
 
 permissions:
+
   contents: write  # 允許寫入檔案
