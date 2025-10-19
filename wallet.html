@@ -405,13 +405,14 @@
             width: max-content;
             min-width: 100%;
             border-collapse: collapse;
-            font-size: 16px;
+            font-size: 12px;
         }
         .whale-table th, .whale-table td {
             padding: 12px 15px;
             text-align: left;
             border-bottom: 1px solid #e0e0e0;
             white-space: nowrap; /* 防止文字換行 */
+            font-size: 12px;
         }
         .whale-table th {
             background-color: #2563eb;
@@ -452,6 +453,15 @@
         }
         .copy-button:hover {
             color: #1e40af;
+        }
+        @media screen and (max-width: 768px) {
+            .whale-table th, .whale-table td {
+                padding: 8px 10px;
+                font-size: 10px;
+            }
+            .whale-table td:nth-child(2) {
+                font-size: 10px; /* 確保地址欄位與其他相同 */
+            }
         }
     </style>
 </head>
@@ -897,4 +907,3 @@
 <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'93bafbe4cd30c567',t:'MTc0NjU2MDc4OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
 </body>
 </html>
-
