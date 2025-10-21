@@ -181,5 +181,3 @@ def update_html_file(wallets):
 if __name__ == "__main__":
     wallets = fetch_top_100()
     update_html_file(wallets)  # 無論如何都更新
-```
-
