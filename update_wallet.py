@@ -152,7 +152,23 @@ def get_fallback_wallets():
         {'rank': '99', 'address': 'bc1q9l2cyuq3lhsu4nzzttsws6e852czq9', 'balance': '10,000 BTC ($1,086,473,758)', 'percentage': '0.0501%', 'first_in': '2025-08-19 19:20:57 UTC', 'last_in': '2025-10-12 21:10:29 UTC', 'ins': '2', 'first_out': '', 'last_out': '', 'outs': '0', 'owner': ''},
         {'rank': '100', 'address': 'bc1q9l2cyuq3lhsu4nzzttsws6e852czq9', 'balance': '10,000 BTC ($1,086,473,758)', 'percentage': '0.0501%', 'first_in': '2025-08-19 19:20:57 UTC', 'last_in': '2025-10-12 21:10:29 UTC', 'ins': '2', 'first_out': '', 'last_out': '', 'outs': '0', 'owner': ''}
     ]
-
+def update_html_file(wallets):
+    html_file = 'wallet.html'
+    if not os.path.exists(html_file):
+        print(f"{html_file} 不存在")
+        return
+    with open(html_file, 'r', encoding='utf-8') as f:
+        content = f.read()
+    # 找到 publicWhales 陣列並替換
+    pattern = r"const publicWhales = \[\s*([\s\S]*?)\s*\];"
+    new_array = "const publicWhales = [\n"
+    for wallet in wallets:
+        new_array += f" {{ rank: {wallet['rank']}, address: \"{wallet['address']}\", balance: \"{wallet['balance']}\", percentage: \"{wallet['percentage']}\", first_in: \"{wallet['first_in']}\", last_in: \"{wallet['last_in']}\", ins: {wallet['ins']}, first_out: \"{wallet['first_out']}\", last_out: \"{wallet['last_out']}\", outs: {wallet['outs']}, owner: \"{wallet['owner']}\" }},\n"
+    new_array += "];"
+    updated_content = re.sub(pattern, new_array, content)
+    with open(html_file, 'w', encoding='utf-8') as f:
+        f.write(updated_content)
+    print("wallet.html 已更新")
 if __name__ == "__main__":
     wallets = fetch_top_100()
-    update_html_file(wallets)  # 每次都更新
+    update_html_file(wallets) # 每次都更新 講中文 這個update_html_file(wallets) # 每次都更新 每次都出錯要怎麼改 要改的html名稱是wallet.html 整個內容完整
