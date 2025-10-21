@@ -188,4 +188,3 @@ def update_html_file(wallets):
     # 找到 publicWhales 陣列並替換
     pattern = r"const publicWhales = \[\s*([\s\S]*?)\s*\];"
     new
-```
