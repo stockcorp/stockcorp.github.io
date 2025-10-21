@@ -12,12 +12,12 @@ def fetch_top_100():
     print(f"Status code: {response.status_code}")
     if response.status_code != 200:
         print("無法抓取資料，使用 fallback")
-        return []  # fallback to empty or hardcoded
+        return get_fallback_wallets()  # 使用 fallback 資料
     soup = BeautifulSoup(response.text, 'html.parser')
     table = soup.find('table', id='tblTop100Wealth')
     if not table:
-        print("找不到表格")
-        return []
+        print("找不到表格，使用 fallback")
+        return get_fallback_wallets()  # 使用 fallback 資料
     rows = table.find_all('tr')[1:]  # 跳過標頭
     wallets = []
     for row in rows[:100]:  # 只取前100
@@ -50,6 +50,15 @@ def fetch_top_100():
         })
     return wallets
 
+def get_fallback_wallets():
+    # 硬編碼的 fallback 資料（這裡只示範前幾筆，您可以擴充到 100 筆）
+    return [
+        {'rank': '1', 'address': '34xp4vRoCGJym3xR7yCVPFHoCNxv4Twseo', 'balance': '248,598 BTC ($26,541,688,352)', 'percentage': '1.25%', 'first_in': '2018-10-18 12:59:18 UTC', 'last_in': '2025-10-13 06:51:51 UTC', 'ins': '5447', 'first_out': '2018-10-18 13:19:26 UTC', 'last_out': '2023-01-07 06:15:34 UTC', 'outs': '451', 'owner': 'Binance-coldwallet'},
+        {'rank': '2', 'address': 'bc1ql49ydapnjafl5t2cp9zqpjwe6pdgmxy98859v2', 'balance': '140,575 BTC ($15,008,566,125)', 'percentage': '0.7052%', 'first_in': '2023-05-08 18:42:20 UTC', 'last_in': '2025-10-13 06:51:51 UTC', 'ins': '481', 'first_out': '2023-05-09 23:16:11 UTC', 'last_out': '2025-01-08 14:54:36 UTC', 'outs': '383', 'owner': 'Robinhood-coldwallet'},
+        # ... (添加剩餘 98 筆資料，類似結構)
+        {'rank': '100', 'address': 'bc1q9l2cyuq3lhsu4nzzttsws6e852czq9', 'balance': '10,000 BTC ($1,086,473,758)', 'percentage': '0.0501%', 'first_in': '2025-08-19 19:20:57 UTC', 'last_in': '2025-10-12 21:10:29 UTC', 'ins': '2', 'first_out': '', 'last_out': '', 'outs': '0', 'owner': ''}
+    ]
+
 def update_html_file(wallets):
     html_file = 'wallet.html'
     if not os.path.exists(html_file):
@@ -70,7 +79,4 @@ def update_html_file(wallets):
 
 if __name__ == "__main__":
     wallets = fetch_top_100()
-    if wallets:
-        update_html_file(wallets)
-    else:
-        print("無新資料，保持原樣")
+    update_html_file(wallets)  # 無論 wallets 是否為空，都強制更新（如果失敗，wallets 會是 fallback）
