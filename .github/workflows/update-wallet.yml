@@ -1,35 +1,24 @@
 name: 每日更新比特幣前100大錢包狀態
-
 on:
   schedule:
-    - cron: '0 0 * * *'  # 每天 UTC 00:00 運行 (台灣時間約 08:00)
-  workflow_dispatch:  # 允許手動觸發
-
+    - cron: '0 0 * * *' # 每天 UTC 00:00 運行 (台灣時間約 08:00)
+  workflow_dispatch: # 允許手動觸發
 jobs:
   update-wallet:
     runs-on: ubuntu-latest
-
     steps:
       - name: 檢查儲存庫
         uses: actions/checkout@v4
-
       - name: 安裝 Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-
-      - name: Install dependencies
+      - name: 安裝依賴
         run: |
-          pip install requests beautifulsoup4 cloudscraper  # 新增 cloudscraper
-
-- name: 安裝依賴
-  run: |
-    python -m pip install --upgrade pip
-    pip install requests beautifulsoup4 cloudscraper openai
-
+          python -m pip install --upgrade pip
+          pip install requests beautifulsoup4 cloudscraper openai
       - name: 執行更新腳本
-        run: python update_wallet.py  # 假設您將腳本命名為 update_wallet.py
-
+        run: python update_wallet.py # 假設您將腳本命名為 update_wallet.py
       - name: Commit 並推送變更
         run: |
           git config --global user.name "GitHub Actions"
@@ -37,7 +26,5 @@ jobs:
           git add wallet.html
           git commit -m "自動更新比特幣前100錢包資料" || echo "無變更"
           git push
-
 permissions:
-  contents: write  # 允許寫入檔案
-
+  contents: write # 允許寫入檔案
