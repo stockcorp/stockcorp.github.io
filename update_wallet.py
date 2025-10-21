@@ -7,7 +7,7 @@ from openai import OpenAI
 import json
 
 # 初始化 OpenAI 客戶端，使用環境變數的 API 密鑰
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY_BITCOIN"))
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 def clean_with_gpt(text):
     """使用 ChatGPT API 清理和格式化抓取的資料（例如，標準化時間或驗證格式）"""
@@ -188,3 +188,4 @@ def update_html_file(wallets):
     # 找到 publicWhales 陣列並替換
     pattern = r"const publicWhales = \[\s*([\s\S]*?)\s*\];"
     new
+
