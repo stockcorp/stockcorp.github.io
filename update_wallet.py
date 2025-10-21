@@ -1,4 +1,4 @@
-```python
+python
 import requests
 from bs4 import BeautifulSoup
 import re
@@ -182,3 +182,4 @@ if __name__ == "__main__":
     wallets = fetch_top_100()
     update_html_file(wallets)  # 無論如何都更新
 ```
+
