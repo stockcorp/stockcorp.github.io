@@ -185,3 +185,10 @@ def update_html_file(wallets):
         content = f.read()
     # 找到 publicWhales 陣列並替換
     pattern = r"const publicWhales = \[\s*([\s\S]*?)\s*\];"
+    new_array = "const publicWhales = [\n"
+    for wallet in wallets:
+        new_array += "    " + str(wallet) + ",\n"
+    new_array += "];\n"
+    new_content = re.sub(pattern, new_array, content)
+    with open(html_file, 'w', encoding='utf-8') as f:
+        f.write(new_content)
