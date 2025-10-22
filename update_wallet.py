@@ -5,25 +5,25 @@ import os
 import openai
 from openai import OpenAI
 import json
-
-# 初始化 OpenAI 客戶端，使用環境變數的 API 密鑰
-client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY_BITCOIN"))
-
+# 初始化 xAI 客戶端，使用環境變數的 API 密鑰
+client = OpenAI(
+    api_key=os.getenv("XAI_API_KEY_BITCOIN"),
+    base_url="https://api.x.ai/v1"
+)
 def clean_with_gpt(text):
-    """使用 ChatGPT API 清理和格式化抓取的資料（例如，標準化時間或驗證格式）"""
+    """使用 Grok API 清理和格式化抓取的資料（例如，標準化時間或驗證格式）"""
     try:
         prompt = f"請清理以下抓取的資料，確保格式正確（例如，時間格式為 'YYYY-MM-DD HH:MM:SS UTC'，數值為數字，移除無效字元）。如果資料無效，返回 'N/A'：\n{text}"
         res = client.chat.completions.create(
-            model="gpt-4o",
+            model="grok-3",
             messages=[{"role": "user", "content": prompt}],
             temperature=0.2,
             max_tokens=100
         )
         return res.choices[0].message.content.strip()
     except Exception as e:
-        print(f"⚠️ ChatGPT 清理資料失敗: {e}")
+        print(f"⚠️ Grok 清理資料失敗: {e}")
         return text if text else "N/A"
-
 def fetch_top_100():
     url = 'https://bitinfocharts.com/top-100-richest-bitcoin-addresses.html'
     scraper = cloudscraper.create_scraper()
@@ -37,11 +37,11 @@ def fetch_top_100():
     if not table:
         print("找不到表格，使用 fallback")
         return get_fallback_wallets()
-    rows = table.find_all('tr')[1:]  # 跳過標頭
+    rows = table.find_all('tr')[1:] # 跳過標頭
     wallets = []
-    for row in rows[:100]:  # 只取前100
+    for row in rows[:100]: # 只取前100
         cells = row.find_all('td')
-        if len(cells) < 13:  # 至少需要 13 欄（包括 7d 和 30d 變化）
+        if len(cells) < 13: # 至少需要 13 欄（包括 7d 和 30d 變化）
             continue
         rank = clean_with_gpt(cells[0].text.strip())
         address = cells[1].find('a').text.strip() if cells[1].find('a') else cells[1].text.strip()
@@ -72,7 +72,6 @@ def fetch_top_100():
             'owner': owner
         })
     return wallets
-
 def get_fallback_wallets():
     # 硬編碼的 100 組備用資料（包含 change 欄位）
     return [
@@ -177,7 +176,6 @@ def get_fallback_wallets():
         {'rank': '99', 'address': 'bc1q9l2cyuq3lhsu4nzzttsws6e852czq9', 'balance': '10,000 BTC ($1,086,473,758)', 'percentage': '0.0501%', 'first_in': '2025-08-19 19:20:57 UTC', 'last_in': '2025-10-12 21:10:29 UTC', 'ins': '2', 'first_out': '', 'last_out': '', 'outs': '0', 'change': '7d:N/A / 30d:N/A', 'owner': ''},
         {'rank': '100', 'address': 'bc1q9l2cyuq3lhsu4nzzttsws6e852czq9', 'balance': '10,000 BTC ($1,086,473,758)', 'percentage': '0.0501%', 'first_in': '2025-08-19 19:20:57 UTC', 'last_in': '2025-10-12 21:10:29 UTC', 'ins': '2', 'first_out': '', 'last_out': '', 'outs': '0', 'change': '7d:N/A / 30d:N/A', 'owner': ''}
     ]
-
 def update_html_file(wallets):
     html_file = 'wallet.html'
     if not os.path.exists(html_file):
@@ -187,4 +185,3 @@ def update_html_file(wallets):
         content = f.read()
     # 找到 publicWhales 陣列並替換
     pattern = r"const publicWhales = \[\s*([\s\S]*?)\s*\];"
-    new
