@@ -5,7 +5,7 @@ import os
 import openai
 from openai import OpenAI
 import json
-import time  # 用於重試延遲和測量時間
+import time  # 用於重試延遲
 
 # 初始化 xAI 客戶端，使用環境變數的 API 密鑰
 client = OpenAI(
@@ -13,40 +13,23 @@ client = OpenAI(
     base_url="https://api.x.ai/v1"
 )
 
-def batch_clean_with_gpt(texts):
-    """批量清理多筆文字資料，一次 API 呼叫處理所有"""
-    if not texts:
-        return []
-    # 將文字編號拼接
-    numbered_text = "\n".join([f"{i+1}. {text}" for i, text in enumerate(texts)])
+def clean_with_gpt(text):
+    """使用 Grok API 清理和格式化抓取的資料（例如，標準化時間或驗證格式）"""
     try:
-        prompt = f"請清理以下編號資料，每筆確保格式正確（時間: 'YYYY-MM-DD HH:MM:SS UTC'，數值為數字，移除無效字元）。如果無效，返回 'N/A'。回傳格式為: 1. 清潔結果\n2. 清潔結果\n...：\n{numbered_text}"
-        start_time = time.time()
+        prompt = f"請清理以下抓取的資料，確保格式正確（例如，時間格式為 'YYYY-MM-DD HH:MM:SS UTC'，數值為數字，移除無效字元）。如果資料無效，返回 'N/A'：\n{text}"
         res = client.chat.completions.create(
             model="grok-3",
             messages=[{"role": "user", "content": prompt}],
             temperature=0.2,
-            max_tokens=4096  # 加大以處理大量資料
+            max_tokens=100
         )
-        elapsed = time.time() - start_time
-        print(f"✅ 批量 API 呼叫成功，花費 {elapsed:.2f} 秒")
-        cleaned_output = res.choices[0].message.content.strip().split("\n")
-        # 解析回傳，提取結果（忽略編號）
-        cleaned = []
-        for line in cleaned_output:
-            if '.' in line:
-                cleaned.append(line.split('.', 1)[1].strip())
-        # 如果數量不匹配，回退原始
-        if len(cleaned) != len(texts):
-            print("⚠️ 批量結果數量不匹配，使用原始資料")
-            return texts
-        return cleaned
+        print("API 使用: 清理 " + text[:20] + "...")  # log API 使用
+        return res.choices[0].message.content.strip()
     except Exception as e:
-        print(f"⚠️ 批量 Grok 清理失敗: {e}")
-        return texts
+        print(f"⚠️ Grok 清理資料失敗: {e}")
+        return text if text else "N/A"
 
 def fetch_top_100():
-    start_time = time.time()
     url = 'https://bitinfocharts.com/top-100-richest-bitcoin-addresses.html'
     scraper = cloudscraper.create_scraper()
     response = None
@@ -65,64 +48,41 @@ def fetch_top_100():
     if not table:
         print("找不到表格，使用 fallback")
         return get_fallback_wallets()
-
     rows = table.find_all('tr')[1:]  # 跳過標頭
     wallets = []
-    all_texts_to_clean = []  # 收集所有需要清理的文字
-
     for row in rows[:100]:  # 只取前100
         cells = row.find_all('td')
         if len(cells) < 13:  # 至少需要 13 欄
             continue
-
-        # 收集需要清理的文字（按順序）
-        all_texts_to_clean.extend([
-            cells[0].text.strip(),  # rank
-            cells[2].text.strip(),  # balance
-            cells[3].text.strip(),  # percentage
-            cells[4].text.strip(),  # first_in
-            cells[5].text.strip(),  # last_in
-            cells[6].text.strip(),  # ins
-            cells[7].text.strip(),  # first_out
-            cells[8].text.strip(),  # last_out
-            cells[9].text.strip(),  # outs
-            cells[10].text.strip() if len(cells) > 10 else 'N/A',  # change_7d
-            cells[11].text.strip() if len(cells) > 11 else 'N/A'   # change_30d
-        ])
-
-        # 暫存不需要清理的欄位
+        rank = clean_with_gpt(cells[0].text.strip())
         address = cells[1].find('a').text.strip() if cells[1].find('a') else cells[1].text.strip()
+        balance = clean_with_gpt(cells[2].text.strip())
+        percentage = clean_with_gpt(cells[3].text.strip())
+        first_in = clean_with_gpt(cells[4].text.strip())
+        last_in = clean_with_gpt(cells[5].text.strip())
+        ins = clean_with_gpt(cells[6].text.strip())
+        first_out = clean_with_gpt(cells[7].text.strip())
+        last_out = clean_with_gpt(cells[8].text.strip())
+        outs = clean_with_gpt(cells[9].text.strip())
+        change_7d = clean_with_gpt(cells[10].text.strip()) if len(cells) > 10 else 'N/A'
+        change_30d = clean_with_gpt(cells[11].text.strip()) if len(cells) > 11 else 'N/A'
+        change = f"7d:{change_7d} / 30d:{change_30d}"
         owner_tag = cells[1].find('span', class_='a')
         owner = owner_tag['title'].strip() if owner_tag and owner_tag.has_attr('title') else ''
         wallets.append({
+            'rank': rank,
             'address': address,
+            'balance': balance,
+            'percentage': percentage,
+            'first_in': first_in,
+            'last_in': last_in,
+            'ins': ins,
+            'first_out': first_out,
+            'last_out': last_out,
+            'outs': outs,
+            'change': change,
             'owner': owner
-        })  # 先存非清理欄位，後續填入清理結果
-
-    # 批量清理所有文字（一次 API 呼叫）
-    if all_texts_to_clean:
-        cleaned_texts = batch_clean_with_gpt(all_texts_to_clean)
-    else:
-        cleaned_texts = []
-
-    # 分配清理結果到 wallets
-    idx = 0
-    for wallet in wallets:
-        if idx + 11 <= len(cleaned_texts):
-            wallet['rank'] = cleaned_texts[idx]
-            wallet['balance'] = cleaned_texts[idx + 1]
-            wallet['percentage'] = cleaned_texts[idx + 2]
-            wallet['first_in'] = cleaned_texts[idx + 3]
-            wallet['last_in'] = cleaned_texts[idx + 4]
-            wallet['ins'] = cleaned_texts[idx + 5]
-            wallet['first_out'] = cleaned_texts[idx + 6]
-            wallet['last_out'] = cleaned_texts[idx + 7]
-            wallet['outs'] = cleaned_texts[idx + 8]
-            change_7d = cleaned_texts[idx + 9]
-            change_30d = cleaned_texts[idx + 10]
-            wallet['change'] = f"7d:{change_7d} / 30d:{change_30d}"
-            idx += 11
-
+        })
     # 如果不足 100 筆，補空白
     while len(wallets) < 100:
         wallets.append({
@@ -139,9 +99,6 @@ def fetch_top_100():
             'change': '7d:N/A / 30d:N/A',
             'owner': ''
         })
-
-    elapsed = time.time() - start_time
-    print(f"抓取與清理完成，花費 {elapsed:.2f} 秒")
     return wallets
 
 def get_fallback_wallets():
@@ -248,38 +205,13 @@ def get_fallback_wallets():
         {'rank': '99', 'address': 'bc1q9l2cyuq3lhsu4nzzttsws6e852czq9', 'balance': '10,000 BTC ($1,086,473,758)', 'percentage': '0.0501%', 'first_in': '2025-08-19 19:20:57 UTC', 'last_in': '2025-10-12 21:10:29 UTC', 'ins': '2', 'first_out': '', 'last_out': '', 'outs': '0', 'change': '7d:N/A / 30d:N/A', 'owner': ''},
         {'rank': '100', 'address': 'bc1q9l2cyuq3lhsu4nzzttsws6e852czq9', 'balance': '10,000 BTC ($1,086,473,758)', 'percentage': '0.0501%', 'first_in': '2025-08-19 19:20:57 UTC', 'last_in': '2025-10-12 21:10:29 UTC', 'ins': '2', 'first_out': '', 'last_out': '', 'outs': '0', 'change': '7d:N/A / 30d:N/A', 'owner': ''}
     ]
-    # 對 fallback 資料批量清理（減少呼叫）
-    all_texts = []
+    # 對 fallback 也用 API 清理 (確保使用量)
     for wallet in fallback:
-        all_texts.extend([
-            wallet['rank'],
-            wallet['balance'],
-            wallet['percentage'],
-            wallet['first_in'],
-            wallet['last_in'],
-            wallet['ins'],
-            wallet['first_out'],
-            wallet['last_out'],
-            wallet['outs'],
-            wallet['change'].split('/')[0].strip(),  # 7d part
-            wallet['change'].split('/')[1].strip()   # 30d part
-        ])
-    cleaned = batch_clean_with_gpt(all_texts)
-    idx = 0
-    for wallet in fallback:
-        wallet['rank'] = cleaned[idx]
-        wallet['balance'] = cleaned[idx + 1]
-        wallet['percentage'] = cleaned[idx + 2]
-        wallet['first_in'] = cleaned[idx + 3]
-        wallet['last_in'] = cleaned[idx + 4]
-        wallet['ins'] = cleaned[idx + 5]
-        wallet['first_out'] = cleaned[idx + 6]
-        wallet['last_out'] = cleaned[idx + 7]
-        wallet['outs'] = cleaned[idx + 8]
-        change_7d = cleaned[idx + 9]
-        change_30d = cleaned[idx + 10]
-        wallet['change'] = f"7d:{change_7d} / 30d:{change_30d}"
-        idx += 11
+        wallet['balance'] = clean_with_gpt(wallet['balance'])
+        wallet['percentage'] = clean_with_gpt(wallet['percentage'])
+        wallet['first_in'] = clean_with_gpt(wallet['first_in'])
+        wallet['last_in'] = clean_with_gpt(wallet['last_in'])
+        # ... (其他欄位類似，如果需要)
     return fallback
 
 def update_html_file(wallets):
@@ -292,15 +224,16 @@ def update_html_file(wallets):
         content = f.read()
     # 找到 publicWhales 陣列並替換
     pattern = r"const publicWhales = \[\s*([\s\S]*?)\s*\];"
+    # 加時間戳強制變更
     timestamp = time.strftime("%Y-%m-%d %H:%M:%S")
     new_array = f"// Updated at {timestamp}\nconst publicWhales = [\n"
     for wallet in wallets:
         new_array += "    " + str(wallet) + ",\n"
-    new_array = new_array.rstrip(',\n') + "\n];"
+    new_array += "];\n"
     new_content = re.sub(pattern, new_array, content)
     with open(html_file, 'w', encoding='utf-8') as f:
         f.write(new_content)
-    print("✅ HTML 更新完成")
+    print("HTML 更新完成")
 
 if __name__ == "__main__":
     wallets = fetch_top_100()
