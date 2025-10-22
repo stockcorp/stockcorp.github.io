@@ -5,58 +5,94 @@ import os
 import openai
 from openai import OpenAI
 import json
+import time  # 新增，用於重試延遲
+
 # 初始化 xAI 客戶端，使用環境變數的 API 密鑰
 client = OpenAI(
     api_key=os.getenv("XAI_API_KEY_BITCOIN"),
     base_url="https://api.x.ai/v1"
 )
-def clean_with_gpt(text):
-    """使用 Grok API 清理和格式化抓取的資料（例如，標準化時間或驗證格式）"""
+
+def batch_clean_with_gpt(data_list):
+    """批量使用 Grok API 清理多筆資料"""
+    if not data_list:
+        return []
+    text = "\n".join(data_list)
     try:
-        prompt = f"請清理以下抓取的資料，確保格式正確（例如，時間格式為 'YYYY-MM-DD HH:MM:SS UTC'，數值為數字，移除無效字元）。如果資料無效，返回 'N/A'：\n{text}"
+        prompt = f"請清理以下多行資料，每行確保格式正確（例如，時間格式為 'YYYY-MM-DD HH:MM:SS UTC'，數值為數字，移除無效字元）。如果資料無效，返回 'N/A'。逐行回傳清理結果：\n{text}"
         res = client.chat.completions.create(
             model="grok-3",
             messages=[{"role": "user", "content": prompt}],
             temperature=0.2,
-            max_tokens=100
+            max_tokens=2000  # 調整以處理多筆資料
         )
-        return res.choices[0].message.content.strip()
+        cleaned = res.choices[0].message.content.strip().split("\n")
+        # 確保返回的清潔結果數量匹配輸入
+        if len(cleaned) != len(data_list):
+            print("⚠️ 批量清理結果數量不匹配，使用原始資料")
+            return data_list
+        return cleaned
     except Exception as e:
-        print(f"⚠️ Grok 清理資料失敗: {e}")
-        return text if text else "N/A"
+        print(f"⚠️ Grok 批量清理失敗: {e}")
+        return data_list
+
 def fetch_top_100():
     url = 'https://bitinfocharts.com/top-100-richest-bitcoin-addresses.html'
     scraper = cloudscraper.create_scraper()
-    response = scraper.get(url)
-    print(f"Status code: {response.status_code}")
+    response = None
+    for attempt in range(3):  # 重試 3 次
+        response = scraper.get(url)
+        print(f"嘗試 {attempt+1} - Status code: {response.status_code}")
+        if response.status_code == 200:
+            break
+        time.sleep(5)  # 延遲 5 秒
     if response.status_code != 200:
         print("無法抓取資料，使用 fallback")
         return get_fallback_wallets()
+
     soup = BeautifulSoup(response.text, 'html.parser')
     table = soup.find('table', id='tblTop100Wealth')
     if not table:
         print("找不到表格，使用 fallback")
         return get_fallback_wallets()
-    rows = table.find_all('tr')[1:] # 跳過標頭
+
+    rows = table.find_all('tr')[1:]  # 跳過標頭
     wallets = []
-    for row in rows[:100]: # 只取前100
+    for row in rows[:100]:  # 只取前100
         cells = row.find_all('td')
-        if len(cells) < 13: # 至少需要 13 欄（包括 7d 和 30d 變化）
+        if len(cells) < 13:  # 至少需要 13 欄（包括 7d 和 30d 變化）
             continue
-        rank = clean_with_gpt(cells[0].text.strip())
-        address = cells[1].find('a').text.strip() if cells[1].find('a') else cells[1].text.strip()
-        balance = clean_with_gpt(cells[2].text.strip())
-        percentage = clean_with_gpt(cells[3].text.strip())
-        first_in = clean_with_gpt(cells[4].text.strip())
-        last_in = clean_with_gpt(cells[5].text.strip())
-        ins = clean_with_gpt(cells[6].text.strip())
-        first_out = clean_with_gpt(cells[7].text.strip())
-        last_out = clean_with_gpt(cells[8].text.strip())
-        outs = clean_with_gpt(cells[9].text.strip())
-        change_7d = clean_with_gpt(cells[10].text.strip()) if len(cells) > 10 else 'N/A'
-        change_30d = clean_with_gpt(cells[11].text.strip()) if len(cells) > 11 else 'N/A'
+
+        # 收集需要清理的欄位文本
+        texts_to_clean = [
+            cells[0].text.strip(),  # rank
+            cells[2].text.strip(),  # balance
+            cells[3].text.strip(),  # percentage
+            cells[4].text.strip(),  # first_in
+            cells[5].text.strip(),  # last_in
+            cells[6].text.strip(),  # ins
+            cells[7].text.strip(),  # first_out
+            cells[8].text.strip(),  # last_out
+            cells[9].text.strip(),  # outs
+            cells[10].text.strip() if len(cells) > 10 else 'N/A',  # change_7d
+            cells[11].text.strip() if len(cells) > 11 else 'N/A'   # change_30d
+        ]
+
+        # 批量清理
+        cleaned_texts = batch_clean_with_gpt(texts_to_clean)
+
+        # 分配清理結果
+        rank, balance, percentage, first_in, last_in, ins, first_out, last_out, outs, change_7d, change_30d = cleaned_texts
+
         change = f"7d:{change_7d} / 30d:{change_30d}"
-        owner = cells[1].find('span', class_='a')['title'].strip() if cells[1].find('span', class_='a') else ''
+
+        # 安全提取 owner
+        owner_tag = cells[1].find('span', class_='a')
+        owner = owner_tag['title'].strip() if owner_tag and owner_tag.has_attr('title') else ''
+
+        # 提取 address
+        address = cells[1].find('a').text.strip() if cells[1].find('a') else cells[1].text.strip()
+
         wallets.append({
             'rank': rank,
             'address': address,
@@ -71,7 +107,14 @@ def fetch_top_100():
             'change': change,
             'owner': owner
         })
+
+    # 保存為 JSON
+    with open("top100_wallets.json", "w", encoding="utf-8") as f:
+        json.dump(wallets, f, ensure_ascii=False, indent=2)
+    print("✅ 已儲存 top100_wallets.json")
+
     return wallets
+
 def get_fallback_wallets():
     # 硬編碼的 100 組備用資料（包含 change 欄位）
     return [
