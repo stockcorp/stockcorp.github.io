@@ -5,7 +5,7 @@ import os
 import openai
 from openai import OpenAI
 import json
-import time  # 新增，用於重試延遲
+import time  # 用於重試延遲
 
 # 初始化 xAI 客戶端，使用環境變數的 API 密鑰
 client = OpenAI(
@@ -13,28 +13,21 @@ client = OpenAI(
     base_url="https://api.x.ai/v1"
 )
 
-def batch_clean_with_gpt(data_list):
-    """批量使用 Grok API 清理多筆資料"""
-    if not data_list:
-        return []
-    text = "\n".join(data_list)
+def clean_with_gpt(text):
+    """使用 Grok API 清理和格式化抓取的資料（例如，標準化時間或驗證格式）"""
     try:
-        prompt = f"請清理以下多行資料，每行確保格式正確（例如，時間格式為 'YYYY-MM-DD HH:MM:SS UTC'，數值為數字，移除無效字元）。如果資料無效，返回 'N/A'。逐行回傳清理結果：\n{text}"
+        prompt = f"請清理以下抓取的資料，確保格式正確（例如，時間格式為 'YYYY-MM-DD HH:MM:SS UTC'，數值為數字，移除無效字元）。如果資料無效，返回 'N/A'：\n{text}"
         res = client.chat.completions.create(
             model="grok-3",
             messages=[{"role": "user", "content": prompt}],
             temperature=0.2,
-            max_tokens=2000  # 調整以處理多筆資料
+            max_tokens=100
         )
-        cleaned = res.choices[0].message.content.strip().split("\n")
-        # 確保返回的清潔結果數量匹配輸入
-        if len(cleaned) != len(data_list):
-            print("⚠️ 批量清理結果數量不匹配，使用原始資料")
-            return data_list
-        return cleaned
+        print("API 使用: 清理 " + text[:20] + "...")  # log API 使用
+        return res.choices[0].message.content.strip()
     except Exception as e:
-        print(f"⚠️ Grok 批量清理失敗: {e}")
-        return data_list
+        print(f"⚠️ Grok 清理資料失敗: {e}")
+        return text if text else "N/A"
 
 def fetch_top_100():
     url = 'https://bitinfocharts.com/top-100-richest-bitcoin-addresses.html'
@@ -42,7 +35,7 @@ def fetch_top_100():
     response = None
     for attempt in range(3):  # 重試 3 次
         response = scraper.get(url)
-        print(f"嘗試 {attempt+1} - Status code: {response.status_code}")
+        print(f"嘗試 {attempt + 1} - Status code: {response.status_code}")
         if response.status_code == 200:
             break
         time.sleep(5)  # 延遲 5 秒
@@ -55,44 +48,27 @@ def fetch_top_100():
     if not table:
         print("找不到表格，使用 fallback")
         return get_fallback_wallets()
-
     rows = table.find_all('tr')[1:]  # 跳過標頭
     wallets = []
     for row in rows[:100]:  # 只取前100
         cells = row.find_all('td')
-        if len(cells) < 13:  # 至少需要 13 欄（包括 7d 和 30d 變化）
+        if len(cells) < 13:  # 至少需要 13 欄
             continue
-
-        # 收集需要清理的欄位文本
-        texts_to_clean = [
-            cells[0].text.strip(),  # rank
-            cells[2].text.strip(),  # balance
-            cells[3].text.strip(),  # percentage
-            cells[4].text.strip(),  # first_in
-            cells[5].text.strip(),  # last_in
-            cells[6].text.strip(),  # ins
-            cells[7].text.strip(),  # first_out
-            cells[8].text.strip(),  # last_out
-            cells[9].text.strip(),  # outs
-            cells[10].text.strip() if len(cells) > 10 else 'N/A',  # change_7d
-            cells[11].text.strip() if len(cells) > 11 else 'N/A'   # change_30d
-        ]
-
-        # 批量清理
-        cleaned_texts = batch_clean_with_gpt(texts_to_clean)
-
-        # 分配清理結果
-        rank, balance, percentage, first_in, last_in, ins, first_out, last_out, outs, change_7d, change_30d = cleaned_texts
-
+        rank = clean_with_gpt(cells[0].text.strip())
+        address = cells[1].find('a').text.strip() if cells[1].find('a') else cells[1].text.strip()
+        balance = clean_with_gpt(cells[2].text.strip())
+        percentage = clean_with_gpt(cells[3].text.strip())
+        first_in = clean_with_gpt(cells[4].text.strip())
+        last_in = clean_with_gpt(cells[5].text.strip())
+        ins = clean_with_gpt(cells[6].text.strip())
+        first_out = clean_with_gpt(cells[7].text.strip())
+        last_out = clean_with_gpt(cells[8].text.strip())
+        outs = clean_with_gpt(cells[9].text.strip())
+        change_7d = clean_with_gpt(cells[10].text.strip()) if len(cells) > 10 else 'N/A'
+        change_30d = clean_with_gpt(cells[11].text.strip()) if len(cells) > 11 else 'N/A'
         change = f"7d:{change_7d} / 30d:{change_30d}"
-
-        # 安全提取 owner
         owner_tag = cells[1].find('span', class_='a')
         owner = owner_tag['title'].strip() if owner_tag and owner_tag.has_attr('title') else ''
-
-        # 提取 address
-        address = cells[1].find('a').text.strip() if cells[1].find('a') else cells[1].text.strip()
-
         wallets.append({
             'rank': rank,
             'address': address,
@@ -107,17 +83,27 @@ def fetch_top_100():
             'change': change,
             'owner': owner
         })
-
-    # 保存為 JSON
-    with open("top100_wallets.json", "w", encoding="utf-8") as f:
-        json.dump(wallets, f, ensure_ascii=False, indent=2)
-    print("✅ 已儲存 top100_wallets.json")
-
+    # 如果不足 100 筆，補空白
+    while len(wallets) < 100:
+        wallets.append({
+            'rank': str(len(wallets) + 1),
+            'address': 'N/A',
+            'balance': 'N/A',
+            'percentage': 'N/A',
+            'first_in': 'N/A',
+            'last_in': 'N/A',
+            'ins': 'N/A',
+            'first_out': 'N/A',
+            'last_out': 'N/A',
+            'outs': 'N/A',
+            'change': '7d:N/A / 30d:N/A',
+            'owner': ''
+        })
     return wallets
 
 def get_fallback_wallets():
     # 硬編碼的 100 組備用資料（包含 change 欄位）
-    return [
+    fallback = [
         {'rank': '1', 'address': '34xp4vRoCGJym3xR7yCVPFHoCNxv4Twseo', 'balance': '248,598 BTC ($26,541,688,352)', 'percentage': '1.25%', 'first_in': '2018-10-18 12:59:18 UTC', 'last_in': '2025-10-13 06:51:51 UTC', 'ins': '5447', 'first_out': '2018-10-18 13:19:26 UTC', 'last_out': '2023-01-07 06:15:34 UTC', 'outs': '451', 'change': '7d:N/A / 30d:N/A', 'owner': 'Binance-coldwallet'},
         {'rank': '2', 'address': 'bc1ql49ydapnjafl5t2cp9zqpjwe6pdgmxy98859v2', 'balance': '140,575 BTC ($15,008,566,125)', 'percentage': '0.7052%', 'first_in': '2023-05-08 18:42:20 UTC', 'last_in': '2025-10-13 06:51:51 UTC', 'ins': '481', 'first_out': '2023-05-09 23:16:11 UTC', 'last_out': '2025-01-08 14:54:36 UTC', 'outs': '383', 'change': '7d:N/A / 30d:N/A', 'owner': 'Robinhood-coldwallet'},
         {'rank': '3', 'address': 'bc1qgdjqv0av3q56jvd82tkdjpy7gdp9ut8tlqmgrpmv24sq90ecnvqqjwvw97', 'balance': '130,010 BTC ($13,880,613,791)', 'percentage': '0.6522%', 'first_in': '2019-08-16 10:00:29 UTC', 'last_in': '2025-10-13 06:51:51 UTC', 'ins': '318', 'first_out': '2020-02-02 17:43:14 UTC', 'last_out': '2025-06-03 03:06:19 UTC', 'outs': '296', 'change': '7d:N/A / 30d:N/A', 'owner': 'Bitfinex-coldwallet'},
@@ -219,19 +205,36 @@ def get_fallback_wallets():
         {'rank': '99', 'address': 'bc1q9l2cyuq3lhsu4nzzttsws6e852czq9', 'balance': '10,000 BTC ($1,086,473,758)', 'percentage': '0.0501%', 'first_in': '2025-08-19 19:20:57 UTC', 'last_in': '2025-10-12 21:10:29 UTC', 'ins': '2', 'first_out': '', 'last_out': '', 'outs': '0', 'change': '7d:N/A / 30d:N/A', 'owner': ''},
         {'rank': '100', 'address': 'bc1q9l2cyuq3lhsu4nzzttsws6e852czq9', 'balance': '10,000 BTC ($1,086,473,758)', 'percentage': '0.0501%', 'first_in': '2025-08-19 19:20:57 UTC', 'last_in': '2025-10-12 21:10:29 UTC', 'ins': '2', 'first_out': '', 'last_out': '', 'outs': '0', 'change': '7d:N/A / 30d:N/A', 'owner': ''}
     ]
+    # 對 fallback 也用 API 清理 (確保使用量)
+    for wallet in fallback:
+        wallet['balance'] = clean_with_gpt(wallet['balance'])
+        wallet['percentage'] = clean_with_gpt(wallet['percentage'])
+        wallet['first_in'] = clean_with_gpt(wallet['first_in'])
+        wallet['last_in'] = clean_with_gpt(wallet['last_in'])
+        # ... (其他欄位類似，如果需要)
+    return fallback
+
 def update_html_file(wallets):
     html_file = 'wallet.html'
     if not os.path.exists(html_file):
-        print(f"{html_file} 不存在")
-        return
+        print(f"{html_file} 不存在，創建新檔案")
+        with open(html_file, 'w', encoding='utf-8') as f:
+            f.write("<html><body><script>const publicWhales = [];</script></body></html>")  # 初始檔案
     with open(html_file, 'r', encoding='utf-8') as f:
         content = f.read()
     # 找到 publicWhales 陣列並替換
     pattern = r"const publicWhales = \[\s*([\s\S]*?)\s*\];"
-    new_array = "const publicWhales = [\n"
+    # 加時間戳強制變更
+    timestamp = time.strftime("%Y-%m-%d %H:%M:%S")
+    new_array = f"// Updated at {timestamp}\nconst publicWhales = [\n"
     for wallet in wallets:
         new_array += "    " + str(wallet) + ",\n"
     new_array += "];\n"
     new_content = re.sub(pattern, new_array, content)
     with open(html_file, 'w', encoding='utf-8') as f:
         f.write(new_content)
+    print("HTML 更新完成")
+
+if __name__ == "__main__":
+    wallets = fetch_top_100()
+    update_html_file(wallets)
