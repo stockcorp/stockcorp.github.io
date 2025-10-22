@@ -1,34 +1,26 @@
 name: 每日更新比特幣前100大錢包狀態
-
 on:
   schedule:
     - cron: '0 0 * * *' # 每天 UTC 00:00（台灣早上 08:00）
   workflow_dispatch: # 支援手動觸發
-
 jobs:
   update-wallet:
     runs-on: ubuntu-latest
-
     steps:
       - name: 檢查儲存庫
         uses: actions/checkout@v4
-
       - name: 安裝 Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-
       - name: 安裝依賴套件
         run: |
           python -m pip install --upgrade pip
           pip install requests beautifulsoup4 cloudscraper openai
-
-      - name: 設定 OpenAI API 金鑰
-        run: echo "OPENAI_API_KEY_BITCOIN=${{ secrets.OPENAI_API_KEY_BITCOIN }}" >> $GITHUB_ENV
-
+      - name: 設定 xAI API 金鑰
+        run: echo "XAI_API_KEY_BITCOIN=${{ secrets.XAI_API_KEY_BITCOIN }}" >> $GITHUB_ENV
       - name: 執行更新腳本
         run: python update_wallet.py
-
       - name: Commit 並推送變更
         run: |
           git config --global user.name "GitHub Actions"
@@ -36,6 +28,5 @@ jobs:
           git add wallet.html || true
           git diff-index --quiet HEAD || git commit -m "自動更新比特幣前100錢包資料"
           git push
-
 permissions:
   contents: write
