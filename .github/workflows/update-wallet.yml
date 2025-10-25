@@ -6,6 +6,8 @@ on:
 jobs:
   update-wallet:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: 檢查儲存庫
         uses: actions/checkout@v4
@@ -21,13 +23,16 @@ jobs:
         run: echo "XAI_API_KEY_BITCOIN=${{ secrets.XAI_API_KEY_BITCOIN }}" >> $GITHUB_ENV
       - name: 執行更新腳本
         run: python update_wallet.py
+      - name: 檢查 wallet.html 是否存在
+        run: |
+          if [ ! -f wallet.html ]; then
+            echo "錯誤：wallet.html 未生成"
+            exit 1
+          fi
       - name: Commit 並推送變更
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
-          git add wallet.html || true
-          git diff-index --quiet HEAD || git commit -m "自動更新比特幣前100錢包資料" $(date +'%Y-%m-%d %H:%M:%S')"
-          git push
-permissions:
-  contents: write
-
+          git add wallet.html
+          git diff-index --quiet HEAD || git commit -m "自動更新比特幣前100錢包資料 $(TZ=Asia/Taipei date +'%Y-%m-%d %H:%M:%S')"
+          git push origin main
