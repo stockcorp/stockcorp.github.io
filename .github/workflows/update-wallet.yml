@@ -11,6 +11,8 @@ jobs:
     steps:
       - name: 檢查儲存庫
         uses: actions/checkout@v4
+      - name: Pull 遠端變更  # 新增這個步驟
+        run: git pull origin main --rebase  # 使用 --rebase 避免 merge commit；如果衝突嚴重，可改成 git pull --merge
       - name: 安裝 Python
         uses: actions/setup-python@v5
         with:
