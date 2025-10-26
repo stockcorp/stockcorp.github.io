@@ -53,8 +53,11 @@ def clean_local(text, field_type):
         return re.sub(r'\D', '', text) or 'N/A'
     elif field_type == 'change':
         # 提取 7d / 30d，處理 + - BTC
-        match7 = re.match(r'([+-]?\d+(?:,\d{3})*)\s*BTC', text)
-        return match7.group(1).replace(',', '') if match7 else 'N/A'
+        match7 = re.search(r'7d:([+-]?\d+(?:,\d{3})*)\s*BTC', text)
+        match30 = re.search(r'30d:([+-]?\d+(?:,\d{3})*)\s*BTC', text)
+        change7 = match7.group(1).replace(',', '') if match7 else 'N/A'
+        change30 = match30.group(1).replace(',', '') if match30 else 'N/A'
+        return f"7d:{change7} / 30d:{change30}"
     else:
         # 其他欄位不清理
         return text if text else 'N/A'
@@ -103,11 +106,11 @@ def fetch_top_100():
         first_out = cells[7].text.strip()
         last_out = cells[8].text.strip()
         outs = cells[9].text.strip()
-        change_7d = cells[10].text.strip() if len(cells) > 10 else 'N/A'
-        change_30d = cells[11].text.strip() if len(cells) > 11 else 'N/A'
-        change = f"7d:{change_7d} / 30d:{change_30d}"
-        owner_tag = address_cell.find('span', class_='a')
-        owner = owner_tag['title'].strip() if owner_tag and owner_tag.has_attr('title') else ''
+        change = cells[10].text.strip() if len(cells) > 10 else '7d:N/A / 30d:N/A'  # 直接取 change
+        owner = ''  # 如果有 owner，從 address_cell 提取
+        owner_match = re.search(r'wallet:\s*([\w-]+)', address_cell.text)
+        if owner_match:
+            owner = owner_match.group(1)
         wallets.append({
             'rank': rank,
             'address': address,
@@ -267,10 +270,11 @@ def update_json_and_push(new_wallets):
                 else:
                     # 沒異動維持原狀
                     updated_w[key] = old_w[key]
+            updated_wallets.append(updated_w)
         else:
-            # 新錢包，用本地清理（或 API，如果想精準）
-            updated_w = {k: clean_local(v, k) for k, v in new_w.items()}
-        updated_wallets.append(updated_w)
+            # 新錢包，用 API 清理（因為新，需精準）
+            updated_w = {k: clean_with_gpt(v) for k, v in new_w.items()}
+            updated_wallets.append(updated_w)
     with open(json_file, 'w', encoding='utf-8') as f:
         json.dump(updated_wallets, f, ensure_ascii=False, indent=4)
     print("JSON 更新完成")
