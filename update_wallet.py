@@ -54,14 +54,7 @@ def fetch_top_100():
         print("無法抓取資料，使用 fallback")
         return get_fallback_wallets()
     soup = BeautifulSoup(response.text, 'html.parser')
-
-    # 修改選擇器：找所有 table，選包含 'Address' 或 'Balance' 文字的
-    tables = soup.find_all('table')
-    table = None
-    for t in tables:
-        if 'Address' in t.text or 'Balance' in t.text:  # 檢查表格文字是否有關鍵字
-            table = t
-            break
+    table = soup.find('table', id='tblTop100Wealth')
     if not table:
         print("找不到表格，使用 fallback")
         return get_fallback_wallets()
@@ -72,8 +65,7 @@ def fetch_top_100():
         if len(cells) < 13:
             continue
         rank = clean_local(cells[0].text.strip(), 'rank')
-        address_link = cells[1].find('a')
-        address = address_link.text.strip() if address_link else cells[1].text.strip()
+        address = cells[1].find('a').text.strip() if cells[1].find('a') else cells[1].text.strip()
         balance = clean_local(cells[2].text.strip(), 'balance')
         percentage = clean_local(cells[3].text.strip(), 'percentage')
         first_in = clean_local(cells[4].text.strip(), 'date_in')
@@ -82,8 +74,8 @@ def fetch_top_100():
         first_out = clean_local(cells[7].text.strip(), 'date_out')
         last_out = clean_local(cells[8].text.strip(), 'date_out')
         outs = clean_local(cells[9].text.strip(), 'number')
-        change_7d = clean_local(cells[10].text.strip() if len(cells) > 10 else 'N/A', 'change')
-        change_30d = clean_local(cells[11].text.strip() if len(cells) > 11 else 'N/A', 'change')
+        change_7d = clean_local(cells[10].text.strip(), 'change') if len(cells) > 10 else 'N/A'
+        change_30d = clean_local(cells[11].text.strip(), 'change') if len(cells) > 11 else 'N/A'
         change = f"7d:{change_7d} / 30d:{change_30d}"
         owner_tag = cells[1].find('span', class_='a')
         owner = owner_tag['title'].strip() if owner_tag and owner_tag.has_attr('title') else ''
@@ -121,7 +113,7 @@ def fetch_top_100():
 
 def get_fallback_wallets():
     # 硬編碼的 100 組備用資料（包含 change 欄位），不呼叫 API 清理
-    fallback =  [
+    fallback = [
         {'rank': '1', 'address': '34xp4vRoCGJym3xR7yCVPFHoCNxv4Twseo', 'balance': '248,598 BTC ($26,541,688,352)', 'percentage': '1.25%', 'first_in': '2018-10-18 12:59:18 UTC', 'last_in': '2025-10-13 06:51:51 UTC', 'ins': '5447', 'first_out': '2018-10-18 13:19:26 UTC', 'last_out': '2023-01-07 06:15:34 UTC', 'outs': '451', 'change': '7d:N/A / 30d:N/A', 'owner': 'Binance-coldwallet'},
         {'rank': '2', 'address': 'bc1ql49ydapnjafl5t2cp9zqpjwe6pdgmxy98859v2', 'balance': '140,575 BTC ($15,008,566,125)', 'percentage': '0.7052%', 'first_in': '2023-05-08 18:42:20 UTC', 'last_in': '2025-10-13 06:51:51 UTC', 'ins': '481', 'first_out': '2023-05-09 23:16:11 UTC', 'last_out': '2025-01-08 14:54:36 UTC', 'outs': '383', 'change': '7d:N/A / 30d:N/A', 'owner': 'Robinhood-coldwallet'},
         {'rank': '3', 'address': 'bc1qgdjqv0av3q56jvd82tkdjpy7gdp9ut8tlqmgrpmv24sq90ecnvqqjwvw97', 'balance': '130,010 BTC ($13,880,613,791)', 'percentage': '0.6522%', 'first_in': '2019-08-16 10:00:29 UTC', 'last_in': '2025-10-13 06:51:51 UTC', 'ins': '318', 'first_out': '2020-02-02 17:43:14 UTC', 'last_out': '2025-06-03 03:06:19 UTC', 'outs': '296', 'change': '7d:N/A / 30d:N/A', 'owner': 'Bitfinex-coldwallet'},
