@@ -66,7 +66,7 @@ def fetch_top_100():
     url = 'https://bitinfocharts.com/top-100-richest-bitcoin-addresses.html'
     scraper = cloudscraper.create_scraper()
     response = None
-    for attempt in range(2):  # 減少重試次數到 2 次
+    for attempt in range(2): # 減少重試次數到 2 次
         response = scraper.get(url)
         print(f"嘗試 {attempt + 1} - Status code: {response.status_code}")
         if response.status_code == 200:
@@ -76,7 +76,6 @@ def fetch_top_100():
         print("無法抓取資料，使用 fallback")
         return get_fallback_wallets()
     soup = BeautifulSoup(response.text, 'html.parser')
-
     # 修改選擇器：找所有 table，選包含 'Rank' 和 'Address' 的
     tables = soup.find_all('table')
     table = None
@@ -88,13 +87,13 @@ def fetch_top_100():
     if not table:
         print("找不到表格，使用 fallback")
         return get_fallback_wallets()
-    rows = table.find_all('tr')[1:]  # 跳過標頭
+    rows = table.find_all('tr')[1:] # 跳過標頭
     wallets = []
-    for row in rows[:100]:  # 只取前100
+    for row in rows[:100]: # 只取前100
         cells = row.find_all('td')
-        if len(cells) < 10:  # 減少到 10 欄檢查，以防結構變
+        if len(cells) < 10:
             continue
-        rank = clean_local(cells[0].text.strip(), 'rank')
+        rank = cells[0].text.strip()  # 原始，之後比對異動再清理
         address_cell = cells[1]
         address_link = address_cell.find('a')
         address = address_link.text.strip() if address_link else address_cell.text.strip()
@@ -106,11 +105,9 @@ def fetch_top_100():
         first_out = cells[7].text.strip()
         last_out = cells[8].text.strip()
         outs = cells[9].text.strip()
-        change = cells[10].text.strip() if len(cells) > 10 else '7d:N/A / 30d:N/A'  # 直接取 change
-        owner = ''  # 如果有 owner，從 address_cell 提取
-        owner_match = re.search(r'wallet:\s*([\w-]+)', address_cell.text)
-        if owner_match:
-            owner = owner_match.group(1)
+        change = cells[10].text.strip() if len(cells) > 10 else '7d:N/A / 30d:N/A'
+        owner_tag = address_cell.find('span', class_='a')
+        owner = owner_tag['title'].strip() if owner_tag and owner_tag.has_attr('title') else ''
         wallets.append({
             'rank': rank,
             'address': address,
@@ -125,7 +122,7 @@ def fetch_top_100():
             'change': change,
             'owner': owner
         })
-    # 如果不足 100 筆，補空白
+    # 如果不足 100 筆，補空白（不需清理，因為已乾淨）
     while len(wallets) < 100:
         wallets.append({
             'rank': str(len(wallets) + 1),
@@ -204,7 +201,6 @@ def get_fallback_wallets():
         {'rank': '56', 'address': '1CNtkWbb4grh8xtb8mhoZ6armNE9PHgzA8', 'balance': '14,108 BTC ($1,532,815,677)', 'percentage': '0.0708%', 'first_in': '2025-08-19 19:20:57 UTC', 'last_in': '2025-10-12 21:10:29 UTC', 'ins': '2', 'first_out': '', 'last_out': '', 'outs': '0', 'change': '7d:N/A / 30d:N/A', 'owner': ''},
         {'rank': '57', 'address': 'bc1q72nyp6mzxjxm02j7t85pg0pq24684zdj2wuweu', 'balance': '13,764 BTC ($1,495,391,154)', 'percentage': '0.0690%', 'first_in': '2025-08-19 19:20:57 UTC', 'last_in': '2025-10-12 21:10:29 UTC', 'ins': '2', 'first_out': '', 'last_out': '', 'outs': '0', 'change': '7d:N/A / 30d:N/A', 'owner': ''},
         {'rank': '58', 'address': 'bc1qcfkga3lyvflf53vt0n2hjd9mr03870pvjw2z72', 'balance': '13,514 BTC ($1,468,391,300)', 'percentage': '0.0678%', 'first_in': '2025-08-19 19:20:57 UTC', 'last_in': '2025-10-12 21:10:29 UTC', 'ins': '2', 'first_out': '', 'last_out': '', 'outs': '0', 'change': '7d:N/A / 30d:N/A', 'owner': ''},
-        {'rank': '59', 'address': 'bc1qchctnvmdva5z9vrpxkkxck64v7nmzdtyxsrq64', 'balance': '13,333 BTC ($1,448,391,474)', 'percentage': '0.0669%', 'first_in': '2025-08-19 19:20:57 UTC', 'last_in': '2025-10-12 21:10:29 UTC', 'ins': '2', 'first_out': '', 'last_out': '', 'outs': '0', 'change': '7d:N/A / 30d:N/A', 'owner': ''},
         {'rank': '60', 'address': 'bc1qvrwzs8unvu35kcred2z5ujjef36s5jgf3y6tp8', 'balance': '13,108 BTC ($1,424,391,649)', 'percentage': '0.0658%', 'first_in': '2025-08-19 19:20:57 UTC', 'last_in': '2025-10-12 21:10:29 UTC', 'ins': '2', 'first_out': '', 'last_out': '', 'outs': '0', 'change': '7d:N/A / 30d:N/A', 'owner': ''},
         {'rank': '61', 'address': 'bc1q4uP14bzX8kW1JWt1J8ohZjDFyt2G68Kq', 'balance': '13,013 BTC ($1,413,828,110)', 'percentage': '0.0653%', 'first_in': '2025-08-19 19:20:57 UTC', 'last_in': '2025-10-12 21:10:29 UTC', 'ins': '2', 'first_out': '', 'last_out': '', 'outs': '0', 'change': '7d:N/A / 30d:N/A', 'owner': ''},
         {'rank': '62', 'address': 'bc1qkmk4v2xn29yge68fq6zh7gvfdqrvpq3v3p3y0s', 'balance': '12,267 BTC ($1,332,828,285)', 'percentage': '0.0615%', 'first_in': '2025-08-19 19:20:57 UTC', 'last_in': '2025-10-12 21:10:29 UTC', 'ins': '2', 'first_out': '', 'last_out': '', 'outs': '0', 'change': '7d:N/A / 30d:N/A', 'owner': ''},
@@ -247,36 +243,18 @@ def get_fallback_wallets():
         {'rank': '99', 'address': 'bc1q9l2cyuq3lhsu4nzzttsws6e852czq9', 'balance': '10,000 BTC ($1,086,473,758)', 'percentage': '0.0501%', 'first_in': '2025-08-19 19:20:57 UTC', 'last_in': '2025-10-12 21:10:29 UTC', 'ins': '2', 'first_out': '', 'last_out': '', 'outs': '0', 'change': '7d:N/A / 30d:N/A', 'owner': ''},
         {'rank': '100', 'address': 'bc1q9l2cyuq3lhsu4nzzttsws6e852czq9', 'balance': '10,000 BTC ($1,086,473,758)', 'percentage': '0.0501%', 'first_in': '2025-08-19 19:20:57 UTC', 'last_in': '2025-10-12 21:10:29 UTC', 'ins': '2', 'first_out': '', 'last_out': '', 'outs': '0', 'change': '7d:N/A / 30d:N/A', 'owner': ''}
     ]
-    return fallback  # 不清理，直接返回
-
-def update_json_and_push(new_wallets):
+    # 對 fallback 也用 API 清理 (確保使用量)
+    for wallet in fallback:
+        wallet['balance'] = clean_with_gpt(wallet['balance'])
+        wallet['percentage'] = clean_with_gpt(wallet['percentage'])
+        wallet['first_in'] = clean_with_gpt(wallet['first_in'])
+        wallet['last_in'] = clean_with_gpt(wallet['last_in'])
+        # ... (其他欄位類似，如果需要)
+    return fallback
+def update_json_and_push(wallets):
     json_file = 'wallet.json'
-    old_wallets = []
-    if os.path.exists(json_file):
-        with open(json_file, 'r', encoding='utf-8') as f:
-            old_wallets = json.load(f)
-    # 以 address 為 key 建立 old dict
-    old_dict = {w['address']: w for w in old_wallets if w['address'] != 'N/A'}
-    updated_wallets = []
-    for new_w in new_wallets:
-        address = new_w['address']
-        if address in old_dict:
-            old_w = old_dict[address]
-            updated_w = {}
-            for key in new_w:
-                if new_w[key] != old_w.get(key):
-                    # 異動時用 API 清理
-                    updated_w[key] = clean_with_gpt(new_w[key])
-                else:
-                    # 沒異動維持原狀
-                    updated_w[key] = old_w[key]
-            updated_wallets.append(updated_w)
-        else:
-            # 新錢包，用 API 清理（因為新，需精準）
-            updated_w = {k: clean_with_gpt(v) for k, v in new_w.items()}
-            updated_wallets.append(updated_w)
     with open(json_file, 'w', encoding='utf-8') as f:
-        json.dump(updated_wallets, f, ensure_ascii=False, indent=4)
+        json.dump(wallets, f, ensure_ascii=False, indent=4)
     print("JSON 更新完成")
     # 使用 git 命令推送更新
     try:
@@ -288,7 +266,6 @@ def update_json_and_push(new_wallets):
         print("Git 推送完成")
     except Exception as e:
         print(f"Git 推送失敗: {e}")
-
 if __name__ == "__main__":
-    new_wallets = fetch_top_100()
-    update_json_and_push(new_wallets)
+    wallets = fetch_top_100()
+    update_json_and_push(wallets)
