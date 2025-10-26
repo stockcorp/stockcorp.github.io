@@ -2,44 +2,54 @@ import cloudscraper
 from bs4 import BeautifulSoup
 import re
 import os
-import openai
 from openai import OpenAI
 import json
-import time # 用於重試延遲
+import time  # 用於重試延遲
 import subprocess
 
-# 初始化 xAI 客戶端，使用環境變數的 API 密鑰
+# 初始化 xAI 客戶端，使用環境變數的 API 密鑰（但現在盡量少用 API）
 client = OpenAI(
     api_key=os.getenv("XAI_API_KEY_BITCOIN"),
     base_url="https://api.x.ai/v1"
 )
 
-def clean_with_gpt(text):
-    """使用 Grok API 清理和格式化抓取的資料（例如，標準化時間或驗證格式）"""
-    try:
-        prompt = f"請清理以下抓取的資料，確保格式正確（例如，時間格式為 'YYYY-MM-DD HH:MM:SS UTC'，數值為數字，移除無效字元）。如果資料無效，返回 'N/A'：\n{text}"
-        res = client.chat.completions.create(
-            model="grok-3",
-            messages=[{"role": "user", "content": prompt}],
-            temperature=0.2,
-            max_tokens=100
-        )
-        print("API 使用: 清理 " + text[:20] + "...") # log API 使用
-        return res.choices[0].message.content.strip()
-    except Exception as e:
-        print(f"⚠️ Grok 清理資料失敗: {e}")
-        return text if text else "N/A"
+# 本地清理函數：取代 Grok API，減少呼叫
+def clean_local(text, field_type):
+    """本地清理資料，減少 API 呼叫。只清理必要欄位。"""
+    text = text.strip()
+    if field_type == 'balance':
+        # 提取 BTC 和 USD，移除逗號
+        match = re.match(r'([\d,]+)\s*BTC\s*\(([\$\d,]+)\)', text)
+        if match:
+            btc = match.group(1).replace(',', '')
+            usd = match.group(2).replace(',', '').replace('$', '')
+            return f"{btc} BTC (${usd})"
+        return 'N/A'
+    elif field_type == 'percentage':
+        # 移除 %，保留數字
+        return text.replace('%', '').strip() + '%'
+    elif field_type in ['date_in', 'date_out']:
+        # 確保日期格式，或 N/A
+        if re.match(r'\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2} UTC', text):
+            return text
+        return 'N/A'
+    elif field_type in ['number', 'rank', 'ins', 'outs']:
+        # 移除非數字
+        return re.sub(r'\D', '', text) or 'N/A'
+    else:
+        # 其他欄位不清理
+        return text if text else 'N/A'
 
 def fetch_top_100():
     url = 'https://bitinfocharts.com/top-100-richest-bitcoin-addresses.html'
     scraper = cloudscraper.create_scraper()
     response = None
-    for attempt in range(3): # 重試 3 次
+    for attempt in range(2):  # 減少重試次數到 2 次
         response = scraper.get(url)
         print(f"嘗試 {attempt + 1} - Status code: {response.status_code}")
         if response.status_code == 200:
             break
-        time.sleep(5) # 延遲 5 秒
+        time.sleep(5)
     if response.status_code != 200:
         print("無法抓取資料，使用 fallback")
         return get_fallback_wallets()
@@ -48,24 +58,24 @@ def fetch_top_100():
     if not table:
         print("找不到表格，使用 fallback")
         return get_fallback_wallets()
-    rows = table.find_all('tr')[1:] # 跳過標頭
+    rows = table.find_all('tr')[1:]  # 跳過標頭
     wallets = []
-    for row in rows[:100]: # 只取前100
+    for row in rows[:100]:  # 只取前100
         cells = row.find_all('td')
-        if len(cells) < 13: # 至少需要 13 欄
+        if len(cells) < 13:
             continue
-        rank = clean_with_gpt(cells[0].text.strip())
+        rank = clean_local(cells[0].text.strip(), 'rank')
         address = cells[1].find('a').text.strip() if cells[1].find('a') else cells[1].text.strip()
-        balance = clean_with_gpt(cells[2].text.strip())
-        percentage = clean_with_gpt(cells[3].text.strip())
-        first_in = clean_with_gpt(cells[4].text.strip())
-        last_in = clean_with_gpt(cells[5].text.strip())
-        ins = clean_with_gpt(cells[6].text.strip())
-        first_out = clean_with_gpt(cells[7].text.strip())
-        last_out = clean_with_gpt(cells[8].text.strip())
-        outs = clean_with_gpt(cells[9].text.strip())
-        change_7d = clean_with_gpt(cells[10].text.strip()) if len(cells) > 10 else 'N/A'
-        change_30d = clean_with_gpt(cells[11].text.strip()) if len(cells) > 11 else 'N/A'
+        balance = clean_local(cells[2].text.strip(), 'balance')
+        percentage = clean_local(cells[3].text.strip(), 'percentage')
+        first_in = clean_local(cells[4].text.strip(), 'date_in')
+        last_in = clean_local(cells[5].text.strip(), 'date_in')
+        ins = clean_local(cells[6].text.strip(), 'number')
+        first_out = clean_local(cells[7].text.strip(), 'date_out')
+        last_out = clean_local(cells[8].text.strip(), 'date_out')
+        outs = clean_local(cells[9].text.strip(), 'number')
+        change_7d = clean_local(cells[10].text.strip(), 'change') if len(cells) > 10 else 'N/A'
+        change_30d = clean_local(cells[11].text.strip(), 'change') if len(cells) > 11 else 'N/A'
         change = f"7d:{change_7d} / 30d:{change_30d}"
         owner_tag = cells[1].find('span', class_='a')
         owner = owner_tag['title'].strip() if owner_tag and owner_tag.has_attr('title') else ''
@@ -83,7 +93,7 @@ def fetch_top_100():
             'change': change,
             'owner': owner
         })
-    # 如果不足 100 筆，補空白
+    # 如果不足 100 筆，補空白（不需清理，因為已乾淨）
     while len(wallets) < 100:
         wallets.append({
             'rank': str(len(wallets) + 1),
@@ -102,7 +112,7 @@ def fetch_top_100():
     return wallets
 
 def get_fallback_wallets():
-    # 硬編碼的 100 組備用資料（包含 change 欄位）
+    # 硬編碼的 100 組備用資料（包含 change 欄位），不呼叫 API 清理
     fallback = [
         {'rank': '1', 'address': '34xp4vRoCGJym3xR7yCVPFHoCNxv4Twseo', 'balance': '248,598 BTC ($26,541,688,352)', 'percentage': '1.25%', 'first_in': '2018-10-18 12:59:18 UTC', 'last_in': '2025-10-13 06:51:51 UTC', 'ins': '5447', 'first_out': '2018-10-18 13:19:26 UTC', 'last_out': '2023-01-07 06:15:34 UTC', 'outs': '451', 'change': '7d:N/A / 30d:N/A', 'owner': 'Binance-coldwallet'},
         {'rank': '2', 'address': 'bc1ql49ydapnjafl5t2cp9zqpjwe6pdgmxy98859v2', 'balance': '140,575 BTC ($15,008,566,125)', 'percentage': '0.7052%', 'first_in': '2023-05-08 18:42:20 UTC', 'last_in': '2025-10-13 06:51:51 UTC', 'ins': '481', 'first_out': '2023-05-09 23:16:11 UTC', 'last_out': '2025-01-08 14:54:36 UTC', 'outs': '383', 'change': '7d:N/A / 30d:N/A', 'owner': 'Robinhood-coldwallet'},
@@ -205,21 +215,13 @@ def get_fallback_wallets():
         {'rank': '99', 'address': 'bc1q9l2cyuq3lhsu4nzzttsws6e852czq9', 'balance': '10,000 BTC ($1,086,473,758)', 'percentage': '0.0501%', 'first_in': '2025-08-19 19:20:57 UTC', 'last_in': '2025-10-12 21:10:29 UTC', 'ins': '2', 'first_out': '', 'last_out': '', 'outs': '0', 'change': '7d:N/A / 30d:N/A', 'owner': ''},
         {'rank': '100', 'address': 'bc1q9l2cyuq3lhsu4nzzttsws6e852czq9', 'balance': '10,000 BTC ($1,086,473,758)', 'percentage': '0.0501%', 'first_in': '2025-08-19 19:20:57 UTC', 'last_in': '2025-10-12 21:10:29 UTC', 'ins': '2', 'first_out': '', 'last_out': '', 'outs': '0', 'change': '7d:N/A / 30d:N/A', 'owner': ''}
     ]
-    # 對 fallback 也用 API 清理 (確保使用量)
-    for wallet in fallback:
-        wallet['balance'] = clean_with_gpt(wallet['balance'])
-        wallet['percentage'] = clean_with_gpt(wallet['percentage'])
-        wallet['first_in'] = clean_with_gpt(wallet['first_in'])
-        wallet['last_in'] = clean_with_gpt(wallet['last_in'])
-        # ... (其他欄位類似，如果需要)
-    return fallback
+    return fallback  # 不清理，直接返回
 
 def update_json_and_push(wallets):
     json_file = 'wallet.json'
     with open(json_file, 'w', encoding='utf-8') as f:
         json.dump(wallets, f, ensure_ascii=False, indent=4)
     print("JSON 更新完成")
-
     # 使用 git 命令推送更新
     try:
         subprocess.call(['git', 'add', json_file])
