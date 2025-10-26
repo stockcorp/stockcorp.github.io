@@ -5,7 +5,8 @@ import os
 import openai
 from openai import OpenAI
 import json
-import time  # 用於重試延遲
+import time # 用於重試延遲
+import subprocess
 
 # 初始化 xAI 客戶端，使用環境變數的 API 密鑰
 client = OpenAI(
@@ -23,7 +24,7 @@ def clean_with_gpt(text):
             temperature=0.2,
             max_tokens=100
         )
-        print("API 使用: 清理 " + text[:20] + "...")  # log API 使用
+        print("API 使用: 清理 " + text[:20] + "...") # log API 使用
         return res.choices[0].message.content.strip()
     except Exception as e:
         print(f"⚠️ Grok 清理資料失敗: {e}")
@@ -33,26 +34,25 @@ def fetch_top_100():
     url = 'https://bitinfocharts.com/top-100-richest-bitcoin-addresses.html'
     scraper = cloudscraper.create_scraper()
     response = None
-    for attempt in range(3):  # 重試 3 次
+    for attempt in range(3): # 重試 3 次
         response = scraper.get(url)
         print(f"嘗試 {attempt + 1} - Status code: {response.status_code}")
         if response.status_code == 200:
             break
-        time.sleep(5)  # 延遲 5 秒
+        time.sleep(5) # 延遲 5 秒
     if response.status_code != 200:
         print("無法抓取資料，使用 fallback")
         return get_fallback_wallets()
-
     soup = BeautifulSoup(response.text, 'html.parser')
     table = soup.find('table', id='tblTop100Wealth')
     if not table:
         print("找不到表格，使用 fallback")
         return get_fallback_wallets()
-    rows = table.find_all('tr')[1:]  # 跳過標頭
+    rows = table.find_all('tr')[1:] # 跳過標頭
     wallets = []
-    for row in rows[:100]:  # 只取前100
+    for row in rows[:100]: # 只取前100
         cells = row.find_all('td')
-        if len(cells) < 13:  # 至少需要 13 欄
+        if len(cells) < 13: # 至少需要 13 欄
             continue
         rank = clean_with_gpt(cells[0].text.strip())
         address = cells[1].find('a').text.strip() if cells[1].find('a') else cells[1].text.strip()
@@ -214,27 +214,23 @@ def get_fallback_wallets():
         # ... (其他欄位類似，如果需要)
     return fallback
 
-def update_html_file(wallets):
-    html_file = 'wallet.html'
-    if not os.path.exists(html_file):
-        print(f"{html_file} 不存在，創建新檔案")
-        with open(html_file, 'w', encoding='utf-8') as f:
-            f.write("<html><body><script>const publicWhales = [];</script></body></html>")  # 初始檔案
-    with open(html_file, 'r', encoding='utf-8') as f:
-        content = f.read()
-    # 找到 publicWhales 陣列並替換
-    pattern = r"const publicWhales = \[\s*([\s\S]*?)\s*\];"
-    # 加時間戳強制變更
-    timestamp = time.strftime("%Y-%m-%d %H:%M:%S")
-    new_array = f"// Updated at {timestamp}\nconst publicWhales = [\n"
-    for wallet in wallets:
-        new_array += "    " + str(wallet) + ",\n"
-    new_array += "];\n"
-    new_content = re.sub(pattern, new_array, content)
-    with open(html_file, 'w', encoding='utf-8') as f:
-        f.write(new_content)
-    print("HTML 更新完成")
+def update_json_and_push(wallets):
+    json_file = 'wallet.json'
+    with open(json_file, 'w', encoding='utf-8') as f:
+        json.dump(wallets, f, ensure_ascii=False, indent=4)
+    print("JSON 更新完成")
+
+    # 使用 git 命令推送更新
+    try:
+        subprocess.call(['git', 'add', json_file])
+        timestamp = time.strftime("%Y-%m-%d %H:%M:%S")
+        commit_message = f"Update wallet data at {timestamp}"
+        subprocess.call(['git', 'commit', '-m', commit_message])
+        subprocess.call(['git', 'push'])
+        print("Git 推送完成")
+    except Exception as e:
+        print(f"Git 推送失敗: {e}")
 
 if __name__ == "__main__":
     wallets = fetch_top_100()
-    update_html_file(wallets)
+    update_json_and_push(wallets)
