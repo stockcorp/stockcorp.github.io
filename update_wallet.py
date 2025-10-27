@@ -1,53 +1,35 @@
 import requests
-from bs4 import BeautifulSoup
-import re
 import os
-from openai import OpenAI
 import json
 import time
-import subprocess
+from openai import OpenAI # 用於 Grok API
+# 移除了 BeautifulSoup 和 re，因為解析邏輯已轉移到 Grok
 
 # -----------------
 # Configuration & Initialization
 # -----------------
 WALLET_FILE = 'wallet.json'
+TARGET_URL = 'https://bitinfocharts.com/top-100-richest-bitcoin-addresses.html'
+SCRAPINGANT_API_URL = 'https://api.scrapingant.com/v2/general'
 
-# 初始化 xAI 客戶端，使用環境變數的 API 密鑰（如果需要清理數據）
+# 初始化 xAI 客戶端，使用環境變數的 API 密鑰
 client = OpenAI(
     api_key=os.getenv("XAI_API_KEY_BITCOIN"),
     base_url="https://api.x.ai/v1"
 )
 
 # -----------------
-# Data Cleaning & Fallback (保持不變)
+# Fallback (硬編碼資料，保持不變)
 # -----------------
-def clean_local(text, field_type):
-    """本地清理資料，減少 API 呼叫。只清理必要欄位。"""
-    text = text.strip()
-    if field_type == 'balance':
-        match = re.match(r'([\d,]+)\s*BTC\s*\(([\$\d,]+)\)', text)
-        if match:
-            btc = match.group(1).replace(',', '')
-            usd = match.group(2).replace(',', '').replace('$', '')
-            return f"{btc} BTC (${usd})"
-        return 'N/A'
-    elif field_type == 'percentage':
-        return text.replace('%', '').strip() + '%'
-    elif field_type in ['date_in', 'date_out']:
-        if re.match(r'\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2} UTC', text):
-            return text
-        return 'N/A'
-    elif field_type in ['number', 'rank', 'ins', 'outs']:
-        return re.sub(r'\D', '', text) or 'N/A'
-    else:
-        return text if text else 'N/A'
-
 def get_fallback_wallets():
-    # 這是您的硬編碼備用資料，用於抓取失敗時填充
-    # ... (省略硬編碼內容以保持簡潔，但實際函數中會返回 100 筆數據)
+    """
+    在抓取或解析失敗時使用備用資料。
+    會優先讀取本地的 wallet.json，若無則使用硬編碼資料。
+    """
+    # 這裡放您的硬編碼備用資料，例如：
     fallback = [
         {'rank': '1', 'address': '34xp4vRoCGJym3xR7yCVPFHoCNxv4Twseo', 'balance': '248,598 BTC ($26,541,688,352)', 'percentage': '1.25%', 'first_in': '2018-10-18 12:59:18 UTC', 'last_in': '2025-10-13 06:51:51 UTC', 'ins': '5447', 'first_out': '2018-10-18 13:19:26 UTC', 'last_out': '2023-01-07 06:15:34 UTC', 'outs': '451', 'change': '7d:N/A / 30d:N/A', 'owner': 'Binance-coldwallet'},
-        # ... (其餘 99 筆資料)
+        # ... (其餘 99 筆資料 - 假設您已補足)
     ]
     # 讀取本地 wallet.json 作為備用 (如果存在)
     try:
@@ -56,143 +38,104 @@ def get_fallback_wallets():
                  print(f"**警告：無法取得最新數據，已使用本地 {WALLET_FILE} 作為備用。**")
                  return json.load(f)
     except Exception:
-        pass # 忽略讀取錯誤，使用硬編碼 fallback
+        pass
         
     # 如果本地檔案讀取失敗，則使用硬編碼資料並補足至 100 筆
     while len(fallback) < 100:
-        # 使用 N/A 填充
         fallback.append({
-            'rank': str(len(fallback) + 1),
-            'address': 'N/A',
-            'balance': 'N/A',
-            'percentage': 'N/A',
-            'first_in': 'N/A',
-            'last_in': 'N/A',
-            'ins': 'N/A',
-            'first_out': 'N/A',
-            'last_out': 'N/A',
-            'outs': 'N/A',
-            'change': '7d:N/A / 30d:N/A',
-            'owner': ''
+             'rank': str(len(fallback) + 1), 'address': 'N/A', 'balance': 'N/A', 'percentage': 'N/A', 
+             'first_in': 'N/A', 'last_in': 'N/A', 'ins': 'N/A', 'first_out': 'N/A', 'last_out': 'N/A', 
+             'outs': 'N/A', 'change': '7d:N/A / 30d:N/A', 'owner': ''
         })
     return fallback[:100]
 
 # -----------------
-# Data Fetching (使用 Scrapingant API - 強化參數)
+# Core Function: Use Grok to Parse HTML and Generate JSON
+# -----------------
+def grok_parse_and_generate_json(html_content):
+    """使用 Grok API 解析 HTML 內容並生成 JSON 數據"""
+    print("-> 呼叫 Grok API 進行數據解析與 JSON 轉換...")
+    # 提示 Grok 提取數據並確保輸出格式嚴格為 JSON
+    prompt = f"""
+    以下是從 {TARGET_URL} 抓取的網頁原始 HTML 內容。
+    請僅從 HTML 中找到 ID 為 'tblTop100Wealth' 的表格。
+    提取表格中**前 100 筆**資料，將每行數據轉換為 JSON 格式的物件。
+    
+    JSON 陣列中的每個物件必須包含以下鍵：
+    ['rank', 'address', 'balance', 'percentage', 'first_in', 'last_in', 'ins', 'first_out', 'last_out', 'outs', 'change', 'owner']
+    
+    - 'owner' 欄位通常在地址旁邊的 <span> 標籤的 'title' 屬性中。
+    - 'change' 欄位需要合併 7d 和 30d 的變動為一個字串 (例如: "7d:+0.01% / 30d:-0.05%")。
+    - 請嚴格確保輸出內容是**純粹、完整的 JSON 陣列**，不要包含任何額外的註釋、解釋性文字或 Markdown 標記 (e.g., ```json)。
+    
+    原始 HTML 內容 (已截斷)：
+    ---HTML START---
+    {html_content[:15000]}
+    ---HTML END---
+    """
+    
+    try:
+        # 使用 Grok API 進行轉換
+        # 註：這裡假設 'grok-1.0' 是您的模型名稱
+        response = client.chat.completions.create(
+            model="grok-1.0",
+            messages=[{"role": "user", "content": prompt}],
+            temperature=0.0 # 低溫度確保結構化輸出
+        )
+        
+        json_string = response.choices[0].message.content.strip()
+        
+        # 嘗試解析 Grok 的輸出
+        wallets_data = json.loads(json_string)
+        print("<- Grok API 轉換成功，獲得 JSON 數據。")
+        return wallets_data
+        
+    except Exception as e:
+        print(f"!!! Grok API 呼叫或 JSON 解析失敗: {e}")
+        # 如果 Grok 失敗，則回傳空列表，讓主函數使用 fallback
+        return []
+
+
+# -----------------
+# Data Fetching (使用 Scrapingant API 獲取 HTML)
 # -----------------
 def fetch_top_100():
-    target_url = 'https://bitinfocharts.com/top-100-richest-bitcoin-addresses.html'
-    
-    # 從環境變數讀取金鑰，如果未設置，則使用硬編碼金鑰
     api_key = os.getenv("SCRAPINGANT_API_KEY", "2712b686edd24534b6282b00c11f20b8") 
     
     if not os.getenv("SCRAPINGANT_API_KEY"):
         print("警告: SCRAPINGANT_API_KEY 未透過 GitHub Secret 設定，正在使用硬編碼金鑰。")
     
-    scrapingant_api_url = 'https://api.scrapingant.com/v2/general'
-    
-    # **關鍵修改：設置 proxy_type 為 residential (住宅代理) 以提高成功率**
+    # 強化 Scrapingant 參數：使用 Residential Proxy
     params = {
-        'url': target_url,
+        'url': TARGET_URL,
         'x-api-key': api_key,
-        'browser': 'true',          # 啟用瀏覽器渲染
-        'wait_for_selector': '#tblTop100Wealth', # 等待目標表格
-        'proxy_type': 'residential' # <--- 使用住宅代理
-        # 'proxy_country': 'US'      # (可選) 移除國家限制，讓代理隨機選擇 IP
+        'browser': 'true',
+        'wait_for_selector': '#tblTop100Wealth',
+        'proxy_type': 'residential' # <--- 住宅代理（成功率更高，但消耗點數較多）
     }
     
     response = None
-    for attempt in range(3): # 增加嘗試次數到 3 次
+    for attempt in range(3):
         try:
-            print(f"嘗試 {attempt + 1} - 呼叫 Scrapingant API 抓取 {target_url} (使用 Residential Proxy)")
-            response = requests.get(scrapingant_api_url, params=params, timeout=45) # 增加超時時間
+            print(f"嘗試 {attempt + 1} - 呼叫 Scrapingant API 抓取 {TARGET_URL} (Residential Proxy)")
+            response = requests.get(SCRAPINGANT_API_URL, params=params, timeout=45)
             print(f"嘗試 {attempt + 1} - Scrapingant Status code: {response.status_code}")
             
             if response.status_code == 200:
-                break
+                print("Scrapingant 成功取得 HTML 內容。")
+                # 將 HTML 內容交給 Grok 處理
+                return grok_parse_and_generate_json(response.text)
+                
             elif response.status_code == 403:
-                print("Scrapingant 仍被阻擋 (403)，可能是網站偵測到代理。")
+                print("Scrapingant 仍被阻擋 (403)。")
         except requests.exceptions.RequestException as e:
             print(f"請求發生錯誤: {e}")
             response = None
             
-        time.sleep(10) # 增加失敗後的等待時間
+        time.sleep(10)
     
-    if not response or response.status_code != 200:
-        print("無法透過 Scrapingant 抓取資料，使用 fallback")
-        return get_fallback_wallets()
-        
-    # 解析 HTML
-    print("成功取得 HTML 內容，開始解析...")
-    soup = BeautifulSoup(response.text, 'html.parser')
-    
-    # 驗證表格是否存在
-    table = soup.find('table', id='tblTop100Wealth')
-    if not table:
-        print("警告: 成功取得頁面，但找不到目標表格，可能網站結構已變動。")
-        return get_fallback_wallets()
-        
-    # 以下的數據提取邏輯與上次版本保持一致
-    # ... (數據提取邏輯) ...
-    rows = table.find_all('tr')[1:] 
-    wallets = []
-    
-    for row in rows[:100]:
-        cells = row.find_all('td')
-        if len(cells) < 13:
-            continue
-        
-        # ... (省略提取和清理邏輯，與上次版本一致) ...
-        rank = clean_local(cells[0].text.strip(), 'rank')
-        address = cells[1].find('a').text.strip() if cells[1].find('a') else cells[1].text.strip()
-        balance = clean_local(cells[2].text.strip(), 'balance')
-        percentage = clean_local(cells[3].text.strip(), 'percentage')
-        first_in = clean_local(cells[4].text.strip(), 'date_in')
-        last_in = clean_local(cells[5].text.strip(), 'date_in')
-        ins = clean_local(cells[6].text.strip(), 'number')
-        first_out = clean_local(cells[7].text.strip(), 'date_out')
-        last_out = clean_local(cells[8].text.strip(), 'date_out')
-        outs = clean_local(cells[9].text.strip(), 'number')
-        change_7d = clean_local(cells[10].text.strip(), 'change') if len(cells) > 10 else 'N/A'
-        change_30d = clean_local(cells[11].text.strip(), 'change') if len(cells) > 11 else 'N/A'
-        change = f"7d:{change_7d} / 30d:{change_30d}"
-        owner_tag = cells[1].find('span', class_='a')
-        owner = owner_tag['title'].strip() if owner_tag and owner_tag.has_attr('title') else ''
-
-        wallets.append({
-            'rank': rank,
-            'address': address,
-            'balance': balance,
-            'percentage': percentage,
-            'first_in': first_in,
-            'last_in': last_in,
-            'ins': ins,
-            'first_out': first_out,
-            'last_out': last_out,
-            'outs': outs,
-            'change': change,
-            'owner': owner
-        })
-        
-    # 補足至 100 筆 N/A 資料
-    while len(wallets) < 100:
-        wallets.append({
-            'rank': str(len(wallets) + 1),
-            'address': 'N/A',
-            'balance': 'N/A',
-            'percentage': 'N/A',
-            'first_in': 'N/A',
-            'last_in': 'N/A',
-            'ins': 'N/A',
-            'first_out': 'N/A',
-            'last_out': 'N/A',
-            'outs': 'N/A',
-            'change': '7d:N/A / 30d:N/A',
-            'owner': ''
-        })
-        
-    print(f"成功從網站抓取 {len(wallets)} 筆有效數據。")
-    return wallets
+    print("!!! 無法透過 Scrapingant 取得 HTML，使用 fallback 數據。")
+    return get_fallback_wallets()
 
 # -----------------
 # Main Execution Block (保持不變)
@@ -212,7 +155,7 @@ def save_wallets(wallets, filename=WALLET_FILE):
         return False
         
 def main():
-    print("--- 比特幣 100 大錢包更新腳本啟動 (Scrapingant API 模式) ---")
+    print("--- 比特幣 100 大錢包更新腳本啟動 (Scrapingant 抓取 + Grok 解析模式) ---")
     
     latest_wallets = fetch_top_100()
     
