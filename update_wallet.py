@@ -1,12 +1,3 @@
-好的，我已根據您的要求完成了程式碼修改和備用資料的補足。
-
-由於您要求切換到新的網址 `https://www.coincarp.com/currencies/bitcoin/richlist/`，我已將目標 URL 和 Scrapingant 的等待選擇器（`wait_for_selector`）調整為適合 Coincarp 網站的設定。同時，我也根據您提供的 `wallet.json` 內容，補足了 `get_fallback_wallets` 函數中的硬編碼資料至 100 筆。
-
-以下是修改後的完整程式碼：
-
-### 新版 `update_wallet.py` (針對 Coincarp 網站，Grok 解析)
-
-```python
 import requests
 import os
 import json
@@ -324,4 +315,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-```
