@@ -6,7 +6,7 @@ from openai import OpenAI
 import json
 import time
 import subprocess
-from copy import deepcopy # 雖然不再需要深層比對，但保留以防未來擴展
+from copy import deepcopy
 
 # -----------------
 # Configuration
@@ -33,7 +33,14 @@ def clean_local(text, field_type):
             btc = match.group(1).replace(',', '')
             usd = match.group(2).replace(',', '').replace('$', '')
             # 格式化為統一字串
-            return f"{int(btc):,} BTC (${int(usd):,})" if btc.isdigit() and usd.isdigit() else f"{btc} BTC (${usd})"
+            # 這裡使用 int(btc) / int(usd) 轉型是為了移除小數點後面的零，但如果網站數據本身就有小數點，可能會出錯。
+            # 為了穩定性，我們嘗試格式化為一致的字串格式
+            try:
+                # 嘗試轉換為整數後格式化
+                return f"{int(float(btc)):,} BTC (${int(float(usd)):,})"
+            except ValueError:
+                # 如果無法轉換，則使用原始字串 (但這個網站應該是整數)
+                 return f"{btc} BTC (${usd})"
         return 'N/A'
     elif field_type == 'percentage':
         # 移除 %，保留數字
@@ -54,13 +61,32 @@ def clean_local(text, field_type):
         return text if text else 'N/A'
 
 # -----------------
-# Data Fetching (Keep existing)
+# Fallback Function (使用本地 JSON 作為備用)
+# -----------------
+def get_fallback_wallets(filename=WALLET_FILE):
+    """在抓取失敗時，從本地 JSON 讀取備用數據。"""
+    try:
+        if os.path.exists(filename):
+            with open(filename, 'r', encoding='utf-8') as f:
+                print(f"**警告：無法取得最新數據，已使用本地 {filename} 作為備用。**")
+                return json.load(f)
+        else:
+            print(f"**嚴重警告：本地 {filename} 也不存在，返回空列表。**")
+            return []
+    except Exception as e:
+        print(f"**錯誤：讀取本地備用檔案 {filename} 時發生錯誤: {e}，返回空列表。**")
+        return []
+
+# -----------------
+# Data Fetching (FIXED)
 # -----------------
 def fetch_top_100():
     """從目標網站抓取最新的前 100 大錢包數據。"""
     scraper = cloudscraper.create_scraper()
     response = None
     print(f"嘗試從 {TARGET_URL} 抓取數據...")
+    
+    # 嘗試抓取兩次
     for attempt in range(2):
         try:
             response = scraper.get(TARGET_URL, timeout=15)
@@ -73,26 +99,58 @@ def fetch_top_100():
             time.sleep(5)
 
     if response is None or response.status_code != 200:
-        print("無法抓取資料，將使用本地 JSON 作為備用數據。")
-        return get_fallback_wallets() # 失敗時呼叫 fallback
+        print("無法取得網站內容。")
+        return [] # 這裡不立即 fallback，讓 main 決定
 
     soup = BeautifulSoup(response.text, 'html.parser')
+    
+    # --- 修正點 1: 尋找表格 ---
     table = soup.find('table', id='tblTop100Wealth')
+    
+    # 如果找不到特定 ID 的表格，嘗試尋找 class="table" 的表格（可能網站結構變動）
     if not table:
-        print("找不到表格，將使用本地 JSON 作為備用數據。")
-        return get_fallback_wallets()
+        print("找不到 ID 為 'tblTop100Wealth' 的表格，嘗試使用替代選擇器...")
+        # 尋找包含 Rank, Address, Balance 等關鍵字作為標頭的表格
+        for t in soup.find_all('table'):
+            header_row = t.find('thead') or t.find('tr')
+            if header_row and ('Rank' in header_row.text and 'Address' in header_row.text and 'Balance' in header_row.text):
+                table = t
+                print("成功找到包含關鍵標頭的表格。")
+                break
+    
+    if not table:
+        print("無法從抓取的 HTML 中找到包含錢包數據的表格。")
+        return [] # 找不到表格則返回空列表，讓 main 決定
 
+    # --- 修正點 2: 提取數據 ---
     rows = table.find_all('tr')[1:]
     wallets = []
+    
     for row in rows[:100]:
         cells = row.find_all('td')
-        if len(cells) < 13:
+        # 確保至少有 12 個欄位 (Rank 到 30d Change)
+        if len(cells) < 12:
             continue
         
         # 抓取和清理欄位
         rank = clean_local(cells[0].text.strip(), 'rank')
         address_cell = cells[1].find('a')
-        address = address_cell.text.strip() if address_cell else cells[1].text.strip()
+        # 如果找不到 <a> 標籤，則使用 cell 的純文字，但要先移除 owner 資訊
+        address_text = cells[1].text.strip()
+        owner_tag = cells[1].find('span', class_='a')
+        owner = owner_tag['title'].strip() if owner_tag and owner_tag.has_attr('title') else ''
+        
+        # 從 address_text 中移除 owner 資訊，只保留地址本身
+        if owner_tag:
+             address = address_text.replace(owner_tag.text, '').strip()
+        elif address_cell:
+             address = address_cell.text.strip()
+        else:
+             address = address_text # 作為最終備用
+             
+        # 修正 address 欄位可能包含換行和空格的問題
+        address = address.split('\n')[0].strip()
+             
         balance = clean_local(cells[2].text.strip(), 'balance')
         percentage = clean_local(cells[3].text.strip(), 'percentage')
         first_in = clean_local(cells[4].text.strip(), 'date_in')
@@ -104,12 +162,8 @@ def fetch_top_100():
         change_7d = clean_local(cells[10].text.strip(), 'change') if len(cells) > 10 else 'N/A'
         change_30d = clean_local(cells[11].text.strip(), 'change') if len(cells) > 11 else 'N/A'
         
-        # 重新格式化 change 欄位以確保一致性
         change = f"7d:{change_7d} / 30d:{change_30d}"
 
-        owner_tag = cells[1].find('span', class_='a')
-        owner = owner_tag['title'].strip() if owner_tag and owner_tag.has_attr('title') else ''
-        
         wallets.append({
             'rank': rank,
             'address': address,
@@ -125,7 +179,7 @@ def fetch_top_100():
             'owner': owner
         })
     
-    # 補足至 100 筆 N/A 資料 (保留原有邏輯)
+    # 補足至 100 筆 N/A 資料
     while len(wallets) < 100:
         wallets.append({
             'rank': str(len(wallets) + 1),
@@ -142,27 +196,11 @@ def fetch_top_100():
             'owner': ''
         })
         
+    print(f"成功從網站抓取 {len(wallets)} 筆有效數據。")
     return wallets
 
-# -----------------
-# Fallback Function (使用本地 JSON 作為備用)
-# -----------------
-def get_fallback_wallets(filename=WALLET_FILE):
-    """在抓取失敗時，從本地 JSON 讀取備用數據。"""
-    try:
-        if os.path.exists(filename):
-            with open(filename, 'r', encoding='utf-8') as f:
-                print(f"成功使用本地 {filename} 作為備用數據。")
-                return json.load(f)
-        else:
-            print(f"本地 {filename} 也不存在，返回空列表。")
-            return []
-    except Exception as e:
-        print(f"讀取本地備用檔案 {filename} 時發生錯誤: {e}")
-        return []
-
 # ----------------------------------------
-# NEW/MODIFIED FUNCTION: Save (Keep simple)
+# Save Function (Keep simple)
 # ----------------------------------------
 
 def save_wallets(wallets, filename=WALLET_FILE):
@@ -183,24 +221,30 @@ def save_wallets(wallets, filename=WALLET_FILE):
         
 
 # -----------------
-# Main Execution Block (簡化為直接覆蓋)
+# Main Execution Block (修正 fallback 邏輯)
 # -----------------
 def main():
-    print("--- 比特幣 100 大錢包更新腳本啟動 (直接覆蓋模式) ---")
+    print("--- 比特幣 100 大錢包更新腳本啟動 (直接覆蓋模式 - 修正版) ---")
     
-    # 1. 抓取最新的網站數據 (失敗時會自動使用本地 JSON 作為備用)
+    # 1. 抓取最新的網站數據
     latest_wallets = fetch_top_100()
     
-    # 2. 直接保存
-    if latest_wallets:
+    # 2. 判斷是否成功抓取
+    if not latest_wallets:
+        # 如果抓取失敗 (返回空列表)，則使用本地 JSON 作為備用
+        print("網站數據抓取失敗，嘗試使用本地備用數據。")
+        final_wallets = get_fallback_wallets(WALLET_FILE)
+    else:
+        # 如果抓取成功，則使用網站數據
+        final_wallets = latest_wallets
+
+    # 3. 直接保存
+    if final_wallets:
         # 直接保存，不需要比對
-        save_wallets(latest_wallets, WALLET_FILE)
+        save_wallets(final_wallets, WALLET_FILE)
     else:
         print("未獲取到任何有效數據 (網站和本地備用皆失敗)，腳本結束。")
     
-    # 3. 如果在 GitHub Actions 中，需要判斷是否生成了新的 JSON 檔案
-    #    這部分邏輯交給 `update-wallet.yml` 中的 Git 步驟處理
-
     print("--- 腳本執行完畢 ---")
 
 if __name__ == '__main__':
