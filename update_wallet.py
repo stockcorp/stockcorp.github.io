@@ -4,22 +4,18 @@ import json
 import time
 from openai import OpenAI
 import re
-from bs4 import BeautifulSoup 
-
+from bs4 import BeautifulSoup
 # -----------------
 # Configuration & Initialization
 # -----------------
 WALLET_FILE = 'wallet.json'
 # --- 更新目標網址 ---
 TARGET_URL = 'https://www.coincarp.com/currencies/bitcoin/richlist/'
-SCRAPINGANT_API_URL = 'https://api.scrapingant.com/v2/general'
-
 # 初始化 xAI 客戶端，使用環境變數的 API 密鑰
 client = OpenAI(
     api_key=os.getenv("XAI_API_KEY_BITCOIN"),
     base_url="https://api.x.ai/v1"
 )
-
 # -----------------
 # Data Cleaning & Fallback
 # -----------------
@@ -40,7 +36,6 @@ def clean_local(text, field_type):
          return re.sub(r'\D', '', text) or 'N/A'
     else:
         return text if text else 'N/A'
-
 def get_fallback_wallets():
     """使用上次抓取的資料，並補足至 100 筆 N/A 數據作為備用。"""
     # 根據您上次 wallet.json 的內容，硬編碼前 47 筆有效數據
@@ -146,26 +141,25 @@ def get_fallback_wallets():
         {'rank': '99', 'address': 'bc1q9l2cyuq3lhsu4nzzttsws6e852czq9', 'balance': '10,000 BTC ($1,086,473,758)', 'percentage': '0.0501%', 'first_in': '2025-08-19 19:20:57 UTC', 'last_in': '2025-10-12 21:10:29 UTC', 'ins': '2', 'first_out': '', 'last_out': '', 'outs': '0', 'change': '7d:N/A / 30d:N/A', 'owner': ''},
         {'rank': '100', 'address': 'bc1q9l2cyuq3lhsu4nzzttsws6e852czq9', 'balance': '10,000 BTC ($1,086,473,758)', 'percentage': '0.0501%', 'first_in': '2025-08-19 19:20:57 UTC', 'last_in': '2025-10-12 21:10:29 UTC', 'ins': '2', 'first_out': '', 'last_out': '', 'outs': '0', 'change': '7d:N/A / 30d:N/A', 'owner': ''}
     ]
-
     # 補足至 100 筆 N/A 資料
     current_length = len(fallback)
     while len(fallback) < 100:
         current_length += 1
         fallback.append({
-             'rank': str(current_length), 
-             'address': 'N/A', 
-             'balance': 'N/A', 
-             'percentage': 'N/A', 
-             'first_in': 'N/A', 
-             'last_in': 'N/A', 
-             'ins': 'N/A', 
-             'first_out': 'N/A', 
-             'last_out': 'N/A', 
-             'outs': 'N/A', 
-             'change': '7d:N/A / 30d:N/A', 
+             'rank': str(current_length),
+             'address': 'N/A',
+             'balance': 'N/A',
+             'percentage': 'N/A',
+             'first_in': 'N/A',
+             'last_in': 'N/A',
+             'ins': 'N/A',
+             'first_out': 'N/A',
+             'last_out': 'N/A',
+             'outs': 'N/A',
+             'change': '7d:N/A / 30d:N/A',
              'owner': ''
         })
-    
+   
     # 讀取本地 wallet.json 作為備用 (如果存在) - 確保在 CI 環境中使用硬編碼，除非本地讀取成功
     try:
         if os.path.exists(WALLET_FILE):
@@ -176,113 +170,79 @@ def get_fallback_wallets():
                     return local_data
     except Exception:
         pass # 忽略讀取錯誤
-
     return fallback[:100]
-
 # -----------------
-# Core Function: Use Grok to Parse HTML and Generate JSON
+# Core Function: Use Grok to Fetch and Generate JSON
 # -----------------
-def grok_parse_and_generate_json(html_content):
-    """使用 Grok API 解析 HTML 內容並生成 JSON 數據"""
-    print("-> 呼叫 Grok API 進行數據解析與 JSON 轉換...")
-    
-    # 提示 Grok 提取數據並確保輸出格式嚴格為 JSON
+def grok_fetch_and_generate_json():
+    """使用 Grok API 直接抓取並解析網站資料，生成 JSON 數據"""
+    print("-> 呼叫 Grok API 進行數據抓取與 JSON 轉換...")
+   
+    # 提示 Grok 抓取網站並提取數據，確保輸出格式嚴格為 JSON
     prompt = f"""
-    以下是從 {TARGET_URL} 抓取的網頁原始 HTML 內容。
-    請僅從 HTML 中找到包含比特幣錢包地址列表的表格（通常是 class='richlist_table' 的表格）。
-    提取表格中**前 100 筆**資料，將每行數據轉換為 JSON 格式的物件。
-
-    請將網頁表格中的欄位，精準地對應到以下 JSON 鍵：
-    - 排名 (Rank) -> 'rank'
-    - 地址 (Address) -> 'address'
-    - 餘額 (Balance) 及價值 -> 'balance' (格式應為: "X,XXX BTC ($Y,YYY)")
-    - 佔比 (Share) -> 'percentage' (格式應為: "X.XX%")
-    - 首次入帳 (First In Time) -> 'first_in'
-    - 最後入帳 (Last In Time) -> 'last_in'
-    - 總入帳筆數 (Total In) -> 'ins'
-    - 首次出帳 (First Out Time) -> 'first_out'
-    - 最後出帳 (Last Out Time) -> 'last_out'
-    - 總出帳筆數 (Total Out) -> 'outs'
-    - 7日/30日變動 (7D Change / 30D Change) -> 'change' (合併為: "7d:+X / 30d:-Y")
-    - 實體或交易所標註 (Owner/Exchange Tag) -> 'owner' (如果沒有，請留空字串 "")
-    
-    請嚴格確保輸出內容是**純粹、完整的 JSON 陣列**，不要包含任何額外的註釋、解釋性文字或 Markdown 標記。
-    
-    原始 HTML 內容 (已截斷)：
-    ---HTML START---
-    {html_content[:15000]}
-    ---HTML END---
+    請瀏覽 {TARGET_URL} 網站，提取比特幣錢包富豪榜的前 100 筆資料。
+    將每筆資料轉換為 JSON 格式的物件，並輸出一個包含 100 個物件的陣列。
+    請精準對應以下 JSON 鍵：
+    - 排名 -> 'rank'
+    - 地址 -> 'address'
+    - 餘額及價值 -> 'balance' (格式: "X,XXX BTC ($Y,YYY)")
+    - 佔比 -> 'percentage' (格式: "X.XX%")
+    - 首次入帳 -> 'first_in'
+    - 最後入帳 -> 'last_in'
+    - 總入帳筆數 -> 'ins'
+    - 首次出帳 -> 'first_out'
+    - 最後出帳 -> 'last_out'
+    - 總出帳筆數 -> 'outs'
+    - 7日/30日變動 -> 'change' (格式: "7d:+X / 30d:-Y")
+    - 擁有者 -> 'owner' (無則留空 "")
+   
+    輸出必須是純 JSON 陣列，無任何額外文字。
     """
-    
+   
     try:
-        # 使用 Grok API 進行轉換
+        # 使用 Grok API 進行抓取和轉換
         response = client.chat.completions.create(
             model="grok-1.0",
             messages=[{"role": "user", "content": prompt}],
             temperature=0.0 # 低溫度確保結構化輸出
         )
-        
+       
         json_string = response.choices[0].message.content.strip()
-        
+       
         # 嘗試解析 Grok 的輸出
         wallets_data = json.loads(json_string)
         print("<- Grok API 轉換成功，獲得 JSON 數據。")
-        
-        # 確保 Grok 輸出的數據是 100 筆，如果不足則補足 N/A
+       
+        # 確保數據是 100 筆，如果不足則補足 N/A
         while len(wallets_data) < 100:
              wallets_data.append({
-                 'rank': str(len(wallets_data) + 1), 'address': 'N/A', 'balance': 'N/A', 'percentage': 'N/A', 
-                 'first_in': 'N/A', 'last_in': 'N/A', 'ins': 'N/A', 'first_out': 'N/A', 'last_out': 'N/A', 
+                 'rank': str(len(wallets_data) + 1), 'address': 'N/A', 'balance': 'N/A', 'percentage': 'N/A',
+                 'first_in': 'N/A', 'last_in': 'N/A', 'ins': 'N/A', 'first_out': 'N/A', 'last_out': 'N/A',
                  'outs': 'N/A', 'change': '7d:N/A / 30d:N/A', 'owner': ''
             })
-            
+           
         return wallets_data[:100]
-        
+       
     except Exception as e:
         print(f"!!! Grok API 呼叫或 JSON 解析失敗: {e}")
         return []
-
-
 # -----------------
-# Data Fetching (使用 Scrapingant API 獲取 HTML)
+# Data Fetching (使用 Grok API 直接獲取)
 # -----------------
 def fetch_top_100():
-    api_key = os.getenv("SCRAPINGANT_API_KEY", "2712b686edd24534b6282b00c11f20b8") 
-    
-    if not os.getenv("SCRAPINGANT_API_KEY"):
-        print("警告: SCRAPINGANT_API_KEY 未透過 GitHub Secret 設定，正在使用硬編碼金鑰。")
-    
-    # 針對 Coincarp 調整的選擇器
-    params = {
-        'url': TARGET_URL,
-        'x-api-key': api_key,
-        'browser': 'true',
-        'wait_for_selector': 'table.richlist_table', # <--- 針對 Coincarp 調整
-        'proxy_type': 'residential'
-    }
-    
-    response = None
     for attempt in range(3):
         try:
-            print(f"嘗試 {attempt + 1} - 呼叫 Scrapingant API 抓取 {TARGET_URL} (Residential Proxy)")
-            response = requests.get(SCRAPINGANT_API_URL, params=params, timeout=45)
-            print(f"嘗試 {attempt + 1} - Scrapingant Status code: {response.status_code}")
-            
-            if response.status_code == 200:
-                print("Scrapingant 成功取得 HTML 內容。")
-                return grok_parse_and_generate_json(response.text)
-                
-            elif response.status_code == 403:
-                print("Scrapingant 仍被阻擋 (403)，網站可能已升級反爬蟲機制。")
-        except requests.exceptions.RequestException as e:
+            print(f"嘗試 {attempt + 1} - 呼叫 Grok API 抓取 {TARGET_URL}")
+            wallets = grok_fetch_and_generate_json()
+            if wallets:
+                return wallets
+        except Exception as e:
             print(f"請求發生錯誤: {e}")
-            response = None
-            
+           
         time.sleep(10)
-    
-    print("!!! 無法透過 Scrapingant 取得 HTML，使用 fallback 數據。")
+   
+    print("!!! 無法透過 Grok API 取得數據，使用 fallback 數據。")
     return get_fallback_wallets()
-
 # -----------------
 # Main Execution Block (保持不變)
 # -----------------
@@ -290,7 +250,7 @@ def save_wallets(wallets, filename=WALLET_FILE):
     if not wallets:
         print("警告：嘗試寫入空數據，已取消寫入。")
         return False
-        
+       
     try:
         with open(filename, 'w', encoding='utf-8') as f:
             # 確保 JSON 輸出美觀且不包含 ASCII 以外的字符
@@ -300,18 +260,17 @@ def save_wallets(wallets, filename=WALLET_FILE):
     except Exception as e:
         print(f"寫入檔案 {filename} 時發生錯誤: {e}")
         return False
-        
+       
 def main():
-    print("--- 比特幣 100 大錢包更新腳本啟動 (Coincarp 抓取 + Grok 解析模式) ---")
-    
+    print("--- 比特幣 100 大錢包更新腳本啟動 (Grok API 直接抓取模式) ---")
+   
     latest_wallets = fetch_top_100()
-    
+   
     if latest_wallets:
         save_wallets(latest_wallets, WALLET_FILE)
     else:
         print("未獲取到任何有效數據，腳本結束。")
-    
+   
     print("--- 腳本執行完畢 ---")
-
 if __name__ == '__main__':
     main()
