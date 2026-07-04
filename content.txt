@@ -1,3 +1,10 @@
+title: Mexico stocks lower at close of trade; S&P/BMV IPC down 0.02%
+images: 366.jpg,366-1.jpg
+fontSize: 16px
+date: 2026-07-04
+content: <p>無法生成文章內容: Mexico stocks lower at close of trade; S&P/BMV IPC down 0.02%</p><p>原始連結：<a href="https://www.investing.com/news/stock-market-news/mexico-stocks-lower-at-close-of-trade-spbmv-ipc-down-002-4775321">點此查看</a></p>
+
+---
 title: Ford Q2 sales drop 10.3% due to F-Series supplier issue, falling EV demand
 images: 365.jpg,365-1.jpg
 fontSize: 16px
