@@ -1,3 +1,10 @@
+title: Trump’s memecoin holders have lost over $3.8B: Report
+images: 368.jpg,368-1.jpg
+fontSize: 16px
+date: 2026-07-06
+content: <p>無法生成文章內容: Trump’s memecoin holders have lost over $3.8B: Report</p><p>原始連結：<a href="https://cointelegraph.com/news/trumps-memecoin-loses-38b-for-nearly-1m-holders-report?utm_source=rss_feed&utm_medium=rss&utm_campaign=rss_partner_inbound">點此查看</a></p>
+
+---
 title: Here’s what’s worth streaming in July 2026 on Netflix, Hulu, HBO Max and more
 images: 367.jpg,367-1.jpg
 fontSize: 16px
