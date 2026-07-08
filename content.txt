@@ -1,3 +1,10 @@
+title: South32 secures U.S. Forest Service approval for Arizona mine
+images: 370.jpg,370-1.jpg
+fontSize: 16px
+date: 2026-07-08
+content: <p>無法生成文章內容: South32 secures U.S. Forest Service approval for Arizona mine</p><p>原始連結：<a href="https://seekingalpha.com/news/4612123-south32-secures-u-s-forest-service-approval-for-arizona-mine?source=generic_rss">點此查看</a></p>
+
+---
 title: UK Foreign Secretary Warns of 'AI Hiroshima' if Policymakers Don’t Act
 images: 369.jpg,369-1.jpg
 fontSize: 16px
