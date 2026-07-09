@@ -1,3 +1,10 @@
+title: AI boom fuels inflation fears, complicating Fed’s next rate move
+images: 371.jpg,371-1.jpg
+fontSize: 16px
+date: 2026-07-09
+content: <p>無法生成文章內容: AI boom fuels inflation fears, complicating Fed’s next rate move</p><p>原始連結：<a href="https://cointelegraph.com/news/ai-boom-fuels-inflation-fears-complicating-feds-next-move?utm_source=rss_feed&utm_medium=rss&utm_campaign=rss_partner_inbound">點此查看</a></p>
+
+---
 title: South32 secures U.S. Forest Service approval for Arizona mine
 images: 370.jpg,370-1.jpg
 fontSize: 16px
