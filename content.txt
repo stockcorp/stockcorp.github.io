@@ -1,3 +1,10 @@
+title: Goldman Sachs wins $70 billion in asset management deals with Verizon, Lockheed Martin
+images: 372.jpg,372-1.jpg
+fontSize: 16px
+date: 2026-07-10
+content: <p>無法生成文章內容: Goldman Sachs wins $70 billion in asset management deals with Verizon, Lockheed Martin</p><p>原始連結：<a href="https://www.cnbc.com/2026/07/09/goldman-sachs-asset-management-deals-verizon-lockheed-martin.html">點此查看</a></p>
+
+---
 title: AI boom fuels inflation fears, complicating Fed’s next rate move
 images: 371.jpg,371-1.jpg
 fontSize: 16px
