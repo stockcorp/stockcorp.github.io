@@ -1,3 +1,10 @@
+title: Why tech investors are reevaluating AI investments
+images: 373.jpg,373-1.jpg
+fontSize: 16px
+date: 2026-07-11
+content: <p>無法生成文章內容: Why tech investors are reevaluating AI investments</p><p>原始連結：<a href="https://www.investing.com/news/stock-market-news/why-tech-investors-are-reevaluating-ai-investments-4787169">點此查看</a></p>
+
+---
 title: Goldman Sachs wins $70 billion in asset management deals with Verizon, Lockheed Martin
 images: 372.jpg,372-1.jpg
 fontSize: 16px
