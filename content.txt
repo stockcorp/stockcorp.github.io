@@ -1,3 +1,10 @@
+title: Kestra expects $137M FY2027 revenue while targeting 70%+ gross margins in the next few years
+images: 377.jpg,377-1.jpg
+fontSize: 16px
+date: 2026-07-15
+content: <p>無法生成文章內容: Kestra expects $137M FY2027 revenue while targeting 70%+ gross margins in the next few years</p><p>原始連結：<a href="https://seekingalpha.com/news/4613797-kestra-expects-137m-fy2027-revenue-while-targeting-70-percent-gross-margins-in-the-next-few?source=generic_rss">點此查看</a></p>
+
+---
 title: Here’s what happened in crypto today
 images: 376.jpg,376-1.jpg
 fontSize: 16px
