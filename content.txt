@@ -1,3 +1,10 @@
+title: Sen. Warren says Trump's CFPB overhaul has cost Americans $26.5 billion
+images: 379.jpg,379-1.jpg
+fontSize: 16px
+date: 2026-07-17
+content: <p>無法生成文章內容: Sen. Warren says Trump's CFPB overhaul has cost Americans $26.5 billion</p><p>原始連結：<a href="https://www.cnbc.com/2026/07/16/trumps-cfpb-overhaul-cost-americans-26point5-billion-sen-warren-says.html">點此查看</a></p>
+
+---
 title: Bank of Tanzania Targets Crypto as Governor Warns of Terror Finance Risks
 images: 378.jpg,378-1.jpg
 fontSize: 16px
