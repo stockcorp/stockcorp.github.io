@@ -1,3 +1,10 @@
+title: Silver Price Forecast: XAG hits fresh YTD low, bears eye $54 breakdown
+images: 380.jpg,380-1.jpg
+fontSize: 16px
+date: 2026-07-18
+content: <p>無法生成文章內容: Silver Price Forecast: XAG hits fresh YTD low, bears eye $54 breakdown</p><p>原始連結：<a href="https://www.fxstreet.com/news/silver-price-forecast-xag-hits-fresh-ytd-low-bears-eye-54-breakdown-202607172140">點此查看</a></p>
+
+---
 title: Sen. Warren says Trump's CFPB overhaul has cost Americans $26.5 billion
 images: 379.jpg,379-1.jpg
 fontSize: 16px
