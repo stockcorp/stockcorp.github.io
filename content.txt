@@ -1,3 +1,10 @@
+title: Comex Gold, Silver Settle Lower
+images: 381.jpg,381-1.jpg
+fontSize: 16px
+date: 2026-07-19
+content: <p>無法生成文章內容: Comex Gold, Silver Settle Lower</p><p>原始連結：<a href="https://www.wsj.com/articles/gold-edges-lower-feds-rate-decision-in-focus-09dbfceb?mod=rss_markets_main">點此查看</a></p>
+
+---
 title: Silver Price Forecast: XAG hits fresh YTD low, bears eye $54 breakdown
 images: 380.jpg,380-1.jpg
 fontSize: 16px
