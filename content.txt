@@ -1,3 +1,10 @@
+title: What Happens When a Bitcoin Block Is Full? Every Byte Sparks a Live Fee Auction
+images: 383.jpg,383-1.jpg
+fontSize: 16px
+date: 2026-07-21
+content: <p>無法生成文章內容: What Happens When a Bitcoin Block Is Full? Every Byte Sparks a Live Fee Auction</p><p>原始連結：<a href="https://news.bitcoin.com/what-happens-when-a-bitcoin-block-is-full-every-byte-sparks-a-live-fee-auction/">點此查看</a></p>
+
+---
 title: Robert Kiyosaki Backs ‘Go to the Moon’ Outlook for Gold and Silver After Severe Retracement
 images: 382.jpg,382-1.jpg
 fontSize: 16px
