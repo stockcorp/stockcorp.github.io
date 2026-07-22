@@ -1,3 +1,10 @@
+title: Super Micro’s stock soars as its margins unexpectedly double
+images: 384.jpg,384-1.jpg
+fontSize: 16px
+date: 2026-07-22
+content: <p>無法生成文章內容: Super Micro’s stock soars as its margins unexpectedly double</p><p>原始連結：<a href="https://www.marketwatch.com/story/super-micros-stock-soars-as-its-margins-unexpectedly-double-8aa83784?mod=mw_rss_topstories">點此查看</a></p>
+
+---
 title: What Happens When a Bitcoin Block Is Full? Every Byte Sparks a Live Fee Auction
 images: 383.jpg,383-1.jpg
 fontSize: 16px
