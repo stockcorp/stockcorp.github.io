@@ -1,3 +1,10 @@
+title: Kraken Parent Company Makes Moves to Offer xStocks From Global Markets
+images: 385.jpg,385-1.jpg
+fontSize: 16px
+date: 2026-07-23
+content: <p>無法生成文章內容: Kraken Parent Company Makes Moves to Offer xStocks From Global Markets</p><p>原始連結：<a href="https://decrypt.co/374106/kraken-parent-xstocks-beyond-us-equities">點此查看</a></p>
+
+---
 title: Super Micro’s stock soars as its margins unexpectedly double
 images: 384.jpg,384-1.jpg
 fontSize: 16px
