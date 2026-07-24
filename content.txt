@@ -1,3 +1,10 @@
+title: Albertsons stock plunges as it says weaker grocery spending will cut into sales and earnings
+images: 386.jpg,386-1.jpg
+fontSize: 16px
+date: 2026-07-24
+content: <p>無法生成文章內容: Albertsons stock plunges as it says weaker grocery spending will cut into sales and earnings</p><p>原始連結：<a href="https://www.cnbc.com/2026/07/23/albertsons-stock-plunges-on-lowered-outlook-softened-grocery-trends.html">點此查看</a></p>
+
+---
 title: Kraken Parent Company Makes Moves to Offer xStocks From Global Markets
 images: 385.jpg,385-1.jpg
 fontSize: 16px
