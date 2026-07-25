@@ -1,3 +1,10 @@
+title: Nasdaq lags on angst over AI spending ahead of earnings reports
+images: 387.jpg,387-1.jpg
+fontSize: 16px
+date: 2026-07-25
+content: <p>無法生成文章內容: Nasdaq lags on angst over AI spending ahead of earnings reports</p><p>原始連結：<a href="https://www.investing.com/news/stock-market-news/wall-st-futures-rise-after-tech-rout-mideast-tariffs-in-focus-4810955">點此查看</a></p>
+
+---
 title: Albertsons stock plunges as it says weaker grocery spending will cut into sales and earnings
 images: 386.jpg,386-1.jpg
 fontSize: 16px
