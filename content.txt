@@ -1,3 +1,10 @@
+title: New York AG warns CLARITY Act could weaken state crypto enforcement
+images: 390.jpg,390-1.jpg
+fontSize: 16px
+date: 2026-07-28
+content: <p>無法生成文章內容: New York AG warns CLARITY Act could weaken state crypto enforcement</p><p>原始連結：<a href="https://cointelegraph.com/news/new-york-ag-clarity-act-state-crypto-enforcement?utm_source=rss_feed&utm_medium=rss&utm_campaign=rss_partner_inbound">點此查看</a></p>
+
+---
 title: Peter Schiff Says Japan Could Be the Pin That Pricks the Bigger US Bubble
 images: 389.jpg,389-1.jpg
 fontSize: 16px
