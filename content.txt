@@ -1,3 +1,10 @@
+title: US Interest in Bitcoin Sinks to Near 5-Year Low
+images: 397.jpg,397-1.jpg
+fontSize: 16px
+date: 2026-08-04
+content: <p>無法生成文章內容: US Interest in Bitcoin Sinks to Near 5-Year Low</p><p>原始連結：<a href="https://news.bitcoin.com/crypto-news/us-interest-in-bitcoin-sinks-to-near-5-year-low/">點此查看</a></p>
+
+---
 title: CleanCore’s $800M AI Contract Shows Dogecoin Treasury Firms Are Changing Shape
 images: 396.jpg,396-1.jpg
 fontSize: 16px
