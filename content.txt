@@ -1,3 +1,10 @@
+title: Ford's new 'Fathom' electric pickup truck will start at $28,000
+images: 400.jpg,400-1.jpg
+fontSize: 16px
+date: 2026-08-07
+content: <p>無法生成文章內容: Ford's new 'Fathom' electric pickup truck will start at $28,000</p><p>原始連結：<a href="https://www.cnbc.com/2026/08/06/ford-fathom-pickup-truck-price.html">點此查看</a></p>
+
+---
 title: Senator Lummis still pushing for CLARITY vote before August recess
 images: 399.jpg,399-1.jpg
 fontSize: 16px
