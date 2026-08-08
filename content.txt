@@ -1,3 +1,10 @@
+title: New Jersey opens civil rights probe of privately run ICE detention center in Newark
+images: 401.jpg,401-1.jpg
+fontSize: 16px
+date: 2026-08-08
+content: <p>無法生成文章內容: New Jersey opens civil rights probe of privately run ICE detention center in Newark</p><p>原始連結：<a href="https://www.investing.com/news/stock-market-news/new-jersey-opens-civil-rights-probe-of-privately-run-ice-detention-center-in-newark-4847547">點此查看</a></p>
+
+---
 title: Ford's new 'Fathom' electric pickup truck will start at $28,000
 images: 400.jpg,400-1.jpg
 fontSize: 16px
