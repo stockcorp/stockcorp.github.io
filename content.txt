@@ -1,3 +1,10 @@
+title: Why Do Companies Stay Private Longer?
+images: 402.jpg,402-1.jpg
+fontSize: 16px
+date: 2026-08-09
+content: <p>無法生成文章內容: Why Do Companies Stay Private Longer?</p><p>原始連結：<a href="https://www.nasdaq.com/articles/why-do-companies-stay-private-longer">點此查看</a></p>
+
+---
 title: New Jersey opens civil rights probe of privately run ICE detention center in Newark
 images: 401.jpg,401-1.jpg
 fontSize: 16px
