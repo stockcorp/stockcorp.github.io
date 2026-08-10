@@ -1,3 +1,10 @@
+title: Brazil targets crypto fraud with up to 24-hour transfer hold
+images: 403.jpg,403-1.jpg
+fontSize: 16px
+date: 2026-08-10
+content: <p>無法生成文章內容: Brazil targets crypto fraud with up to 24-hour transfer hold</p><p>原始連結：<a href="https://cointelegraph.com/news/brazil-targets-crypto-fraud-with-up-to-24-hour-transfer-hold?utm_source=rss_feed&utm_medium=rss&utm_campaign=rss_partner_inbound">點此查看</a></p>
+
+---
 title: Why Do Companies Stay Private Longer?
 images: 402.jpg,402-1.jpg
 fontSize: 16px
