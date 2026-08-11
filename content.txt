@@ -1,3 +1,10 @@
+title: CleanCore’s $800M AI Contract Shows Dogecoin Treasury Firms Are Changing Shape
+images: 404.jpg,404-1.jpg
+fontSize: 16px
+date: 2026-08-11
+content: <p>無法生成文章內容: CleanCore’s $800M AI Contract Shows Dogecoin Treasury Firms Are Changing Shape</p><p>原始連結：<a href="https://www.newsbtc.com/news/cleancore-s-800m-ai-contract-shows-dogecoin-treasury-firms-are-changing-shape/">點此查看</a></p>
+
+---
 title: Brazil targets crypto fraud with up to 24-hour transfer hold
 images: 403.jpg,403-1.jpg
 fontSize: 16px
