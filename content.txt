@@ -1,3 +1,10 @@
+title: Worksport outlines 2026 cash flow breakeven focus while targeting $12M-$12.9M quarterly revenue sensitivity at 35% gross margin
+images: 405.jpg,405-1.jpg
+fontSize: 16px
+date: 2026-08-12
+content: <p>無法生成文章內容: Worksport outlines 2026 cash flow breakeven focus while targeting $12M-$12.9M quarterly revenue sensitivity at 35% gross margin</p><p>原始連結：<a href="https://seekingalpha.com/news/4631196-worksport-outlines-2026-cash-flow-breakeven-focus-while-targeting-12m-12_9m-quarterly-revenue?source=generic_rss">點此查看</a></p>
+
+---
 title: CleanCore’s $800M AI Contract Shows Dogecoin Treasury Firms Are Changing Shape
 images: 404.jpg,404-1.jpg
 fontSize: 16px
