@@ -1,3 +1,10 @@
+title: The ‘20% rule’ behind Giorgos Tsetis’ blueprint for a new kind of family office
+images: 407.jpg,407-1.jpg
+fontSize: 16px
+date: 2026-08-14
+content: <p>無法生成文章內容: The ‘20% rule’ behind Giorgos Tsetis’ blueprint for a new kind of family office</p><p>原始連結：<a href="https://www.cnbc.com/2026/08/13/family-office-giorgos-tsetis-nutrafol.html">點此查看</a></p>
+
+---
 title: Coinbase Expands Derivatives Trading To UK Professional Clients
 images: 406.jpg,406-1.jpg
 fontSize: 16px
