@@ -1,3 +1,10 @@
+title: EURUSD backs off from the 50% midpoint target at 1.1585. What next?
+images: 408.jpg,408-1.jpg
+fontSize: 16px
+date: 2026-08-15
+content: <p>無法生成文章內容: EURUSD backs off from the 50% midpoint target at 1.1585. What next?</p><p>原始連結：<a href="https://investinglive.com/technical-analysis/eurusd-backs-off-from-the-50-midpoint-target-at-1-1585-what-next/">點此查看</a></p>
+
+---
 title: The ‘20% rule’ behind Giorgos Tsetis’ blueprint for a new kind of family office
 images: 407.jpg,407-1.jpg
 fontSize: 16px
