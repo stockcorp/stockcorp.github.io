@@ -1,3 +1,10 @@
+title: Depleted strategic oil reserve nears level that raises concerns about damage to caverns, operations
+images: 409.jpg,409-1.jpg
+fontSize: 16px
+date: 2026-08-16
+content: <p>無法生成文章內容: Depleted strategic oil reserve nears level that raises concerns about damage to caverns, operations</p><p>原始連結：<a href="https://www.cnbc.com/2026/08/15/strategic-petroleum-reserve-spr-oil-iran-war-caverns.html">點此查看</a></p>
+
+---
 title: EURUSD backs off from the 50% midpoint target at 1.1585. What next?
 images: 408.jpg,408-1.jpg
 fontSize: 16px
