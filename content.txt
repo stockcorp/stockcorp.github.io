@@ -1,3 +1,10 @@
+title: Data of 54,000 wallet users leaked, CLARITY odds just 10%: Hodler’s Digest
+images: 410.jpg,410-1.jpg
+fontSize: 16px
+date: 2026-08-17
+content: <p>無法生成文章內容: Data of 54,000 wallet users leaked, CLARITY odds just 10%: Hodler’s Digest</p><p>原始連結：<a href="https://cointelegraph.com/magazine/data-of-54000-wallet-users-leaked-clarity-odds-just-10-hodlers-digest?utm_source=rss_feed&utm_medium=rss&utm_campaign=rss_partner_inbound">點此查看</a></p>
+
+---
 title: Depleted strategic oil reserve nears level that raises concerns about damage to caverns, operations
 images: 409.jpg,409-1.jpg
 fontSize: 16px
