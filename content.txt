@@ -1,3 +1,10 @@
+title: OpenAI’s Answer to Rogue Agents and Hacks Is More AI, Not Less
+images: 411.jpg,411-1.jpg
+fontSize: 16px
+date: 2026-08-18
+content: <p>無法生成文章內容: OpenAI’s Answer to Rogue Agents and Hacks Is More AI, Not Less</p><p>原始連結：<a href="https://decrypt.co/375816/openai-answer-rogue-agents-hacks-more-ai">點此查看</a></p>
+
+---
 title: Data of 54,000 wallet users leaked, CLARITY odds just 10%: Hodler’s Digest
 images: 410.jpg,410-1.jpg
 fontSize: 16px
