@@ -1,3 +1,10 @@
+title: Riot’s Anthropic Deal Shows Bitcoin Miners Are Moving Deeper Into AI Compute
+images: 413.jpg,413-1.jpg
+fontSize: 16px
+date: 2026-08-20
+content: <p>無法生成文章內容: Riot’s Anthropic Deal Shows Bitcoin Miners Are Moving Deeper Into AI Compute</p><p>原始連結：<a href="https://www.newsbtc.com/news/riot-s-anthropic-deal-shows-bitcoin-miners-are-moving-deeper-into-ai-compute/">點此查看</a></p>
+
+---
 title: Seoul, Washington to halve joint drills as Trump reportedly seeks summit with North Korea's Kim
 images: 412.jpg,412-1.jpg
 fontSize: 16px
