@@ -1,3 +1,10 @@
+title: Where commercial real estate demand is the highest, according to new data
+images: 414.jpg,414-1.jpg
+fontSize: 16px
+date: 2026-08-21
+content: <p>無法生成文章內容: Where commercial real estate demand is the highest, according to new data</p><p>原始連結：<a href="https://www.cnbc.com/2026/08/20/commercial-real-estate-demand-nar-data.html">點此查看</a></p>
+
+---
 title: Riot’s Anthropic Deal Shows Bitcoin Miners Are Moving Deeper Into AI Compute
 images: 413.jpg,413-1.jpg
 fontSize: 16px
