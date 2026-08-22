@@ -1,3 +1,10 @@
+title: Explainer-What we know about the door handles that triggered China’s record auto recall
+images: 415.jpg,415-1.jpg
+fontSize: 16px
+date: 2026-08-22
+content: <p>無法生成文章內容: Explainer-What we know about the door handles that triggered China’s record auto recall</p><p>原始連結：<a href="https://www.investing.com/news/stock-market-news/explainerwhat-we-know-about-the-door-handles-that-triggered-chinas-record-auto-recall-4872176">點此查看</a></p>
+
+---
 title: Where commercial real estate demand is the highest, according to new data
 images: 414.jpg,414-1.jpg
 fontSize: 16px
