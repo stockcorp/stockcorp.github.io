@@ -1,3 +1,10 @@
+title: Strategy Raises $2B As Bitcoin Holdings Stay Flat For The Week
+images: 418.jpg,418-1.jpg
+fontSize: 16px
+date: 2026-08-25
+content: <p>無法生成文章內容: Strategy Raises $2B As Bitcoin Holdings Stay Flat For The Week</p><p>原始連結：<a href="https://www.newsbtc.com/news/strategy-raises-2b-as-bitcoin-holdings-stay-flat-for-the-week/">點此查看</a></p>
+
+---
 title: XRP Faces 5.5% Annual Supply Dilution as XRPL Revenue Falls 81.6%
 images: 417.jpg,417-1.jpg
 fontSize: 16px
