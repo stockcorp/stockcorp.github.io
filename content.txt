@@ -1,3 +1,10 @@
+title: Box projects FY 2027 revenue of $1.29B as Enterprise Advanced adoption drives 106% net retention
+images: 419.jpg,419-1.jpg
+fontSize: 16px
+date: 2026-08-26
+content: <p>無法生成文章內容: Box projects FY 2027 revenue of $1.29B as Enterprise Advanced adoption drives 106% net retention</p><p>原始連結：<a href="https://seekingalpha.com/news/4636831-box-projects-fy-2027-revenue-of-1_29b-as-enterprise-advanced-adoption-drives-106-percent-net?source=generic_rss">點此查看</a></p>
+
+---
 title: Strategy Raises $2B As Bitcoin Holdings Stay Flat For The Week
 images: 418.jpg,418-1.jpg
 fontSize: 16px
