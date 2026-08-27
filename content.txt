@@ -1,3 +1,10 @@
+title: Rockawayx Expands US Crypto Presence With Relayer Capital Deal
+images: 420.jpg,420-1.jpg
+fontSize: 16px
+date: 2026-08-27
+content: <p>無法生成文章內容: Rockawayx Expands US Crypto Presence With Relayer Capital Deal</p><p>原始連結：<a href="https://news.bitcoin.com/crypto-news/rockawayx-expands-us-crypto-presence-with-relayer-capital-deal/">點此查看</a></p>
+
+---
 title: Box projects FY 2027 revenue of $1.29B as Enterprise Advanced adoption drives 106% net retention
 images: 419.jpg,419-1.jpg
 fontSize: 16px
