@@ -1,3 +1,10 @@
+title: FDA approves daily HIV pill from Gilead designed to simplify treatment for some patients
+images: 421.jpg,421-1.jpg
+fontSize: 16px
+date: 2026-08-28
+content: <p>無法生成文章內容: FDA approves daily HIV pill from Gilead designed to simplify treatment for some patients</p><p>原始連結：<a href="https://www.cnbc.com/2026/08/27/fda-approves-gilead-hiv-pill-bixlenvo-designed-to-simplify-treatment.html">點此查看</a></p>
+
+---
 title: Rockawayx Expands US Crypto Presence With Relayer Capital Deal
 images: 420.jpg,420-1.jpg
 fontSize: 16px
