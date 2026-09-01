@@ -1,3 +1,10 @@
+title: Bitcoin ETF Outflows Hit $201M As Inflow Streak Breaks
+images: 425.jpg,425-1.jpg
+fontSize: 16px
+date: 2026-09-01
+content: <p>無法生成文章內容: Bitcoin ETF Outflows Hit $201M As Inflow Streak Breaks</p><p>原始連結：<a href="https://www.newsbtc.com/news/bitcoin-etf-outflows-201m-inflow-streak-breaks/">點此查看</a></p>
+
+---
 title: Strategy Raises $2B As Bitcoin Holdings Stay Flat For The Week
 images: 424.jpg,424-1.jpg
 fontSize: 16px
