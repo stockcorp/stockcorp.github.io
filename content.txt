@@ -1,3 +1,10 @@
+title: Automakers urge Congress to permanently ban Chinese connected vehicles in U.S.
+images: 428.jpg,428-1.jpg
+fontSize: 16px
+date: 2026-09-04
+content: <p>無法生成文章內容: Automakers urge Congress to permanently ban Chinese connected vehicles in U.S.</p><p>原始連結：<a href="https://www.cnbc.com/2026/09/03/chinese-vehicles-congress.html">點此查看</a></p>
+
+---
 title: US officials work with CrowdStrike to fight malware behind crypto theft
 images: 427.jpg,427-1.jpg
 fontSize: 16px
