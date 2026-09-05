@@ -1,3 +1,10 @@
+title: Reports of loud explosions in Jordan
+images: 429.jpg,429-1.jpg
+fontSize: 16px
+date: 2026-09-05
+content: <p>無法生成文章內容: Reports of loud explosions in Jordan</p><p>原始連結：<a href="https://investinglive.com/commodities/reports-of-loud-explosions-in-jordan/">點此查看</a></p>
+
+---
 title: Automakers urge Congress to permanently ban Chinese connected vehicles in U.S.
 images: 428.jpg,428-1.jpg
 fontSize: 16px
