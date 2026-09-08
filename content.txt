@@ -1,3 +1,10 @@
+title: Bitwise Amends Ethereum ETF Filing To Include Staking Mechanics
+images: 432.jpg,432-1.jpg
+fontSize: 16px
+date: 2026-09-08
+content: <p>無法生成文章內容: Bitwise Amends Ethereum ETF Filing To Include Staking Mechanics</p><p>原始連結：<a href="https://www.newsbtc.com/news/bitwise-amends-ethereum-etf-filing-to-include-staking-mechanics/">點此查看</a></p>
+
+---
 title: Satoshi-era Bitcoin wakes after 16 years of dormancy as 600 BTC moves
 images: 431.jpg,431-1.jpg
 fontSize: 16px
