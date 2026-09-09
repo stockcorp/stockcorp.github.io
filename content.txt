@@ -1,3 +1,10 @@
+title: Iran says it hit American vessels, oil tankers in Hormuz in retaliation for U.S. strikes
+images: 433.jpg,433-1.jpg
+fontSize: 16px
+date: 2026-09-09
+content: <p>無法生成文章內容: Iran says it hit American vessels, oil tankers in Hormuz in retaliation for U.S. strikes</p><p>原始連結：<a href="https://www.cnbc.com/2026/09/08/iran-us-sub-strait-hormuz.html">點此查看</a></p>
+
+---
 title: Bitwise Amends Ethereum ETF Filing To Include Staking Mechanics
 images: 432.jpg,432-1.jpg
 fontSize: 16px
