@@ -1,3 +1,10 @@
+title: NFL Commissioner Roger Goodell says league could rework TV packages in next media deal
+images: 435.jpg,435-1.jpg
+fontSize: 16px
+date: 2026-09-11
+content: <p>無法生成文章內容: NFL Commissioner Roger Goodell says league could rework TV packages in next media deal</p><p>原始連結：<a href="https://www.cnbc.com/2026/09/10/nfl-roger-goodell-tv-packages-deal.html">點此查看</a></p>
+
+---
 title: Crypto, Banks Take Clarity Act Lobbying Fight to Senators' Home States
 images: 434.jpg,434-1.jpg
 fontSize: 16px
