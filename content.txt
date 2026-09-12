@@ -1,3 +1,10 @@
+title: US declares end of largest recorded cyclosporiasis outbreak
+images: 436.jpg,436-1.jpg
+fontSize: 16px
+date: 2026-09-12
+content: <p>無法生成文章內容: US declares end of largest recorded cyclosporiasis outbreak</p><p>原始連結：<a href="https://www.investing.com/news/stock-market-news/us-declares-end-of-largest-recorded-cyclosporiasis-outbreak-4898115">點此查看</a></p>
+
+---
 title: NFL Commissioner Roger Goodell says league could rework TV packages in next media deal
 images: 435.jpg,435-1.jpg
 fontSize: 16px
