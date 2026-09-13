@@ -1,3 +1,10 @@
+title: Key deals this week: META, ADI, BSP, AAPL, and more
+images: 437.jpg,437-1.jpg
+fontSize: 16px
+date: 2026-09-13
+content: <p>無法生成文章內容: Key deals this week: META, ADI, BSP, AAPL, and more</p><p>原始連結：<a href="https://seekingalpha.com/news/4642267-key-deals-this-week-meta-adi-bsp-aapl-and-more?source=generic_rss">點此查看</a></p>
+
+---
 title: US declares end of largest recorded cyclosporiasis outbreak
 images: 436.jpg,436-1.jpg
 fontSize: 16px
