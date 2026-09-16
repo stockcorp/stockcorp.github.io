@@ -1,3 +1,10 @@
+title: CPI +3.4%, as Expected: Wherefor Go Fed Rates?
+images: 440.jpg,440-1.jpg
+fontSize: 16px
+date: 2026-09-16
+content: <p>無法生成文章內容: CPI +3.4%, as Expected: Wherefor Go Fed Rates?</p><p>原始連結：<a href="https://www.nasdaq.com/articles/cpi-34-expected-wherefor-go-fed-rates">點此查看</a></p>
+
+---
 title: Balancer eyes wind-down after restructuring fails to revive revenue
 images: 439.jpg,439-1.jpg
 fontSize: 16px
