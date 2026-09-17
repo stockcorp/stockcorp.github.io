@@ -1,3 +1,10 @@
+title: Bitcoin Core Software Update Aims for Speed and Security Patches
+images: 441.jpg,441-1.jpg
+fontSize: 16px
+date: 2026-09-17
+content: <p>無法生成文章內容: Bitcoin Core Software Update Aims for Speed and Security Patches</p><p>原始連結：<a href="https://decrypt.co/378430/bitcoin-core-software-october-update">點此查看</a></p>
+
+---
 title: CPI +3.4%, as Expected: Wherefor Go Fed Rates?
 images: 440.jpg,440-1.jpg
 fontSize: 16px
