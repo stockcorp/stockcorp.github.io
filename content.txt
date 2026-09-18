@@ -1,3 +1,10 @@
+title: GM touts new V-8 engines in revived ‘truck wars’ with Ford, Ram amid lackluster EV sales
+images: 442.jpg,442-1.jpg
+fontSize: 16px
+date: 2026-09-18
+content: <p>無法生成文章內容: GM touts new V-8 engines in revived ‘truck wars’ with Ford, Ram amid lackluster EV sales</p><p>原始連結：<a href="https://www.cnbc.com/2026/09/17/chevy-silverado-gmc-sierra-v-8-engines.html">點此查看</a></p>
+
+---
 title: Bitcoin Core Software Update Aims for Speed and Security Patches
 images: 441.jpg,441-1.jpg
 fontSize: 16px
