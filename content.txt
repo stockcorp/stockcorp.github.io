@@ -1,3 +1,10 @@
+title: Australian 40-year economic outlook recognizes ‘AI revolution,’ omits crypto
+images: 446.jpg,446-1.jpg
+fontSize: 16px
+date: 2026-09-22
+content: <p>無法生成文章內容: Australian 40-year economic outlook recognizes ‘AI revolution,’ omits crypto</p><p>原始連結：<a href="https://cointelegraph.com/news/australian-40-year-economic-outlook-recognizes-ai-revolution-omits-crypto?utm_source=rss_feed&utm_medium=rss&utm_campaign=rss_partner_inbound">點此查看</a></p>
+
+---
 title: North Korean fake recruiters infect 30K devices, steal $10.7M in crypto
 images: 445.jpg,445-1.jpg
 fontSize: 16px
