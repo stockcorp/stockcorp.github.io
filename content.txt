@@ -1,3 +1,10 @@
+title: Starbucks to shutter about 250 stores in latest round of cafe closures
+images: 449.jpg,449-1.jpg
+fontSize: 16px
+date: 2026-09-25
+content: <p>無法生成文章內容: Starbucks to shutter about 250 stores in latest round of cafe closures</p><p>原始連結：<a href="https://www.cnbc.com/2026/09/24/starbucks-to-close-250-stores.html">點此查看</a></p>
+
+---
 title: Bybit Opens Oura Pre-IPO Perpetual Trading With Up To 25x Leverage
 images: 448.jpg,448-1.jpg
 fontSize: 16px
