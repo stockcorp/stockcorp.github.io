@@ -1,3 +1,10 @@
+title: Socure Brings AI Identity Checks To Circle’s Arc Onramp
+images: 453.jpg,453-1.jpg
+fontSize: 16px
+date: 2026-09-29
+content: <p>無法生成文章內容: Socure Brings AI Identity Checks To Circle’s Arc Onramp</p><p>原始連結：<a href="https://www.newsbtc.com/technology/socure-brings-ai-identity-checks-to-circles-arc-onramp/">點此查看</a></p>
+
+---
 title: Painting Roofs White Cut AC Use in a Philadelphia Pilot of 340 Homes
 images: 452.jpg,452-1.jpg
 fontSize: 16px
