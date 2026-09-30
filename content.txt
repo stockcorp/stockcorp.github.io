@@ -1,3 +1,10 @@
+title: ‘I’m never selling’: I’m 47 and buy bitcoin with every dollar I earn. Am I crazy?
+images: 454.jpg,454-1.jpg
+fontSize: 16px
+date: 2026-09-30
+content: <p>無法生成文章內容: ‘I’m never selling’: I’m 47 and buy bitcoin with every dollar I earn. Am I crazy?</p><p>原始連結：<a href="https://www.marketwatch.com/story/im-never-selling-im-47-and-buy-bitcoin-with-every-dollar-i-earn-am-i-crazy-364d2a64?mod=mw_rss_topstories">點此查看</a></p>
+
+---
 title: Socure Brings AI Identity Checks To Circle’s Arc Onramp
 images: 453.jpg,453-1.jpg
 fontSize: 16px
