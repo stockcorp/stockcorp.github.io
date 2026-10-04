@@ -1,3 +1,10 @@
+title: ‘I don’t want to die on the sales floor’: I’m 67 and earn $19.50 an hour at a big-box store. When can I finally retire?
+images: 458.jpg,458-1.jpg
+fontSize: 16px
+date: 2026-10-04
+content: <p>無法生成文章內容: ‘I don’t want to die on the sales floor’: I’m 67 and earn $19.50 an hour at a big-box store. When can I finally retire?</p><p>原始連結：<a href="https://www.marketwatch.com/story/i-dont-want-to-die-on-the-sales-floor-im-67-and-earn-19-50-an-hour-at-a-big-box-store-when-can-i-finally-retire-369abcf9?mod=mw_rss_topstories">點此查看</a></p>
+
+---
 title: Bitcoin sellers defend $87,334. Key support comes into focus ahead of the weekend
 images: 457.jpg,457-1.jpg
 fontSize: 16px
