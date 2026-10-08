@@ -1,3 +1,10 @@
+title: OpenAI Says a Secret AI Model Cracked Hundreds of Open Math Problems in One Prompt—Mathematicians Want Receipts
+images: 462.jpg,462-1.jpg
+fontSize: 16px
+date: 2026-10-08
+content: <p>無法生成文章內容: OpenAI Says a Secret AI Model Cracked Hundreds of Open Math Problems in One Prompt—Mathematicians Want Receipts</p><p>原始連結：<a href="https://decrypt.co/380366/openai-secret-ai-model-cracked-hundreds-math-problems-one-prompt">點此查看</a></p>
+
+---
 title: Why AI is both the hope and the hazard for world leaders, according to IMF chief Georgieva
 images: 461.jpg,461-1.jpg
 fontSize: 16px
