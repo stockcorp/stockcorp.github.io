@@ -1,3 +1,10 @@
+title: China, Emerging Markets Lead 2019 Rebound For Global Equities
+images: 463.jpg,463-1.jpg
+fontSize: 16px
+date: 2026-10-09
+content: <p>無法生成文章內容: China, Emerging Markets Lead 2019 Rebound For Global Equities</p><p>原始連結：<a href="https://seekingalpha.com/article/4243412-china-emerging-markets-lead-2019-rebound-for-global-equities?source=feed_tag_abe_defunct_5967">點此查看</a></p>
+
+---
 title: OpenAI Says a Secret AI Model Cracked Hundreds of Open Math Problems in One Prompt—Mathematicians Want Receipts
 images: 462.jpg,462-1.jpg
 fontSize: 16px
