@@ -1,3 +1,10 @@
+title: Venezuela president authorizes SpaceX’s Starlink to operate in the country
+images: 464.jpg,464-1.jpg
+fontSize: 16px
+date: 2026-10-10
+content: <p>無法生成文章內容: Venezuela president authorizes SpaceX’s Starlink to operate in the country</p><p>原始連結：<a href="https://www.investing.com/news/stock-market-news/venezuela-president-authorizes-spacexs-starlink-to-operate-in-the-country-4941872">點此查看</a></p>
+
+---
 title: China, Emerging Markets Lead 2019 Rebound For Global Equities
 images: 463.jpg,463-1.jpg
 fontSize: 16px
