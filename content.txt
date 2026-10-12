@@ -1,3 +1,10 @@
+title: XRP Ledger defends emergency patch for unlimited XRP bug
+images: 466.jpg,466-1.jpg
+fontSize: 16px
+date: 2026-10-12
+content: <p>無法生成文章內容: XRP Ledger defends emergency patch for unlimited XRP bug</p><p>原始連結：<a href="https://cointelegraph.com/news/xrp-ledger-defends-emergency-patch-for-unlimited-xrp-bug?utm_source=rss_feed&utm_medium=rss&utm_campaign=rss_partner_inbound">點此查看</a></p>
+
+---
 title: DeepSeek Won't Sink U.S. AI Titans
 images: 465.jpg,465-1.jpg
 fontSize: 16px
