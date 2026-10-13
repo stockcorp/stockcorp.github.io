@@ -1,3 +1,10 @@
+title: Solana Treasury Firm DeFi Development Keeps Buying SOL as CHAD Preferred Stock Hits Record
+images: 467.jpg,467-1.jpg
+fontSize: 16px
+date: 2026-10-13
+content: <p>無法生成文章內容: Solana Treasury Firm DeFi Development Keeps Buying SOL as CHAD Preferred Stock Hits Record</p><p>原始連結：<a href="https://decrypt.co/380752/solana-treasury-firm-defi-development-keeps-buying-sol">點此查看</a></p>
+
+---
 title: XRP Ledger defends emergency patch for unlimited XRP bug
 images: 466.jpg,466-1.jpg
 fontSize: 16px
