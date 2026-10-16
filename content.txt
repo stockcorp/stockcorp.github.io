@@ -1,3 +1,10 @@
+title: Porsche reveals Mission S concept car that previews new design identity
+images: 470.jpg,470-1.jpg
+fontSize: 16px
+date: 2026-10-16
+content: <p>無法生成文章內容: Porsche reveals Mission S concept car that previews new design identity</p><p>原始連結：<a href="https://www.cnbc.com/2026/10/15/porsche-mission-s-concept-car.html">點此查看</a></p>
+
+---
 title: Ripple and DriveWealth Target Faster Funding for 100+ Global Partners
 images: 469.jpg,469-1.jpg
 fontSize: 16px
