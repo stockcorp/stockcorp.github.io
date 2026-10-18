@@ -1,3 +1,10 @@
+title: ‘Some people did everything right’: I lost my home in the Great Recession. I rent in my 50s. Why is that judged as failure?
+images: 472.jpg,472-1.jpg
+fontSize: 16px
+date: 2026-10-18
+content: <p>無法生成文章內容: ‘Some people did everything right’: I lost my home in the Great Recession. I rent in my 50s. Why is that judged as failure?</p><p>原始連結：<a href="https://www.marketwatch.com/story/i-earn-110-000-a-year-i-lost-my-home-in-the-great-recession-im-renting-in-my-50s-why-is-that-judged-as-failure-d1371d67?mod=mw_rss_topstories">點此查看</a></p>
+
+---
 title: Nearly 12,000 California residents bought EVs using state rebate program
 images: 471.jpg,471-1.jpg
 fontSize: 16px
