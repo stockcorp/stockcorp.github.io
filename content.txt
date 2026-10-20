@@ -1,3 +1,10 @@
+title: Anthropic Gives 5% of Itself to the Public. Musk Answers by Giving Away SpaceX Shares
+images: 474.jpg,474-1.jpg
+fontSize: 16px
+date: 2026-10-20
+content: <p>無法生成文章內容: Anthropic Gives 5% of Itself to the Public. Musk Answers by Giving Away SpaceX Shares</p><p>原始連結：<a href="https://decrypt.co/381371/anthropic-gives-public-musk-answers-spacex-shares">點此查看</a></p>
+
+---
 title: Bitcoin ETFs Shed Nearly $1 Billion in Two Weeks as Uptober Stays Red
 images: 473.jpg,473-1.jpg
 fontSize: 16px
