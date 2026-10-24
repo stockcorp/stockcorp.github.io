@@ -1,3 +1,10 @@
+title: France spared Moody’s ratings downgrade as it struggles with unrest
+images: 478.jpg,478-1.jpg
+fontSize: 16px
+date: 2026-10-24
+content: <p>無法生成文章內容: France spared Moody’s ratings downgrade as it struggles with unrest</p><p>原始連結：<a href="https://www.investing.com/news/stock-market-news/unresthit-france-poised-for-moodys-ratings-verdict-4968793">點此查看</a></p>
+
+---
 title: Pepsi renews contract with Taco Bell days after KFC switches to Coke in the U.S.
 images: 477.jpg,477-1.jpg
 fontSize: 16px
