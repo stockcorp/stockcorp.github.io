@@ -1,3 +1,10 @@
+title: Bitcoin ETFs Snap Two-Week Losing Streak Despite Late-Week Slide
+images: 480.jpg,480-1.jpg
+fontSize: 16px
+date: 2026-10-26
+content: <p>無法生成文章內容: Bitcoin ETFs Snap Two-Week Losing Streak Despite Late-Week Slide</p><p>原始連結：<a href="https://decrypt.co/381777/bitcoin-etfs-snap-two-week-losing-streak-despite-late-week-slide">點此查看</a></p>
+
+---
 title: Short Selling by the Numbers: What the Data Actually Shows
 images: 479.jpg,479-1.jpg
 fontSize: 16px
