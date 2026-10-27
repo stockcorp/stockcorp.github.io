@@ -1,3 +1,10 @@
+title: US OCC calls on community banks to become payment stablecoin issuers
+images: 481.jpg,481-1.jpg
+fontSize: 16px
+date: 2026-10-27
+content: <p>無法生成文章內容: US OCC calls on community banks to become payment stablecoin issuers</p><p>原始連結：<a href="https://cointelegraph.com/news/occ-community-banks-stablecoin-issuers-genius-act?utm_source=rss_feed&utm_medium=rss&utm_campaign=rss_partner_inbound">點此查看</a></p>
+
+---
 title: Bitcoin ETFs Snap Two-Week Losing Streak Despite Late-Week Slide
 images: 480.jpg,480-1.jpg
 fontSize: 16px
