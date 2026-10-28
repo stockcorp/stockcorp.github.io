@@ -1,3 +1,10 @@
+title: Stock Market News for Oct 26, 2026
+images: 482.jpg,482-1.jpg
+fontSize: 16px
+date: 2026-10-28
+content: <p>無法生成文章內容: Stock Market News for Oct 26, 2026</p><p>原始連結：<a href="https://www.nasdaq.com/articles/stock-market-news-oct-26-2026">點此查看</a></p>
+
+---
 title: US OCC calls on community banks to become payment stablecoin issuers
 images: 481.jpg,481-1.jpg
 fontSize: 16px
