@@ -1,3 +1,10 @@
+title: Starbucks sales miss expectations, but its U.S. turnaround is gaining steam
+images: 484.jpg,484-1.jpg
+fontSize: 16px
+date: 2026-10-30
+content: <p>無法生成文章內容: Starbucks sales miss expectations, but its U.S. turnaround is gaining steam</p><p>原始連結：<a href="https://www.cnbc.com/2026/10/29/starbucks-sbux-q4-2026-earnings.html">點此查看</a></p>
+
+---
 title: CF Benchmarks Debuts Onchain Oracle for Institutional Crypto Price Indices
 images: 483.jpg,483-1.jpg
 fontSize: 16px
