@@ -1,3 +1,10 @@
+title: It Costs (About) 10 Cents to Trade $10,000
+images: 486.jpg,486-1.jpg
+fontSize: 16px
+date: 2026-11-01
+content: <p>無法生成文章內容: It Costs (About) 10 Cents to Trade $10,000</p><p>原始連結：<a href="https://www.nasdaq.com/economic-institute/the-print/costs-10-cents-to-trade-10000">點此查看</a></p>
+
+---
 title: Bitcoin tests key support as Binance security fears weigh
 images: 485.jpg,485-1.jpg
 fontSize: 16px
