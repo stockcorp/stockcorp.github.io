@@ -1,3 +1,10 @@
+title: THORChain halts swaps after block reorg bug, slowing Binance hackers
+images: 487.jpg,487-1.jpg
+fontSize: 16px
+date: 2026-11-02
+content: <p>無法生成文章內容: THORChain halts swaps after block reorg bug, slowing Binance hackers</p><p>原始連結：<a href="https://cointelegraph.com/news/thorchain-halts-swaps-after-block-reorg-bug-slowing-binance-hackers?utm_source=rss_feed&utm_medium=rss&utm_campaign=rss_partner_inbound">點此查看</a></p>
+
+---
 title: It Costs (About) 10 Cents to Trade $10,000
 images: 486.jpg,486-1.jpg
 fontSize: 16px
