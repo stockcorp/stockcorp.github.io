@@ -1,3 +1,10 @@
+title: Australia lifts rates to 18-year high as AI boom, energy costs fuel inflation
+images: 488.jpg,488-1.jpg
+fontSize: 16px
+date: 2026-11-03
+content: <p>無法生成文章內容: Australia lifts rates to 18-year high as AI boom, energy costs fuel inflation</p><p>原始連結：<a href="https://cointelegraph.com/markets/australia-lifts-rates-as-ai-boom-energy-costs-fuel-inflation?utm_source=rss_feed&utm_medium=rss&utm_campaign=rss_partner_inbound">點此查看</a></p>
+
+---
 title: THORChain halts swaps after block reorg bug, slowing Binance hackers
 images: 487.jpg,487-1.jpg
 fontSize: 16px
