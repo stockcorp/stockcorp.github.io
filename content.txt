@@ -1,3 +1,10 @@
+title: Super Micro’s stock pops as earnings show booming demand for AI servers
+images: 489.jpg,489-1.jpg
+fontSize: 16px
+date: 2026-11-04
+content: <p>無法生成文章內容: Super Micro’s stock pops as earnings show booming demand for AI servers</p><p>原始連結：<a href="https://www.marketwatch.com/story/super-micros-stock-pops-as-earnings-show-booming-demand-for-ai-servers-2d179658?mod=mw_rss_topstories">點此查看</a></p>
+
+---
 title: Australia lifts rates to 18-year high as AI boom, energy costs fuel inflation
 images: 488.jpg,488-1.jpg
 fontSize: 16px
