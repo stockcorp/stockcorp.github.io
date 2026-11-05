@@ -1,3 +1,10 @@
+title: Kalshi Election Day Volume Hits $4.15B, Short of Its October Record
+images: 490.jpg,490-1.jpg
+fontSize: 16px
+date: 2026-11-05
+content: <p>無法生成文章內容: Kalshi Election Day Volume Hits $4.15B, Short of Its October Record</p><p>原始連結：<a href="https://news.bitcoin.com/igaming/kalshi-election-day-volume-hits-4-15b-short-october-record/">點此查看</a></p>
+
+---
 title: Super Micro’s stock pops as earnings show booming demand for AI servers
 images: 489.jpg,489-1.jpg
 fontSize: 16px
