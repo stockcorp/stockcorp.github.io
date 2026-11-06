@@ -1,3 +1,10 @@
+title: E.l.f. Beauty posts 51% sales increase, raises full-year guidance
+images: 491.jpg,491-1.jpg
+fontSize: 16px
+date: 2026-11-06
+content: <p>無法生成文章內容: E.l.f. Beauty posts 51% sales increase, raises full-year guidance</p><p>原始連結：<a href="https://www.cnbc.com/2026/11/04/elf-beauty-elf-q2-2027-earnings.html">點此查看</a></p>
+
+---
 title: Kalshi Election Day Volume Hits $4.15B, Short of Its October Record
 images: 490.jpg,490-1.jpg
 fontSize: 16px
