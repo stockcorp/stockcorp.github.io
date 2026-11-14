@@ -1,3 +1,10 @@
+title: US stock markets slide but the selling is localized around chip names
+images: 499.jpg,499-1.jpg
+fontSize: 16px
+date: 2026-11-14
+content: <p>無法生成文章內容: US stock markets slide but the selling is localized around chip names</p><p>原始連結：<a href="https://investinglive.com/stocks/us-stock-markets-slide-but-the-selling-is-localized-around-chip-names/">點此查看</a></p>
+
+---
 title: Feds arrest top official of healthcare company, alleging illegal drug importation
 images: 498.jpg,498-1.jpg
 fontSize: 16px
