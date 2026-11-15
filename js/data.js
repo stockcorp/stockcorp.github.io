@@ -36,7 +36,7 @@
   const FUNDS = [
     { id: 'money', name: '貨幣市場基金', nav: 10, buyFee: 0, risk: '極低', desc: '類似活存加強版，報酬跟著利率走，幾乎不會虧。' },
     { id: 'bond', name: '穩健債券基金', nav: 12, buyFee: 0.001, risk: '低', desc: '利率下降時上漲，利率上升時下跌。大跌時常有避險效果。' },
-    { id: 'index', name: '台灣五十指數基金', nav: 35, buyFee: 0.001, risk: '中', desc: '一籃子買進本遊戲的七檔股票，費用低、配息自動再投入。' },
+    { id: 'index', name: '大盤指數基金', nav: 35, buyFee: 0.001, risk: '中', desc: '一籃子買進本遊戲的七檔股票，費用低、配息自動再投入。' },
     { id: 'growth', name: '全球科技成長基金', nav: 20, buyFee: 0.005, risk: '中高', desc: '主動式基金，偏重科技，經理費較高，不一定打敗大盤。' },
     { id: 'divi', name: '高股息收益基金', nav: 15, buyFee: 0.003, risk: '中低', desc: '偏愛配息股，大跌時抗跌，大漲時漲得比較少。' }
   ];
