@@ -5,6 +5,8 @@
   const R = D.RULES;
   const SECS = ['tech', 'finance', 'shipping', 'biotech', 'consumer', 'energy'];
   const WARMUP = 12;
+  const T = (k, p) => root.I18N.t(k, p);
+  function L(rep, k, key, p) { rep.lines.push({ k: k, key: key, p: p || [] }); }
 
   /* ---------- 亂數（可存檔的種子亂數） ---------- */
   function rnd(s) {
@@ -97,11 +99,11 @@
     return sh;
   }
   function buyIntel(s) {
-    if (s.intel) return { ok: false, msg: '本月已經買過情報了。' };
-    if (s.cash < R.intelCost) return { ok: false, msg: '現金不足，無法購買情報。' };
+    if (s.intel) return { ok: false, msg: T('本月已經買過情報了。') };
+    if (s.cash < R.intelCost) return { ok: false, msg: T('現金不足，無法購買情報。') };
     s.cash -= R.intelCost; s.intel = true;
     for (const n of s.news) n.known = true;
-    return { ok: true, msg: '已取得內線情報，本月消息真偽已揭曉。' };
+    return { ok: true, msg: T('已取得內線情報，本月消息真偽已揭曉。') };
   }
 
   /* ---------- 價格更新 ---------- */
@@ -232,14 +234,14 @@
     const pay = Math.min(s.marginDebt, Math.max(0, s.cash));
     s.cash -= pay; s.marginDebt -= pay;
     rep.mc = true; s.stats.mcCount++;
-    rep.lines.push({ k: 'bad', m: '⚠️ 追繳保證金！融資維持率不足，券商強制賣出部分持股並償還借款。' });
+    L(rep, 'bad', '⚠️ 追繳保證金！融資維持率不足，券商強制賣出部分持股並償還借款。');
   }
 
   function settleCash(s, rep) {
     if (s.cash >= 0) return;
     const got = liquidate(s, -s.cash);
-    if (got > 0) rep.lines.push({ k: 'bad', m: '現金不足，已自動賣出部分資產補足。' });
-    if (s.cash < 0) { s.marginDebt += -s.cash; s.cash = 0; rep.lines.push({ k: 'bad', m: '現金不足且無資產可賣，差額轉為借款。' }); }
+    if (got > 0) L(rep, 'bad', '現金不足，已自動賣出部分資產補足。');
+    if (s.cash < 0) { s.marginDebt += -s.cash; s.cash = 0; L(rep, 'bad', '現金不足且無資產可賣，差額轉為借款。'); }
   }
 
   /* ---------- 推進一個月 ---------- */
@@ -257,14 +259,14 @@
     // 新聞結果
     for (const n of s.news) {
       if (n.quiet) continue;
-      rep.lines.push({ k: n.truth ? 'info' : 'warn', m: (n.truth ? '📰 消息成真：' : '📰 消息落空：') + n.t });
+      L(rep, n.truth ? 'info' : 'warn', n.truth ? '📰 消息成真：{0:e}' : '📰 消息落空：{0:e}', [n.id]);
     }
 
     // 股利（每季）
     if (m % 3 === 0) {
       let div = 0;
       for (const st of D.STOCKS) { const o = s.stocks[st.id]; if (o.shares > 0 && st.div > 0) div += o.shares * o.price * st.div / 4; }
-      if (div > 0) { s.cash += div; rep.lines.push({ k: 'good', m: '💰 領到股利 ' + fmtMoney(div) }); }
+      if (div > 0) { s.cash += div; L(rep, 'good', '💰 領到股利 {0:m}', [div]); }
     }
 
     // 租金與持有成本、房貸利息
@@ -278,21 +280,21 @@
     const marInt = s.marginDebt * (s.rate + R.marginSpread) / 12;
     const cashInt = Math.max(0, s.cash) * s.rate * R.cashRateFactor / 12;
     s.cash += rent - hold - mortInt - marInt + cashInt;
-    if (rent > 0) rep.lines.push({ k: 'good', m: '🏠 收租 ' + fmtMoney(rent) + '（扣除持有成本與房貸利息後淨 ' + fmtMoney(rent - hold - mortInt) + '）' });
+    if (rent > 0) L(rep, 'good', '🏠 收租 {0:m}（扣除持有成本與房貸利息後淨 {1:m}）', [rent, rent - hold - mortInt]);
 
     // 薪資、加薪、獎金、個人突發事件
-    if (m % 12 === 1 && m > 1) { s.save = Math.round(s.save * 1.03 / 100) * 100; rep.lines.push({ k: 'info', m: '📈 新的一年，月儲蓄提高為 ' + fmtMoney(s.save) }); }
+    if (m % 12 === 1 && m > 1) { s.save = Math.round(s.save * 1.03 / 100) * 100; L(rep, 'info', '📈 新的一年，月儲蓄提高為 {0:m}', [s.save]); }
     s.cash += s.save;
-    if (m % 12 === 0) { const b = s.save * 1.5; s.cash += b; rep.lines.push({ k: 'good', m: '🎁 年終獎金 ' + fmtMoney(b) }); }
+    if (m % 12 === 0) { const b = s.save * 1.5; s.cash += b; L(rep, 'good', '🎁 年終獎金 {0:m}', [b]); }
     const pr = rnd(s);
     if (pr < 0.07) {
       const e = D.PERSONAL_BAD[Math.floor(rnd(s) * D.PERSONAL_BAD.length)];
       const amt = Math.round(e.m * s.save / 100) * 100; s.cash -= amt;
-      rep.lines.push({ k: 'bad', m: '💸 突發支出：' + e.t + ' -' + fmtMoney(amt) });
+      L(rep, 'bad', '💸 突發支出：{0:t} -{1:m}', [e.t, amt]);
     } else if (pr < 0.1) {
       const e = D.PERSONAL_GOOD[Math.floor(rnd(s) * D.PERSONAL_GOOD.length)];
       const amt = Math.round(e.m * s.save / 100) * 100; s.cash += amt;
-      rep.lines.push({ k: 'good', m: '🍀 意外之財：' + e.t + ' +' + fmtMoney(amt) });
+      L(rep, 'good', '🍀 意外之財：{0:t} +{1:m}', [e.t, amt]);
     }
 
     settleCash(s, rep);
@@ -317,12 +319,7 @@
   }
 
   /* ---------- 交易 ---------- */
-  function fmtMoney(n) {
-    const a = Math.abs(n), sg = n < 0 ? '-' : '';
-    if (a >= 1e8) return sg + (a / 1e8).toFixed(2) + ' 億';
-    if (a >= 1e4) return sg + (a / 1e4).toFixed(1) + ' 萬';
-    return sg + Math.round(a).toLocaleString('en-US');
-  }
+  function fmtMoney(n) { return root.I18N.money(n); }
 
   /*
     trade(s, kind, side, id, x, opts, dry)
@@ -333,25 +330,25 @@
   function trade(s, kind, side, id, x, opts, dry) {
     opts = opts || {};
     x = Number(x);
-    if (!isFinite(x) || x <= 0) return { ok: false, msg: '請輸入大於 0 的數字。' };
-    if (s.finished) return { ok: false, msg: '遊戲已結束。' };
+    if (!isFinite(x) || x <= 0) return { ok: false, msg: T('請輸入大於 0 的數字。') };
+    if (s.finished) return { ok: false, msg: T('遊戲已結束。') };
     const fail = m => ({ ok: false, msg: m });
     let res;
 
     if (kind === 'stock') {
-      const o = s.stocks[id]; if (!o) return fail('找不到這檔股票。');
+      const o = s.stocks[id]; if (!o) return fail(T('找不到這檔股票。'));
       x = Math.floor(x);
-      if (x < 1) return fail('至少要 1 股。');
+      if (x < 1) return fail(T('至少要 1 股。'));
       if (side === 'buy') {
         const gross = x * o.price, fee = gross * R.stockBuyFee, cost = gross + fee;
-        if (cost > s.cash + 1e-6) return fail('現金不足，需要 ' + fmtMoney(cost) + '。');
-        res = { ok: true, qty: x, fee, total: cost, msg: '買進 ' + x + ' 股，共花費 ' + fmtMoney(cost) };
+        if (cost > s.cash + 1e-6) return fail(T('現金不足，需要 {0:m}。', [cost]));
+        res = { ok: true, qty: x, fee, total: cost, msg: T('買進 {0} 股，共花費 {1:m}', [x, cost]) };
         if (!dry) { s.cash -= cost; o.shares += x; o.cost += cost; }
       } else {
-        if (x > o.shares) return fail('持股不足。');
+        if (x > o.shares) return fail(T('持股不足。'));
         const gross = x * o.price, fee = gross * R.stockSellFee, got = gross - fee;
         const basis = o.cost * (x / o.shares);
-        res = { ok: true, qty: x, fee, total: got, pnl: got - basis, msg: '賣出 ' + x + ' 股，入帳 ' + fmtMoney(got) };
+        res = { ok: true, qty: x, fee, total: got, pnl: got - basis, msg: T('賣出 {0} 股，入帳 {1:m}', [x, got]) };
         if (!dry) {
           s.cash += got; s.stats.realized += got - basis;
           if (got < basis * 0.8) s.flags.cutLoss = true;
@@ -361,65 +358,65 @@
     } else if (kind === 'btc') {
       const o = s.btc;
       if (side === 'buy') {
-        if (x > s.cash + 1e-6) return fail('現金不足。');
+        if (x > s.cash + 1e-6) return fail(T('現金不足。'));
         const fee = x * R.btcFee, units = (x - fee) / o.price;
-        res = { ok: true, qty: units, fee, total: x, msg: '投入 ' + fmtMoney(x) + '，買到 ' + units.toFixed(4) + ' 枚' };
+        res = { ok: true, qty: units, fee, total: x, msg: T('投入 {0:m}，買到 {1} 枚', [x, units.toFixed(4)]) };
         if (!dry) { s.cash -= x; o.units += units; o.cost += x; }
       } else {
         const pct = clamp(x, 0, 100) / 100;
-        if (o.units <= 0) return fail('沒有持有比特幣。');
+        if (o.units <= 0) return fail(T('沒有持有比特幣。'));
         const units = o.units * pct, gross = units * o.price, fee = gross * R.btcFee, got = gross - fee;
         const basis = o.cost * pct;
-        res = { ok: true, qty: units, fee, total: got, pnl: got - basis, msg: '賣出 ' + units.toFixed(4) + ' 枚，入帳 ' + fmtMoney(got) };
+        res = { ok: true, qty: units, fee, total: got, pnl: got - basis, msg: T('賣出 {0} 枚，入帳 {1:m}', [units.toFixed(4), got]) };
         if (!dry) {
           s.cash += got; s.stats.realized += got - basis;
           o.cost -= basis; o.units -= units; if (pct >= 0.9999) { o.units = 0; o.cost = 0; }
         }
       }
     } else if (kind === 'fund') {
-      const o = s.funds[id]; if (!o) return fail('找不到這檔基金。');
+      const o = s.funds[id]; if (!o) return fail(T('找不到這檔基金。'));
       const def = D.FUNDS.find(f => f.id === id);
       if (side === 'buy') {
-        if (x > s.cash + 1e-6) return fail('現金不足。');
+        if (x > s.cash + 1e-6) return fail(T('現金不足。'));
         const fee = x * def.buyFee, units = (x - fee) / o.nav;
-        res = { ok: true, qty: units, fee, total: x, msg: '申購 ' + fmtMoney(x) + '，取得 ' + units.toFixed(2) + ' 單位' };
+        res = { ok: true, qty: units, fee, total: x, msg: T('申購 {0:m}，取得 {1} 單位', [x, units.toFixed(2)]) };
         if (!dry) { s.cash -= x; o.units += units; o.cost += x; }
       } else {
         const pct = clamp(x, 0, 100) / 100;
-        if (o.units <= 0) return fail('沒有持有這檔基金。');
+        if (o.units <= 0) return fail(T('沒有持有這檔基金。'));
         const units = o.units * pct, got = units * o.nav, basis = o.cost * pct;
-        res = { ok: true, qty: units, fee: 0, total: got, pnl: got - basis, msg: '贖回 ' + units.toFixed(2) + ' 單位，入帳 ' + fmtMoney(got) };
+        res = { ok: true, qty: units, fee: 0, total: got, pnl: got - basis, msg: T('贖回 {0} 單位，入帳 {1:m}', [units.toFixed(2), got]) };
         if (!dry) {
           s.cash += got; s.stats.realized += got - basis;
           o.cost -= basis; o.units -= units; if (pct >= 0.9999) { o.units = 0; o.cost = 0; }
         }
       }
     } else if (kind === 're') {
-      const o = s.re[id]; if (!o) return fail('找不到這項房產。');
+      const o = s.re[id]; if (!o) return fail(T('找不到這項房產。'));
       x = Math.floor(x);
-      if (x < 1) return fail('至少要 1 間。');
+      if (x < 1) return fail(T('至少要 1 間。'));
       if (side === 'buy') {
         const total = o.price * x, fees = total * R.reBuyCost;
         const loan = opts.mortgage ? total * R.reLtv : 0;
         const need = total - loan + fees;
-        if (need > s.cash + 1e-6) return fail('現金不足，需要 ' + fmtMoney(need) + '（含 3% 稅費）。');
-        res = { ok: true, qty: x, fee: fees, total: need, loan, msg: '買進 ' + x + ' 間，現金支出 ' + fmtMoney(need) + (loan ? '，房貸 ' + fmtMoney(loan) : '') };
+        if (need > s.cash + 1e-6) return fail(T('現金不足，需要 {0:m}（含 3% 稅費）。', [need]));
+        res = { ok: true, qty: x, fee: fees, total: need, loan, msg: T('買進 {0} 間，現金支出 {1:m}', [x, need]) + (loan ? T('，房貸 {0:m}', [loan]) : '') };
         if (!dry) { s.cash -= need; o.count += x; o.cost += total + fees; o.mortgage += loan; }
       } else {
-        if (x > o.count) return fail('持有數量不足。');
+        if (x > o.count) return fail(T('持有數量不足。'));
         const gross = o.price * x, fee = gross * R.reSellCost;
         const share = o.mortgage * (x / o.count);
         const got = gross - fee - share;
-        if (s.cash + got < -1e-6) return fail('賣出後仍不足以清償房貸，無法成交。');
+        if (s.cash + got < -1e-6) return fail(T('賣出後仍不足以清償房貸，無法成交。'));
         const basis = o.cost * (x / o.count);
-        res = { ok: true, qty: x, fee, total: got, pnl: gross - fee - basis, msg: '賣出 ' + x + ' 間，扣除房貸與 4% 費用後入帳 ' + fmtMoney(got) };
+        res = { ok: true, qty: x, fee, total: got, pnl: gross - fee - basis, msg: T('賣出 {0} 間，扣除房貸與 4% 費用後入帳 {1:m}', [x, got]) };
         if (!dry) {
           s.cash += got; s.stats.realized += gross - fee - basis;
           o.mortgage -= share; o.cost -= basis; o.count -= x;
           if (o.count === 0) { o.mortgage = 0; o.cost = 0; }
         }
       }
-    } else return fail('未知的交易類型。');
+    } else return fail(T('未知的交易類型。'));
 
     if (!dry) { s.stats.trades++; res.ach = checkAch(s); }
     return res;
@@ -429,19 +426,19 @@
   function maxBorrow(s) { return Math.max(0, R.marginMaxRatio * liquidValue(s) - s.marginDebt); }
   function borrow(s, amt) {
     amt = Math.floor(Number(amt));
-    if (!(amt > 0)) return { ok: false, msg: '請輸入借款金額。' };
+    if (!(amt > 0)) return { ok: false, msg: T('請輸入借款金額。') };
     const mb = maxBorrow(s);
-    if (amt > mb + 1) return { ok: false, msg: '超過可借額度，目前最多可借 ' + fmtMoney(mb) + '（以股票、比特幣、基金為擔保，上限 50%）。' };
+    if (amt > mb + 1) return { ok: false, msg: T('超過可借額度，目前最多可借 {0:m}（以股票、比特幣、基金為擔保，上限 50%）。', [mb]) };
     s.marginDebt += amt; s.cash += amt; s.flags.borrowed = true;
-    return { ok: true, msg: '已借款 ' + fmtMoney(amt), ach: checkAch(s) };
+    return { ok: true, msg: T('已借款 {0:m}', [amt]), ach: checkAch(s) };
   }
   function repay(s, amt) {
     amt = Math.floor(Number(amt));
-    if (!(amt > 0)) return { ok: false, msg: '請輸入還款金額。' };
+    if (!(amt > 0)) return { ok: false, msg: T('請輸入還款金額。') };
     amt = Math.min(amt, s.marginDebt);
-    if (amt > s.cash) return { ok: false, msg: '現金不足。' };
+    if (amt > s.cash) return { ok: false, msg: T('現金不足。') };
     s.cash -= amt; s.marginDebt -= amt;
-    return { ok: true, msg: '已還款 ' + fmtMoney(amt) };
+    return { ok: true, msg: T('已還款 {0:m}', [amt]) };
   }
 
   /* ---------- 成就 ---------- */
@@ -469,7 +466,7 @@
 
   function rankOf(s) {
     const nw = netWorth(s);
-    if (s.bankrupt || nw <= 0) return { name: '破產', text: '帳戶歸零，但別氣餒，市場永遠有下一次機會。' };
+    if (s.bankrupt || nw <= 0) return { name: T('破產'), text: T('帳戶歸零，但別氣餒，市場永遠有下一次機會。') };
     const ratio = nw / s.target;
     let r = D.RANKS[0];
     for (const x of D.RANKS) if (ratio >= x.min) r = x;

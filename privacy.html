@@ -3,14 +3,28 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>隱私權政策與廣告說明｜我愛操盤手</title>
+<title>隱私權政策與廣告說明｜我愛操盤手 / Privacy Policy | I Love Trading</title>
 <meta name="robots" content="index,follow">
 <link rel="stylesheet" href="style.css">
-<style>.doc{max-width:780px;margin:0 auto;padding:24px 20px 60px}.doc h1{font-size:24px}.doc h2{font-size:18px;color:var(--accent);margin-top:24px}.doc li{margin:4px 0}</style>
+<style>.doc{max-width:780px;margin:0 auto;padding:24px 20px 60px}.doc h1{font-size:24px}.doc h2{font-size:18px;color:var(--accent);margin-top:24px}.doc li{margin:4px 0}.langbar{float:right}</style>
+<script>
+(function () {
+  var l = null;
+  try { var m = /[?&]lang=(zh|en)\b/.exec(location.search); if (m) l = m[1]; if (!l) l = localStorage.getItem('wacp_lang'); } catch (e) {}
+  if (!l) l = /^zh/i.test(navigator.language || 'zh') ? 'zh' : 'en';
+  document.documentElement.lang = l === 'en' ? 'en' : 'zh-Hant';
+  window.__setLang = function (x) { try { localStorage.setItem('wacp_lang', x); } catch (e) {} document.documentElement.lang = x === 'en' ? 'en' : 'zh-Hant'; };
+})();
+</script>
 </head>
 <body>
 <div class="doc">
-<p><a href="index.html">← 回到遊戲</a></p>
+
+<p><a href="index.html" class="zh-only">← 回到遊戲</a><a href="index.html" class="en-only">← Back to the game</a>
+<button class="btn ghost small langbar" onclick="__setLang(document.documentElement.lang==='en'?'zh':'en')">中文 / EN</button></p>
+
+<!-- ============ 中文 ============ -->
+<div class="zh-only">
 <h1>隱私權政策與廣告說明</h1>
 <p class="mute">最後更新：2026 年 11 月 16 日</p>
 
@@ -20,28 +34,69 @@
 <h2>2. 我們收集哪些資料</h2>
 <ul>
 <li>本網站<strong>不要求註冊、不收集姓名、電子郵件或任何個人身分資料</strong>。</li>
-<li>遊戲進度與本機排行榜儲存在你瀏覽器的 localStorage，只存在你的裝置上，不會上傳到我們的伺服器。清除瀏覽器資料即可刪除。</li>
+<li>遊戲進度、語言偏好與本機排行榜儲存在你瀏覽器的 localStorage，只存在你的裝置上，不會上傳到我們的伺服器。清除瀏覽器資料即可刪除。</li>
 </ul>
 
-<h2>3. Google AdSense 廣告與 Cookie</h2>
+<h2>3. Google AdSense 廣告與 Cookie（網頁版）</h2>
 <ul>
-<li>本網站使用 Google AdSense 顯示廣告。Google 及其合作夥伴可能使用 Cookie 或類似技術，根據你過去造訪本網站或其他網站的紀錄投放廣告。</li>
-<li>Google 使用廣告 Cookie，可讓 Google 及其合作夥伴根據你對本站或其他網站的造訪紀錄向你放送廣告。</li>
+<li>網頁版使用 Google AdSense 顯示廣告。Google 及其合作夥伴可能使用 Cookie 或類似技術，根據你過去造訪本網站或其他網站的紀錄投放廣告。</li>
 <li>你可以到 <a href="https://adssettings.google.com" rel="noopener" target="_blank">Google 廣告設定</a>管理或關閉個人化廣告，也可以造訪 <a href="https://www.aboutads.info" rel="noopener" target="_blank">aboutads.info</a> 了解如何停用第三方廠商的個人化廣告。</li>
 <li>更多資訊請參考 <a href="https://policies.google.com/technologies/ads?hl=zh-TW" rel="noopener" target="_blank">Google 如何使用廣告技術</a>。</li>
 </ul>
 
-<h2>4. 第三方服務</h2>
+<h2>4. 行動 App 版本</h2>
+<p>若日後推出 iOS／Android App，App 內將不會載入網頁版的 AdSense 廣告，而是改用 Google AdMob 顯示廣告，屆時會在此更新相關的資料蒐集說明（例如廣告識別碼）。</p>
+
+<h2>5. 第三方服務</h2>
 <p>本網站由 GitHub Pages 提供託管，GitHub 可能依其隱私權政策記錄基本的連線資訊（例如 IP 位址）。本網站除 Google AdSense 外未使用其他分析或追蹤工具。</p>
 
-<h2>5. 兒少保護</h2>
+<h2>6. 兒少保護</h2>
 <p>本網站內容為財經教育與模擬，並非針對 13 歲以下兒童設計，我們不會刻意收集兒童的個人資料。</p>
 
-<h2>6. 免責聲明</h2>
+<h2>7. 免責聲明</h2>
 <p>遊戲中的價格走勢由亂數與簡化模型產生，與真實市場無關，也無法預測任何真實資產的未來表現。真實投資具有風險，請依自身情況審慎評估，必要時諮詢合格的專業人士。</p>
 
-<h2>7. 政策更新</h2>
+<h2>8. 政策更新</h2>
 <p>我們可能不定期更新本政策，更新後會公布於本頁面。</p>
+</div>
+
+<!-- ============ English ============ -->
+<div class="en-only">
+<h1>Privacy Policy &amp; Advertising</h1>
+<p class="mute">Last updated: November 16, 2026</p>
+
+<h2>1. About this site</h2>
+<p>"I Love Trading" is a free investing simulator hosted on GitHub Pages. All companies, news, prices and events in the game are fictional and are provided for entertainment and investment education only. <strong>Nothing here is investment, financial, legal or tax advice.</strong></p>
+
+<h2>2. What data we collect</h2>
+<ul>
+<li>The site <strong>does not require sign-up and does not collect your name, email or any personal identity data</strong>.</li>
+<li>Your game progress, language preference and local leaderboard are stored in your browser's localStorage on your own device. They are never uploaded to our servers, and clearing your browser data deletes them.</li>
+</ul>
+
+<h2>3. Google AdSense ads and cookies (web version)</h2>
+<ul>
+<li>The web version shows ads through Google AdSense. Google and its partners may use cookies or similar technologies to serve ads based on your visits to this and other sites.</li>
+<li>You can manage or turn off personalized ads in <a href="https://adssettings.google.com" rel="noopener" target="_blank">Google Ad Settings</a>, or visit <a href="https://www.aboutads.info" rel="noopener" target="_blank">aboutads.info</a> to opt out of third-party vendors' personalized advertising.</li>
+<li>Learn more in <a href="https://policies.google.com/technologies/ads" rel="noopener" target="_blank">How Google uses advertising technologies</a>.</li>
+</ul>
+
+<h2>4. Mobile apps</h2>
+<p>If iOS or Android apps are released later, they will not load the web version's AdSense ads. They will use Google AdMob instead, and this page will be updated with the relevant data-collection details (such as advertising identifiers).</p>
+
+<h2>5. Third-party services</h2>
+<p>The site is hosted by GitHub Pages, which may log basic connection information (such as IP addresses) under its own privacy policy. Apart from Google AdSense, the site uses no other analytics or tracking tools.</p>
+
+<h2>6. Children</h2>
+<p>This site is educational finance entertainment and is not directed at children under 13. We do not knowingly collect personal data from children.</p>
+
+<h2>7. Disclaimer</h2>
+<p>Price movements in the game come from random numbers and simplified models. They have nothing to do with real markets and cannot predict how any real asset will perform. Real investing involves risk; evaluate your own situation carefully and consult a qualified professional when needed.</p>
+
+<h2>8. Policy updates</h2>
+<p>We may update this policy from time to time. Changes will be posted on this page.</p>
+</div>
+
 </div>
 </body>
 </html>

@@ -126,3 +126,9 @@ canvas.short{height:170px}
   .grid2{grid-template-columns:1fr}
   #toasts{left:12px;right:12px;max-width:none}
 }
+/* App（WebView）內不顯示網頁廣告 */
+.in-app .ad-wrap{display:none!important}
+.in-app .foot{padding-bottom:30px}
+/* 隱私頁雙語 */
+html[lang=en] .zh-only{display:none}
+html[lang=zh-Hant] .en-only{display:none}
