@@ -3,7 +3,7 @@
   'use strict';
   const D = root.GAME_DATA;
   const R = D.RULES;
-  const SECS = ['tech', 'finance', 'shipping', 'biotech', 'consumer', 'energy'];
+  const SECS = ['tech', 'finance', 'shipping', 'biotech', 'consumer', 'energy', 'industry'];
   const WARMUP = 12;
   const T = (k, p) => root.I18N.t(k, p);
   function L(rep, k, key, p) { rep.lines.push({ k: k, key: key, p: p || [] }); }
@@ -29,11 +29,12 @@
 
   /* ---------- 估值 ---------- */
   function stockValue(s) { let v = 0; for (const k in s.stocks) v += s.stocks[k].shares * s.stocks[k].price; return v; }
-  function btcValue(s) { return s.btc.units * s.btc.price; }
+  function cryptoValue(s) { let v = 0; for (const k in s.crypto) v += s.crypto[k].units * s.crypto[k].price; return v; }
+  function cryptoCount(s) { let n = 0; for (const k in s.crypto) if (s.crypto[k].units > 0) n++; return n; }
   function fundValue(s) { let v = 0; for (const k in s.funds) v += s.funds[k].units * s.funds[k].nav; return v; }
   function reValue(s) { let v = 0; for (const k in s.re) v += s.re[k].count * s.re[k].price; return v; }
   function mortgageTotal(s) { let v = 0; for (const k in s.re) v += s.re[k].mortgage; return v; }
-  function liquidValue(s) { return stockValue(s) + btcValue(s) + fundValue(s); }
+  function liquidValue(s) { return stockValue(s) + cryptoValue(s) + fundValue(s); }
   function netWorth(s) { return s.cash + liquidValue(s) + reValue(s) - s.marginDebt - mortgageTotal(s); }
   function propertyCount(s) { let n = 0; for (const k in s.re) n += s.re[k].count; return n; }
   function monthlyRent(s) { let v = 0; for (const k in s.re) v += s.re[k].count * s.re[k].rent; return v; }
@@ -41,20 +42,25 @@
   function holdsFunds(s) { for (const k in s.funds) if (s.funds[k].units > 0) return true; return false; }
 
   /* ---------- 建立新遊戲 ---------- */
-  function newGame(modeId, seed) {
+  function sig(p) { return p >= 1000 ? Math.round(p) : p >= 1 ? +p.toFixed(2) : +p.toPrecision(4); }
+  function defaultCfg() {
+    return { market: 'fic', stocks: D.STOCKS.map(x => Object.assign({}, x)), cryptos: D.CRYPTOS.filter(c => D.DEFAULT_CRYPTO.indexOf(c.id) >= 0).map(x => Object.assign({}, x)), taiex: D.SNAP.taiex, date: D.SNAP.date, live: false };
+  }
+  function newGame(modeId, seed, cfg) {
     const mode = D.MODES.find(m => m.id === modeId) || D.MODES[1];
+    cfg = cfg || defaultCfg();
     const s = {
-      v: 1, mode: mode.id, month: 0, months: R.months,
+      v: 2, cfg: cfg, crypto: {}, plans: [], orders: {}, trades: [], index: cfg.taiex || D.SNAP.taiex, indexHist: [cfg.taiex || D.SNAP.taiex], mode: mode.id, month: 0, months: R.months,
       rng: ((seed != null ? seed : Math.floor(Math.random() * 4294967296)) >>> 0),
       cash: mode.cash, startCash: mode.cash, save: mode.save, target: mode.target,
       marginDebt: 0, rate: 0.02, reg: 1, btcReg: 1, reReg: 1,
-      stocks: {}, btc: {}, re: {}, funds: {},
+      stocks: {}, re: {}, funds: {},
       rateHist: [], netHist: [], news: [], log: [], flags: {}, ach: {},
       stats: { realized: 0, mcCount: 0, trades: 0, maxNW: mode.cash },
       won: false, finished: false, bankrupt: false, intel: false, warm: WARMUP
     };
-    for (const st of D.STOCKS) s.stocks[st.id] = { price: st.price, hist: [st.price], shares: 0, cost: 0, last: 0 };
-    s.btc = { price: D.BTC.price, hist: [D.BTC.price], units: 0, cost: 0, last: 0 };
+    for (const st of cfg.stocks) s.stocks[st.id] = { price: st.price, hist: [st.price], shares: 0, cost: 0, last: 0 };
+    for (const c of cfg.cryptos) s.crypto[c.id] = { price: c.price, hist: [c.price], units: 0, cost: 0, last: 0 };
     for (const p of D.PROPERTIES) s.re[p.id] = { price: p.price, hist: [p.price], count: 0, cost: 0, mortgage: 0, rent: p.rent, last: 0 };
     for (const f of D.FUNDS) s.funds[f.id] = { nav: f.nav, hist: [f.nav], units: 0, cost: 0, last: 0 };
     s.reg = chainNext(s, 1, D.MARKET.chain);
@@ -63,12 +69,17 @@
     // 先模擬 12 個月，讓圖表一開始就有歷史
     const zero = zeroShocks();
     for (let i = 0; i < WARMUP; i++) stepPrices(s, zero);
+    // 把暖身後的價格校正回起始價（真實市場模式＝真實收盤價），歷史走勢等比例縮放
+    const fix = (o, target, f) => { const k = target / o.price; o.hist = o.hist.map(v => f(v * k)); o.price = target; o.hist[o.hist.length - 1] = target; };
+    for (const st of cfg.stocks) fix(s.stocks[st.id], st.price, v => +v.toFixed(2));
+    for (const c of cfg.cryptos) fix(s.crypto[c.id], c.price, sig);
+    { const k = s.indexHist[0] / s.index; s.indexHist = s.indexHist.map(v => +(v * k).toFixed(2)); s.index = s.indexHist[s.indexHist.length - 1]; }
     s.netHist.push(netWorth(s));
     genNews(s);
     return s;
   }
 
-  function zeroShocks() { return { market: 0, tech: 0, finance: 0, shipping: 0, biotech: 0, consumer: 0, energy: 0, btc: 0, re: 0, rate: 0 }; }
+  function zeroShocks() { return { market: 0, tech: 0, finance: 0, shipping: 0, biotech: 0, consumer: 0, energy: 0, industry: 0, btc: 0, re: 0, rate: 0 }; }
 
   /* ---------- 新聞 ---------- */
   function genNews(s) {
@@ -94,7 +105,7 @@
     const sh = zeroShocks();
     for (const n of s.news) {
       const k = n.truth ? 1 : -0.4;
-      for (const key in n.fx) sh[key] += n.fx[key] * k;
+      for (const key in n.fx) sh[key] = (sh[key] || 0) + n.fx[key] * k;
     }
     return sh;
   }
@@ -126,32 +137,37 @@
 
     const mret = D.MARKET.drift[s.reg] + randn(s) * 0.035 + sh.market;
     info.mret = mret;
+    s.index = +(s.index * (1 + clamp(mret, -0.5, 0.8))).toFixed(2); s.indexHist.push(s.index);
     const sec = {};
     for (const k of SECS) sec[k] = randn(s) * 0.02 + sh[k];
     info.sec = sec;
 
     // 股票
     const sr = {};
-    for (const st of D.STOCKS) {
-      let r = st.beta * mret + sec[st.sector] + randn(s) * st.vol;
+    for (const st of s.cfg.stocks) {
+      let r = st.beta * mret + (st.sector === 'etf' ? 0 : (sec[st.sector] || 0)) + randn(s) * st.vol;
       if (st.sector === 'biotech' && rnd(s) < 0.04) r += (rnd(s) < 0.5 ? 1 : -1) * 0.2;
       r = clamp(r, -0.5, 0.8);
       sr[st.id] = r;
       const o = s.stocks[st.id];
       o.last = r;
-      o.price = Math.max(3, +(o.price * (1 + r)).toFixed(2));
+      o.price = Math.max(0.5, +(o.price * (1 + r)).toFixed(2));
       o.hist.push(o.price);
     }
     info.stockRets = sr;
 
     // 比特幣
     {
-      let r = D.BTC_REG.drift[s.btcReg] + randn(s) * 0.13 + 0.25 * mret + sh.btc;
-      r = clamp(r, -0.6, 1.2);
-      s.btc.last = r;
-      s.btc.price = Math.max(1000, Math.round(s.btc.price * (1 + r)));
-      s.btc.hist.push(s.btc.price);
-      info.btcRet = r;
+      const common = D.BTC_REG.drift[s.btcReg] + randn(s) * 0.13 + 0.25 * mret + sh.btc;
+      info.btcRet = clamp(common, -0.6, 1.2);
+      for (const c of s.cfg.cryptos) {
+        const o = s.crypto[c.id];
+        let r = c.beta * common + randn(s) * c.vol - (c.beta - 1) * 0.012 - c.vol * c.vol / 2;
+        r = clamp(r, -0.7, 1.5);
+        o.last = r;
+        o.price = sig(Math.max(o.price * (1 + r), 1e-9));
+        o.hist.push(o.price);
+      }
     }
 
     // 房地產
@@ -173,8 +189,9 @@
       const fr = {};
       fr.money = s.rate * 0.9 / 12 + randn(s) * 0.0002;
       fr.bond = s.rate / 12 - 4 * dRate + randn(s) * 0.004 - 0.004 / 12 + (mret < -0.05 ? 0.01 : 0);
-      let idx = 0;
-      for (const st of D.STOCKS) idx += st.w * sr[st.id];
+      let idx = 0, wsum = 0;
+      for (const st of s.cfg.stocks) { idx += st.w * sr[st.id]; wsum += st.w; }
+      idx = wsum > 0 ? idx / wsum : mret;
       fr.index = idx + 0.03 / 12 - 0.0005 / 12;
       fr.growth = 1.1 * mret + 0.6 * sec.tech + randn(s) * 0.02 - 0.015 / 12;
       fr.divi = 0.6 * mret + 0.3 * sec.consumer + randn(s) * 0.012 + 0.05 / 12 - 0.004 / 12;
@@ -202,9 +219,10 @@
       s.stats.realized += got - o.cost * (q / o.shares);
       o.cost -= o.cost * (q / o.shares); o.shares -= q; net += got;
     }
-    if (s.btc.units > 0) {
-      const q = s.btc.units * f, got = q * s.btc.price * (1 - fee);
-      s.stats.realized += got - s.btc.cost * f; s.btc.cost -= s.btc.cost * f; s.btc.units -= q; net += got;
+    for (const id in s.crypto) {
+      const o = s.crypto[id]; if (o.units <= 0) continue;
+      const q = o.units * f, got = q * o.price * (1 - fee);
+      s.stats.realized += got - o.cost * f; o.cost -= o.cost * f; o.units -= q; net += got;
     }
     for (const id in s.funds) {
       const o = s.funds[id]; if (o.units <= 0) continue;
@@ -262,10 +280,13 @@
       L(rep, n.truth ? 'info' : 'warn', n.truth ? '📰 消息成真：{0:e}' : '📰 消息落空：{0:e}', [n.id]);
     }
 
+    // 停損／停利條件單
+    runOrders(s, rep);
+
     // 股利（每季）
     if (m % 3 === 0) {
       let div = 0;
-      for (const st of D.STOCKS) { const o = s.stocks[st.id]; if (o.shares > 0 && st.div > 0) div += o.shares * o.price * st.div / 4; }
+      for (const st of s.cfg.stocks) { const o = s.stocks[st.id]; if (o.shares > 0 && st.div > 0) div += o.shares * o.price * st.div / 4; }
       if (div > 0) { s.cash += div; L(rep, 'good', '💰 領到股利 {0:m}', [div]); }
     }
 
@@ -297,6 +318,7 @@
       L(rep, 'good', '🍀 意外之財：{0:t} +{1:m}', [e.t, amt]);
     }
 
+    runPlans(s, rep);
     settleCash(s, rep);
     marginCheck(s, rep);
 
@@ -313,7 +335,7 @@
     }
     rep.ach = checkAch(s);
     if (!s.finished) genNews(s);
-    s.log.unshift({ m, lines: rep.lines.slice(0, 8) });
+    s.log.unshift({ m, lines: rep.lines.slice(0, 10) });
     if (s.log.length > 24) s.log.length = 24;
     return rep;
   }
@@ -355,19 +377,19 @@
           o.cost -= basis; o.shares -= x; if (o.shares === 0) o.cost = 0;
         }
       }
-    } else if (kind === 'btc') {
-      const o = s.btc;
+    } else if (kind === 'crypto') {
+      const o = s.crypto[id]; if (!o) return fail(T('找不到這個幣種。'));
       if (side === 'buy') {
         if (x > s.cash + 1e-6) return fail(T('現金不足。'));
         const fee = x * R.btcFee, units = (x - fee) / o.price;
-        res = { ok: true, qty: units, fee, total: x, msg: T('投入 {0:m}，買到 {1} 枚', [x, units.toFixed(4)]) };
+        res = { ok: true, qty: units, fee, total: x, msg: T('投入 {0:m}，買到 {1} 枚', [x, fmtUnits(units)]) };
         if (!dry) { s.cash -= x; o.units += units; o.cost += x; }
       } else {
         const pct = clamp(x, 0, 100) / 100;
-        if (o.units <= 0) return fail(T('沒有持有比特幣。'));
+        if (o.units <= 0) return fail(T('沒有持有這個幣種。'));
         const units = o.units * pct, gross = units * o.price, fee = gross * R.btcFee, got = gross - fee;
         const basis = o.cost * pct;
-        res = { ok: true, qty: units, fee, total: got, pnl: got - basis, msg: T('賣出 {0} 枚，入帳 {1:m}', [units.toFixed(4), got]) };
+        res = { ok: true, qty: units, fee, total: got, pnl: got - basis, msg: T('賣出 {0} 枚，入帳 {1:m}', [fmtUnits(units), got]) };
         if (!dry) {
           s.cash += got; s.stats.realized += got - basis;
           o.cost -= basis; o.units -= units; if (pct >= 0.9999) { o.units = 0; o.cost = 0; }
@@ -418,8 +440,81 @@
       }
     } else return fail(T('未知的交易類型。'));
 
-    if (!dry) { s.stats.trades++; res.ach = checkAch(s); }
+    if (!dry) {
+      s.stats.trades++;
+      s.trades.unshift({ m: s.month, kind: kind, side: side, id: id, qty: res.qty, total: res.total, pnl: res.pnl == null ? null : res.pnl, auto: opts.auto || '' });
+      if (s.trades.length > 60) s.trades.length = 60;
+      res.ach = checkAch(s);
+    }
     return res;
+  }
+
+  function fmtUnits(u) { return u >= 1000 ? Math.round(u).toLocaleString('en-US') : u >= 1 ? u.toFixed(3) : u.toFixed(5); }
+
+  /* ---------- 資產定義、定期定額、條件單 ---------- */
+  function assetDef(s, kind, id) {
+    if (kind === 'stock') return s.cfg.stocks.find(x => x.id === id);
+    if (kind === 'crypto') return s.cfg.cryptos.find(x => x.id === id);
+    if (kind === 'fund') return D.FUNDS.find(x => x.id === id);
+    return D.PROPERTIES.find(x => x.id === id);
+  }
+  function nameRef(s, kind, id) { const d = assetDef(s, kind, id) || {}; return [d.name || id, d.en || '']; }
+  function holding(s, kind, id) {
+    if (kind === 'stock') { const o = s.stocks[id]; return o ? { qty: o.shares, cost: o.cost, price: o.price } : null; }
+    if (kind === 'crypto') { const o = s.crypto[id]; return o ? { qty: o.units, cost: o.cost, price: o.price } : null; }
+    if (kind === 'fund') { const o = s.funds[id]; return o ? { qty: o.units, cost: o.cost, price: o.nav } : null; }
+    return null;
+  }
+  // 定期定額：amt=每月金額，0＝取消
+  function setPlan(s, kind, id, amt) {
+    amt = Math.floor(Number(amt) || 0);
+    if (!holding(s, kind, id)) return { ok: false, msg: T('這項資產不能設定定期定額。') };
+    s.plans = s.plans.filter(p => !(p.kind === kind && p.id === id));
+    if (amt <= 0) return { ok: true, msg: T('已取消定期定額。') };
+    if (amt < 1000) return { ok: false, msg: T('每月金額至少 1,000 元。') };
+    if (s.plans.length >= 8) return { ok: false, msg: T('最多同時設定 8 筆定期定額。') };
+    s.plans.push({ kind: kind, id: id, amt: amt });
+    return { ok: true, msg: T('已設定每月定期定額 {0:m}', [amt]) };
+  }
+  function getPlan(s, kind, id) { return s.plans.find(p => p.kind === kind && p.id === id) || null; }
+  function runPlans(s, rep) {
+    if (!s.plans.length || s.finished) return;
+    let done = 0;
+    for (const p of s.plans) {
+      const h = holding(s, p.kind, p.id); if (!h) continue;
+      if (s.cash < p.amt) { L(rep, 'warn', '🔁 定期定額 {0:n}：現金不足，本月跳過', [nameRef(s, p.kind, p.id)]); continue; }
+      let x = p.amt;
+      if (p.kind === 'stock') { x = Math.floor(p.amt / (h.price * (1 + R.stockBuyFee))); if (x < 1) { L(rep, 'warn', '🔁 定期定額 {0:n}：金額不足買 1 股，本月跳過', [nameRef(s, p.kind, p.id)]); continue; } }
+      const r = trade(s, p.kind, 'buy', p.id, x, { auto: 'dca' });
+      if (r.ok) { done++; L(rep, 'info', '🔁 定期定額買進 {0:n} {1:m}', [nameRef(s, p.kind, p.id), r.total]); }
+    }
+    if (done) s.flags.dcaCount = (s.flags.dcaCount || 0) + 1;
+  }
+  // 條件單：sl=停損%（跌破平均成本多少），tp=停利%；0＝不設
+  function setOrder(s, kind, id, sl, tp) {
+    sl = Math.max(0, Number(sl) || 0); tp = Math.max(0, Number(tp) || 0);
+    if (!holding(s, kind, id)) return { ok: false, msg: T('這項資產不能設定條件單。') };
+    const key = kind + ':' + id;
+    if (!sl && !tp) { delete s.orders[key]; return { ok: true, msg: T('已取消條件單。') }; }
+    if (sl >= 95) return { ok: false, msg: T('停損幅度需小於 95%。') };
+    s.orders[key] = { sl: sl / 100, tp: tp / 100 };
+    return { ok: true, msg: T('已設定條件單。') };
+  }
+  function getOrder(s, kind, id) { return s.orders[kind + ':' + id] || null; }
+  function runOrders(s, rep) {
+    for (const key of Object.keys(s.orders)) {
+      const kind = key.split(':')[0], id = key.slice(kind.length + 1), od = s.orders[key];
+      const h = holding(s, kind, id);
+      if (!h || h.qty <= 0 || h.cost <= 0) continue;
+      const ret = h.price * h.qty / h.cost - 1;
+      const hitSL = od.sl > 0 && ret <= -od.sl, hitTP = od.tp > 0 && ret >= od.tp;
+      if (!hitSL && !hitTP) continue;
+      const r = trade(s, kind, 'sell', id, kind === 'stock' ? h.qty : 100, { auto: hitSL ? 'sl' : 'tp' });
+      if (r.ok) {
+        delete s.orders[key]; s.flags.orderHit = true;
+        L(rep, hitSL ? 'bad' : 'good', hitSL ? '🛑 停損觸發：賣出 {0:n}，入帳 {1:m}' : '🎯 停利觸發：賣出 {0:n}，入帳 {1:m}', [nameRef(s, kind, id), r.total]);
+      }
+    }
   }
 
   /* ---------- 借貸 ---------- */
@@ -428,7 +523,7 @@
     amt = Math.floor(Number(amt));
     if (!(amt > 0)) return { ok: false, msg: T('請輸入借款金額。') };
     const mb = maxBorrow(s);
-    if (amt > mb + 1) return { ok: false, msg: T('超過可借額度，目前最多可借 {0:m}（以股票、比特幣、基金為擔保，上限 50%）。', [mb]) };
+    if (amt > mb + 1) return { ok: false, msg: T('超過可借額度，目前最多可借 {0:m}（以股票、加密貨幣、基金為擔保，上限 50%）。', [mb]) };
     s.marginDebt += amt; s.cash += amt; s.flags.borrowed = true;
     return { ok: true, msg: T('已借款 {0:m}', [amt]), ach: checkAch(s) };
   }
@@ -446,9 +541,9 @@
     const nw = netWorth(s), out = [];
     const tests = {
       first: () => nw >= s.startCash * 1.2,
-      diversify: () => holdsStocks(s) && s.btc.units > 0 && propertyCount(s) > 0 && holdsFunds(s),
+      diversify: () => holdsStocks(s) && cryptoCount(s) > 0 && propertyCount(s) > 0 && holdsFunds(s),
       landlord: () => propertyCount(s) >= 3,
-      btcfaith: () => btcValue(s) >= 5000000,
+      btcfaith: () => cryptoValue(s) >= 5000000,
       leverage: () => !!s.flags.borrowed,
       cutloss: () => !!s.flags.cutLoss,
       dodge: () => !!s.flags.dodge,
@@ -456,7 +551,10 @@
       rich: () => nw >= 10000000,
       goal: () => s.won,
       finish: () => !!s.flags.finish && !s.bankrupt,
-      tenx: () => nw >= s.startCash * 10
+      tenx: () => nw >= s.startCash * 10,
+      dca: () => (s.flags.dcaCount || 0) >= 12,
+      order: () => !!s.flags.orderHit,
+      altcoin: () => cryptoCount(s) >= 3
     };
     for (const a of D.ACHIEVEMENTS) {
       if (!s.ach[a.id] && tests[a.id] && tests[a.id]()) { s.ach[a.id] = s.month; out.push(a); }
@@ -475,7 +573,8 @@
 
   const api = {
     newGame, advance, trade, borrow, repay, maxBorrow, buyIntel, checkAch, rankOf,
-    netWorth, liquidValue, stockValue, btcValue, fundValue, reValue, mortgageTotal, propertyCount, monthlyRent, fmtMoney,
+    defaultCfg, assetDef, setPlan, getPlan, setOrder, getOrder, fmtUnits, cryptoCount,
+    netWorth, liquidValue, stockValue, cryptoValue, fundValue, reValue, mortgageTotal, propertyCount, monthlyRent, fmtMoney,
     WARMUP
   };
   root.GameEngine = api;
