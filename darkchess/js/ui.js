@@ -291,7 +291,7 @@
   function hostNewGame(first) {
     const s = D.newGame({ first, rookRun: false });
     G = fresh(s, 'online', 0, { first }); sel = -1; hintCells = []; busy = false; rebuild(); layout(); closeAll();
-    NET.send({ t: 'start', s: mask(s), first });
+    NET.send({ t: 'start', s: mask(s), first, ids: G.ids });
     toast(first === 0 ? L('你先翻棋', 'You flip first') : L('對手先手', 'Opponent goes first'));
     next();
   }
@@ -299,8 +299,10 @@
     if (!m || !m.t) return;
     const host = NET && NET.role === 'host';
     if (m.t === 'start' && !host) {
-      G = fresh(m.s, 'online', 1, { first: m.first }); sel = -1; hintCells = []; busy = false; rebuild(); layout(); closeAll();
+      G = fresh(m.s, 'online', 1, { first: m.first }); if (m.ids) G.ids = m.ids; sel = -1; hintCells = []; busy = false; rebuild(); layout(); closeAll();
       toast(m.first === 1 ? L('你先翻棋', 'You flip first') : L('對手先手', 'Opponent goes first')); SFX.ding(); paint();
+    } else if (m.t === 'hello' && host) {
+      if (G && online()) NET.send({ t: 'start', s: mask(G.s), first: G.first, ids: G.ids });
     } else if (m.t === 'act' && host) {
       if (!G || G.over || G.s.side !== G.opp || !D.isLegal(G.s, m.a)) return;
       act(m.a);
