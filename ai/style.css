@@ -33,3 +33,5 @@ body{padding-top:env(safe-area-inset-top)}
 .in-app,.in-app body{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 /* 手機橫向遊玩時，錨定廣告出現就把按鈕往上移 */
 @media (orientation:landscape) and (max-height:520px){#touch{bottom:calc(8px + var(--sc-anchor,0px))}}
+
+.top .lang{margin-left:auto;background:#26304a;color:#e6ebf5;border:1px solid #3a4766;border-radius:10px;padding:5px 12px;font-weight:700;cursor:pointer}

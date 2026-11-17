@@ -100,3 +100,14 @@ a{color:var(--gold)}
 .toast.on{opacity:1;transform:translate(-50%,0)}
 @media(max-width:700px){.info{grid-template-columns:1fr}.brand small{display:none}.top{padding:8px 10px}.btn{padding:8px 12px;font-size:14px}.side{padding:6px 10px;min-height:54px}.avatar{width:40px;height:40px}.bubble{font-size:13px}}
 @media(max-width:420px){.bubble{position:absolute;left:62px;right:8px;top:-34px;z-index:4}.tray .mini{width:20px;height:20px;font-size:12px}}
+/* v1.1：線上對戰、表情、語言切換 */
+.acts{flex-wrap:wrap;justify-content:flex-end}
+.avatar.net{background:linear-gradient(#1f6b4a,#0d3324);border-color:#35e08a;box-shadow:0 0 14px rgba(53,224,138,.35)}
+.avatar.net .eyes::before,.avatar.net .eyes::after{background:#e6fff2;box-shadow:none;transform:none;height:8px;width:8px;border-radius:50%;top:16px}
+.avatar.net .mouth{border-color:#e6fff2}
+.lvl.on{background:#0f3324;color:#7dffc0;border-color:#1f6b4a}
+.emotes{display:flex;gap:6px;justify-content:center;flex-wrap:wrap}
+.emotes button{font-size:22px;background:#2a1e15;border:1px solid var(--line);border-radius:12px;padding:4px 10px;cursor:pointer}
+.emotes button:active{transform:scale(.9)}
+.me .bubble{order:2}
+@media(max-width:560px){.acts .btn{padding:7px 9px;font-size:13px}.brand h1{font-size:17px}.logo{width:34px;height:34px;font-size:18px}}

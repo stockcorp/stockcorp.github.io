@@ -42,23 +42,23 @@
     boss:    mk(26, { 6: '.....---........---.......', 9: '....................B.....' })
   };
   const LEVELS = [
-    { name: '夜市突圍', theme: 'market', tip: '← → 移動，空白鍵跳躍，X 丟晶片。踩在敵人頭上也能打倒他們。',
+    { name: '夜市突圍', nameEn: 'Night Market Escape', tipEn: 'Arrow keys to move, Space to jump, X to throw chips. Stomp on enemies to beat them.', theme: 'market', tip: '← → 移動，空白鍵跳躍，X 丟晶片。踩在敵人頭上也能打倒他們。',
       seq: ['start', 'flat', 'walker', 'pit', 'steps', 'spikes', 'check', 'crates', 'pitShare', 'walker', 'spring', 'flat', 'goal'] },
-    { name: '機場追逐', theme: 'airport', tip: '輸送帶會把你往前推；狗仔無人機可以用晶片打下來。',
+    { name: '機場追逐', nameEn: 'Airport Chase', tipEn: 'Conveyor belts push you forward. Shoot down paparazzi drones with chips.', theme: 'airport', tip: '輸送帶會把你往前推；狗仔無人機可以用晶片打下來。',
       seq: ['start', 'conveyor', 'drone', 'pit2', 'check', 'walker', 'vert', 'turret', 'movers', 'steps', 'drone', 'check', 'pitShare', 'goal'] },
-    { name: '無塵室潛入', theme: 'fab', tip: '雷射會一開一關，看準熄滅的瞬間通過。',
+    { name: '無塵室潛入', nameEn: 'Cleanroom Infiltration', tipEn: 'Lasers blink on and off. Wait for them to switch off, then dash through.', theme: 'fab', tip: '雷射會一開一關，看準熄滅的瞬間通過。',
       seq: ['start', 'laser', 'walker', 'movers', 'check', 'turret', 'spring', 'spikes', 'laser', 'vert', 'check', 'pit2', 'drone', 'shelf', 'goal'] },
-    { name: '資料中心過熱', theme: 'dc', tip: '發紅的地板溫度過高，踩到會受傷，請走上方的平台。',
+    { name: '資料中心過熱', nameEn: 'Data Center Meltdown', tipEn: 'Glowing red floors are too hot to touch. Stay on the platforms above.', theme: 'dc', tip: '發紅的地板溫度過高，踩到會受傷，請走上方的平台。',
       seq: ['start', 'heat', 'drone', 'conveyor', 'check', 'laser', 'heat', 'steps', 'turret', 'movers', 'check', 'spring', 'heat', 'drones', 'pitShare', 'goal'] },
-    { name: '股市大廳', theme: 'stock', tip: '空頭熊會丟出利空新聞，跳過去或用晶片反擊。',
+    { name: '股市大廳', nameEn: 'Stock Exchange Hall', tipEn: 'Bear traders throw bad-news papers. Jump over them or fight back with chips.', theme: 'stock', tip: '空頭熊會丟出利空新聞，跳過去或用晶片反擊。',
       seq: ['start', 'turret', 'pit2', 'drone', 'vert', 'check', 'movers', 'spikes', 'turret', 'laser', 'check', 'shelf', 'conveyor', 'heat', 'steps', 'walker2', 'goal'] },
-    { name: '總部頂樓決戰', theme: 'roof', tip: '魔王砸到地面後會暫時當機，那是攻擊的最好時機！',
+    { name: '總部頂樓決戰', nameEn: 'Rooftop Showdown', tipEn: 'When the boss slams the ground it crashes for a moment. That\'s your chance!', theme: 'roof', tip: '魔王砸到地面後會暫時當機，那是攻擊的最好時機！',
       seq: ['start', 'spikes', 'drone', 'pit', 'check', 'spring', 'turret', 'pitShare', 'check', 'shelf', 'heart', 'boss'] }
   ];
   function build(i) {
     const L = LEVELS[i], rows = []; for (let r = 0; r < R; r++) rows.push('');
     L.seq.forEach(function (k) { const c = CH[k]; if (!c) throw new Error('unknown chunk ' + k); for (let r = 0; r < R; r++) rows[r] += c[r]; });
-    return { name: L.name, theme: L.theme, tip: L.tip, rows: rows, w: rows[0].length, h: R };
+    return { name: L.name, nameEn: L.nameEn, theme: L.theme, tip: L.tip, tipEn: L.tipEn, rows: rows, w: rows[0].length, h: R };
   }
-  root.AIG_LEVELS = { count: LEVELS.length, build: build, names: LEVELS.map(function (l) { return l.name; }), R: R };
+  root.AIG_LEVELS = { count: LEVELS.length, build: build, names: LEVELS.map(function (l) { return l.name; }), namesEn: LEVELS.map(function (l) { return l.nameEn; }), R: R };
 })(typeof window !== 'undefined' ? window : globalThis);

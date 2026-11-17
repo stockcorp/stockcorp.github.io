@@ -243,6 +243,6 @@
     return { act: best[0], score: Math.round(best[1]), depth: reached, nodes: S.nodes, ms: Date.now() - t0 };
   }
 
-  const API = { ROWS, COLS, N, EMPTY, HID, NAMES, COLOR_NAME, RANK, COUNT, LEVELS, K, A, E, R, H, C, P, colorOf, typeOf, canCap, newGame, clone, legalActions, isLegal, sameAct, apply, status, think, key, poolOf, rng, name: v => NAMES[colorOf(v)][typeOf(v)] };
+  const API = { ROWS, COLS, N, EMPTY, HID, UNKNOWN, NAMES, COLOR_NAME, RANK, COUNT, LEVELS, K, A, E, R, H, C, P, colorOf, typeOf, canCap, newGame, clone, legalActions, isLegal, sameAct, apply, status, think, key, poolOf, rng, name: v => NAMES[colorOf(v)][typeOf(v)] };
   if (typeof module !== 'undefined' && module.exports) module.exports = API; else root.DC = API;
 })(typeof window !== 'undefined' ? window : globalThis);
