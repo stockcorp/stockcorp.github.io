@@ -1,31 +1,39 @@
-# 我愛操盤手
+# stockcorp.github.io 遊戲站
 
-股票、比特幣、房地產、基金的投資模擬遊戲。用 10 年（120 個月）達成財富目標，面對新聞事件、利率變化與追繳保證金。
+純前端（HTML + CSS + JavaScript）遊戲，部署在 GitHub Pages，main 分支推送後約 1 分鐘自動更新。
 
-純靜態網站（HTML / CSS / JavaScript），部署在 GitHub Pages：<https://stockcorp.github.io/>
+| 編號 | 遊戲 | 網址 | 資料夾 |
+|---|---|---|---|
+| 01 | 我愛操盤手 | https://stockcorp.github.io/ | 根目錄（`index.html`、`js/`、`style.css`） |
+| 02 | 搶救AI教父大作戰 | https://stockcorp.github.io/ai/ | `ai/` |
+| 03 | 暗棋破壞神 | https://stockcorp.github.io/darkchess/ | `darkchess/` |
 
-## 專案結構
-- `index.html`／`style.css`：頁面與樣式
-- `js/data.js`：資產、事件、成就等遊戲資料
-- `js/engine.js`：遊戲引擎（價格模型、交易、借貸、事件）
-- `js/ui.js`：介面與圖表
-- `js/config.js`：AdSense 設定
-- `ads.txt`、`privacy.html`：廣告與隱私權說明
+本機備份：`Z:\程式開發專案\00.web\02.stockcorp.github.io(原stockcorp.tw)\<編號.遊戲名>\AI_Claude_Opus5.5\版本X.Y`
 
-所有公司與新聞皆為虛構，僅供娛樂與教育，不構成投資建議。
+## 共用檔案 `shared/`
 
+- `shared/app.js`：每頁 `<head>` 同步載入。偵測是否在 App（WebView 套殼）內，網頁版載入 Google AdSense（`ca-pub-3440199491716602`），App 內不載入（App 請用 AdMob）。
+- `shared/games.js`：遊戲切換列。寬螢幕左右兩側顯示上一款／下一款，窄螢幕在頁面頂端。**新增遊戲只要在 `GAMES` 陣列加一筆**，所有頁面自動更新。App 內不顯示。
 
-## 版本 1.0（2026-11-16）
+## App 套殼（Android／iOS WebView）
 
-- **真實市場模式**：開局可自選 3～12 檔台股上市公司／ETF（可用代號或名稱搜尋全部上市證券）與 1～6 種加密貨幣，使用真實名稱、代號與最新價格開局。
-  - 股票：臺灣證券交易所每日收盤行情、殖利率與加權指數（`www.twse.com.tw`，瀏覽器直接讀取）。
-  - 加密貨幣：CoinGecko 新台幣報價。
-  - 讀不到時自動改用 `js/data.js` 內建快照。開局後的走勢、新聞與事件全部是模擬。
-- **多種加密貨幣**：BTC、ETH、SOL 等 16 種，小型幣波動更大。
-- **定期定額**：股票、加密貨幣、基金可設定每月自動買進。
-- **停損停利條件單**：月底依平均成本的漲跌幅自動賣出。
-- **圖表**：1 年／3 年／全部切換、6 個月均線、平均成本線、近一年高低點。
-- **資產總覽**：持有明細、自動交易清單、交易紀錄；新增 3 個成就。
-- 存檔格式改為 `wacp_save_v2`（舊版存檔不相容，會從新遊戲開始）。
+讓網頁知道自己在 App 裡，任一即可：
 
-檔案：`js/data.js`（資料與快照）、`js/market.js`（真實行情）、`js/engine.js`（引擎）、`js/ui.js`（介面）、`js/i18n.js`（中英文）。
+1. 開啟網址加上 `?app=1`（例如 `https://stockcorp.github.io/darkchess/?app=1`），會記住；`?app=0` 取消。
+2. WebView 的 User-Agent 加上 `StockcorpApp/1.0`。
+3. 使用原生橋接：React Native WebView、Capacitor、cordova、flutter_inappwebview、iOS `webkit.messageHandlers.stockcorp`、Android `window.StockcorpAndroid`。
+
+App 內會：不載入 AdSense、隱藏遊戲切換列與說明區、套用瀏海與底部安全區、停用長按選單。
+
+原生端可以呼叫：
+
+- `window.SC.back()`：處理返回鍵，回傳 `true` 表示網頁已處理（關閉視窗、暫停遊戲），`false` 時 App 可以自行關閉。
+- `window.SC.pause()`／`window.SC.resume()`：App 切到背景時呼叫（網頁也會自動偵測 visibilitychange）。
+
+網頁會用 `SC.post(type, data)` 通知原生端，例如 `ready`、`gamestart`、`gameover`、`levelclear`，原生端可用來插入 AdMob 插頁廣告。
+
+## 各遊戲版本
+
+- 01 我愛操盤手 v1.1：加入遊戲切換列與共用 App 設定。
+- 02 搶救AI教父大作戰 v1.1：搬到 `/ai/`，加入 AdSense、App 返回鍵與背景暫停。
+- 03 暗棋破壞神 v1.0：台灣暗棋規則，電腦四種難度（簡單、普通、困難、大師）、先後手、車直衝選項、悔棋與提示、戰績、手機直向自動轉棋盤、對局自動存檔。

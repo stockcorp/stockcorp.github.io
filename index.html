@@ -2,7 +2,7 @@
 <html lang="zh-Hant">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>我愛操盤手｜股票、比特幣、房地產、基金投資模擬遊戲</title>
 <meta name="description" content="免費的投資模擬遊戲：用 10 年時間操作股票、比特幣、房地產與基金，面對新聞事件、利率變化與追繳保證金，挑戰成為股神。">
 <meta name="google-adsense-account" content="ca-pub-3440199491716602">
@@ -10,35 +10,13 @@
 <meta property="og:title" content="我愛操盤手｜投資模擬遊戲">
 <meta property="og:description" content="股票、比特幣、房地產、基金全包！10 年內達成財富目標，你能成為股神嗎？">
 <meta property="og:type" content="website">
+<meta property="og:url" content="https://stockcorp.github.io/">
+<link rel="canonical" href="https://stockcorp.github.io/">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%230f1420'/%3E%3Cpath d='M15 70 L38 45 L55 58 L85 25' stroke='%23ef4444' stroke-width='9' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
-<link rel="stylesheet" href="style.css?v=1.0">
-<script>
-/* App 環境偵測：在 iOS／Android App（WebView）內不載入 AdSense，App 請改用 AdMob。
-   觸發方式（任一即可）：
-   1) 網址帶 ?app=1（會記住；?app=0 可取消）
-   2) App 的 User-Agent 含 "WacpApp/"
-   3) 原生橋接物件：ReactNativeWebView、Capacitor 原生平台、cordova、webkit.messageHandlers.wacp、Android 的 WacpAndroid */
-(function () {
-  var q = location.search, app = false;
-  try {
-    if (/[?&]app=1\b/.test(q)) localStorage.setItem('wacp_app', '1');
-    if (/[?&]app=0\b/.test(q)) localStorage.removeItem('wacp_app');
-    app = localStorage.getItem('wacp_app') === '1';
-  } catch (e) { app = /[?&]app=1\b/.test(q); }
-  if (!app) {
-    var ua = navigator.userAgent || '';
-    app = /WacpApp\//.test(ua) || !!window.ReactNativeWebView || !!window.cordova || !!window.WacpAndroid ||
-      !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform()) ||
-      !!(window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.wacp);
-  }
-  window.WACP_IS_APP = app;
-  if (app) { document.documentElement.className += ' in-app'; return; }
-  var s = document.createElement('script');
-  s.async = true; s.crossOrigin = 'anonymous';
-  s.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3440199491716602';
-  document.head.appendChild(s);
-})();
-</script>
+<link rel="stylesheet" href="style.css?v=1.1">
+<!-- App 偵測與 AdSense 載入（共用）：App 內不載入 AdSense，請改用 AdMob。觸發方式見 /shared/app.js -->
+<script src="/shared/app.js?v=1.1"></script>
+<script src="/shared/games.js?v=1.1" data-game="trader" defer></script>
 </head>
 <body>
 <header class="topbar">
@@ -81,11 +59,11 @@
 <div id="modalRoot"></div>
 <div id="toasts"></div>
 
-<script src="js/config.js?v=1.0"></script>
-<script src="js/data.js?v=1.0"></script>
-<script src="js/i18n.js?v=1.0"></script>
-<script src="js/market.js?v=1.0"></script>
-<script src="js/engine.js?v=1.0"></script>
-<script src="js/ui.js?v=1.0"></script>
+<script src="js/config.js?v=1.1"></script>
+<script src="js/data.js?v=1.1"></script>
+<script src="js/i18n.js?v=1.1"></script>
+<script src="js/market.js?v=1.1"></script>
+<script src="js/engine.js?v=1.1"></script>
+<script src="js/ui.js?v=1.1"></script>
 </body>
 </html>

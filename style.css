@@ -150,3 +150,9 @@ html[lang=zh-Hant] .en-only{display:none}
 .sent em{font-style:normal}
 tr.row[data-act=goto]{cursor:pointer}
 @media (max-width:600px){.modes.two{grid-template-columns:1fr}}
+
+/* 遊戲切換列（/shared/games.js）與 App 套殼 */
+html.scg-rails #toasts{right:calc(var(--sc-rail) + 14px)}
+body{padding-top:env(safe-area-inset-top);overscroll-behavior-y:none}
+.foot{padding-bottom:calc(120px + var(--sc-anchor,0px) + env(safe-area-inset-bottom))}
+.in-app .foot{padding-bottom:calc(30px + env(safe-area-inset-bottom))}
