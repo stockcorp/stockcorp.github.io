@@ -388,7 +388,7 @@
 
   I.setLang = function (l) {
     I.lang = l === 'en' ? 'en' : 'zh';
-    try { localStorage.setItem('wacp_lang', I.lang); } catch (e) { /* 忽略 */ }
+    try { localStorage.setItem('wacp_lang', I.lang); localStorage.setItem('sc_lang', I.lang); } catch (e) { /* 忽略 */ }
   };
 
   (function init() {
@@ -400,7 +400,7 @@
     } catch (e) { /* 忽略 */ }
     if (!l) l = /^zh/i.test(navigator.language || 'zh') ? 'zh' : 'en';
     I.lang = l === 'en' ? 'en' : 'zh';
-    try { localStorage.setItem('wacp_lang', I.lang); } catch (e) { /* 忽略 */ }
+    try { localStorage.setItem('wacp_lang', I.lang); localStorage.setItem('sc_lang', I.lang); } catch (e) { /* 忽略 */ }
   })();
 
   root.I18N = I;

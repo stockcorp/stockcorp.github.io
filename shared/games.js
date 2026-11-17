@@ -1,5 +1,6 @@
 /* stockcorp.github.io 共用：遊戲切換列
-   新增遊戲時只要在 GAMES 加一筆，所有遊戲頁面的左右切換就會自動更新。
+   新增遊戲時只要在 GAMES 加一筆，所有遊戲頁面的左右切換就會自動更新；
+   之後執行 node tools/build-sitemap.js（或推送後由 GitHub Actions 自動執行）就會更新 sitemap.xml。
    用法：<script src="/shared/games.js" data-game="遊戲 id" defer></script>
    寬螢幕：左右兩側固定「上一款／下一款」；窄螢幕：頁面最上方一條切換列。App 內（SC_IS_APP）不顯示。 */
 (function () {
@@ -7,7 +8,8 @@
   var GAMES = [
     { id: 'trader', no: '01', url: '/', icon: '📈', color: '#ef4444', zh: '我愛操盤手', en: 'I Love Trading', dzh: '用真實股價與加密貨幣模擬投資 10 年', den: 'Trade real stocks and crypto over 10 years' },
     { id: 'ai', no: '02', url: '/ai/', icon: '🤖', color: '#f5b83d', zh: '搶救AI教父大作戰', en: 'Save the AI Godfather', dzh: '六關橫向闖關，打倒董事會機器人', den: 'Six-stage platformer with a boss fight' },
-    { id: 'darkchess', no: '03', url: '/darkchess/', icon: '帥', color: '#c0392b', zh: '暗棋破壞神', en: 'Dark Chess Destroyer', dzh: '翻棋對決電腦，四種難度', den: 'Chinese dark chess vs. the computer' }
+    { id: 'darkchess', no: '03', url: '/darkchess/', icon: '帥', color: '#c0392b', zh: '暗棋破壞神', en: 'Dark Chess Destroyer', dzh: '翻棋對決電腦或線上真人', den: 'Dark chess vs. AI or friends online' },
+    { id: 'xiangqi', no: '04', url: '/xiangqi/', icon: '將', color: '#16181d', fg: '#16181d', zh: '象棋', en: 'Xiangqi', dzh: '楚河漢界，對戰電腦或線上真人', den: 'Chinese chess vs. AI or friends online' }
   ];
   window.SC_GAMES = GAMES;
   if (window.SC_IS_APP) return;
@@ -59,7 +61,7 @@
     '.scg-item .scg-ico{flex:none}'
   ].join('\n');
 
-  function ico(g, size) { var t = g.icon.length === 1 && /[一-鿿]/.test(g.icon); return '<span class="scg-ico' + (t ? ' t' : '') + '" style="background:' + g.color + (size ? ';width:' + size + 'px;height:' + size + 'px' : '') + '">' + g.icon + '</span>'; }
+  function ico(g, size) { var t = g.icon.length === 1 && /[一-鿿]/.test(g.icon); return '<span class="scg-ico' + (t ? ' t' : '') + '" style="background:' + g.color + (g.fg ? ';color:' + g.fg + ';border-color:' + g.fg : '') + (size ? ';width:' + size + 'px;height:' + size + 'px' : '') + '">' + g.icon + '</span>'; }
   function card(g, dir) {
     return '<a class="scg-card" href="' + g.url + '" title="' + nm(g) + '">' + (dir < 0 ? '<span class="scg-arrow">◀</span>' : '') +
       '<span class="scg-no">' + g.no + '</span>' + ico(g) + '<span class="scg-name">' + nm(g) + '</span><span class="scg-desc">' + (en() ? g.den : g.dzh) + '</span>' +

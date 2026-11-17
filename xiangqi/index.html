@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title data-en="Chinese Chess (Xiangqi) | Play vs AI or Friends Online, Free">象棋｜線上象棋，對戰電腦或真人（免費）</title>
+<meta name="description" content="免費線上象棋：和電腦棋王對弈（簡單、普通、困難、大師四種難度），或用房號和朋友線上對戰。支援悔棋、提示，手機電腦都能玩。Free Chinese Chess (Xiangqi) vs AI or friends online.">
+<meta name="google-adsense-account" content="ca-pub-3440199491716602">
+<meta name="theme-color" content="#120c08">
+<meta property="og:title" content="象棋｜Chinese Chess (Xiangqi)">
+<meta property="og:description" content="和電腦棋王對弈，或和朋友線上對戰。Play Xiangqi vs AI or online.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://stockcorp.github.io/xiangqi/">
+<link rel="canonical" href="https://stockcorp.github.io/xiangqi/">
+<link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/xiangqi/?lang=zh">
+<link rel="alternate" hreflang="en" href="https://stockcorp.github.io/xiangqi/?lang=en">
+<link rel="alternate" hreflang="x-default" href="https://stockcorp.github.io/xiangqi/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='44' fill='%23fdf3dc' stroke='%2316181d' stroke-width='8'/%3E%3Ctext x='50' y='66' font-size='46' text-anchor='middle' fill='%2316181d' font-weight='bold'%3E將%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="style.css?v=1.0">
+<script src="/shared/app.js?v=1.2"></script>
+<script src="/shared/games.js?v=1.2" data-game="xiangqi" defer></script>
+<script src="/shared/net.js?v=1.2"></script>
+</head>
+<body>
+<header class="top">
+  <div class="brand"><span class="logo">將</span><div><h1 data-en="Xiangqi">象棋</h1><small data-en="Chinese Chess vs AI or friends">楚河漢界・對戰電腦或真人</small></div></div>
+  <div class="acts">
+    <button class="btn ghost" data-lang-toggle>EN</button>
+    <button class="btn ghost" id="bSound" title="Sound">🔊</button>
+    <button class="btn ghost" id="bRules" data-en="Rules">規則</button>
+    <button class="btn ghost" id="bOnline">🌐 線上對戰</button>
+    <button class="btn" id="bNew" data-en="New">新局</button>
+  </div>
+</header>
+
+<main class="game" id="game">
+  <section class="side ai" id="pAI">
+    <div class="who"><div class="avatar sage" id="aiFace"><span class="eyes"></span><span class="mouth"></span></div>
+      <div><b id="aiName">棋王</b> <span class="lvl" id="aiLvl"></span><div class="col" id="aiCol"></div></div></div>
+    <div class="bubble" id="aiSay"></div>
+    <div class="tray" id="trayAI"></div>
+  </section>
+
+  <div class="boardwrap" id="wrap">
+    <div class="board xq" id="board"></div>
+    <canvas id="fx"></canvas>
+  </div>
+
+  <section class="side me" id="pMe">
+    <div class="who"><div class="avatar me"><span>🙂</span></div>
+      <div><b id="meName">你</b><div class="col" id="meCol"></div></div></div>
+    <div class="bubble" id="meSay"></div>
+    <div class="tray" id="trayMe"></div>
+  </section>
+
+  <div class="status" id="status"></div>
+  <div class="tools">
+    <button class="btn ghost" id="bUndo"><span data-en="↶ Undo">↶ 悔棋</span> <span id="undoN"></span></button>
+    <button class="btn ghost" id="bHint"><span data-en="💡 Hint">💡 提示</span> <span id="hintN"></span></button>
+    <button class="btn ghost danger" id="bResign">🏳 認輸</button>
+  </div>
+  <div class="emotes" id="emotes" style="display:none"></div>
+</main>
+
+<section class="info">
+  <article>
+    <h2 data-en="How to play">怎麼玩</h2>
+    <p data-en="Red moves first. Click one of your pieces to see where it can go (green dots), then click a destination. Capture the enemy General by checkmate: leave it in check with no way out. Running out of legal moves also loses.">紅方先走。點自己的棋子會顯示可走的位置（綠點），再點目的地即可。把對方的帥（將）<b>將死</b>就獲勝；輪到你卻無棋可走（困斃）也算輸。</p>
+    <p data-en="Each side moves in turn. Three repetitions of the same position, or 120 moves without a capture, is a draw.">雙方輪流走棋；同一局面重複三次，或連續 120 步沒有吃子，判為和局。</p>
+  </article>
+  <article>
+    <h2 data-en="AI levels and online play">四種難度與線上對戰</h2>
+    <p data-en="<b>Easy</b> is for beginners, <b>Normal</b> looks 3 moves ahead, <b>Hard</b> thinks about 1 second, and <b>Master</b> searches deeply for 2.5 seconds per move."><b>簡單</b>適合初學；<b>普通</b>看三步；<b>困難</b>每步想約 1 秒；<b>大師</b>每步深算 2.5 秒。</p>
+    <p data-en="Press <b>🌐 Online</b>, create a room and send the 6-character code or link to a friend. No account needed.">按 <b>🌐 線上對戰</b> 建立房間，把 6 碼房號或連結傳給朋友就能對弈，不需要註冊。</p>
+  </article>
+</section>
+
+<footer class="foot">
+  <p><span data-en="Free to play. Your games and stats are saved only in your browser.">本遊戲為免費娛樂用途，戰績與對局只存在你的瀏覽器。</span>　<a href="privacy.html" data-en="Privacy policy">隱私權政策與廣告說明</a></p>
+</footer>
+
+<div class="ov" id="ovSetup">
+  <div class="modal">
+    <h2 data-en="♟ Play the AI">♟ 挑戰棋王</h2>
+    <h3 data-en="Difficulty">難度</h3>
+    <div class="chips" id="lvChips"></div>
+    <h3 data-en="Your side">你執</h3>
+    <div class="chips" id="sideChips">
+      <button data-v="red" data-en="Red (first)">紅方（先走）</button><button data-v="black" data-en="Black">黑方（後走）</button><button data-v="rand" data-en="Random">隨機</button>
+    </div>
+    <div class="row"><button class="btn big" id="bStart" data-en="Start">開始對局</button><button class="btn ghost" id="bSetupOnline">🌐 <span data-en="Play a friend online">和朋友線上對戰</span></button><button class="btn ghost" id="bCancel" data-en="Cancel">取消</button></div>
+  </div>
+</div>
+
+<div class="ov" id="ovEnd">
+  <div class="modal center">
+    <div class="big-emoji" id="endEmoji">🏆</div>
+    <h2 id="endTitle"></h2>
+    <p id="endText"></p>
+    <div class="stats" id="endStats"></div>
+    <div class="row"><button class="btn big" id="bAgain"></button><button class="btn ghost" id="bChange" data-en="Change level">換難度</button><button class="btn ghost" id="bView" data-en="View board">看棋盤</button></div>
+  </div>
+</div>
+
+<div class="ov" id="ovRules">
+  <div class="modal">
+    <h2 data-en="Xiangqi rules">象棋規則</h2>
+    <ol data-en="<li><b>General</b> 帥/將: one step orthogonally, must stay in the palace. The two Generals may never face each other on an open file.</li><li><b>Advisor</b> 仕/士: one step diagonally inside the palace.</li><li><b>Elephant</b> 相/象: exactly two steps diagonally, cannot cross the river, and is blocked if the midpoint is occupied.</li><li><b>Horse</b> 傌/馬: one step straight then one diagonal (an L). Blocked if the adjacent straight point is occupied.</li><li><b>Chariot</b> 俥/車: any distance in a straight line.</li><li><b>Cannon</b> 炮/包: moves like a Chariot, but captures only by jumping over exactly one piece.</li><li><b>Soldier</b> 兵/卒: one step forward; after crossing the river it may also step sideways. Never backward.</li><li>You may not leave your own General in check. Checkmate or having no legal move loses.</li>">
+      <li><b>帥／將</b>：在九宮內直走一步。雙方帥將不能在同一直線上直接照面（王見王）。</li>
+      <li><b>仕／士</b>：在九宮內斜走一步。</li>
+      <li><b>相／象</b>：斜走兩步（田字），不能過河；田字中心有子時不能走（塞象眼）。</li>
+      <li><b>傌／馬</b>：先直一步再斜一步（日字）；直走方向的鄰點有子時不能走（拐馬腳）。</li>
+      <li><b>俥／車</b>：直線任意格數。</li>
+      <li><b>炮／包</b>：走法和車相同，但吃子時必須隔著剛好一枚棋子（翻山）。</li>
+      <li><b>兵／卒</b>：每次向前一步；過河後可以向左右走，永遠不能後退。</li>
+      <li>不能讓自己的帥（將）處在被將軍的狀態。被將死或無棋可走就輸。</li>
+    </ol>
+    <div class="row"><button class="btn" data-close data-en="Got it">知道了</button></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="js/engine.js?v=1.0"></script>
+<script src="js/ui.js?v=1.0"></script>
+</body>
+</html>

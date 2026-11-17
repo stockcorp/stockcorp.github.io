@@ -3,36 +3,42 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
-<title>暗棋破壞神｜線上暗棋，翻棋對決電腦（四種難度）</title>
-<meta name="description" content="免費線上暗棋（半盤象棋、翻翻棋）：翻開蓋著的棋子，和電腦「破壞神」對決。簡單、普通、困難、大師四種難度，可選先後手與車直衝規則，手機電腦都能玩。">
+<title data-en="Dark Chess Destroyer | Play Chinese Dark Chess (Banqi) vs AI or Online">暗棋破壞神｜線上暗棋，對戰電腦或真人</title>
+<meta name="description" content="免費線上暗棋（半盤象棋、翻翻棋）：和電腦「破壞神」對決，或用房號和朋友線上對戰。四種難度，可選先後手與車直衝規則，手機電腦都能玩。Free Chinese Dark Chess (Banqi) vs AI or friends online.">
 <meta name="google-adsense-account" content="ca-pub-3440199491716602">
 <meta name="theme-color" content="#120c08">
-<meta property="og:title" content="暗棋破壞神｜翻棋對決電腦">
-<meta property="og:description" content="四種難度的線上暗棋，你打得贏破壞神嗎？">
+<meta property="og:title" content="暗棋破壞神｜Dark Chess Destroyer">
+<meta property="og:description" content="四種難度的線上暗棋，也能和朋友線上對戰。Chinese Dark Chess vs AI or online.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://stockcorp.github.io/darkchess/">
 <link rel="canonical" href="https://stockcorp.github.io/darkchess/">
+<link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/darkchess/?lang=zh">
+<link rel="alternate" hreflang="en" href="https://stockcorp.github.io/darkchess/?lang=en">
+<link rel="alternate" hreflang="x-default" href="https://stockcorp.github.io/darkchess/">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='44' fill='%23fdf3dc' stroke='%23b91c1c' stroke-width='8'/%3E%3Ctext x='50' y='66' font-size='46' text-anchor='middle' fill='%23b91c1c' font-weight='bold'%3E帥%3C/text%3E%3C/svg%3E">
-<link rel="stylesheet" href="style.css?v=1.0">
-<script src="/shared/app.js?v=1.0"></script>
-<script src="/shared/games.js?v=1.0" data-game="darkchess" defer></script>
+<link rel="stylesheet" href="style.css?v=1.1">
+<script src="/shared/app.js?v=1.2"></script>
+<script src="/shared/games.js?v=1.2" data-game="darkchess" defer></script>
+<script src="/shared/net.js?v=1.2"></script>
 </head>
 <body>
 <header class="top">
-  <div class="brand"><span class="logo">帥</span><div><h1>暗棋破壞神</h1><small>翻棋對決電腦</small></div></div>
+  <div class="brand"><span class="logo">帥</span><div><h1 data-en="Dark Chess Destroyer">暗棋破壞神</h1><small data-en="Flip, fight, destroy">翻棋對決電腦或真人</small></div></div>
   <div class="acts">
-    <button class="btn ghost" id="bSound" title="音效">🔊</button>
-    <button class="btn ghost" id="bRules">規則</button>
-    <button class="btn" id="bNew">新局</button>
+    <button class="btn ghost" data-lang-toggle>EN</button>
+    <button class="btn ghost" id="bSound" title="Sound">🔊</button>
+    <button class="btn ghost" id="bRules" data-en="Rules">規則</button>
+    <button class="btn ghost" id="bOnline">🌐 線上對戰</button>
+    <button class="btn" id="bNew" data-en="New">新局</button>
   </div>
 </header>
 
 <main class="game" id="game">
   <section class="side ai" id="pAI">
     <div class="who"><div class="avatar" id="aiFace"><span class="eyes"></span><span class="mouth"></span></div>
-      <div><b>破壞神</b> <span class="lvl" id="aiLvl">普通</span><div class="col" id="aiCol">尚未決定顏色</div></div></div>
+      <div><b id="aiName">破壞神</b> <span class="lvl" id="aiLvl">普通</span><div class="col" id="aiCol"></div></div></div>
     <div class="bubble" id="aiSay"></div>
-    <div class="tray" id="trayAI" title="破壞神吃掉的棋子"></div>
+    <div class="tray" id="trayAI"></div>
   </section>
 
   <div class="boardwrap" id="wrap">
@@ -41,68 +47,68 @@
   </div>
 
   <section class="side me" id="pMe">
-    <div class="who"><div class="avatar me"><span>你</span></div>
-      <div><b>玩家</b><div class="col" id="meCol">翻開第一枚棋子決定你的顏色</div></div></div>
-    <div class="tray" id="trayMe" title="你吃掉的棋子"></div>
+    <div class="who"><div class="avatar me"><span>🙂</span></div>
+      <div><b id="meName">你</b><div class="col" id="meCol"></div></div></div>
+    <div class="bubble" id="meSay"></div>
+    <div class="tray" id="trayMe"></div>
   </section>
 
-  <div class="status" id="status">準備開始</div>
+  <div class="status" id="status"></div>
   <div class="tools">
-    <button class="btn ghost" id="bUndo">↶ 悔棋 <span id="undoN"></span></button>
-    <button class="btn ghost" id="bHint">💡 提示 <span id="hintN"></span></button>
+    <button class="btn ghost" id="bUndo"><span data-en="↶ Undo">↶ 悔棋</span> <span id="undoN"></span></button>
+    <button class="btn ghost" id="bHint"><span data-en="💡 Hint">💡 提示</span> <span id="hintN"></span></button>
     <button class="btn ghost danger" id="bResign">🏳 認輸</button>
   </div>
+  <div class="emotes" id="emotes" style="display:none"></div>
 </main>
 
 <section class="info">
   <article>
-    <h2>暗棋怎麼玩</h2>
-    <p>32 枚棋子全部蓋著、隨機排在 4×8 的棋盤上。每回合可以<b>翻開一枚棋子</b>，或<b>走一步自己的棋子</b>。第一個翻開的棋子是什麼顏色，你就是那一方。把對手的棋子吃光、或讓對手無棋可走就獲勝。</p>
-    <p>大小順序：<b>帥將 &gt; 仕士 &gt; 相象 &gt; 俥車 &gt; 傌馬 &gt; 炮包 &gt; 兵卒</b>，大吃小、同級可互吃。例外：兵卒可以吃帥將，帥將不能吃兵卒；炮包要隔一枚棋子（蓋著的也算）才能吃，而且什麼都能吃。</p>
+    <h2 data-en="How to play">暗棋怎麼玩</h2>
+    <p data-en="All 32 pieces start face down, shuffled on a 4×8 board. On your turn, either <b>flip a piece</b> or <b>move one of your pieces</b> one step. The color of the first piece you flip is your side. Capture all enemy pieces, or leave your opponent with no legal move, to win.">32 枚棋子全部蓋著、隨機排在 4×8 的棋盤上。每回合可以<b>翻開一枚棋子</b>，或<b>走一步自己的棋子</b>。第一個翻開的棋子是什麼顏色，你就是那一方。把對手的棋子吃光、或讓對手無棋可走就獲勝。</p>
+    <p data-en="Rank: <b>General &gt; Advisor &gt; Elephant &gt; Chariot &gt; Horse &gt; Cannon &gt; Soldier</b>. A piece captures pieces of equal or lower rank. Exceptions: a Soldier can capture the General, but the General cannot capture Soldiers; a Cannon captures by jumping over exactly one piece (face-down counts) and can capture anything.">大小順序：<b>帥將 &gt; 仕士 &gt; 相象 &gt; 俥車 &gt; 傌馬 &gt; 炮包 &gt; 兵卒</b>，大吃小、同級可互吃。例外：兵卒可以吃帥將，帥將不能吃兵卒；炮包要隔一枚棋子（蓋著的也算）才能吃，而且什麼都能吃。</p>
   </article>
   <article>
-    <h2>四種難度</h2>
-    <p><b>簡單</b>會亂翻亂走；<b>普通</b>看兩步；<b>困難</b>會算翻棋的風險；<b>大師</b>會在一秒內盡可能深算。電腦看不到蓋著的棋子，和你一樣公平。</p>
+    <h2 data-en="AI levels and online play">四種難度與線上對戰</h2>
+    <p data-en="<b>Easy</b> flips at random, <b>Normal</b> looks two moves ahead, <b>Hard</b> weighs the risk of each flip, and <b>Master</b> searches as deep as it can in one second. The AI cannot see face-down pieces, just like you."><b>簡單</b>會亂翻亂走；<b>普通</b>看兩步；<b>困難</b>會算翻棋的風險；<b>大師</b>會在一秒內盡可能深算。電腦看不到蓋著的棋子，和你一樣公平。</p>
+    <p data-en="Press <b>🌐 Online</b>, create a room and send the 6-character code or link to a friend. No account needed.">按 <b>🌐 線上對戰</b> 建立房間，把 6 碼房號或連結傳給朋友就能對戰，不需要註冊。</p>
   </article>
 </section>
 
 <footer class="foot">
-  <p>本遊戲為免費娛樂用途，戰績與對局只存在你的瀏覽器。　<a href="privacy.html">隱私權政策與廣告說明</a></p>
+  <p><span data-en="Free to play. Your games and stats are saved only in your browser.">本遊戲為免費娛樂用途，戰績與對局只存在你的瀏覽器。</span>　<a href="privacy.html" data-en="Privacy policy">隱私權政策與廣告說明</a></p>
 </footer>
 
-<!-- 開局設定 -->
 <div class="ov" id="ovSetup">
   <div class="modal">
-    <h2>⚔️ 挑戰破壞神</h2>
-    <h3>難度</h3>
+    <h2 data-en="⚔️ Challenge the Destroyer">⚔️ 挑戰破壞神</h2>
+    <h3 data-en="Difficulty">難度</h3>
     <div class="chips" id="lvChips"></div>
-    <h3>先手</h3>
+    <h3 data-en="First move">先手</h3>
     <div class="chips" id="firstChips">
-      <button data-v="me">我先翻</button><button data-v="ai">電腦先</button><button data-v="rand">隨機</button>
+      <button data-v="me" data-en="Me first">我先翻</button><button data-v="ai" data-en="AI first">電腦先</button><button data-v="rand" data-en="Random">隨機</button>
     </div>
-    <h3>進階規則</h3>
-    <label class="tog"><input type="checkbox" id="optRook"> 車（俥）直衝：可直走多格，並吃掉路上遇到的第一枚棋子</label>
-    <p class="mute">連續 50 步沒有翻棋也沒有吃子即為和局。</p>
-    <div class="row"><button class="btn big" id="bStart">開始對局</button><button class="btn ghost" id="bCancel">取消</button></div>
+    <h3 data-en="Optional rule">進階規則</h3>
+    <label class="tog"><input type="checkbox" id="optRook"> <span data-en="Rook rush: Chariots may slide any distance and capture the first piece in their path">車（俥）直衝：可直走多格，並吃掉路上遇到的第一枚棋子</span></label>
+    <p class="mute" data-en="50 moves in a row without a flip or capture is a draw.">連續 50 步沒有翻棋也沒有吃子即為和局。</p>
+    <div class="row"><button class="btn big" id="bStart" data-en="Start">開始對局</button><button class="btn ghost" id="bSetupOnline">🌐 <span data-en="Play a friend online">和朋友線上對戰</span></button><button class="btn ghost" id="bCancel" data-en="Cancel">取消</button></div>
   </div>
 </div>
 
-<!-- 結果 -->
 <div class="ov" id="ovEnd">
   <div class="modal center">
     <div class="big-emoji" id="endEmoji">🏆</div>
-    <h2 id="endTitle">你贏了！</h2>
+    <h2 id="endTitle"></h2>
     <p id="endText"></p>
     <div class="stats" id="endStats"></div>
-    <div class="row"><button class="btn big" id="bAgain">再來一局</button><button class="btn ghost" id="bChange">換難度</button><button class="btn ghost" id="bView">看棋盤</button></div>
+    <div class="row"><button class="btn big" id="bAgain"></button><button class="btn ghost" id="bChange" data-en="Change level">換難度</button><button class="btn ghost" id="bView" data-en="View board">看棋盤</button></div>
   </div>
 </div>
 
-<!-- 規則 -->
 <div class="ov" id="ovRules">
   <div class="modal">
-    <h2>暗棋規則</h2>
-    <ol>
+    <h2 data-en="Dark Chess rules">暗棋規則</h2>
+    <ol data-en="<li>4×8 board. Each side has 16 pieces: General 1, Advisors 2, Elephants 2, Chariots 2, Horses 2, Cannons 2, Soldiers 5. All start face down and shuffled.</li><li>On your turn, either <b>flip</b> any face-down piece (any color) or <b>move</b> one of your face-up pieces.</li><li>The first player to flip takes the color of that piece.</li><li>Pieces move one step up, down, left or right, and may capture an adjacent enemy of equal or lower rank.</li><li>Rank: General 7 &gt; Advisor 6 &gt; Elephant 5 &gt; Chariot 4 &gt; Horse 3 &gt; Cannon 2 &gt; Soldier 1.</li><li>A Soldier can capture the General; the General cannot capture Soldiers.</li><li>A Cannon moves one step, but captures by jumping over <b>exactly one</b> piece in a straight line (face-up or face-down). It can capture any piece but not an adjacent one.</li><li>Win by capturing every enemy piece or when your opponent has no legal move. 50 moves without a flip or capture is a draw.</li><li>(Optional) Rook rush: Chariots slide any distance and capture the first capturable piece in their path.</li>">
       <li>棋盤 4×8，紅黑各 16 枚：帥將 1、仕士 2、相象 2、俥車 2、傌馬 2、炮包 2、兵卒 5。開局全部蓋著並隨機擺放。</li>
       <li>每回合擇一：<b>翻開</b>任一枚蓋著的棋子（不論顏色），或<b>移動</b>一枚自己已翻開的棋子。</li>
       <li>第一個翻棋的人，翻出什麼顏色就是那一方。</li>
@@ -113,13 +119,13 @@
       <li>把對方棋子全部吃光，或對方輪到時無棋可走，就獲勝；連續 50 步沒有翻棋也沒有吃子為和局。</li>
       <li>（選用）車直衝：俥車可直走多格，吃掉直線上遇到的第一枚可吃的棋子。</li>
     </ol>
-    <div class="row"><button class="btn" data-close>知道了</button></div>
+    <div class="row"><button class="btn" data-close data-en="Got it">知道了</button></div>
   </div>
 </div>
 
 <div class="toast" id="toast"></div>
 
-<script src="js/engine.js?v=1.0"></script>
-<script src="js/ui.js?v=1.0"></script>
+<script src="js/engine.js?v=1.1"></script>
+<script src="js/ui.js?v=1.1"></script>
 </body>
 </html>
