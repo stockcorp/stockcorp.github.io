@@ -260,13 +260,14 @@
   }
   function hostNewGame(hostColor) {
     G = fresh(X.newGame(), 'online', hostColor); sel = -1; hintPts = []; busy = false; rebuild(); closeAll();
-    NET.send({ t: 'start', guestColor: 1 - hostColor });
+    NET.send({ t: 'start', guestColor: 1 - hostColor, s: G.s, ids: G.ids });
     toast(L('你執' + colName(hostColor), 'You play ' + colName(hostColor))); next();
   }
   function onNet(msg) {
     if (!msg || !msg.t) return;
     const host = NET && NET.role === 'host';
-    if (msg.t === 'start' && !host) { G = fresh(X.newGame(), 'online', msg.guestColor === 0 ? 0 : 1); sel = -1; hintPts = []; busy = false; rebuild(); closeAll(); toast(L('你執' + colName(G.myColor), 'You play ' + colName(G.myColor))); SFX.ding(); paint(); }
+    if (msg.t === 'hello' && host) { if (G && online()) NET.send({ t: 'start', guestColor: 1 - G.myColor, s: G.s, ids: G.ids }); }
+    else if (msg.t === 'start' && !host) { G = fresh(msg.s && msg.s.board && msg.s.board.length === 90 ? msg.s : X.newGame(), 'online', msg.guestColor === 0 ? 0 : 1, msg.ids ? { ids: msg.ids } : {}); sel = -1; hintPts = []; busy = false; rebuild(); closeAll(); toast(L('你執' + colName(G.myColor), 'You play ' + colName(G.myColor))); SFX.ding(); paint(); }
     else if (msg.t === 'act' && host) { if (!G || G.over || G.s.side === G.myColor || !msg.a || !X.isLegal(G.s, msg.a)) return; act({ f: msg.a.f, t: msg.a.t }); }
     else if (msg.t === 'apply' && !host) { if (!G || G.over || !X.isLegal(G.s, msg.a)) return; busy = false; act({ f: msg.a.f, t: msg.a.t }); if (msg.st && msg.st !== 'play') finish(msg.st); }
     else if (msg.t === 'resign') { if (host && G && !G.over) { const st = { winner: G.myColor, reason: 'resign' }; NET.send({ t: 'end', st }); finish(st); } }

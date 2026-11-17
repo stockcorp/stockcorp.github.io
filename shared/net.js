@@ -82,9 +82,14 @@
       peer.on('open', function () {
         var dc = peer.connect(pid(game, code), { reliable: true, serialization: 'json' });
         dc.on('open', function () {
-          var first = function (m) { if (m && m.t === '__full') { done = true; clearTimeout(to); onErr('full'); try { peer.destroy(); } catch (e) { /* 略過 */ } } };
+          var early = [];
+          var first = function (m) { if (m && m.t === '__full') { done = true; clearTimeout(to); onErr('full'); try { peer.destroy(); } catch (e) { /* 略過 */ } } else if (m && m.t !== '__ping') early.push(m); };
           dc.on('data', first);
-          setTimeout(function () { if (done) return; done = true; clearTimeout(to); dc.off && dc.off('data', first); onConn(wrap(peer, dc, 'guest', code)); }, 350);
+          setTimeout(function () {
+            if (done) return; done = true; clearTimeout(to); if (dc.off) dc.off('data', first);
+            var c = wrap(peer, dc, 'guest', code); onConn(c);
+            early.forEach(function (m) { if (c.onData) c.onData(m); });
+          }, 350);
         });
       });
       peer.on('error', function (e) { if (done) return; done = true; clearTimeout(to); onErr(e && e.type || 'error'); try { peer.destroy(); } catch (x) { /* 略過 */ } });
