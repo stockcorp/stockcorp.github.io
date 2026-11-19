@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title data-en="Memory Match | Free Online Card-Flip Pairs Game">記憶翻牌｜免費線上翻牌配對・考驗記憶力・全球排行榜</title>
+<meta name="description" content="免費線上記憶翻牌：一次翻開兩張牌，圖案一樣就配對成功，不一樣就蓋回去，記住每張牌的位置，用最短時間全部配完。4×4、6×6 兩種大小，成績上傳全球排行榜。">
+<meta name="google-adsense-account" content="ca-pub-3440199491716602">
+<meta name="theme-color" content="#071623">
+<meta property="og:title" content="記憶翻牌｜Stockcorp 遊戲大廳">
+<meta property="og:description" content="翻牌配對，考驗你的記憶力。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://stockcorp.github.io/memory/">
+<link rel="canonical" href="https://stockcorp.github.io/memory/">
+<link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/memory/?lang=zh">
+<link rel="alternate" hreflang="en" href="https://stockcorp.github.io/memory/?lang=en">
+<link rel="alternate" hreflang="x-default" href="https://stockcorp.github.io/memory/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%230ea5e9'/%3E%3Ctext x='50' y='70' font-size='60' text-anchor='middle'%3E%F0%9F%83%8F%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/shared/kit.css?v=1.0">
+<link rel="stylesheet" href="style.css?v=1.0">
+<script src="/shared/app.js?v=1.2"></script>
+<script src="/shared/kit.js?v=1.0"></script>
+<script src="/shared/games.js?v=1.7" data-game="memory" defer></script>
+<script src="/shared/lb.js?v=1.0" defer></script>
+</head>
+<body>
+<header class="k-top">
+  <div class="k-brand"><span class="k-logo">🃏</span><div><h1 data-en="Memory Match">記憶翻牌</h1><small id="sub"></small></div></div>
+  <div class="k-acts">
+    <button class="btn ghost" data-lang-toggle>EN</button>
+    <button class="btn ghost" id="bSound">🔊</button>
+    <a class="btn ghost" id="bLb" href="/leaderboard/?game=memory&mode=4x4" style="text-decoration:none">🏆</a>
+    <button class="btn" id="bNew" data-en="New">新局</button>
+  </div>
+</header>
+<main class="wrap">
+  <div class="bar"><span>⏱ <b id="clock">0:00</b></span><span><span data-en="Flips">翻牌</span> <b id="flips">0</b></span><span><span data-en="Pairs">配對</span> <b id="pairs">0</b>/<b id="total">8</b></span></div>
+  <div class="grid" id="grid"></div>
+</main>
+<section class="k-help"><article><h2 data-en="How to play">玩法</h2><p data-en="Turn over two cards at a time. Matching pictures stay face up; others flip back. Remember where everything is and match every pair to win.">一次翻開兩張牌：圖案一樣就留著，不一樣會自動蓋回去。記住每張牌的位置，把所有的牌都配對完就過關。</p></article><article><h2 data-en="Leaderboard">排行榜</h2><p data-en="Each size has its own leaderboard for completion time, measured by the server.">兩種大小各有排行榜，比的是完成時間（伺服器計時）。</p></article></section>
+<footer class="k-foot"><span data-en="Free to play. Scores you choose to submit appear on the global leaderboard.">免費遊玩；選擇上傳的成績會顯示在全球排行榜。</span>　<a href="privacy.html" data-en="Privacy policy">隱私權政策與廣告說明</a></footer>
+<div class="k-ov" id="ovNew"><div class="k-modal center"><h2 data-en="New game">開新局</h2><div class="k-chips lvs" id="lvChips"><button data-m="4x4" data-en="4×4 (8 pairs)">4×4（8 對）</button><button data-m="6x6" data-en="6×6 (18 pairs)">6×6（18 對）</button></div><div class="k-row"><button class="btn ghost" data-close data-en="Cancel">取消</button></div></div></div>
+<div class="k-ov" id="ovEnd" data-sticky><div class="k-modal center"><div class="k-big" id="endEmoji">🧠</div><h2 id="endTitle" data-en="All matched!">全部配對完成！</h2>
+  <div class="k-stats"><div><b id="endTime">0</b><span data-en="Time">時間</span></div><div><b id="endFlips">0</b><span data-en="Flips">翻牌次數</span></div></div>
+  <p class="mute" id="endBest"></p><div class="k-row"><button class="btn big" id="bAgain" data-en="Play again">再玩一次</button><button class="btn ghost" data-close data-en="Close">關閉</button></div></div></div>
+<script src="game.js?v=1.0" defer></script>
+</body>
+</html>

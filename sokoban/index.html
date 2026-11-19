@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title data-en="Sokoban | Free Online Box-Pushing Puzzle, 30 Levels">推箱子｜免費線上推箱子・30 關由易到難・全球排行榜</title>
+<meta name="description" content="免費線上推箱子：把所有箱子推到目標點上就過關，只能推不能拉。30 關由簡單到困難，每一關都由電腦驗證有解，可以悔棋與重來。破關數上傳全球排行榜。">
+<meta name="google-adsense-account" content="ca-pub-3440199491716602">
+<meta name="theme-color" content="#17110a">
+<meta property="og:title" content="推箱子｜Stockcorp 遊戲大廳">
+<meta property="og:description" content="只能推不能拉，把箱子推到定位。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://stockcorp.github.io/sokoban/">
+<link rel="canonical" href="https://stockcorp.github.io/sokoban/">
+<link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/sokoban/?lang=zh">
+<link rel="alternate" hreflang="en" href="https://stockcorp.github.io/sokoban/?lang=en">
+<link rel="alternate" hreflang="x-default" href="https://stockcorp.github.io/sokoban/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%23b45309'/%3E%3Ctext x='50' y='70' font-size='60' text-anchor='middle'%3E%F0%9F%93%A6%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/shared/kit.css?v=1.0">
+<link rel="stylesheet" href="style.css?v=1.0">
+<script src="/shared/app.js?v=1.2"></script>
+<script src="/shared/kit.js?v=1.0"></script>
+<script src="/shared/games.js?v=1.7" data-game="sokoban" defer></script>
+<script src="/shared/lb.js?v=1.0" defer></script>
+</head>
+<body>
+<header class="k-top">
+  <div class="k-brand"><span class="k-logo">📦</span><div><h1 data-en="Sokoban">推箱子</h1><small id="sub"></small></div></div>
+  <div class="k-acts">
+    <button class="btn ghost" data-lang-toggle>EN</button>
+    <button class="btn ghost" id="bSound">🔊</button>
+    <a class="btn ghost" id="bLb" href="/leaderboard/?game=sokoban&mode=levels" style="text-decoration:none">🏆</a>
+    <button class="btn ghost" id="bLevels" data-en="Levels">選關</button>
+  </div>
+</header>
+<main class="wrap">
+  <div class="bar"><span><span data-en="Level">第</span> <b id="lvNo">1</b>/30</span><span><span data-en="Moves">步數</span> <b id="moves">0</b></span><span><span data-en="Pushes">推</span> <b id="pushes">0</b></span></div>
+  <div class="boardWrap"><canvas id="cv"></canvas></div>
+  <div class="pad"><button class="btn ghost" id="bUndo" data-en="↶ Undo">↶ 悔棋</button><div class="dpad"><button data-d="u">▲</button><button data-d="l">◀</button><button data-d="d">▼</button><button data-d="r">▶</button></div><button class="btn ghost" id="bReset" data-en="⟲ Restart">⟲ 重來</button></div>
+</main>
+<section class="k-help"><article><h2 data-en="How to play">玩法</h2><p data-en="Move the worker with the arrow keys, the on-screen pad, or by swiping on the board. You can push one box at a time but never pull. Get every box onto a glowing target to clear the level. Undo or restart if you get stuck. Tap an empty floor square and the worker walks there.">用方向鍵、畫面上的方向按鈕，或在棋盤上滑動手指來移動工人。工人只能「推」箱子、不能拉，一次只能推一個。把所有箱子都推到發亮的目標點上就過關。推錯了可以悔棋或重來。點棋盤上的空地，工人會自己走過去。</p></article><article><h2 data-en="Leaderboard">排行榜</h2><p data-en="The 30 levels unlock in order; the leaderboard ranks how many you have cleared.">30 關依序解開，排行榜比的是你通過的關數。</p></article></section>
+<footer class="k-foot"><span data-en="Free to play. Scores you choose to submit appear on the global leaderboard.">免費遊玩；選擇上傳的成績會顯示在全球排行榜。</span>　<a href="privacy.html" data-en="Privacy policy">隱私權政策與廣告說明</a></footer>
+<div class="k-ov" id="ovLv"><div class="k-modal center"><h2 data-en="Choose a level">選擇關卡</h2><div class="lvgrid" id="lvGrid"></div><div class="k-row"><button class="btn ghost" data-close data-en="Close">關閉</button></div></div></div>
+<div class="k-ov" id="ovEnd" data-sticky><div class="k-modal center"><div class="k-big" id="endEmoji">📦</div><h2 id="endTitle" data-en="Level clear!">過關！</h2>
+  <div class="k-stats"><div><b id="endMoves">0</b><span data-en="Moves">步數</span></div><div><b id="endPushes">0</b><span data-en="Pushes">推箱</span></div></div>
+  <p class="mute" id="endBest"></p><div class="k-row"><button class="btn big" id="bAgain" data-en="Next level">下一關</button><button class="btn ghost" data-close data-en="Close">關閉</button></div></div></div>
+<script src="levels.js?v=1.0" defer></script>
+<script src="game.js?v=1.0" defer></script>
+</body>
+</html>

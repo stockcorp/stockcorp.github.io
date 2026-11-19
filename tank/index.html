@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title data-en="Tank Battle | Free Online Tank Defense Arcade Game">坦克大戰｜免費線上坦克大戰・守護基地・全球排行榜</title>
+<meta name="description" content="免費線上坦克大戰：駕駛坦克在磚牆迷宮中作戰，擊毀所有敵方坦克、守護下方的基地。磚牆可以打破、鋼牆打不壞、水面無法通過。每關 12 輛敵軍，分數上傳全球排行榜。">
+<meta name="google-adsense-account" content="ca-pub-3440199491716602">
+<meta name="theme-color" content="#0d1306">
+<meta property="og:title" content="坦克大戰｜Stockcorp 遊戲大廳">
+<meta property="og:description" content="守住基地、擊毀所有敵軍坦克。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://stockcorp.github.io/tank/">
+<link rel="canonical" href="https://stockcorp.github.io/tank/">
+<link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/tank/?lang=zh">
+<link rel="alternate" hreflang="en" href="https://stockcorp.github.io/tank/?lang=en">
+<link rel="alternate" hreflang="x-default" href="https://stockcorp.github.io/tank/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%234d7c0f'/%3E%3Ctext x='50' y='70' font-size='60' text-anchor='middle'%3E%F0%9F%AA%96%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/shared/kit.css?v=1.0">
+<link rel="stylesheet" href="style.css?v=1.0">
+<script src="/shared/app.js?v=1.2"></script>
+<script src="/shared/kit.js?v=1.0"></script>
+<script src="/shared/games.js?v=1.7" data-game="tank" defer></script>
+<script src="/shared/lb.js?v=1.0" defer></script>
+</head>
+<body>
+<header class="k-top">
+  <div class="k-brand"><span class="k-logo">🪖</span><div><h1 data-en="Tank Battle">坦克大戰</h1><small id="sub"></small></div></div>
+  <div class="k-acts">
+    <button class="btn ghost" data-lang-toggle>EN</button>
+    <button class="btn ghost" id="bSound">🔊</button>
+    <a class="btn ghost" id="bLb" href="/leaderboard/?game=tank&mode=classic" style="text-decoration:none">🏆</a>
+    <button class="btn" id="bNew" data-en="New">新局</button>
+  </div>
+</header>
+<main class="wrap">
+  <div class="bar"><span><span data-en="Score">分數</span> <b id="score">0</b></span><span><span data-en="Stage">關卡</span> <b id="stage">1</b></span><span><span data-en="Enemies">敵軍</span> <b id="foes">12</b></span><span id="lives">❤️❤️❤️</span></div>
+  <div class="stage"><canvas id="cv" width="520" height="520"></canvas><div class="msg" id="msg"></div></div>
+  <div class="ctl"><div class="dpad"><button data-d="0">▲</button><button data-d="3">◀</button><button data-d="2">▼</button><button data-d="1">▶</button></div><button class="fire" id="bFire" data-en="FIRE">開火</button></div>
+</main>
+<section class="k-help"><article><h2 data-en="How to play">玩法</h2><p data-en="Move with the arrow keys (or the pad at the bottom left) and fire with Space (or the Fire button). Destroy every enemy tank to clear the stage. If the enemy hits your base 💎 or you lose all your tanks, the game is over. Red enemy tanks take two hits.">用方向鍵（或畫面左下的方向鍵）移動坦克，空白鍵（或「開火」按鈕）發射砲彈。打掉所有敵軍坦克就過關；如果敵人打中下方的基地 💎 或你的坦克全部被擊毀，遊戲結束。紅色的敵軍要打兩下。</p></article><article><h2 data-en="Terrain">地形</h2><p data-en="Red brick walls can be shot through, grey steel cannot, blue water stops tanks but not shells, and green grass hides whatever is inside it.">紅色磚牆可以打穿，灰色鋼牆打不壞，藍色水面坦克過不去但砲彈可以飛過，綠色草叢可以躲在裡面。</p></article><article><h2 data-en="Leaderboard">排行榜</h2><p data-en="Your final score can go on the global leaderboard.">遊戲結束時的總分可以上傳全球排行榜。</p></article></section>
+<footer class="k-foot"><span data-en="Free to play. Scores you choose to submit appear on the global leaderboard.">免費遊玩；選擇上傳的成績會顯示在全球排行榜。</span>　<a href="privacy.html" data-en="Privacy policy">隱私權政策與廣告說明</a></footer>
+<div class="k-ov" id="ovEnd" data-sticky><div class="k-modal center"><div class="k-big" id="endEmoji">🪖</div><h2 id="endTitle" data-en="Game over">遊戲結束</h2>
+  <div class="k-stats"><div><b id="endScore">0</b><span data-en="Score">分數</span></div><div><b id="endStage">0</b><span data-en="Stage">關卡</span></div></div>
+  <p class="mute" id="endBest"></p><div class="k-row"><button class="btn big" id="bAgain" data-en="Play again">再玩一次</button><button class="btn ghost" data-close data-en="Close">關閉</button></div></div></div>
+<script src="game.js?v=1.0" defer></script>
+</body>
+</html>
