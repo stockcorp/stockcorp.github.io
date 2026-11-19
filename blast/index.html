@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title data-en="Block Blast | Free Online Block Puzzle with Global Leaderboard">方塊爆破｜免費線上方塊拖放消除遊戲・全球排行榜</title>
+<meta name="description" content="方塊爆破：把方塊拖進 8×8 的格子，排滿一整行或一整列就爆破消除，連續消除有連擊加分。不限時、慢慢想，手機電腦都能玩，分數上傳全球排行榜。">
+<meta name="google-adsense-account" content="ca-pub-3440199491716602">
+<meta name="theme-color" content="#1f1208">
+<meta property="og:title" content="方塊爆破｜Stockcorp 遊戲大廳">
+<meta property="og:description" content="把方塊拖進 8×8，排滿就爆破，挑戰全球排行榜。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://stockcorp.github.io/blast/">
+<link rel="canonical" href="https://stockcorp.github.io/blast/">
+<link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/blast/?lang=zh">
+<link rel="alternate" hreflang="en" href="https://stockcorp.github.io/blast/?lang=en">
+<link rel="alternate" hreflang="x-default" href="https://stockcorp.github.io/blast/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%23ea580c'/%3E%3Ctext x='50' y='70' font-size='60' text-anchor='middle'%3E%F0%9F%92%A5%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/shared/kit.css?v=1.0">
+<link rel="stylesheet" href="style.css?v=1.0">
+<script src="/shared/app.js?v=1.2"></script>
+<script src="/shared/kit.js?v=1.0"></script>
+<script src="/shared/games.js?v=1.5" data-game="blast" defer></script>
+<script src="/shared/lb.js?v=1.0" defer></script>
+</head>
+<body>
+<header class="k-top">
+  <div class="k-brand"><span class="k-logo">💥</span><div><h1 data-en="Block Blast">方塊爆破</h1><small data-en="Drag · fill · blast">拖進去、排滿、爆破</small></div></div>
+  <div class="k-acts">
+    <button class="btn ghost" data-lang-toggle>EN</button>
+    <button class="btn ghost" id="bSound">🔊</button>
+    <a class="btn ghost" href="/leaderboard/?game=blast&mode=classic" style="text-decoration:none">🏆</a>
+    <button class="btn" id="bNew" data-en="New">新局</button>
+  </div>
+</header>
+<main class="wrap">
+  <div class="scores"><div class="sc"><span data-en="SCORE">分數</span><b id="score">0</b></div><div class="sc"><span data-en="BEST">最高</span><b id="best">0</b></div><div class="sc"><span data-en="COMBO">連擊</span><b id="streak">0</b></div></div>
+  <div class="board" id="board"><canvas id="cv"></canvas><div class="pop" id="pop"></div></div>
+  <div class="tray" id="tray"><div class="slot" data-s="0"><canvas></canvas></div><div class="slot" data-s="1"><canvas></canvas></div><div class="slot" data-s="2"><canvas></canvas></div></div>
+  <p class="tip mute" data-en="Drag a piece onto the board. Pieces cannot be rotated.">按住下方的方塊拖到格子上放開；方塊不能旋轉。</p>
+</main>
+<section class="k-help">
+  <article><h2 data-en="How to play">玩法</h2><p data-en="You get three pieces at a time. Drag each one onto the 8×8 board. Fill a whole row or column and it blasts away. When all three are placed you get three more. The game ends when none of your pieces fit anywhere.">每次給你 3 個方塊，把它們拖到 8×8 的格子上。排滿一整橫行或一整直列就會爆破消除。3 個都放完會再給 3 個；剩下的方塊都放不下時遊戲結束。</p></article>
+  <article><h2 data-en="Scoring">計分</h2><p data-en="Each square placed is 1 point. Each line cleared is 80 points, with a bonus for clearing several at once. Keep clearing within three moves to build a combo that multiplies your points. Emptying the whole board gives 1000.">放下每一格 1 分；每消一行 80 分，一次消越多加越多。三步內持續有消除會累積連擊，分數加倍；把整個盤面清空再加 1000 分。</p></article>
+</section>
+<footer class="k-foot"><span data-en="Free to play. Scores you choose to submit appear on the global leaderboard.">免費遊玩；選擇上傳的成績會顯示在全球排行榜。</span>　<a href="privacy.html" data-en="Privacy policy">隱私權政策與廣告說明</a></footer>
+<div class="drag" id="drag"><canvas></canvas></div>
+<div class="k-ov" id="ovEnd" data-sticky><div class="k-modal center"><div class="k-big">💥</div><h2 data-en="No more room!">放不下了！</h2>
+  <div class="k-stats"><div><b id="endScore">0</b><span data-en="Score">分數</span></div><div><b id="endLines">0</b><span data-en="Lines">消除行數</span></div></div>
+  <p class="mute" id="endBest"></p><div class="k-row"><button class="btn big" id="bAgain" data-en="Play again">再玩一次</button></div></div></div>
+<script src="game.js?v=1.0" defer></script>
+</body>
+</html>

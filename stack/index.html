@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title data-en="Block Stacker | Free Online Falling-Block Puzzle with Global Leaderboard">方塊疊疊樂｜免費線上落下方塊消除遊戲・全球排行榜</title>
+<meta name="description" content="方塊疊疊樂：3 格、4 格、5 格的果凍方塊從上方落下，旋轉、移動排滿一整行就消除，越疊速度越快。手機觸控、電腦鍵盤都能玩，分數上傳全球排行榜。">
+<meta name="google-adsense-account" content="ca-pub-3440199491716602">
+<meta name="theme-color" content="#1b1020">
+<meta property="og:title" content="方塊疊疊樂｜Stockcorp 遊戲大廳">
+<meta property="og:description" content="果凍方塊落下排滿就消除，越疊越快，挑戰全球排行榜。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://stockcorp.github.io/stack/">
+<link rel="canonical" href="https://stockcorp.github.io/stack/">
+<link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/stack/?lang=zh">
+<link rel="alternate" hreflang="en" href="https://stockcorp.github.io/stack/?lang=en">
+<link rel="alternate" hreflang="x-default" href="https://stockcorp.github.io/stack/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%23db2777'/%3E%3Ctext x='50' y='70' font-size='60' text-anchor='middle'%3E%F0%9F%A7%B1%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/shared/kit.css?v=1.0">
+<link rel="stylesheet" href="style.css?v=1.0">
+<script src="/shared/app.js?v=1.2"></script>
+<script src="/shared/kit.js?v=1.0"></script>
+<script src="/shared/games.js?v=1.5" data-game="stack" defer></script>
+<script src="/shared/lb.js?v=1.0" defer></script>
+</head>
+<body>
+<header class="k-top">
+  <div class="k-brand"><span class="k-logo">🧱</span><div><h1 data-en="Block Stacker">方塊疊疊樂</h1><small data-en="Fill a row to clear it">排滿一整行就消除</small></div></div>
+  <div class="k-acts">
+    <button class="btn ghost" data-lang-toggle>EN</button>
+    <button class="btn ghost" id="bSound">🔊</button>
+    <a class="btn ghost" href="/leaderboard/?game=stack&mode=marathon" style="text-decoration:none">🏆</a>
+    <button class="btn ghost" id="bPause">⏸</button>
+  </div>
+</header>
+<main class="wrap">
+  <aside class="side l">
+    <div class="box"><span data-en="HOLD">保留</span><canvas id="cvHold" width="96" height="72"></canvas></div>
+    <div class="box st"><span data-en="SCORE">分數</span><b id="score">0</b></div>
+    <div class="box st"><span data-en="LEVEL">等級</span><b id="level">1</b></div>
+    <div class="box st"><span data-en="LINES">行數</span><b id="lines">0</b></div>
+  </aside>
+  <div class="well" id="well"><canvas id="cv"></canvas><div class="combo" id="combo"></div></div>
+  <aside class="side r">
+    <div class="box"><span data-en="NEXT">下一個</span><canvas id="cvNext" width="96" height="150"></canvas></div>
+    <div class="box st best"><span data-en="BEST">最高</span><b id="best">0</b></div>
+  </aside>
+  <div class="pad" id="pad">
+    <button data-k="hold" data-en="Hold">保留</button>
+    <button data-k="left">◀</button>
+    <button data-k="rot">⟳</button>
+    <button data-k="right">▶</button>
+    <button data-k="soft">▼</button>
+    <button data-k="drop" data-en="Drop">落下</button>
+  </div>
+  <p class="tip mute" data-en="Keyboard: ← → move · ↑/X rotate · Z rotate back · ↓ soft drop · Space drop · C hold · P pause. Touch: drag sideways to move, tap to rotate, flick down to drop.">鍵盤：← → 移動、↑/X 旋轉、Z 反轉、↓ 加速、空白鍵直接落下、C 保留、P 暫停。觸控：左右拖曳移動、點一下旋轉、往下快滑直接落下。</p>
+</main>
+<section class="k-help">
+  <article><h2 data-en="How to play">玩法</h2><p data-en="Jelly blocks made of 3, 4 or 5 squares fall into a 12-wide well. Move and rotate them so they fill complete rows — a full row disappears. Every 10 rows the level goes up and blocks fall faster. The game ends when the pile reaches the top.">由 3 格、4 格、5 格組成的果凍方塊會掉進 12 格寬的井裡。移動、旋轉讓它們排滿整行，滿的那一行就會消除。每消 10 行升一級，方塊掉得更快；疊到頂端就結束。</p></article>
+  <article><h2 data-en="Scoring">計分</h2><p data-en="1 / 2 / 3 / 4 / 5 rows at once: 100 / 300 / 500 / 800 / 1200 × level (up to ×10). Clearing on consecutive pieces adds a combo bonus. Fast dropping gives a few extra points.">一次消 1／2／3／4／5 行：100／300／500／800／1200 分 × 等級（最多 ×10）。連續幾個方塊都有消行會有連擊加分；快速落下也有少量加分。</p></article>
+</section>
+<footer class="k-foot"><span data-en="Free to play. Scores you choose to submit appear on the global leaderboard.">免費遊玩；選擇上傳的成績會顯示在全球排行榜。</span>　<a href="privacy.html" data-en="Privacy policy">隱私權政策與廣告說明</a></footer>
+
+<div class="k-ov" id="ovStart" data-sticky><div class="k-modal center"><div class="k-big">🧱</div><h2 data-en="Block Stacker">方塊疊疊樂</h2><p class="mute" id="bestLine"></p><div class="k-row"><button class="btn big" id="bStart" data-en="Start">開始</button></div></div></div>
+<div class="k-ov" id="ovPause" data-sticky><div class="k-modal center"><h2 data-en="Paused">暫停</h2><div class="k-row"><button class="btn big" id="bResume" data-en="Resume">繼續</button><button class="btn ghost" id="bQuit" data-en="Restart">重新開始</button></div></div></div>
+<div class="k-ov" id="ovEnd" data-sticky><div class="k-modal center"><div class="k-big">🧱</div><h2 data-en="Stacked to the top!">疊到頂了！</h2>
+  <div class="k-stats"><div><b id="endScore">0</b><span data-en="Score">分數</span></div><div><b id="endLines">0</b><span data-en="Rows">行數</span></div><div><b id="endLevel">1</b><span data-en="Level">等級</span></div></div>
+  <p class="mute" id="endBest"></p><div class="k-row"><button class="btn big" id="bAgain" data-en="Play again">再玩一次</button></div></div></div>
+<script src="game.js?v=1.0" defer></script>
+</body>
+</html>

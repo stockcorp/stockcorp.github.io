@@ -11,6 +11,11 @@ G = {
  'coin': ('金幣大亨', 'Coin Tycoon', '#1a1206', False),
  'racing': ('極速賽車', 'Turbo Racer', '#0a1020', False),
  'sudoku': ('數獨', 'Sudoku', '#0b1420', False),
+ 'stack': ('方塊疊疊樂', 'Block Stacker', '#1b1020', False),
+ 'blast': ('方塊爆破', 'Block Blast', '#1f1208', False),
+ 'link': ('麻將連連看', 'Mahjong Link', '#0c2016', False),
+ 'gomoku': ('五子棋', 'Gomoku', '#1a140c', True),
+ 'snake': ('貪吃蛇', 'Snake', '#0f1a0a', False),
 }
 T = '''<!DOCTYPE html>
 <html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">

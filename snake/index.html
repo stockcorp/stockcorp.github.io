@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title data-en="Snake | Free Online Classic Snake Game with Global Leaderboard">貪吃蛇｜免費線上經典貪吃蛇遊戲・全球排行榜</title>
+<meta name="description" content="免費線上貪吃蛇：吃水果變長、越吃越快，撞到牆或自己就結束。手機滑動或方向鍵、電腦方向鍵都能玩，分數上傳全球排行榜。">
+<meta name="google-adsense-account" content="ca-pub-3440199491716602">
+<meta name="theme-color" content="#0f1a0a">
+<meta property="og:title" content="貪吃蛇｜Stockcorp 遊戲大廳">
+<meta property="og:description" content="經典貪吃蛇，吃越多越長也越快，挑戰全球排行榜。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://stockcorp.github.io/snake/">
+<link rel="canonical" href="https://stockcorp.github.io/snake/">
+<link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/snake/?lang=zh">
+<link rel="alternate" hreflang="en" href="https://stockcorp.github.io/snake/?lang=en">
+<link rel="alternate" hreflang="x-default" href="https://stockcorp.github.io/snake/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%2365a30d'/%3E%3Ctext x='50' y='70' font-size='60' text-anchor='middle'%3E%F0%9F%90%8D%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/shared/kit.css?v=1.0">
+<link rel="stylesheet" href="style.css?v=1.0">
+<script src="/shared/app.js?v=1.2"></script>
+<script src="/shared/kit.js?v=1.0"></script>
+<script src="/shared/games.js?v=1.5" data-game="snake" defer></script>
+<script src="/shared/lb.js?v=1.0" defer></script>
+</head>
+<body>
+<header class="k-top">
+  <div class="k-brand"><span class="k-logo">🐍</span><div><h1 data-en="Snake">貪吃蛇</h1><small data-en="Eat, grow, don't crash">吃、變長、別撞到</small></div></div>
+  <div class="k-acts">
+    <button class="btn ghost" data-lang-toggle>EN</button>
+    <button class="btn ghost" id="bSound">🔊</button>
+    <a class="btn ghost" href="/leaderboard/?game=snake&mode=classic" style="text-decoration:none">🏆</a>
+    <button class="btn ghost" id="bPause">⏸</button>
+  </div>
+</header>
+<main class="wrap">
+  <div class="scores"><div class="sc"><span data-en="SCORE">分數</span><b id="score">0</b></div><div class="sc"><span data-en="LENGTH">長度</span><b id="len">3</b></div><div class="sc"><span data-en="BEST">最高</span><b id="best">0</b></div></div>
+  <div class="board" id="board"><canvas id="cv"></canvas></div>
+  <div class="dpad" id="dpad"><button data-d="0">▲</button><button data-d="3">◀</button><button data-d="2">▼</button><button data-d="1">▶</button></div>
+  <p class="tip mute" data-en="Swipe on the board or use the arrow buttons. Keyboard: arrows / WASD, P to pause.">在棋盤上滑動或按方向鍵換方向；鍵盤：方向鍵或 WASD，P 暫停。</p>
+</main>
+<section class="k-help">
+  <article><h2 data-en="How to play">玩法</h2><p data-en="Steer the snake to eat fruit. Each fruit makes it longer and a little faster. Hitting the wall or your own body ends the game. Golden fruit appears now and then for a short time — grab it for bonus points.">控制蛇去吃水果，每吃一個就變長、速度也會變快一點。撞到牆壁或自己的身體就結束。偶爾會出現限時的金色水果，吃到可以拿額外分數。</p></article>
+  <article><h2 data-en="Scoring">計分</h2><p data-en="Fruit is worth 10 points at the start, rising as the snake speeds up. Golden fruit is worth five times as much.">水果一開始 10 分，速度越快分數越高；金色水果是一般水果的 5 倍。</p></article>
+</section>
+<footer class="k-foot"><span data-en="Free to play. Scores you choose to submit appear on the global leaderboard.">免費遊玩；選擇上傳的成績會顯示在全球排行榜。</span>　<a href="privacy.html" data-en="Privacy policy">隱私權政策與廣告說明</a></footer>
+<div class="k-ov" id="ovStart" data-sticky><div class="k-modal center"><div class="k-big">🐍</div><h2 data-en="Snake">貪吃蛇</h2><p class="mute" id="bestLine"></p><div class="k-row"><button class="btn big" id="bStart" data-en="Start">開始</button></div></div></div>
+<div class="k-ov" id="ovPause" data-sticky><div class="k-modal center"><h2 data-en="Paused">暫停</h2><div class="k-row"><button class="btn big" id="bResume" data-en="Resume">繼續</button></div></div></div>
+<div class="k-ov" id="ovEnd" data-sticky><div class="k-modal center"><div class="k-big">💥</div><h2 data-en="Game over">撞到了！</h2>
+  <div class="k-stats"><div><b id="endScore">0</b><span data-en="Score">分數</span></div><div><b id="endLen">0</b><span data-en="Length">長度</span></div></div>
+  <p class="mute" id="endBest"></p><div class="k-row"><button class="btn big" id="bAgain" data-en="Play again">再玩一次</button></div></div></div>
+<script src="game.js?v=1.0" defer></script>
+</body>
+</html>

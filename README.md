@@ -65,3 +65,8 @@ App 內會：不載入 AdSense、隱藏遊戲切換列與說明區、套用瀏�
 - 新遊戲共用 `shared/kit.css`、`shared/kit.js`（標題列、彈窗、提示、音效、存檔）
 - 全部接上 Linode 排行榜（`shared/lb.js`），後端 `score.php` 的 GAMES 需同步更新
 - 王者大老二、麻將大亨加入線上對戰（`shared/net.js` v1.6 支援最多 4 人房間 `max: 4`）：房主電腦是裁判，空位由電腦補；真人 45／40 秒沒動作自動代打；線上對局不列入排行榜
+
+## 2026-11-20 新增 5 款遊戲（11–15）
+- 11 方塊疊疊樂 `/stack/`（12×22 井、3／4／5 格混合 10 種果凍方塊；刻意不用 Tetris 名稱與外觀）
+- 12 方塊爆破 `/blast/`（8×8 拖放）、13 麻將連連看 `/link/`（四川省規則）、14 五子棋 `/gomoku/`（含線上對戰）、15 貪吃蛇 `/snake/`
+- 後端 `score.php` 的 GAMES 已加入 stack、blast、link、gomoku、snake
