@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title data-en="Blackjack | Free Online 21 with Virtual Chips and Leaderboard">21點｜免費線上21點（Blackjack）・虛擬籌碼・全球排行榜</title>
+<meta name="description" content="免費線上 21 點：和莊家比大小，點數越接近 21 越好、超過就爆牌。可以要牌、停牌、加倍、分牌，Blackjack 賠 1.5 倍。用 1000 虛擬籌碼打 20 手，剩下的籌碼上傳全球排行榜。純娛樂，不涉及真錢。">
+<meta name="google-adsense-account" content="ca-pub-3440199491716602">
+<meta name="theme-color" content="#07170f">
+<meta property="og:title" content="21點｜Stockcorp 遊戲大廳">
+<meta property="og:description" content="比莊家更接近 21 點，純虛擬籌碼。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://stockcorp.github.io/blackjack/">
+<link rel="canonical" href="https://stockcorp.github.io/blackjack/">
+<link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/blackjack/?lang=zh">
+<link rel="alternate" hreflang="en" href="https://stockcorp.github.io/blackjack/?lang=en">
+<link rel="alternate" hreflang="x-default" href="https://stockcorp.github.io/blackjack/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%23166534'/%3E%3Ctext x='50' y='70' font-size='60' text-anchor='middle'%3E%F0%9F%82%A1%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/shared/kit.css?v=1.0">
+<link rel="stylesheet" href="style.css?v=1.0">
+<script src="/shared/app.js?v=1.2"></script>
+<script src="/shared/kit.js?v=1.0"></script>
+<script src="/shared/games.js?v=1.6" data-game="blackjack" defer></script>
+<script src="/shared/lb.js?v=1.0" defer></script>
+</head>
+<body>
+<header class="k-top">
+  <div class="k-brand"><span class="k-logo">🂡</span><div><h1 data-en="Blackjack">21點</h1><small id="sub"></small></div></div>
+  <div class="k-acts">
+    <button class="btn ghost" data-lang-toggle>EN</button>
+    <button class="btn ghost" id="bSound">🔊</button>
+    <a class="btn ghost" id="bLb" href="/leaderboard/?game=blackjack&mode=20hands" style="text-decoration:none">🏆</a>
+    <button class="btn" id="bNew" data-en="New">新局</button>
+  </div>
+</header>
+<main class="wrap">
+  <div class="bar"><span>🪙 <b id="chips">1000</b></span><span><span data-en="Hand">第</span> <b id="handNo">1</b>/20</span><span id="betShow"></span></div>
+  <div class="felt">
+    <div class="who"><span data-en="Dealer">莊家</span> <b id="dTot"></b></div><div class="row" id="dealer"></div>
+    <div class="msg" id="msg"></div>
+    <div id="mine"></div>
+  </div>
+  <div class="acts" id="betBar"><button class="chip" data-v="10">10</button><button class="chip" data-v="50">50</button><button class="chip" data-v="100">100</button><button class="chip" data-v="500">500</button><button class="btn ghost sm" id="bClr" data-en="Clear">清除</button><button class="btn big" id="bDeal" data-en="Deal">發牌</button></div>
+  <div class="acts" id="playBar" style="display:none"><button class="btn big" id="bHit" data-en="Hit">要牌</button><button class="btn big" id="bStand" data-en="Stand">停牌</button><button class="btn" id="bDouble" data-en="Double">加倍</button><button class="btn" id="bSplit" data-en="Split">分牌</button></div>
+</main>
+<section class="k-help"><article><h2 data-en="How to play">玩法</h2><p data-en="Place a bet, then deal. You and the dealer get two cards each, one of the dealer&#39;s face down. Aces count 1 or 11 and picture cards 10. Get closer to 21 than the dealer without going over. Hit to take a card, Stand to let the dealer play; the dealer must draw below 17.">先下注再發牌。你和莊家各拿兩張，莊家只翻開一張。A 算 1 或 11、J/Q/K 算 10。點數越接近 21 越好，超過 21 就爆牌輸掉。「要牌」再拿一張，「停牌」換莊家；莊家點數未滿 17 一定要補牌。</p></article><article><h2 data-en="Double and split">加倍與分牌</h2><p data-en="On your first two cards you may Double (double the bet, take exactly one more card). With a pair you may Split into two hands. A two-card 21 (Blackjack) pays 3 to 2.">拿到前兩張時可以「加倍」：賭注加倍、只再拿一張。兩張點數相同時可以「分牌」成兩手各自玩。前兩張就湊成 21（Blackjack）賠 1.5 倍。</p></article><article><h2 data-en="Leaderboard">排行榜</h2><p data-en="Play 20 hands starting with 1000 virtual chips; what you finish with goes on the leaderboard. Just for fun — the chips have no value.">用 1000 虛擬籌碼打 20 手，結束時剩下的籌碼上傳排行榜。純娛樂，籌碼沒有任何價值。</p></article></section>
+<footer class="k-foot"><span data-en="Free to play. Scores you choose to submit appear on the global leaderboard.">免費遊玩；選擇上傳的成績會顯示在全球排行榜。</span>　<a href="privacy.html" data-en="Privacy policy">隱私權政策與廣告說明</a></footer>
+<div class="k-ov" id="ovEnd" data-sticky><div class="k-modal center"><div class="k-big" id="endEmoji">🪙</div><h2 id="endTitle" data-en="20 hands done">20 手結束</h2>
+  <div class="k-stats"><div><b id="endChips">0</b><span data-en="Chips">籌碼</span></div><div><b id="endWins">0</b><span data-en="Hands won">贏的手數</span></div></div>
+  <p class="mute" id="endBest"></p><div class="k-row"><button class="btn big" id="bAgain" data-en="Play again">再玩一次</button><button class="btn ghost" data-close data-en="Close">關閉</button></div></div></div>
+<script src="game.js?v=1.0" defer></script>
+</body>
+</html>

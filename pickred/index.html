@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title data-en="Chinese Ten | Free Online Pick-Red (Jian Hong Dian) Card Game">撿紅點｜免費線上撿紅點・湊十吃牌・對戰三位電腦・全球排行榜</title>
+<meta name="description" content="免費線上撿紅點：台灣過年最經典的撲克牌遊戲，出牌湊成 10 點（10、J、Q、K 吃同點）就能把牌撿回來，紅色牌與黑桃 A 有分數。對戰三位電腦，打四局比總分，成績上傳全球排行榜。">
+<meta name="google-adsense-account" content="ca-pub-3440199491716602">
+<meta name="theme-color" content="#1a0d0b">
+<meta property="og:title" content="撿紅點｜Stockcorp 遊戲大廳">
+<meta property="og:description" content="湊十吃牌，撿越多紅點越好。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://stockcorp.github.io/pickred/">
+<link rel="canonical" href="https://stockcorp.github.io/pickred/">
+<link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/pickred/?lang=zh">
+<link rel="alternate" hreflang="en" href="https://stockcorp.github.io/pickred/?lang=en">
+<link rel="alternate" hreflang="x-default" href="https://stockcorp.github.io/pickred/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%23dc2626'/%3E%3Ctext x='50' y='70' font-size='60' text-anchor='middle'%3E%F0%9F%80%84%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/shared/kit.css?v=1.0">
+<link rel="stylesheet" href="style.css?v=1.0">
+<script src="/shared/app.js?v=1.2"></script>
+<script src="/shared/kit.js?v=1.0"></script>
+<script src="/shared/games.js?v=1.6" data-game="pickred" defer></script>
+<script src="/shared/lb.js?v=1.0" defer></script>
+</head>
+<body>
+<header class="k-top">
+  <div class="k-brand"><span class="k-logo">🀄</span><div><h1 data-en="Chinese Ten">撿紅點</h1><small id="sub"></small></div></div>
+  <div class="k-acts">
+    <button class="btn ghost" data-lang-toggle>EN</button>
+    <button class="btn ghost" id="bSound">🔊</button>
+    <a class="btn ghost" id="bLb" href="/leaderboard/?game=pickred&mode=normal" style="text-decoration:none">🏆</a>
+    <button class="btn" id="bNew" data-en="New">新局</button>
+  </div>
+</header>
+<main class="wrap">
+  <div class="opps" id="opps"></div>
+  <div class="felt"><div class="stock" id="stock"></div><div class="pool" id="pool"></div><div class="msg" id="msg"></div></div>
+  <div class="mine"><span id="myInfo"></span></div>
+  <div class="hand" id="hand"></div>
+</main>
+<section class="k-help"><article><h2 data-en="How to play">玩法</h2><p data-en="Each of four players gets 6 cards, 4 cards go face up on the table and the remaining 24 form the deck. On your turn play a card: if it makes 10 with a table card (A+9, 2+8, 3+7, 4+6, 5+5; 10, J, Q and K pair with the same rank), take both; otherwise leave it on the table. Then turn the top card of the deck — it captures the same way, or stays on the table.">四個人各拿 6 張牌，桌上翻開 4 張，其餘 24 張蓋著當牌堆。輪到你時先出一張手牌：如果能和桌上的牌湊成 10 點（A 配 9、2 配 8、3 配 7、4 配 6、5 配 5；10、J、Q、K 要配同點數），就把兩張撿回來；配不到就把牌放在桌上。接著翻開牌堆最上面一張，能配對也能撿走，不能就留在桌上。</p></article><article><h2 data-en="Scoring">計分</h2><p data-en="Only captured cards score: red aces 20, red 9 to K 10 each, red 2 to 8 face value, and the ace of spades 30 — 240 in all. If three cards of the same rank are on the table, the fourth captures all three.">只有撿回來的牌有分：紅色 A 20 分、紅色 9 到 K 各 10 分、紅色 2 到 8 照點數、黑桃 A 30 分，全部加起來 240 分。桌上有三張同點數時，用第四張可以一次吃走三張。</p></article><article><h2 data-en="Leaderboard">排行榜</h2><p data-en="A match is four deals; your total can go on the global leaderboard.">一場打四局，四局總分可以上傳全球排行榜。</p></article></section>
+<footer class="k-foot"><span data-en="Free to play. Scores you choose to submit appear on the global leaderboard.">免費遊玩；選擇上傳的成績會顯示在全球排行榜。</span>　<a href="privacy.html" data-en="Privacy policy">隱私權政策與廣告說明</a></footer>
+<div class="k-ov" id="ovNew"><div class="k-modal center"><h2 data-en="New game">開新局</h2><p class="mute" data-en="Computer level">電腦難度</p><div class="k-chips lvs" id="lvChips"><button data-m="easy" data-en="Easy">簡單</button><button data-m="normal" data-en="Normal">普通</button><button data-m="hard" data-en="Hard">困難</button></div><div class="k-row"><button class="btn ghost" data-close data-en="Cancel">取消</button></div></div></div>
+<div class="k-ov" id="ovRound"><div class="k-modal center"><h2 id="rdTitle"></h2><div id="rdTable"></div><div class="k-row"><button class="btn big" id="bNext" data-en="Next deal">下一局</button></div></div></div>
+<div class="k-ov" id="ovEnd" data-sticky><div class="k-modal center"><div class="k-big" id="endEmoji">🏆</div><h2 id="endTitle"></h2><div id="endTable"></div><p class="mute" id="endBest"></p><div class="k-row"><button class="btn big" id="bAgain" data-en="Play again">再玩一次</button><button class="btn ghost" data-close data-en="Close">關閉</button></div></div></div>
+<script src="game.js?v=1.0" defer></script>
+</body>
+</html>

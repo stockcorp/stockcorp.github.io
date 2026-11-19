@@ -1,0 +1,19 @@
+:root{--bg:#07170f;--panel:#0d2a1b;--line:#1a4a30;--accent:#4ade80;--accent2:#166534}
+.wrap{max-width:640px;margin:0 auto;padding:8px}
+.bar{display:flex;justify-content:center;align-items:center;gap:16px;margin-bottom:8px;font-size:15px;color:var(--mute)}
+.bar b{color:#fff;font-variant-numeric:tabular-nums}#betShow{color:#fde68a;font-weight:800}
+.felt{position:relative;border-radius:24px;background:radial-gradient(ellipse at 50% 30%,#1f7a4d,#0d3b26 75%);box-shadow:inset 0 0 40px rgba(0,0,0,.5);padding:14px 10px 18px;min-height:330px}
+.who{color:#d1fae5;font-size:14px;text-align:center}.who b{color:#fde68a}
+.row{display:flex;justify-content:center;gap:6px;min-height:90px;margin:6px 0}
+.msg{text-align:center;font-weight:900;font-size:20px;color:#fff;text-shadow:0 2px 6px #000;min-height:30px;margin:4px 0}
+.hd{border-radius:14px;padding:4px 6px;margin:4px auto;max-width:100%}.hd.act{background:rgba(250,204,21,.12);box-shadow:0 0 0 2px rgba(250,204,21,.6)}
+.hd .who{margin-bottom:2px}
+.c{width:58px;height:84px;border-radius:7px;background:#fff;border:1px solid #cbd5e1;box-shadow:0 2px 4px rgba(0,0,0,.4);font-family:ui-rounded,system-ui,sans-serif;font-weight:800;position:relative;color:#0f172a;flex:none;animation:in .25s}
+@keyframes in{from{transform:translateY(-20px);opacity:0}}
+.c.r{color:#dc2626}.c .tl{position:absolute;left:5px;top:4px;font-size:17px;line-height:1;text-align:center}.c .mid{position:absolute;right:5px;bottom:4px;font-size:28px;line-height:1}
+.c.dn{background:repeating-linear-gradient(45deg,#1e3a8a 0 4px,#1d4ed8 4px 8px);border:3px solid #fff}.c.dn>*{display:none}
+.acts{display:flex;justify-content:center;gap:8px;margin-top:10px;flex-wrap:wrap;align-items:center}
+.chip{width:54px;height:54px;border-radius:50%;border:4px dashed #fff;font-weight:900;color:#fff;cursor:pointer;font-size:14px;box-shadow:0 3px 6px rgba(0,0,0,.4)}
+.chip[data-v="10"]{background:#2563eb}.chip[data-v="50"]{background:#dc2626}.chip[data-v="100"]{background:#111827}.chip[data-v="500"]{background:#7c3aed}
+.chip:disabled{opacity:.35}
+@media (max-width:600px){.c{width:48px;height:70px}.c .mid{font-size:22px}.c .tl{font-size:14px}}

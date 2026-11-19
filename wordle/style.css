@@ -1,0 +1,14 @@
+:root{--bg:#0c1210;--panel:#16201c;--line:#2a3a33;--accent:#4ade80;--accent2:#16a34a}
+.wrap{max-width:500px;margin:0 auto;padding:10px}
+.bar{display:flex;justify-content:center;gap:18px;margin-bottom:10px;font-size:15px;color:var(--mute)}.bar b{color:#fff;font-variant-numeric:tabular-nums}
+.grid{display:grid;grid-template-rows:repeat(6,1fr);gap:6px;width:min(330px,80vw);margin:0 auto 14px}
+.grid .row{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.grid .row.shake{animation:sh .35s}@keyframes sh{20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
+.grid i{aspect-ratio:1;border:2px solid #3a4a43;border-radius:6px;display:flex;align-items:center;justify-content:center;font-style:normal;font-size:min(8vw,32px);font-weight:900;text-transform:uppercase;color:#fff}
+.grid i.f{border-color:#8fa39a;animation:pop .1s}@keyframes pop{50%{transform:scale(1.1)}}
+.g{background:#16a34a!important;border-color:#16a34a!important}.y{background:#ca8a04!important;border-color:#ca8a04!important}.n{background:#3f4945!important;border-color:#3f4945!important}
+.grid i.g,.grid i.y,.grid i.n{animation:flip .4s}@keyframes flip{0%{transform:rotateX(0)}50%{transform:rotateX(90deg)}100%{transform:rotateX(0)}}
+.kb{display:flex;flex-direction:column;gap:6px;user-select:none}
+.kb div{display:flex;justify-content:center;gap:5px}
+.kb button{flex:1;max-width:44px;height:54px;border:0;border-radius:6px;background:#56645e;color:#fff;font-weight:800;font-size:15px;text-transform:uppercase;cursor:pointer;touch-action:manipulation}
+.kb button.wide{max-width:68px;flex:1.5;font-size:12px}

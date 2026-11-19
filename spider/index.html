@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title data-en="Spider Solitaire | Free Online Spider with 1, 2 or 4 Suits">蜘蛛紙牌｜免費線上蜘蛛接龍・單色／雙色／四色・全球排行榜</title>
+<meta name="description" content="免費線上蜘蛛紙牌（蜘蛛接龍）：兩副牌 104 張，把同花色從 K 排到 A 就會自動收走，收完 8 組就贏。單色、雙色、四色三種難度，點一下自動移牌、無限悔棋。完成時間上傳全球排行榜。">
+<meta name="google-adsense-account" content="ca-pub-3440199491716602">
+<meta name="theme-color" content="#062016">
+<meta property="og:title" content="蜘蛛紙牌｜Stockcorp 遊戲大廳">
+<meta property="og:description" content="同花色 K 到 A 排好就收走。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://stockcorp.github.io/spider/">
+<link rel="canonical" href="https://stockcorp.github.io/spider/">
+<link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/spider/?lang=zh">
+<link rel="alternate" hreflang="en" href="https://stockcorp.github.io/spider/?lang=en">
+<link rel="alternate" hreflang="x-default" href="https://stockcorp.github.io/spider/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%2315803d'/%3E%3Ctext x='50' y='70' font-size='60' text-anchor='middle'%3E%F0%9F%95%B7%EF%B8%8F%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/shared/kit.css?v=1.0">
+<link rel="stylesheet" href="style.css?v=1.0">
+<script src="/shared/app.js?v=1.2"></script>
+<script src="/shared/kit.js?v=1.0"></script>
+<script src="/shared/games.js?v=1.6" data-game="spider" defer></script>
+<script src="/shared/lb.js?v=1.0" defer></script>
+</head>
+<body>
+<header class="k-top">
+  <div class="k-brand"><span class="k-logo">🕷️</span><div><h1 data-en="Spider Solitaire">蜘蛛紙牌</h1><small id="sub"></small></div></div>
+  <div class="k-acts">
+    <button class="btn ghost" data-lang-toggle>EN</button>
+    <button class="btn ghost" id="bSound">🔊</button>
+    <a class="btn ghost" id="bLb" href="/leaderboard/?game=spider&mode=1suit" style="text-decoration:none">🏆</a>
+    <button class="btn ghost" id="bUndo" data-en="↶ Undo">↶ 悔棋</button><button class="btn" id="bNew" data-en="New">新局</button>
+  </div>
+</header>
+<main class="wrap">
+  <div class="bar"><span>⏱ <b id="clock">0:00</b></span><span><span data-en="Moves">步數</span> <b id="moves">0</b></span><span><span data-en="Sets">完成</span> <b id="done">0</b>/8</span><button class="btn sm" id="bHint" data-en="💡 Hint">💡 提示</button></div>
+  <div id="table"></div>
+</main>
+<section class="k-help"><article><h2 data-en="How to play">玩法</h2><p data-en="A card can go on any card one rank higher, whatever the suit, but only an unbroken run of one suit can be moved together. Build a full King-to-Ace run in one suit and it is cleared automatically; clear all eight to win. Tap the deck at the top right to deal one card onto every column (no column may be empty).">十疊牌只要「點數少一」就能往下接（花色不限），但只有「同花色、連續」的一串可以一起搬。把同花色從 K 一路排到 A，這 13 張就會自動收走；收完 8 組就贏了。點右上角的牌堆會在每一疊各發一張（每一疊都要有牌才能發）。</p></article><article><h2 data-en="Levels">難度</h2><p data-en="One suit (spades only) is easiest, two suits adds hearts, and four suits is the hardest.">單色只有黑桃最簡單；雙色是黑桃加紅心；四色最難。</p></article><article><h2 data-en="Leaderboard">排行榜</h2><p data-en="Each level has its own leaderboard for the time from your first move to the finish, measured by the server.">三種難度各有排行榜，比的是從第一步到完成的時間（伺服器計時）。</p></article></section>
+<footer class="k-foot"><span data-en="Free to play. Scores you choose to submit appear on the global leaderboard.">免費遊玩；選擇上傳的成績會顯示在全球排行榜。</span>　<a href="privacy.html" data-en="Privacy policy">隱私權政策與廣告說明</a></footer>
+<div class="k-ov" id="ovNew"><div class="k-modal center"><h2 data-en="New game">開新局</h2><div class="k-chips lvs" id="lvChips"><button data-m="1suit" data-en="1 suit">單色</button><button data-m="2suit" data-en="2 suits">雙色</button><button data-m="4suit" data-en="4 suits">四色</button></div><div class="k-row"><button class="btn ghost" data-close data-en="Cancel">取消</button></div></div></div>
+<div class="k-ov" id="ovEnd" data-sticky><div class="k-modal center"><div class="k-big" id="endEmoji">🏆</div><h2 id="endTitle" data-en="Solved!">完成蜘蛛紙牌！</h2>
+  <div class="k-stats"><div><b id="endTime">0</b><span data-en="Time">時間</span></div><div><b id="endMoves">0</b><span data-en="Moves">步數</span></div></div>
+  <p class="mute" id="endBest"></p><div class="k-row"><button class="btn big" id="bAgain" data-en="Play again">再玩一次</button><button class="btn ghost" data-close data-en="Close">關閉</button></div></div></div>
+<script src="game.js?v=1.0" defer></script>
+</body>
+</html>
