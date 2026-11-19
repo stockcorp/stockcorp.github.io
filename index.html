@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Stockcorp 遊戲大廳｜免費網頁小遊戲：投資模擬、闖關、暗棋、象棋線上對戰</title>
-<meta name="description" content="免費網頁遊戲平台：我愛操盤手投資模擬、搶救AI教父橫向闖關、暗棋破壞神與象棋可對戰電腦或線上真人隨機配對。手機、平板、電腦都能玩。">
+<meta name="description" content="免費網頁遊戲平台：大老二、台灣麻將、暗棋、象棋、2048、數獨、賽車、金幣大亨、投資模擬與闖關遊戲，含全球排行榜與線上真人配對。手機、平板、電腦都能玩。">
 <meta name="google-adsense-account" content="ca-pub-3440199491716602">
 <meta name="theme-color" content="#0b0f19">
 <meta property="og:title" content="Stockcorp 遊戲大廳">
@@ -17,7 +17,7 @@
 <link rel="alternate" hreflang="x-default" href="https://stockcorp.github.io/">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%230b0f19'/%3E%3Ctext x='50' y='68' font-size='56' text-anchor='middle'%3E%F0%9F%8E%AE%3C/text%3E%3C/svg%3E">
 <script src="/shared/app.js?v=1.2"></script>
-<script src="/shared/games.js?v=1.4" data-game="lobby"></script>
+<script src="/shared/games.js?v=1.5" data-game="lobby"></script>
 <style>
 :root{--bg:#0b0f19;--card:#141a29;--line:#222b40;--txt:#e6ebf5;--mute:#8b97b3;--gold:#f5b83d;--green:#35e08a}
 *{box-sizing:border-box}
@@ -53,6 +53,13 @@ header p{margin:2px 0 0;color:var(--mute);font-size:13px}
 .body span{color:var(--mute);font-size:13.5px;line-height:1.5}
 .play{margin-top:auto;padding-top:10px;display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--gold);font-weight:700}
 .soon{opacity:.75}
+.cats{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 12px;margin:0 -2px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.cats::-webkit-scrollbar{display:none}
+.cats button{flex:none;display:flex;align-items:center;gap:6px;padding:9px 16px;border-radius:999px;border:1px solid var(--line);background:var(--card);color:#cfd8ea;font-size:14.5px;font-weight:700;cursor:pointer;font-family:inherit}
+.cats button b{font-weight:600;font-size:12px;color:var(--mute)}
+.cats button.on{background:var(--gold);border-color:var(--gold);color:#1a1205}
+.cats button.on b{color:#5a3f0a}
+.ccat{font-size:11.5px;color:var(--mute)}
 .foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);color:var(--mute);font-size:12.5px;line-height:1.7;display:flex;flex-wrap:wrap;gap:6px 16px;justify-content:space-between}
 .foot a{color:#cfd8ea}
 html.in-app .foot .web{display:none}
@@ -78,12 +85,13 @@ html.in-app .foot .web{display:none}
   </section>
 
   <div class="sec"><h3 data-en="All games">全部遊戲</h3><small id="cnt"></small></div>
+  <div class="cats" id="cats" role="tablist"></div>
   <div class="grid" id="grid"></div>
 
   <div class="sec" style="margin-top:26px"><h3 data-en="Leaderboard">全球排行榜</h3></div>
   <div class="grid">
     <a class="card" href="/leaderboard/"><div class="art" style="background:linear-gradient(135deg,#6b4e12,#141a29 75%)"><span class="tag on">● LIVE</span><span class="ico" style="background:#f5b83d">🏆</span></div>
-      <div class="body"><b data-en="Global Leaderboard">全球排行榜</b><span data-en="Highest net worth, fastest stage clears and fastest wins against the AI.">操盤手最高淨資產、AI教父最快通關、暗棋與象棋最快擊敗電腦。</span><span class="play"><span data-en="View rankings">看排名</span> <span>▶</span></span></div></a>
+      <div class="body"><b data-en="Global Leaderboard">全球排行榜</b><span data-en="Global rankings for all ten games: high scores, fastest clears and fastest wins.">十款遊戲的全球排名：最高分、最快通關、最快擊敗電腦。</span><span class="play"><span data-en="View rankings">看排名</span> <span>▶</span></span></div></a>
   </div>
 
   <footer class="foot">
@@ -94,22 +102,35 @@ html.in-app .foot .web{display:none}
 <script>
 (function () {
   'use strict';
-  var G = window.SC_GAMES || [], ONLINE = { darkchess: 1, xiangqi: 1 };
-  var grid = document.getElementById('grid');
+  var G = window.SC_GAMES || [], CATS = window.SC_CATS || [], ONLINE = { darkchess: 1, xiangqi: 1 }, LB = { trader: 1, ai: 1, darkchess: 1, xiangqi: 1, bigtwo: 1, mahjong: 1, '2048': 1, coin: 1, racing: 1, sudoku: 1 };
+  var grid = document.getElementById('grid'), cats = document.getElementById('cats');
+  var cur = (/[?&]cat=(\w+)/.exec(location.search) || [])[1] || 'all';
+  if (!CATS.some(function (c) { return c.id === cur; })) cur = 'all';
+  function catName(id, en) { for (var i = 0; i < CATS.length; i++) if (CATS[i].id === id) return en ? CATS[i].en : CATS[i].zh; return id; }
   function render() {
     var en = SC.lang === 'en';
-    grid.innerHTML = G.map(function (g) {
+    cats.innerHTML = CATS.map(function (c) {
+      var n = c.id === 'all' ? G.length : G.filter(function (g) { return (g.cat || []).indexOf(c.id) >= 0; }).length;
+      return '<button data-cat="' + c.id + '" class="' + (c.id === cur ? 'on' : '') + '">' + c.icon + ' ' + (en ? c.en : c.zh) + ' <b>' + n + '</b></button>';
+    }).join('');
+    var list = G.filter(function (g) { return cur === 'all' || (g.cat || []).indexOf(cur) >= 0; });
+    grid.innerHTML = list.map(function (g) {
       var t = g.icon.length === 1 && /[一-鿿]/.test(g.icon);
       var bg = 'linear-gradient(135deg,' + g.color + '55,#141a29 75%)';
       return '<a class="card" href="' + g.url + '">' +
         '<div class="art" style="background:' + bg + '"><span class="no">' + g.no + '</span>' +
-        (ONLINE[g.id] ? '<span class="tag on">● ' + (en ? 'Online PvP' : '線上對戰') + '</span>' : '') +
+        (ONLINE[g.id] ? '<span class="tag on">● ' + (en ? 'Online PvP' : '線上對戰') + '</span>' : LB[g.id] ? '<span class="tag">🏆 ' + (en ? 'Ranked' : '排行榜') + '</span>' : '') +
         '<span class="ico' + (t ? ' t' : '') + '" style="background:' + g.color + (g.fg ? ';color:' + g.fg + ';border-color:' + g.fg : '') + '">' + g.icon + '</span></div>' +
-        '<div class="body"><b>' + (en ? g.en : g.zh) + '</b><span>' + (en ? g.den : g.dzh) + '</span>' +
+        '<div class="body"><span class="ccat">' + (g.cat || []).map(function (c) { return catName(c, en); }).join('・') + '</span><b>' + (en ? g.en : g.zh) + '</b><span>' + (en ? g.den : g.dzh) + '</span>' +
         '<span class="play">' + (en ? 'Play now' : '開始遊戲') + ' <span>▶</span></span></div></a>';
     }).join('');
     document.getElementById('cnt').textContent = en ? G.length + ' games' : '共 ' + G.length + ' 款';
   }
+  cats.addEventListener('click', function (e) {
+    var b = e.target.closest('button[data-cat]'); if (!b) return;
+    cur = b.getAttribute('data-cat'); render();
+    try { var u = new URL(location.href); if (cur === 'all') u.searchParams.delete('cat'); else u.searchParams.set('cat', cur); history.replaceState(null, '', u.pathname + u.search); } catch (x) { /* 略過 */ }
+  });
   render(); SC.onLang(render);
 })();
 </script>

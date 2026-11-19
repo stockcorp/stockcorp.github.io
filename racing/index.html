@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title data-en="Turbo Racer | Free Online Racing Game with Global Leaderboard">極速賽車｜免費線上賽車遊戲・閃車吃金幣・全球排行榜</title>
+<meta name="description" content="極速賽車：高速公路無盡賽車，左右閃避車流、吃金幣、拿氮氣加速，越開越快。手機滑動、電腦方向鍵都能玩，分數上傳全球排行榜。Free endless highway racing game with a global leaderboard.">
+<meta name="google-adsense-account" content="ca-pub-3440199491716602">
+<meta name="theme-color" content="#0a1020">
+<meta property="og:title" content="極速賽車｜Stockcorp 遊戲大廳">
+<meta property="og:description" content="高速公路閃車、吃金幣、開氮氣，挑戰全球排行榜。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://stockcorp.github.io/racing/">
+<link rel="canonical" href="https://stockcorp.github.io/racing/">
+<link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/racing/?lang=zh">
+<link rel="alternate" hreflang="en" href="https://stockcorp.github.io/racing/?lang=en">
+<link rel="alternate" hreflang="x-default" href="https://stockcorp.github.io/racing/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%232563eb'/%3E%3Ctext x='50' y='70' font-size='60' text-anchor='middle'%3E%F0%9F%8F%8E%EF%B8%8F%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/shared/kit.css?v=1.0">
+<link rel="stylesheet" href="style.css?v=1.0">
+<script src="/shared/app.js?v=1.2"></script>
+<script src="/shared/kit.js?v=1.0"></script>
+<script src="/shared/games.js?v=1.5" data-game="racing" defer></script>
+<script src="/shared/lb.js?v=1.0" defer></script>
+</head>
+<body>
+<header class="k-top">
+  <div class="k-brand"><span class="k-logo">🏎️</span><div><h1 data-en="Turbo Racer">極速賽車</h1><small data-en="Dodge traffic · grab coins · hit the nitro">閃過車流、吃金幣、開氮氣</small></div></div>
+  <div class="k-acts">
+    <button class="btn ghost" data-lang-toggle>EN</button>
+    <button class="btn ghost" id="bSound">🔊</button>
+    <a class="btn ghost" href="/leaderboard/?game=racing&mode=endless" style="text-decoration:none">🏆</a>
+    <button class="btn ghost" id="bPause">⏸</button>
+  </div>
+</header>
+<main class="wrap">
+  <div class="stage" id="stage">
+    <canvas id="cv"></canvas>
+    <div class="hud"><div><span data-en="SCORE">分數</span><b id="score">0</b></div><div><span>km/h</span><b id="kmh">0</b></div><div><span data-en="COINS">金幣</span><b id="coins">0</b></div></div>
+    <button class="nitro" id="nitroBtn" type="button">⚡<span><i id="nitroFill"></i></span></button>
+    <div class="touch l" id="tl">◀</div><div class="touch r" id="tr">▶</div>
+  </div>
+  <p class="tip mute" data-en="Phone: tap or swipe left/right. Keyboard: ← → or A D, Space for nitro when the bar is full.">手機：點左右兩側或左右滑動；鍵盤：← → 或 A D，氮氣條滿了按空白鍵加速。</p>
+</main>
+<section class="k-help">
+  <article><h2 data-en="How to play">玩法</h2><p data-en="Change lanes to avoid the cars ahead. The road gets faster the longer you survive. One crash ends the run, unless you are boosting with nitro — then you smash right through.">切換車道閃過前方車輛，撐越久速度越快。撞到一次就結束，但開氮氣時是無敵的，可以直接撞飛前車。</p></article>
+  <article><h2 data-en="Scoring">計分</h2><p data-en="You score for distance, +50 for each coin, and +25 for each close pass. Every 10 coins fills the nitro bar; the blue bottles fill it instantly.">開越遠分數越高；每個金幣 +50，驚險擦身而過 +25。每吃 10 個金幣集滿氮氣，藍色氮氣瓶直接集滿。</p></article>
+</section>
+<footer class="k-foot"><span data-en="Free to play. Scores you choose to submit appear on the global leaderboard.">免費遊玩；選擇上傳的成績會顯示在全球排行榜。</span>　<a href="privacy.html" data-en="Privacy policy">隱私權政策與廣告說明</a></footer>
+
+<div class="k-ov" id="ovStart" data-sticky>
+  <div class="k-modal center">
+    <div class="k-big">🏎️</div>
+    <h2 data-en="Turbo Racer">極速賽車</h2>
+    <p data-en="Swipe or tap left/right to change lanes. Fill the nitro bar and tap ⚡ to boost.">左右滑動或點兩側換車道，氮氣滿了點 ⚡ 加速。</p>
+    <p class="mute" id="bestLine"></p>
+    <div class="k-row"><button class="btn big" id="bStart" data-en="Start">開始</button></div>
+  </div>
+</div>
+<div class="k-ov" id="ovPause" data-sticky>
+  <div class="k-modal center"><h2 data-en="Paused">暫停</h2><div class="k-row"><button class="btn big" id="bResume" data-en="Resume">繼續</button><button class="btn ghost" id="bQuit" data-en="Restart">重新開始</button></div></div>
+</div>
+<div class="k-ov" id="ovEnd" data-sticky>
+  <div class="k-modal center">
+    <div class="k-big">💥</div>
+    <h2 data-en="Crashed!">撞車了！</h2>
+    <div class="k-stats"><div><b id="endScore">0</b><span data-en="Score">分數</span></div><div><b id="endKm">0</b><span data-en="Distance (km)">距離 (km)</span></div><div><b id="endCoins">0</b><span data-en="Coins">金幣</span></div></div>
+    <p class="mute" id="endBest"></p>
+    <div class="k-row"><button class="btn big" id="bAgain" data-en="Race again">再來一場</button></div>
+  </div>
+</div>
+<script src="game.js?v=1.0" defer></script>
+</body>
+</html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title data-en="Sudoku | Free Online Sudoku with Global Leaderboard">數獨｜免費線上數獨・三種難度・全球排行榜</title>
+<meta name="description" content="免費線上數獨：簡單、中等、困難三種難度，筆記模式、錯誤提示、自動存檔，解題時間可上傳全球排行榜。Free online sudoku with pencil marks and a global leaderboard.">
+<meta name="google-adsense-account" content="ca-pub-3440199491716602">
+<meta name="theme-color" content="#0b1420">
+<meta property="og:title" content="數獨｜Stockcorp 遊戲大廳">
+<meta property="og:description" content="三種難度的線上數獨，比誰解得快。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://stockcorp.github.io/sudoku/">
+<link rel="canonical" href="https://stockcorp.github.io/sudoku/">
+<link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/sudoku/?lang=zh">
+<link rel="alternate" hreflang="en" href="https://stockcorp.github.io/sudoku/?lang=en">
+<link rel="alternate" hreflang="x-default" href="https://stockcorp.github.io/sudoku/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%230891b2'/%3E%3Ctext x='50' y='70' font-size='60' text-anchor='middle'%3E%F0%9F%A7%A9%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/shared/kit.css?v=1.0">
+<link rel="stylesheet" href="style.css?v=1.0">
+<script src="/shared/app.js?v=1.2"></script>
+<script src="/shared/kit.js?v=1.0"></script>
+<script src="/shared/games.js?v=1.5" data-game="sudoku" defer></script>
+<script src="/shared/lb.js?v=1.0" defer></script>
+</head>
+<body>
+<header class="k-top">
+  <div class="k-brand"><span class="k-logo">🧩</span><div><h1 data-en="Sudoku">數獨</h1><small data-en="Fill every row, column and box with 1–9">每行、每列、每宮都填入 1–9</small></div></div>
+  <div class="k-acts">
+    <button class="btn ghost" data-lang-toggle>EN</button>
+    <button class="btn ghost" id="bSound">🔊</button>
+    <a class="btn ghost" id="bLb" href="/leaderboard/?game=sudoku&mode=easy" style="text-decoration:none">🏆</a>
+    <button class="btn" id="bNew" data-en="New">新局</button>
+  </div>
+</header>
+<main class="wrap">
+  <div class="bar">
+    <span class="lv" id="lvName"></span>
+    <span><span data-en="Mistakes">錯誤</span> <b id="mist">0</b>/3</span>
+    <span>⏱ <b id="clock">0:00</b></span>
+  </div>
+  <div class="grid" id="grid" aria-label="sudoku"></div>
+  <div class="tools">
+    <button class="tb" id="tUndo">↶<span data-en="Undo">復原</span></button>
+    <button class="tb" id="tErase">⌫<span data-en="Erase">清除</span></button>
+    <button class="tb" id="tNote">✏️<span data-en="Notes">筆記</span><i id="noteOn">OFF</i></button>
+    <button class="tb" id="tHint">💡<span data-en="Hint">提示</span></button>
+  </div>
+  <div class="pad" id="pad"></div>
+  <p class="tip mute" data-en="Using a hint keeps the game going but removes it from the leaderboard.">使用提示可以繼續玩，但這局就不列入排行榜。</p>
+</main>
+<section class="k-help">
+  <article><h2 data-en="Rules">規則</h2><p data-en="Fill the 9×9 grid so that every row, every column and every 3×3 box contains the digits 1 to 9 exactly once. Each puzzle has exactly one solution.">把 9×9 的格子填滿，讓每一橫行、每一直列、每一個 3×3 小宮都剛好出現 1 到 9 各一次。每題都只有唯一解。</p></article>
+  <article><h2 data-en="Controls">操作</h2><p data-en="Tap a cell, then a number. Notes mode writes small pencil marks. On a keyboard use arrows, 1–9, Backspace, and N for notes. Three mistakes end the game.">點一格再點數字；開啟筆記可以寫小字候選數。鍵盤可用方向鍵、1–9、Backspace，N 切換筆記。錯 3 次就結束。</p></article>
+  <article><h2 data-en="Leaderboard">排行榜</h2><p data-en="Solve without hints and your time can go on the global leaderboard. The server measures the time from the start of the game, so pausing does not stop it.">不用提示解完，就能把時間上傳全球排行榜。時間由伺服器從開局起計算，暫停不會停止計時。</p></article>
+</section>
+<footer class="k-foot"><span data-en="Free to play. Scores you choose to submit appear on the global leaderboard.">免費遊玩；選擇上傳的成績會顯示在全球排行榜。</span>　<a href="privacy.html" data-en="Privacy policy">隱私權政策與廣告說明</a></footer>
+
+<div class="k-ov" id="ovNew">
+  <div class="k-modal center">
+    <h2 data-en="New puzzle">開新題目</h2>
+    <div class="k-chips lvs" id="lvChips"></div>
+    <div class="k-row"><button class="btn ghost" data-close data-en="Cancel">取消</button></div>
+  </div>
+</div>
+<div class="k-ov" id="ovEnd" data-sticky>
+  <div class="k-modal center">
+    <div class="k-big" id="endEmoji">🎉</div>
+    <h2 id="endTitle"></h2>
+    <div class="k-stats"><div><b id="endTime">0:00</b><span data-en="Time">時間</span></div><div><b id="endMist">0</b><span data-en="Mistakes">錯誤</span></div></div>
+    <p id="endNote" class="mute"></p>
+    <div class="k-row"><button class="btn big" id="bAgain" data-en="Next puzzle">下一題</button><button class="btn ghost" data-close data-en="View board">看盤面</button></div>
+  </div>
+</div>
+<script src="game.js?v=1.0" defer></script>
+</body>
+</html>

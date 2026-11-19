@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title data-en="Big Two King | Free Online Big Two (Taiwan Rules) with Global Leaderboard">王者大老二｜免費線上大老二・台灣規則・對戰電腦・全球排行榜</title>
+<meta name="description" content="王者大老二：台灣規則線上大老二，單張、對子、順子、葫蘆、鐵支、同花順，四人桌對戰三位電腦，8 局總分上傳全球排行榜。Free online Big Two (Taiwanese rules) against three AI players.">
+<meta name="google-adsense-account" content="ca-pub-3440199491716602">
+<meta name="theme-color" content="#0d2a1d">
+<meta property="og:title" content="王者大老二｜Stockcorp 遊戲大廳">
+<meta property="og:description" content="台灣規則大老二，對戰三位電腦，8 局一場拚總分。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://stockcorp.github.io/bigtwo/">
+<link rel="canonical" href="https://stockcorp.github.io/bigtwo/">
+<link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/bigtwo/?lang=zh">
+<link rel="alternate" hreflang="en" href="https://stockcorp.github.io/bigtwo/?lang=en">
+<link rel="alternate" hreflang="x-default" href="https://stockcorp.github.io/bigtwo/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%237c3aed'/%3E%3Ctext x='50' y='70' font-size='60' text-anchor='middle'%3E%F0%9F%83%8F%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/shared/kit.css?v=1.0">
+<link rel="stylesheet" href="style.css?v=1.0">
+<script src="/shared/app.js?v=1.2"></script>
+<script src="/shared/kit.js?v=1.0"></script>
+<script src="/shared/games.js?v=1.5" data-game="bigtwo" defer></script>
+<script src="/shared/lb.js?v=1.0" defer></script>
+</head>
+<body>
+<header class="k-top">
+  <div class="k-brand"><span class="k-logo">🃏</span><div><h1 data-en="Big Two King">王者大老二</h1><small id="sub"></small></div></div>
+  <div class="k-acts">
+    <button class="btn ghost" data-lang-toggle>EN</button>
+    <button class="btn ghost" id="bSound">🔊</button>
+    <a class="btn ghost" id="bLb" href="/leaderboard/?game=bigtwo&mode=normal" style="text-decoration:none">🏆</a>
+    <button class="btn ghost" id="bRules" data-en="Rules">規則</button>
+    <button class="btn" id="bNew" data-en="New match">新的一場</button>
+  </div>
+</header>
+<main class="table" id="table">
+  <div class="seat s2" id="seat2"></div>
+  <div class="seat s3" id="seat3"></div>
+  <div class="seat s1" id="seat1"></div>
+  <div class="center" id="center"><div class="trick" id="trick"></div><div class="msg" id="msg"></div></div>
+  <div class="me">
+    <div class="meBar"><div class="who" id="meInfo"></div><div class="acts">
+      <button class="btn ghost sm" id="bSort" data-en="Sort">整理</button>
+      <button class="btn ghost sm" id="bHint" data-en="Hint">提示</button>
+      <button class="btn ghost" id="bPass" data-en="Pass">Pass</button>
+      <button class="btn" id="bPlay" data-en="Play">出牌</button>
+    </div></div>
+    <div class="hand" id="hand"></div>
+  </div>
+</main>
+<section class="k-help">
+  <article><h2 data-en="Card order">牌的大小</h2><p data-en="3 is lowest and 2 is highest: 3 4 5 6 7 8 9 10 J Q K A 2. Suits from high to low: ♠ ♥ ♦ ♣ (Taiwan order). Whoever holds ♣3 leads the first trick and must play it.">由小到大：3 4 5 6 7 8 9 10 J Q K A 2；花色由大到小：♠黑桃 ♥紅心 ♦方塊 ♣梅花（台灣規則）。拿到梅花 3 的人先出，而且第一手必須包含梅花 3。</p></article>
+  <article><h2 data-en="Hands">牌型</h2><p data-en="Single, Pair, and five-card hands: Straight &lt; Full House &lt; Four of a Kind &lt; Straight Flush. 2-3-4-5-6 is the biggest straight, then A-2-3-4-5, then 10-J-Q-K-A. Four of a Kind and Straight Flush are bombs: they can beat any single, pair or straight.">單張、對子、五張牌型：順子 &lt; 葫蘆 &lt; 鐵支 &lt; 同花順。順子以 2-3-4-5-6 最大，其次 A-2-3-4-5，再來 10-J-Q-K-A。鐵支與同花順是「炸彈」，可以壓任何單張、對子、順子、葫蘆。</p></article>
+  <article><h2 data-en="Scoring">計分</h2><p data-en="When someone goes out, every other player loses one point per card left: ×2 with 8–9 cards, ×3 with 10–12, ×4 if they never played. The winner collects it all. A match is 8 deals; your total goes to the leaderboard.">有人出完牌時，其他人剩幾張扣幾分：剩 8–9 張 ×2、10–12 張 ×3、一張都沒出 ×4，全部給贏家。一場 8 局，總分可上傳排行榜。</p></article>
+</section>
+<footer class="k-foot"><span data-en="Free to play. Scores you choose to submit appear on the global leaderboard.">免費遊玩；選擇上傳的成績會顯示在全球排行榜。</span>　<a href="privacy.html" data-en="Privacy policy">隱私權政策與廣告說明</a></footer>
+
+<div class="k-ov" id="ovNew">
+  <div class="k-modal center">
+    <h2 data-en="New match (8 deals)">新的一場（8 局）</h2>
+    <p class="mute" data-en="Choose the computer players' strength.">選擇電腦對手的強度</p>
+    <div class="k-chips lvs" id="lvChips"></div>
+    <div class="k-row"><button class="btn ghost" data-close data-en="Cancel">取消</button></div>
+  </div>
+</div>
+<div class="k-ov" id="ovHand" data-sticky>
+  <div class="k-modal center">
+    <h2 id="hTitle"></h2>
+    <table class="res" id="hTable"></table>
+    <div class="k-row"><button class="btn big" id="bNext"></button></div>
+  </div>
+</div>
+<div class="k-ov" id="ovRules"><div class="k-modal wide"><h2 data-en="Rules">規則</h2><div id="rulesBody"></div><div class="k-row"><button class="btn" data-close data-en="Got it">知道了</button></div></div></div>
+<script src="game.js?v=1.0" defer></script>
+</body>
+</html>
