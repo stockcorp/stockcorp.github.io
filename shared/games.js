@@ -16,7 +16,12 @@
     { id: '2048', no: '07', url: '/2048/', icon: '🔢', color: '#edc22e', cat: ['puzzle'], zh: '2048', en: '2048', dzh: '滑動合併數字，挑戰 2048 以上', den: 'Slide and merge tiles to reach 2048' },
     { id: 'coin', no: '08', url: '/coin/', icon: '💰', color: '#d97706', cat: ['sim'], zh: '金幣大亨', en: 'Coin Tycoon', dzh: '10 分鐘急速經營，看誰賺最多', den: '10-minute idle business race' },
     { id: 'racing', no: '09', url: '/racing/', icon: '🏎️', color: '#2563eb', cat: ['racing', 'action'], zh: '極速賽車', en: 'Turbo Racer', dzh: '高速公路閃車、吃金幣、開氮氣', den: 'Dodge traffic, grab coins, hit the nitro' },
-    { id: 'sudoku', no: '10', url: '/sudoku/', icon: '🧩', color: '#0891b2', cat: ['puzzle'], zh: '數獨', en: 'Sudoku', dzh: '三種難度，筆記模式，比誰解得快', den: 'Three levels, pencil marks, beat the clock' }
+    { id: 'sudoku', no: '10', url: '/sudoku/', icon: '🧩', color: '#0891b2', cat: ['puzzle'], zh: '數獨', en: 'Sudoku', dzh: '三種難度，筆記模式，比誰解得快', den: 'Three levels, pencil marks, beat the clock' },
+    { id: 'stack', no: '11', url: '/stack/', icon: '🧱', color: '#db2777', cat: ['puzzle', 'action'], zh: '方塊疊疊樂', en: 'Block Stacker', dzh: '落下的方塊排滿一行就消除，越疊越快', den: 'Fill rows with falling blocks as the pace speeds up' },
+    { id: 'blast', no: '12', url: '/blast/', icon: '💥', color: '#ea580c', cat: ['puzzle'], zh: '方塊爆破', en: 'Block Blast', dzh: '把方塊拖進 8×8，排滿就爆破，慢慢想不趕時間', den: 'Drag pieces into an 8×8 grid and clear lines' },
+    { id: 'link', no: '13', url: '/link/', icon: '🀄', color: '#16a34a', cat: ['puzzle', 'board'], zh: '麻將連連看', en: 'Mahjong Link', dzh: '找出能連線的兩張相同牌，清空整個盤面', den: 'Connect matching tiles and clear the board' },
+    { id: 'gomoku', no: '14', url: '/gomoku/', icon: '⚫', color: '#a16207', fg: '#a16207', cat: ['board'], zh: '五子棋', en: 'Gomoku', dzh: '先連成五子就贏，對戰電腦或線上真人', den: 'Five in a row vs. AI or real players online' },
+    { id: 'snake', no: '15', url: '/snake/', icon: '🐍', color: '#65a30d', cat: ['action'], zh: '貪吃蛇', en: 'Snake', dzh: '經典貪吃蛇，吃越多越長也越快', den: 'Classic snake — eat, grow and speed up' }
   ];
   window.SC_CATS = [
     { id: 'all', zh: '全部', en: 'All', icon: '🎮' },

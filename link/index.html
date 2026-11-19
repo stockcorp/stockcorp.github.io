@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title data-en="Mahjong Link | Free Online Mahjong Tile Matching with Global Leaderboard">麻將連連看｜免費線上麻將配對消除・三種難度・全球排行榜</title>
+<meta name="description" content="麻將連連看：找出兩張相同、而且能用不超過兩個轉彎的線連起來的麻將牌，消掉整個盤面。簡單、普通、困難三種難度，比誰清得快，成績上傳全球排行榜。">
+<meta name="google-adsense-account" content="ca-pub-3440199491716602">
+<meta name="theme-color" content="#0c2016">
+<meta property="og:title" content="麻將連連看｜Stockcorp 遊戲大廳">
+<meta property="og:description" content="找出能連線的兩張相同麻將牌，清空整個盤面。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://stockcorp.github.io/link/">
+<link rel="canonical" href="https://stockcorp.github.io/link/">
+<link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/link/?lang=zh">
+<link rel="alternate" hreflang="en" href="https://stockcorp.github.io/link/?lang=en">
+<link rel="alternate" hreflang="x-default" href="https://stockcorp.github.io/link/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%2316a34a'/%3E%3Ctext x='50' y='70' font-size='60' text-anchor='middle'%3E%F0%9F%80%84%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/shared/kit.css?v=1.0">
+<link rel="stylesheet" href="style.css?v=1.0">
+<script src="/shared/app.js?v=1.2"></script>
+<script src="/shared/kit.js?v=1.0"></script>
+<script src="/shared/games.js?v=1.5" data-game="link" defer></script>
+<script src="/shared/lb.js?v=1.0" defer></script>
+</head>
+<body>
+<header class="k-top">
+  <div class="k-brand"><span class="k-logo">🀄</span><div><h1 data-en="Mahjong Link">麻將連連看</h1><small id="sub"></small></div></div>
+  <div class="k-acts">
+    <button class="btn ghost" data-lang-toggle>EN</button>
+    <button class="btn ghost" id="bSound">🔊</button>
+    <a class="btn ghost" id="bLb" href="/leaderboard/?game=link&mode=normal" style="text-decoration:none">🏆</a>
+    <button class="btn" id="bNew" data-en="New">新局</button>
+  </div>
+</header>
+<main class="wrap">
+  <div class="bar">
+    <span>⏱ <b id="clock">0:00</b></span>
+    <span><span data-en="Left">剩下</span> <b id="left">0</b></span>
+    <button class="btn ghost sm" id="bHint">💡 <span data-en="Hint">提示</span> (<b id="hints">3</b>)</button>
+    <button class="btn ghost sm" id="bShuf">🔀 <span data-en="Shuffle">洗牌</span> (<b id="shufs">2</b>)</button>
+  </div>
+  <div class="board" id="board"><div class="grid" id="grid"></div><svg class="path" id="path"></svg></div>
+  <p class="tip mute" data-en="Tap two identical tiles that can be joined by a line with at most two turns. The line may go around the outside of the board.">點兩張相同的牌，如果能用「最多轉兩個彎」的線連起來就會消掉；線可以繞到盤面外圍。</p>
+</main>
+<section class="k-help">
+  <article><h2 data-en="Rules">規則</h2><p data-en="Pick two matching tiles. They vanish if a path of at most three straight segments (two turns) joins them without crossing other tiles. Clear every tile to win. If no pair can be joined, the remaining tiles are shuffled automatically.">選兩張一樣的牌，只要能用不超過三段直線（兩個轉彎）、不穿過其他牌的路線連起來就會消除。把所有牌消光就過關；如果已經沒有能連的牌，剩下的牌會自動重新洗牌。</p></article>
+  <article><h2 data-en="Leaderboard">排行榜</h2><p data-en="Your clear time is measured by the server from the start of the game and can be submitted to the global leaderboard for each difficulty.">清空盤面的時間由伺服器從開局開始計算，可以上傳各難度的全球排行榜。</p></article>
+</section>
+<footer class="k-foot"><span data-en="Free to play. Scores you choose to submit appear on the global leaderboard.">免費遊玩；選擇上傳的成績會顯示在全球排行榜。</span>　<a href="privacy.html" data-en="Privacy policy">隱私權政策與廣告說明</a></footer>
+<div class="k-ov" id="ovNew"><div class="k-modal center"><h2 data-en="New game">開新局</h2><div class="k-chips lvs" id="lvChips"></div><div class="k-row"><button class="btn ghost" data-close data-en="Cancel">取消</button></div></div></div>
+<div class="k-ov" id="ovEnd" data-sticky><div class="k-modal center"><div class="k-big">🎉</div><h2 data-en="Board cleared!">全部清空！</h2>
+  <div class="k-stats"><div><b id="endTime">0:00</b><span data-en="Time">時間</span></div><div><b id="endLv">-</b><span data-en="Level">難度</span></div></div>
+  <p class="mute" id="endBest"></p><div class="k-row"><button class="btn big" id="bAgain" data-en="Play again">再玩一局</button></div></div></div>
+<script src="game.js?v=1.0" defer></script>
+</body>
+</html>
