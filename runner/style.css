@@ -1,0 +1,6 @@
+:root{--bg:#1a0f08;--panel:#2a190c;--line:#4a2d14;--accent:#fdba74;--accent2:#ea580c}
+.wrap{max-width:760px;margin:0 auto;padding:8px}
+.stage{position:relative}
+#cv{width:100%;display:block;border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,.5);touch-action:none;user-select:none;-webkit-user-select:none}
+.msg{position:absolute;left:0;right:0;top:36%;text-align:center;font-weight:900;font-size:20px;color:#7c2d12;pointer-events:none}
+.ctl{display:flex;justify-content:space-between;gap:12px;margin-top:12px}.ctl .btn{flex:1;height:64px;font-size:18px;touch-action:none;user-select:none;-webkit-user-select:none}
