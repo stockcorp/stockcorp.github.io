@@ -3,7 +3,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://stockcorp.github.io/</loc>
-    <lastmod>2026-11-19</lastmod>
+    <lastmod>2026-11-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/?lang=zh"/>
@@ -12,7 +12,7 @@
   </url>
   <url>
     <loc>https://stockcorp.github.io/leaderboard/</loc>
-    <lastmod>2026-11-19</lastmod>
+    <lastmod>2026-11-20</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/leaderboard/?lang=zh"/>
@@ -210,7 +210,7 @@
   </url>
   <url>
     <loc>https://stockcorp.github.io/stack/</loc>
-    <lastmod>2026-11-19</lastmod>
+    <lastmod>2026-11-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/stack/?lang=zh"/>
@@ -219,7 +219,7 @@
   </url>
   <url>
     <loc>https://stockcorp.github.io/stack/privacy.html</loc>
-    <lastmod>2026-11-19</lastmod>
+    <lastmod>2026-11-20</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/stack/privacy.html?lang=zh"/>
@@ -228,7 +228,7 @@
   </url>
   <url>
     <loc>https://stockcorp.github.io/blast/</loc>
-    <lastmod>2026-11-19</lastmod>
+    <lastmod>2026-11-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/blast/?lang=zh"/>
@@ -237,7 +237,7 @@
   </url>
   <url>
     <loc>https://stockcorp.github.io/blast/privacy.html</loc>
-    <lastmod>2026-11-19</lastmod>
+    <lastmod>2026-11-20</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/blast/privacy.html?lang=zh"/>
@@ -246,7 +246,7 @@
   </url>
   <url>
     <loc>https://stockcorp.github.io/link/</loc>
-    <lastmod>2026-11-19</lastmod>
+    <lastmod>2026-11-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/link/?lang=zh"/>
@@ -255,7 +255,7 @@
   </url>
   <url>
     <loc>https://stockcorp.github.io/link/privacy.html</loc>
-    <lastmod>2026-11-19</lastmod>
+    <lastmod>2026-11-20</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/link/privacy.html?lang=zh"/>
@@ -264,7 +264,7 @@
   </url>
   <url>
     <loc>https://stockcorp.github.io/gomoku/</loc>
-    <lastmod>2026-11-19</lastmod>
+    <lastmod>2026-11-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/gomoku/?lang=zh"/>
@@ -273,7 +273,7 @@
   </url>
   <url>
     <loc>https://stockcorp.github.io/gomoku/privacy.html</loc>
-    <lastmod>2026-11-19</lastmod>
+    <lastmod>2026-11-20</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/gomoku/privacy.html?lang=zh"/>
@@ -282,7 +282,7 @@
   </url>
   <url>
     <loc>https://stockcorp.github.io/snake/</loc>
-    <lastmod>2026-11-19</lastmod>
+    <lastmod>2026-11-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/snake/?lang=zh"/>
@@ -291,7 +291,7 @@
   </url>
   <url>
     <loc>https://stockcorp.github.io/snake/privacy.html</loc>
-    <lastmod>2026-11-19</lastmod>
+    <lastmod>2026-11-20</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/snake/privacy.html?lang=zh"/>
