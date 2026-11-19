@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title data-en="Hearts | Free Online Hearts Card Game vs 3 Computer Players">紅心大戰｜免費線上紅心大戰（Hearts）・對戰三位電腦・全球排行榜</title>
+<meta name="description" content="免費線上紅心大戰：四人吃墩，每張紅心 1 分、黑桃 Q 13 分，分數越少越好；吃光全部 26 分就是「射月」反讓別人各加 26 分。對戰三位電腦，三種難度，成績上傳全球排行榜。">
+<meta name="google-adsense-account" content="ca-pub-3440199491716602">
+<meta name="theme-color" content="#1a0b10">
+<meta property="og:title" content="紅心大戰｜Stockcorp 遊戲大廳">
+<meta property="og:description" content="經典紅心大戰，分數越少越好。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://stockcorp.github.io/hearts/">
+<link rel="canonical" href="https://stockcorp.github.io/hearts/">
+<link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/hearts/?lang=zh">
+<link rel="alternate" hreflang="en" href="https://stockcorp.github.io/hearts/?lang=en">
+<link rel="alternate" hreflang="x-default" href="https://stockcorp.github.io/hearts/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%23be123c'/%3E%3Ctext x='50' y='70' font-size='60' text-anchor='middle'%3E%E2%99%A5%EF%B8%8F%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/shared/kit.css?v=1.0">
+<link rel="stylesheet" href="style.css?v=1.0">
+<script src="/shared/app.js?v=1.2"></script>
+<script src="/shared/kit.js?v=1.0"></script>
+<script src="/shared/games.js?v=1.6" data-game="hearts" defer></script>
+<script src="/shared/lb.js?v=1.0" defer></script>
+</head>
+<body>
+<header class="k-top">
+  <div class="k-brand"><span class="k-logo">♥️</span><div><h1 data-en="Hearts">紅心大戰</h1><small id="sub"></small></div></div>
+  <div class="k-acts">
+    <button class="btn ghost" data-lang-toggle>EN</button>
+    <button class="btn ghost" id="bSound">🔊</button>
+    <a class="btn ghost" id="bLb" href="/leaderboard/?game=hearts&mode=normal" style="text-decoration:none">🏆</a>
+    <button class="btn" id="bNew" data-en="New">新局</button>
+  </div>
+</header>
+<main class="wrap">
+  <div class="table" id="tbl">
+    <div class="seat s2" id="seat2"><b class="nm"></b><span class="pt"></span><div class="back"></div></div>
+    <div class="seat s1" id="seat1"><b class="nm"></b><span class="pt"></span><div class="back"></div></div>
+    <div class="seat s3" id="seat3"><b class="nm"></b><span class="pt"></span><div class="back"></div></div>
+    <div class="trick" id="trick"></div>
+    <div class="msg" id="msg"></div>
+    <div class="seat s0" id="seat0"><b class="nm"></b><span class="pt"></span></div>
+  </div>
+  <div class="hand" id="hand"></div>
+  <div class="acts"><button class="btn big" id="bPass" style="display:none"></button><button class="btn ghost sm" id="bScores" data-en="📋 Scores">📋 分數表</button></div>
+</main>
+<section class="k-help"><article><h2 data-en="How to play">玩法</h2><p data-en="Each of four players gets 13 cards. The holder of the two of clubs leads first. You must follow suit if you can; otherwise play anything. The highest card of the suit led wins the trick and leads next. Each heart is 1 point and the queen of spades is 13 — low score is good.">四個人每人 13 張牌。持有梅花 2 的人先出，大家必須跟出同花色，跟不出時可以出任何牌；同花色最大的人吃下這一墩，再由他先出。每張紅心 1 分、黑桃 Q 13 分，分數越少越好。</p></article><article><h2 data-en="Details">規則細節</h2><p data-en="Before each hand you pass three cards — left, right, across, then no pass. No point cards on the first trick, and hearts cannot be led until a heart has been played. Taking all 26 points “shoots the moon”: everyone else gets 26 instead. The game ends when someone reaches 100; lowest score wins.">每局開始前要傳 3 張牌給別人（依序傳給左家、右家、對家、不傳）。第一墩不能出分數牌；紅心要等有人墊過紅心（破心）後才能領出。一個人吃光全部 26 分叫「射月」，改成其他三人各加 26 分。有人累積到 100 分時遊戲結束，分數最少的人獲勝。</p></article><article><h2 data-en="Leaderboard">排行榜</h2><p data-en="At the end, your score is the three computers&#39; average minus your own points — higher is better.">遊戲結束時，以「三位電腦平均分數減去你的分數」上傳排行榜，越高越好。</p></article></section>
+<footer class="k-foot"><span data-en="Free to play. Scores you choose to submit appear on the global leaderboard.">免費遊玩；選擇上傳的成績會顯示在全球排行榜。</span>　<a href="privacy.html" data-en="Privacy policy">隱私權政策與廣告說明</a></footer>
+<div class="k-ov" id="ovNew"><div class="k-modal center"><h2 data-en="New game">開新局</h2><p class="mute" data-en="Computer level">電腦難度</p><div class="k-chips lvs" id="lvChips"><button data-m="easy" data-en="Easy">簡單</button><button data-m="normal" data-en="Normal">普通</button><button data-m="hard" data-en="Hard">困難</button></div><div class="k-row"><button class="btn ghost" data-close data-en="Cancel">取消</button></div></div></div>
+<div class="k-ov" id="ovScore"><div class="k-modal center"><h2 id="scTitle" data-en="Scores">分數表</h2><div id="scTable"></div><div class="k-row"><button class="btn big" id="bNext" data-en="Next hand">下一局</button><button class="btn ghost" data-close data-en="Close">關閉</button></div></div></div>
+<div class="k-ov" id="ovEnd" data-sticky><div class="k-modal center"><div class="k-big" id="endEmoji">🏆</div><h2 id="endTitle"></h2><div id="endTable"></div><p class="mute" id="endBest"></p><div class="k-row"><button class="btn big" id="bAgain" data-en="Play again">再玩一次</button><button class="btn ghost" data-close data-en="Close">關閉</button></div></div></div>
+<script src="game.js?v=1.0" defer></script>
+</body>
+</html>
