@@ -10,7 +10,7 @@
   var LV = { easy: ['簡單', 'Easy'], normal: ['普通', 'Normal'], hard: ['困難', 'Hard'] };
   var BOTS = [{ zh: '阿明', en: 'Ming', fc: '🧔' }, { zh: '小美', en: 'Mei', fc: '👩' }, { zh: '老王', en: 'Wang', fc: '👴' }];
   var rk = function (c) { return c >> 2; }, st = function (c) { return c & 3; };
-  var FAST = location.hash === '#fast', M = null, G = null, busy = false, sortBySuit = false, hintIdx = -1, hintList = [];
+  var FAST = location.hash.indexOf('#fast') === 0, M = null, G = null, busy = false, sortBySuit = false, hintIdx = -1, hintList = [];
 
   // ---------- 牌型 ----------
   // 順子樣式：一般 3-7(0)…10-A(7)；A2345 = 8；23456 = 9（最大）
@@ -156,30 +156,59 @@
     return pk || null;
   }
 
-  // ---------- 對局流程 ----------
+  // ---------- 座位、名字與線上狀態 ----------
+  // NM[p]：座位 p 的名字（畫面座位，0 = 自己）。NET：null = 單機；{role:'host', rem:{座位:連線}}；{role:'guest', conn}
+  var NM = null, NET = null, GEN = 0, turnTimer = null;
+  function myName() { var n = K.load('sc_lb_name', ''); return (typeof n === 'string' && n.trim()) ? n.trim().slice(0, 16) : L('房主', 'Host'); }
+  function setOffline() { NET = null; NM = [{ zh: '你', en: 'You', fc: '🙂' }].concat(BOTS); }
+  function name(p) { return p === 0 ? L('你', 'You') : L(NM[p].zh, NM[p].en); }
+  function face(p) { return p === 0 ? '🙂' : NM[p].fc; }
+  function isRemote(p) { return !!(NET && NET.role === 'host' && NET.rem[p]); }
+  function isGuest() { return !!(NET && NET.role === 'guest'); }
+  function msgText(m) {
+    if (!m || !m.k) return '';
+    if (m.k === 'deal') return L('第 ', 'Deal ') + (M.hand + 1) + ' / ' + HANDS + L(' 局　', ' · ') + name(m.p) + L(' 有梅花 3，先出', ' has ♣3 and leads');
+    if (m.k === 'lead') return name(m.p) + L(' 得到出牌權', ' leads a new round');
+    if (m.k === 'left') return name(m.p) + L('：真人玩家離線，改由電腦代打', ': player left — AI takes over');
+    return '';
+  }
+
+  // ---------- 對局流程（單機與房主共用；客人只顯示房主送來的畫面） ----------
   function newMatch(lv) {
-    M = { lv: lv, hand: 0, tot: [0, 0, 0, 0], log: [] };
-    K.save(SAVE, M);
-    if (window.SCLB) SCLB.start(GAME, lv);
-    if (window.SC) SC.post('start', { game: GAME, level: lv });
-    $('bLb').href = '/leaderboard/?game=bigtwo&mode=' + lv;
+    if (isGuest()) return;
+    M = { lv: lv, hand: 0, tot: [0, 0, 0, 0], log: [], online: !!NET };
+    if (!NET) {
+      K.save(SAVE, M);
+      if (window.SCLB) SCLB.start(GAME, lv);
+      $('bLb').href = '/leaderboard/?game=bigtwo&mode=' + lv;
+    }
+    if (window.SC) SC.post('start', { game: GAME, level: lv, online: !!NET });
     deal();
   }
   function deal() {
+    GEN++; K.close('ovHand');
     var deck = K.shuffle(Array.from({ length: 52 }, function (_, i) { return i; }));
     G = { hands: [0, 1, 2, 3].map(function (p) { return deck.slice(p * 13, p * 13 + 13).sort(function (a, b) { return a - b; }); }),
-      last: [null, null, null, null], top: null, topBy: -1, lead: true, first: true, passes: 0, turn: 0, played: [0, 0, 0, 0], over: false };
+      last: [null, null, null, null], top: null, topBy: -1, lead: true, first: true, passes: 0, turn: 0, played: [0, 0, 0, 0], over: false, msg: null };
     G.turn = G.hands.findIndex(function (h) { return h.indexOf(0) >= 0; });
+    G.msg = { k: 'deal', p: G.turn };
     sel = {}; hintList = []; hintIdx = -1;
-    msg(L('第 ', 'Deal ') + (M.hand + 1) + ' / ' + HANDS + L(' 局　', ' · ') + name(G.turn) + L(' 有梅花 3，先出', ' has ♣3 and leads'));
     render(); next();
   }
-  function name(p) { return p === 0 ? L('你', 'You') : L(BOTS[p - 1].zh, BOTS[p - 1].en); }
   function next() {
     if (G.over) return;
+    clearTimeout(turnTimer);
     render();
-    if (G.turn !== 0) { busy = true; setTimeout(function () { busy = false; botTurn(); }, FAST ? 5 : 650 + Math.random() * 500); }
-    else { busy = false; autoSel(); }
+    var p = G.turn, gen = GEN;
+    if (p === 0) { busy = false; autoSel(); return; }
+    if (isRemote(p)) {
+      busy = false;
+      // 真人超過 45 秒沒動作就由電腦代出，避免卡住整桌
+      turnTimer = setTimeout(function () { if (gen === GEN && G.turn === p && !G.over && isRemote(p)) { K.toast(name(p) + L(' 超時，自動出牌', ' timed out — auto play')); botTurn(); } }, 45000);
+      return;
+    }
+    busy = true;
+    setTimeout(function () { if (gen !== GEN) return; busy = false; botTurn(); }, FAST ? 5 : 650 + Math.random() * 500);
   }
   function botTurn() {
     if (G.over || G.turn === 0) return;
@@ -188,6 +217,7 @@
     act(G.turn, mv);
   }
   function act(p, mv) {
+    clearTimeout(turnTimer);
     if (mv) {
       G.hands[p] = G.hands[p].filter(function (c) { return mv.cs.indexOf(c) < 0; });
       G.top = mv; G.topBy = p; G.lead = false; G.first = false; G.passes = 0; G.last[p] = mv.cs; G.played[p] += mv.cs.length;
@@ -201,8 +231,8 @@
     if (G.passes >= 3) {
       // 其他三家都 Pass，出牌的人重新自由出
       G.lead = true; G.top = null; G.passes = 0; G.turn = G.topBy; G.last = [null, null, null, null];
-      msg(name(G.turn) + L(' 得到出牌權', ' leads a new round'));
-    } else msg('');
+      G.msg = { k: 'lead', p: G.turn };
+    } else G.msg = null;
     next();
   }
   function sound(mv) {
@@ -211,15 +241,17 @@
   }
   function penalty(n, played) { if (!played) return n * 4; return n >= 10 ? n * 3 : n >= 8 ? n * 2 : n; }
   function endHand(w) {
-    G.over = true;
+    G.over = true; GEN++;
     var d = [0, 0, 0, 0], pot = 0;
     for (var p = 0; p < 4; p++) if (p !== w) { var pen = penalty(G.hands[p].length, G.played[p]); d[p] = -pen; pot += pen; }
     d[w] = pot;
     for (var q = 0; q < 4; q++) M.tot[q] += d[q];
-    M.hand++; M.log.push(d); K.save(SAVE, M);
+    M.hand++; M.log.push(d);
+    if (!NET) K.save(SAVE, M);
     render(true);
     K.beep(w === 0 ? 660 : 300, 0.4, 'triangle', 0.07, w === 0 ? 1320 : 150);
     if (window.SC) SC.post('hand', { game: GAME, win: w === 0, delta: d[0] });
+    if (NET && NET.role === 'host') Object.keys(NET.rem).forEach(function (k) { NET.rem[k].send({ t: 'res', w: w, d: d }); });
     setTimeout(function () { showResult(w, d); }, 900);
   }
   function showResult(w, d) {
@@ -229,18 +261,116 @@
     var order = [0, 1, 2, 3];
     if (done) order.sort(function (a, b) { return M.tot[b] - M.tot[a]; });
     order.forEach(function (p) {
-      rows += '<tr class="' + (p === 0 ? 'mine' : '') + '"><td>' + (p === 0 ? '🙂' : BOTS[p - 1].fc) + ' ' + K.esc(name(p)) + '</td><td>' + G.hands[p].length + '</td><td class="' + (d[p] >= 0 ? 'pos' : 'neg') + '">' + (d[p] > 0 ? '+' : '') + d[p] + '</td><td><b>' + M.tot[p] + '</b></td></tr>';
+      rows += '<tr class="' + (p === 0 ? 'mine' : '') + '"><td>' + face(p) + ' ' + K.esc(name(p)) + '</td><td>' + G.hands[p].length + '</td><td class="' + (d[p] >= 0 ? 'pos' : 'neg') + '">' + (d[p] > 0 ? '+' : '') + d[p] + '</td><td><b>' + M.tot[p] + '</b></td></tr>';
     });
     $('hTable').innerHTML = rows;
-    $('bNext').textContent = done ? L('再來一場', 'New match') : L('下一局', 'Next deal') + '（' + (M.hand + 1) + '/' + HANDS + '）';
+    if (isGuest()) $('bNext').textContent = done ? L('關閉', 'Close') : L('關閉（等房主開下一局）', 'Close (host deals next)');
+    else $('bNext').textContent = done ? L('再來一場', 'New match') : L('下一局', 'Next deal') + '（' + (M.hand + 1) + '/' + HANDS + '）';
     K.open('ovHand');
     if (done) {
       var rank = order.indexOf(0) + 1;
       $('hTitle').textContent = (rank === 1 ? '🏆 ' : '') + L('整場結束：你第 ' + rank + ' 名', 'Match over: you placed #' + rank);
-      K.save(SAVE, null);
-      if (window.SC) SC.post('gameover', { game: GAME, score: M.tot[0], rank: rank });
-      setTimeout(function () { if (window.SCLB) SCLB.offer({ game: GAME, mode: M.lv, score: M.tot[0], text: L(LV[M.lv][0], LV[M.lv][1]) + ' ' + (M.tot[0] > 0 ? '+' : '') + M.tot[0] + L(' 分', ' pts') }); }, 500);
+      if (window.SC) SC.post('gameover', { game: GAME, score: M.tot[0], rank: rank, online: !!NET });
+      if (!NET) {
+        K.save(SAVE, null);
+        setTimeout(function () { if (window.SCLB) SCLB.offer({ game: GAME, mode: M.lv, score: M.tot[0], text: L(LV[M.lv][0], LV[M.lv][1]) + ' ' + (M.tot[0] > 0 ? '+' : '') + M.tot[0] + L(' 分', ' pts') }); }, 500);
+      }
     }
+  }
+
+  // ---------- 線上：房主 ----------
+  function snap(q) {
+    return { t: 'st', seat: q, nm: NM.map(function (n, i) { return i === 0 ? { zh: myName(), en: myName(), fc: '🙂' } : n; }), hand: G.hands[q],
+      cnt: G.hands.map(function (h) { return h.length; }), last: G.last, top: G.top ? G.top.cs : null, topBy: G.topBy, lead: G.lead, first: G.first,
+      turn: G.turn, over: G.over, played: G.played, tot: M.tot, hno: M.hand, msg: G.msg, reveal: G.over ? G.hands : null };
+  }
+  function broadcast() { if (NET && NET.role === 'host' && G) Object.keys(NET.rem).forEach(function (k) { NET.rem[k].send(snap(+k)); }); }
+  function legalFor(p, cs) {
+    if (!Array.isArray(cs) || !cs.length || cs.length > 5) return null;
+    var h = G.hands[p], seen = {};
+    for (var i = 0; i < cs.length; i++) { var c = cs[i]; if (typeof c !== 'number' || h.indexOf(c) < 0 || seen[c]) return null; seen[c] = 1; }
+    var cl = classify(cs); if (!cl) return null;
+    if (G.first && cs.indexOf(0) < 0) return null;
+    if (!beats(cl, G.lead ? null : G.top.c)) return null;
+    return { cs: cs.slice().sort(function (a, b) { return a - b; }), c: cl };
+  }
+  function startHost(conns) {
+    leaveOnline(true);
+    setOffline();
+    NET = { role: 'host', rem: {} };
+    var seats = [2, 1, 3];
+    conns.forEach(function (c, i) {
+      var p = seats[i]; NET.rem[p] = c;
+      NM[p] = { zh: c.name || L('玩家', 'Player') + (i + 1), en: c.name || 'Player ' + (i + 1), fc: ['🧑', '👧', '🧓'][i] };
+      c.onData = function (m) {
+        if (!m) return;
+        if (m.t === 'hello') { var n = String(m.name || '').slice(0, 16); if (n) { NM[p].zh = NM[p].en = n; render(G && G.over); } return; }
+        if (!G || G.over || G.turn !== p) return;
+        if (m.t === 'play') { var mv = legalFor(p, m.cs); if (mv) act(p, mv); else c.send(snap(p)); }
+        else if (m.t === 'pass' && !G.lead) act(p, null);
+      };
+      c.onClose = function () {
+        if (!NET || NET.rem[p] !== c) return;
+        delete NET.rem[p]; NM[p] = BOTS[p - 1];
+        K.toast(L('有玩家離線，改由電腦代打', 'A player left — AI takes over'));
+        if (G) { G.msg = { k: 'left', p: p }; render(G.over); if (!G.over && G.turn === p) next(); }
+        if (!Object.keys(NET.rem).length) NET.alone = true;
+      };
+    });
+    K.toast(L('線上對局開始！', 'Online match started!'));
+    newMatch('normal');
+  }
+
+  // ---------- 線上：客人 ----------
+  function startGuest(conn) {
+    leaveOnline(true);
+    setOffline(); GEN++;
+    NET = { role: 'guest', conn: conn };
+    if (G) { G.over = true; G.msg = null; }
+    conn.send({ t: 'hello', name: myName() });
+    $('msg').textContent = L('已加入房間，等待房主開始…', 'Joined. Waiting for the host to start…');
+    renderHand();
+    var lastTop = '', mySeat = 0;
+    conn.onData = function (m) {
+      if (!m) return;
+      if (m.t === 'st') {
+        var q = mySeat = m.seat, rot = function (a) { return [0, 1, 2, 3].map(function (v) { return a[(v + q) % 4]; }); }, vw = function (r) { return r < 0 ? -1 : (r - q + 4) % 4; };
+        NM = rot(m.nm); NM[0] = { zh: '你', en: 'You', fc: '🙂' };
+        var wasOver = G && G.over;
+        M = { lv: 'normal', hand: m.hno, tot: rot(m.tot), log: [], online: true };
+        G = { hands: [0, 1, 2, 3].map(function (v) { var r = (v + q) % 4; return v === 0 ? m.hand.slice() : m.reveal ? m.reveal[r].slice() : new Array(m.cnt[r]).fill(-1); }),
+          last: rot(m.last), top: m.top ? { cs: m.top, c: classify(m.top) } : null, topBy: vw(m.topBy), lead: m.lead, first: m.first, passes: 0,
+          turn: vw(m.turn), played: rot(m.played), over: m.over, msg: m.msg ? { k: m.msg.k, p: vw(m.msg.p) } : null };
+        if (!m.over && wasOver) { K.close('ovHand'); sel = {}; }
+        var tk = m.top ? m.top.join(',') : '';
+        if (tk && tk !== lastTop && G.top) sound(G.top); lastTop = tk;
+        Object.keys(sel).forEach(function (c) { if (G.hands[0].indexOf(+c) < 0) delete sel[c]; });
+        busy = false; render(G.over);
+        if (G.turn === 0 && !G.over) { autoSel(); K.beep(700, 0.06, 'sine', 0.04); }
+      } else if (m.t === 'res') {
+        var dv = [0, 1, 2, 3].map(function (v) { return m.d[(v + mySeat) % 4]; });
+        setTimeout(function () { showResult((m.w - mySeat + 4) % 4, dv); }, 900);
+      }
+    };
+    conn.onClose = function () {
+      if (!NET || NET.conn !== conn) return;
+      NET = null; setOffline();
+      K.toast(L('房主已離開，回到單機模式', 'The host left. Back to single player'), 3000);
+      K.close('ovHand'); newMatch('normal');
+    };
+  }
+  function leaveOnline(silent) {
+    if (!NET) return;
+    var n = NET; NET = null; clearTimeout(turnTimer);
+    if (n.role === 'guest') { n.conn.onClose = null; n.conn.close(); }
+    else Object.keys(n.rem).forEach(function (k) { n.rem[k].onClose = null; n.rem[k].close(); });
+    if (!silent) K.toast(L('已離開線上對戰', 'Left the online game'));
+  }
+  function openOnline(code) {
+    if (!window.SCNet) return;
+    SCNet.openLobby({ game: GAME, title: L('王者大老二', 'Big Two King'), max: 4, code: code, autoJoin: !!code,
+      onReady: function (conn) { if (conn.role === 'host') startHost([conn]); else startGuest(conn); },
+      onRoom: startHost });
   }
 
   // ---------- 玩家操作 ----------
@@ -256,12 +386,16 @@
     if (busy || !G || G.over || G.turn !== 0) return;
     var mv = legal(selected());
     if (!mv) { K.toast(selected().length ? L('這樣出不行', 'That play isn’t allowed') : L('先選牌', 'Select cards first')); K.beep(150, 0.1, 'square', 0.04); return; }
-    sel = {}; hintIdx = -1; act(0, mv);
+    sel = {}; hintIdx = -1;
+    if (isGuest()) { busy = true; NET.conn.send({ t: 'play', cs: mv.cs }); renderHand(); return; }
+    act(0, mv);
   }
   function pass() {
     if (busy || !G || G.over || G.turn !== 0) return;
     if (G.lead) { K.toast(L('你有出牌權，不能 Pass', 'You lead — you can’t pass')); return; }
-    sel = {}; hintIdx = -1; act(0, null);
+    sel = {}; hintIdx = -1;
+    if (isGuest()) { busy = true; NET.conn.send({ t: 'pass' }); renderHand(); return; }
+    act(0, null);
   }
   function hint() {
     if (busy || !G || G.over || G.turn !== 0) return;
@@ -279,7 +413,6 @@
     return '<div class="card' + (red ? ' red' : '') + '" data-c="' + c + '"><span class="r">' + RANKS[rk(c)] + '</span><span class="s">' + SUITS[st(c)] + '</span><span class="big">' + SUITS[st(c)] + '</span></div>';
   }
   function lastHtml(x) { if (x === 'pass') return '<span class="pass">PASS</span>'; if (!x) return ''; return x.map(cardHtml).join(''); }
-  function msg(t) { $('msg').textContent = t; }
   function renderHand() {
     var h = G.hands[0].slice();
     if (sortBySuit) h.sort(function (a, b) { return st(a) - st(b) || a - b; });
@@ -289,17 +422,20 @@
   }
   function render(reveal) {
     for (var p = 1; p <= 3; p++) {
-      var b = BOTS[p - 1], n = G.hands[p].length, backs = '';
+      var n = G.hands[p].length, backs = '';
       for (var i = 0; i < Math.min(n, 13); i++) backs += '<i></i>';
       var lastBox = reveal && G.over && n ? G.hands[p].map(cardHtml).join('') : (G.topBy === p && G.top && G.last[p] !== 'pass' ? '' : lastHtml(G.last[p]));
-      $('seat' + p).innerHTML = '<div class="av' + (G.turn === p && !G.over ? ' turn' : '') + '"><span class="fc">' + b.fc + '</span><div><b>' + K.esc(name(p)) + '</b><small>' + L('總分 ', 'Total ') + M.tot[p] + '</small></div></div>' +
+      $('seat' + p).innerHTML = '<div class="av' + (G.turn === p && !G.over ? ' turn' : '') + '"><span class="fc">' + face(p) + '</span><div><b>' + K.esc(name(p)) + '</b><small>' + L('總分 ', 'Total ') + M.tot[p] + '</small></div></div>' +
         '<div class="backs">' + backs + '</div><span class="cnt' + (n <= 2 && n ? ' warn' : '') + '">' + n + L(' 張', ' cards') + '</span><div class="last">' + lastBox + '</div>';
     }
     $('trick').innerHTML = G.top ? G.top.cs.map(cardHtml).join('') : '';
     var lb = $('trick'); if (G.top) lb.title = name(G.topBy);
     $('meInfo').innerHTML = (G.turn === 0 && !G.over ? '👉 <b>' + L('輪到你', 'Your turn') + '</b>　' : '') + L('總分 ', 'Total ') + '<b>' + M.tot[0] + '</b>　' + (G.last[0] === 'pass' ? 'PASS' : '');
-    $('sub').textContent = L(LV[M.lv][0], LV[M.lv][1]) + L('・第 ', ' · Deal ') + Math.min(M.hand + (G.over ? 0 : 1), HANDS) + '/' + HANDS;
+    $('sub').textContent = (M.online ? L('🌐 線上對戰', '🌐 Online') : L(LV[M.lv][0], LV[M.lv][1])) + L('・第 ', ' · Deal ') + Math.max(1, Math.min(M.hand + (G.over ? 0 : 1), HANDS)) + '/' + HANDS;
+    $('msg').textContent = msgText(G.msg);
+    $('bOnline').textContent = NET ? L('🌐 離開線上', '🌐 Leave online') : L('🌐 線上對戰', '🌐 Online');
     renderHand();
+    broadcast();
   }
 
   // ---------- 綁定 ----------
@@ -309,13 +445,22 @@
   });
   $('bPlay').onclick = play; $('bPass').onclick = pass; $('bHint').onclick = hint;
   $('bSort').onclick = function () { sortBySuit = !sortBySuit; renderHand(); };
-  $('bNext').onclick = function () { K.close('ovHand'); if (M.hand >= HANDS) openNew(); else deal(); };
+  $('bNext').onclick = function () {
+    K.close('ovHand');
+    if (isGuest()) return;
+    if (M.hand >= HANDS) { if (NET) newMatch('normal'); else openNew(); } else deal();
+  };
+  $('bOnline').onclick = function () {
+    if (!NET) { openOnline(); return; }
+    if (!(Date.now() - (window._b2ask || 0) < 2500)) { window._b2ask = Date.now(); K.toast(L('再按一次離開線上對戰', 'Tap again to leave the online game')); return; }
+    leaveOnline(); setOffline(); newMatch('normal');
+  };
   function openNew() {
     var ch = $('lvChips'); ch.innerHTML = '';
     Object.keys(LV).forEach(function (k) { var b = document.createElement('button'); b.textContent = L(LV[k][0], LV[k][1]); b.onclick = function () { K.close('ovNew'); newMatch(k); }; if (M && M.lv === k) b.className = 'on'; ch.appendChild(b); });
     K.open('ovNew');
   }
-  $('bNew').onclick = openNew;
+  $('bNew').onclick = function () { if (NET) { $('bOnline').onclick(); return; } openNew(); };
   $('bRules').onclick = function () { $('rulesBody').innerHTML = [].map.call(document.querySelectorAll('.k-help article'), function (a) { return a.innerHTML; }).join(''); K.open('ovRules'); };
   $('bSound').onclick = function () { K.setMute(!K.muted); snd(); };
   function snd() { $('bSound').textContent = K.muted ? '🔇' : '🔊'; } snd();
@@ -325,8 +470,11 @@
   });
   if (window.SC) SC.onLang(function () { if (G) render(G.over); });
 
-  // 接續上一場（從下一局開始）
+  // 接續上一場（從下一局開始）；網址有 ?room= 就直接開線上視窗
+  setOffline();
+  var room = window.SCNet && SCNet.roomFromUrl();
   var sv = K.load(SAVE, null);
   if (sv && LV[sv.lv] && sv.hand < HANDS) { M = sv; $('bLb').href = '/leaderboard/?game=bigtwo&mode=' + M.lv; if (window.SCLB && !SCLB.has(GAME, M.lv)) SCLB.start(GAME, M.lv); deal(); }
   else { M = { lv: 'normal', hand: 0, tot: [0, 0, 0, 0], log: [] }; newMatch('normal'); }
+  if (room) { SCNet.clearRoomFromUrl(); openOnline(room); }
 })();

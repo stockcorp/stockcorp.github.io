@@ -79,7 +79,7 @@ html.in-app .foot .web{display:none}
   <section class="hero">
     <div>
       <h2 data-en="Pick a game and start playing">選一款，馬上開玩</h2>
-      <p data-en="No download, no sign-up. Dark Chess and Xiangqi support online play against real people: tap Random match to find an opponent, or share a room code with a friend.">不用下載、不用註冊。暗棋與象棋可以線上和真人對戰：按「隨機配對」自動找對手，或把房號傳給朋友一起玩。</p>
+      <p data-en="No download, no sign-up. Dark Chess, Xiangqi, Big Two and Mahjong support online play against real people: tap Random match to find an opponent, or share a room code with a friend.">不用下載、不用註冊。暗棋、象棋、大老二、麻將可以線上和真人對戰：按「隨機配對」自動找對手，或把房號傳給朋友一起玩。</p>
       <div class="chips"><span class="chip" data-en="🌐 Online random match">🌐 線上隨機配對</span><span class="chip" data-en="🤖 4 AI levels">🤖 電腦四種難度</span><span class="chip" data-en="📱 Phone friendly">📱 手機直式也好玩</span><span class="chip" data-en="🏆 Global leaderboard">🏆 全球排行榜</span><span class="chip" data-en="🈶 中文 / English">🈶 中文 / English</span></div>
     </div>
   </section>
@@ -102,7 +102,7 @@ html.in-app .foot .web{display:none}
 <script>
 (function () {
   'use strict';
-  var G = window.SC_GAMES || [], CATS = window.SC_CATS || [], ONLINE = { darkchess: 1, xiangqi: 1 }, LB = { trader: 1, ai: 1, darkchess: 1, xiangqi: 1, bigtwo: 1, mahjong: 1, '2048': 1, coin: 1, racing: 1, sudoku: 1 };
+  var G = window.SC_GAMES || [], CATS = window.SC_CATS || [], ONLINE = { darkchess: 1, xiangqi: 1, bigtwo: 1, mahjong: 1 }, LB = { trader: 1, ai: 1, darkchess: 1, xiangqi: 1, bigtwo: 1, mahjong: 1, '2048': 1, coin: 1, racing: 1, sudoku: 1 };
   var grid = document.getElementById('grid'), cats = document.getElementById('cats');
   var cur = (/[?&]cat=(\w+)/.exec(location.search) || [])[1] || 'all';
   if (!CATS.some(function (c) { return c.id === cur; })) cur = 'all';

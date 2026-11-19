@@ -64,3 +64,4 @@ App 內會：不載入 AdSense、隱藏遊戲切換列與說明區、套用瀏�
 - 大廳分類：全部／棋牌／益智／動作／競速／模擬經營（`shared/games.js` 的 `cat` 與 `SC_CATS`，網址 `?cat=puzzle`）
 - 新遊戲共用 `shared/kit.css`、`shared/kit.js`（標題列、彈窗、提示、音效、存檔）
 - 全部接上 Linode 排行榜（`shared/lb.js`），後端 `score.php` 的 GAMES 需同步更新
+- 王者大老二、麻將大亨加入線上對戰（`shared/net.js` v1.6 支援最多 4 人房間 `max: 4`）：房主電腦是裁判，空位由電腦補；真人 45／40 秒沒動作自動代打；線上對局不列入排行榜

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
 <title data-en="Mahjong Tycoon | Free Online Taiwanese 16-Tile Mahjong with Global Leaderboard">麻將大亨｜免費線上台灣十六張麻將・對戰電腦・全球排行榜</title>
-<meta name="description" content="麻將大亨：台灣十六張麻將線上版，吃碰槓胡、花牌、台數計分，對戰三位電腦打一圈東風，總分上傳全球排行榜。Free Taiwanese 16-tile mahjong against three AI players with tai scoring.">
+<meta name="description" content="麻將大亨：台灣十六張麻將線上版，吃碰槓胡、花牌、台數計分，對戰三位電腦或線上和朋友、隨機真人對戰，打一圈東風，總分上傳全球排行榜。Free Taiwanese 16-tile mahjong against three AI players with tai scoring.">
 <meta name="google-adsense-account" content="ca-pub-3440199491716602">
 <meta name="theme-color" content="#0b2a26">
 <meta property="og:title" content="麻將大亨｜Stockcorp 遊戲大廳">
@@ -22,6 +22,7 @@
 <script src="/shared/kit.js?v=1.0"></script>
 <script src="/shared/games.js?v=1.5" data-game="mahjong" defer></script>
 <script src="/shared/lb.js?v=1.0" defer></script>
+<script src="/shared/net.js?v=1.6" defer></script>
 </head>
 <body>
 <header class="k-top">
@@ -30,6 +31,7 @@
     <button class="btn ghost" data-lang-toggle>EN</button>
     <button class="btn ghost" id="bSound">🔊</button>
     <a class="btn ghost" id="bLb" href="/leaderboard/?game=mahjong&mode=normal" style="text-decoration:none">🏆</a>
+    <button class="btn ghost" id="bOnline">🌐 線上對戰</button>
     <button class="btn ghost" id="bRules" data-en="Rules">規則</button>
     <button class="btn" id="bNew" data-en="New match">新的一將</button>
   </div>
@@ -53,6 +55,7 @@
 <section class="k-help">
   <article><h2 data-en="Basics">基本規則</h2><p data-en="Taiwanese 16-tile mahjong: each player holds 16 tiles and wins with 5 sets (chows or pungs) plus a pair. Chow only from the player before you; pung, kong and win from anyone. Flowers are set aside and replaced. The last 16 tiles of the wall are not played — if nobody wins, it is a draw.">台灣十六張麻將：每人 16 張，湊成 5 組（順子或刻子）加 1 對眼就能胡。只能吃上家，碰、槓、胡誰都可以；摸到花牌放旁邊再補一張。牌牆留最後 16 張不摸，沒人胡就流局。</p></article>
   <article><h2 data-en="Tai (points)">台數</h2><p data-en="Dealer 1 · Self-drawn 1 · Concealed hand 1 (concealed self-draw 3) · Dragon pung 1 each · Seat/round wind pung 1 · Own flower 1 each · All chows 2 · Three/four/five concealed pungs 2/5/8 · All pungs 4 · Half flush 4 · Full flush 8 · All honors 16 · Little/Big three dragons 4/8 · Little/Big four winds 8/16 · Last tile 1 · Kong replacement win 1 · Robbing a kong 1 · All melded 2.">莊家 1、自摸 1、門清 1（門清自摸共 3）、三元牌刻子各 1、圈風/門風刻子 1、正花各 1、平胡 2、三暗刻 2／四暗刻 5／五暗刻 8、碰碰胡 4、混一色 4、清一色 8、字一色 16、小三元 4／大三元 8、小四喜 8／大四喜 16、海底撈月/河底撈魚 1、槓上開花 1、搶槓 1、全求人 2。</p></article>
+  <article><h2 data-en="Play online">線上對戰</h2><p data-en="Press 🌐 Online: Random match pairs you with another player (the other two seats are AI), or create a room and send the 6-character code to up to 3 friends. Empty seats are filled by AI. If a player does not act within 40 seconds, the game plays for them. Online games are not on the leaderboard.">按「🌐 線上對戰」：隨機配對會找一位真人對手（另外兩家是電腦）；也可以建立房間，把 6 碼房號傳給最多 3 位朋友，空位由電腦補。40 秒沒動作會自動代打。線上對局不列入排行榜。</p></article>
   <article><h2 data-en="Payment">算錢</h2><p data-en="Each win is worth 10 + 5 per tai. On a discard win the discarder pays; on a self-draw all three pay. A match is one East round (at least 4 deals, dealer stays on a win or draw, max 8 deals). Your total goes to the leaderboard.">每把 = 底 10 + 每台 5。放槍由放槍的人付，自摸三家都付。一將打一圈東風（至少 4 把，莊家胡牌或流局連莊，最多 8 把），總分可上傳排行榜。</p></article>
 </section>
 <footer class="k-foot"><span data-en="Free to play. Scores you choose to submit appear on the global leaderboard.">免費遊玩；選擇上傳的成績會顯示在全球排行榜。</span>　<a href="privacy.html" data-en="Privacy policy">隱私權政策與廣告說明</a></footer>

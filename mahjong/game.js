@@ -5,7 +5,7 @@
 (function () {
   'use strict';
   var GAME = 'mahjong', SAVE = 'scmj_save', MAXH = 8, LEAVE = 16, BASE = 10, PER = 5;
-  var FAST = location.hash === '#fast', $ = K.$, L = K.L;
+  var FAST = location.hash.indexOf('#fast') === 0, $ = K.$, L = K.L;
   var LV = { easy: ['簡單', 'Easy'], normal: ['普通', 'Normal'], hard: ['困難', 'Hard'] };
   var BOTS = [{ zh: '阿財', en: 'Choi', fc: '🧑‍💼' }, { zh: '麗麗', en: 'Lily', fc: '👩‍🦰' }, { zh: '大炮', en: 'Cannon', fc: '🧔' }];
   var NUM = ['一', '二', '三', '四', '五', '六', '七', '八', '九'];
@@ -154,7 +154,7 @@
   }
 
   // ---------- 牌牆 ----------
-  function wallLeft() { return G.back - G.front + 1 - LEAVE; }
+  function wallLeft() { return G._left != null ? G._left : G.back - G.front + 1 - LEAVE; }
   function drawTile(p, fromBack) {
     for (;;) {
       if (wallLeft() <= 0) return null;
@@ -186,7 +186,7 @@
     // 補花
     for (var q2 = 0; q2 < 4; q2++) { var pp = (G.dealer + q2) % 4; while (P[pp].hand.length < 16) { var nt = drawTile(pp, true); if (nt == null) break; P[pp].hand.push(nt); } }
     P.forEach(function (pl) { pl.hand.sort(function (a, b) { return a - b; }); });
-    msg(''); render();
+    msg(null); render();
     var p0 = G.dealer, draw = true, kongDraw = false;
     for (;;) {
       var res;
@@ -216,13 +216,13 @@
         P[p].melds.forEach(function (m) { if (m.type === 'pon' && c[m.tiles[0]]) jiaK.push(m.tiles[0]); });
       }
       var choice;
-      if (p === 0) {
+      if (isHuman(p)) {
         if (canTsumo || anK.length || jiaK.length) {
           var ops = [];
           if (canTsumo) ops.push({ id: 'tsumo' });
           anK.forEach(function (x) { ops.push({ id: 'ankong', k: x }); });
           jiaK.forEach(function (x) { ops.push({ id: 'jiakong', k: x }); });
-          choice = await askSelf(ops);
+          choice = await askP(p, 'self', ops);
         }
       } else {
         await sleep(450 + Math.random() * 350);
@@ -235,18 +235,18 @@
       if (choice.id === 'ankong') {
         P[p].hand = P[p].hand.filter(function (x) { return x !== choice.k; });
         P[p].melds.push({ type: 'ankong', tiles: [choice.k, choice.k, choice.k, choice.k] });
-        say(p, L('暗槓', 'Kong')); K.beep(300, 0.2, 'square', 0.05);
+        say(p, '暗槓', 'Kong'); K.beep(300, 0.2, 'square', 0.05);
         return { next: p, draw: true, kong: true };
       }
       if (choice.id === 'jiakong') {
         var mk = choice.k; P[p].hand.splice(P[p].hand.indexOf(mk), 1);
         var meld = P[p].melds.filter(function (m) { return m.type === 'pon' && m.tiles[0] === mk; })[0];
-        meld.type = 'kong'; meld.tiles.push(mk); say(p, L('加槓', 'Kong')); render();
+        meld.type = 'kong'; meld.tiles.push(mk); say(p, '加槓', 'Kong'); render();
         // 搶槓
         for (var d = 1; d <= 3; d++) {
           var q = (p + d) % 4;
           if (canWin(q, mk)) {
-            var ok = q === 0 ? (await askClaim([{ id: 'hu', k: mk }], mk)).id === 'hu' : true;
+            var ok = isHuman(q) ? (await askP(q, 'claim', [{ id: 'hu', k: mk }], mk)).id === 'hu' : true;
             if (ok) { meld.type = 'pon'; meld.tiles.pop(); P[q].hand.push(mk); win(q, mk, false, { from: p, rob: true }); return {}; }
           }
         }
@@ -255,7 +255,7 @@
     }
     // 打牌
     var dk;
-    if (p === 0) dk = await askDiscard();
+    if (isHuman(p)) dk = await askP(p, 'discard');
     else dk = botDiscard(p);
     if (G.ended) return {};
     discard(p, dk);
@@ -268,32 +268,26 @@
     render();
   }
   async function claims(p, k) {
-    var lastTile = wallLeft() <= 0, humanAsked = false;
+    var lastTile = wallLeft() <= 0, asked = {};
     // 1) 胡（近的先）
     for (var d = 1; d <= 3; d++) {
       var q = (p + d) % 4;
       if (!canWin(q, k)) continue;
-      if (q !== 0) { await sleep(300); takeFromRiver(p); P[q].hand.push(k); win(q, k, false, { from: p, last: lastTile }); return {}; }
-      var hOps = [{ id: 'hu', k: k }], c0 = counts(P[0].hand);
-      if (c0[k] >= 2 && !lastTile) hOps.push({ id: 'pon', k: k });
-      if (c0[k] === 3 && !lastTile) hOps.push({ id: 'kong', k: k });
-      if (p === 3 && !lastTile) chiOpts(0, k).forEach(function (o) { hOps.push({ id: 'chi', k: k, o: o }); });
-      var ch = await askClaim(hOps, k); humanAsked = true;
-      if (ch.id === 'hu') { takeFromRiver(p); P[0].hand.push(k); win(0, k, false, { from: p, last: lastTile }); return {}; }
-      if (ch.id !== 'pass') return doClaim(0, p, ch);
+      if (!isHuman(q)) { await sleep(300); takeFromRiver(p); P[q].hand.push(k); win(q, k, false, { from: p, last: lastTile }); return {}; }
+      var ch = await askP(q, 'claim', [{ id: 'hu', k: k }], k);
+      if (ch.id === 'hu') { takeFromRiver(p); P[q].hand.push(k); win(q, k, false, { from: p, last: lastTile }); return {}; }
     }
     if (lastTile) return { type: 'exhaust' };
-    // 2) 碰／槓
+    // 2) 碰／槓（真人一起問要不要吃）
     for (var e = 1; e <= 3; e++) {
       var r = (p + e) % 4, c = counts(P[r].hand);
       if (c[k] < 2) continue;
-      if (r === 0) {
-        if (autoPass || humanAsked) break;
+      if (isHuman(r)) {
+        if (r === 0 && autoPass) break;
         var ops = [{ id: 'pon', k: k }]; if (c[k] === 3) ops.push({ id: 'kong', k: k });
-        if (p === 3) chiOpts(0, k).forEach(function (o) { ops.push({ id: 'chi', k: k, o: o }); });
-        var ch2 = await askClaim(ops, k); humanAsked = true;
-        if (ch2.id !== 'pass') return doClaim(0, p, ch2);
-        if (p === 3) return { next: 0, draw: true }; // 已經問過吃
+        if (r === (p + 1) % 4) chiOpts(r, k).forEach(function (o) { ops.push({ id: 'chi', k: k, o: o }); });
+        var ch2 = await askP(r, 'claim', ops, k); asked[r] = 1;
+        if (ch2.id !== 'pass') return doClaim(r, p, ch2);
         break;
       }
       if (c[k] === 3 && botWantsKong(r, k, false)) return doClaim(r, p, { id: 'kong', k: k });
@@ -302,11 +296,13 @@
     }
     // 3) 吃（只有下家）
     var nx = (p + 1) % 4, opts = chiOpts(nx, k);
-    if (opts.length) {
-      if (nx === 0 && !autoPass && !humanAsked) {
-        var ch3 = await askClaim(opts.map(function (o) { return { id: 'chi', k: k, o: o }; }), k);
-        if (ch3.id !== 'pass') return doClaim(0, p, ch3);
-      } else if (nx !== 0) {
+    if (opts.length && !asked[nx]) {
+      if (isHuman(nx)) {
+        if (!(nx === 0 && autoPass)) {
+          var ch3 = await askP(nx, 'claim', opts.map(function (o) { return { id: 'chi', k: k, o: o }; }), k);
+          if (ch3.id !== 'pass') return doClaim(nx, p, ch3);
+        }
+      } else {
         for (var i = 0; i < opts.length; i++) if (botWantsChi(nx, opts[i])) return doClaim(nx, p, { id: 'chi', k: k, o: opts[i] });
       }
     }
@@ -315,19 +311,19 @@
   function takeFromRiver(p) { P[p].river.pop(); }
   async function doClaim(q, from, ch) {
     var k = ch.k; takeFromRiver(from);
-    if (q !== 0) await sleep(250);
+    if (!isHuman(q)) await sleep(250);
     if (ch.id === 'pon' || ch.id === 'kong') {
       var n = ch.id === 'pon' ? 2 : 3;
       for (var i = 0; i < n; i++) P[q].hand.splice(P[q].hand.indexOf(k), 1);
       P[q].melds.push({ type: ch.id, tiles: new Array(n + 1).fill(k), from: from });
-      say(q, ch.id === 'pon' ? L('碰！', 'Pung!') : L('槓！', 'Kong!')); K.beep(ch.id === 'pon' ? 360 : 300, 0.18, 'square', 0.05);
+      if (ch.id === 'pon') say(q, '碰！', 'Pung!'); else say(q, '槓！', 'Kong!'); K.beep(ch.id === 'pon' ? 360 : 300, 0.18, 'square', 0.05);
       render();
       return ch.id === 'kong' ? { next: q, draw: true, kong: true } : { next: q, draw: false };
     }
     ch.o.use.forEach(function (u) { P[q].hand.splice(P[q].hand.indexOf(u), 1); });
     var s = ch.o.use.concat([k]).sort(function (a, b) { return a - b; });
     P[q].melds.push({ type: 'chi', tiles: s, from: from, got: k });
-    say(q, L('吃！', 'Chow!')); K.beep(400, 0.12, 'square', 0.04); render();
+    say(q, '吃！', 'Chow!'); K.beep(400, 0.12, 'square', 0.04); render();
     return { next: q, draw: false };
   }
 
@@ -379,11 +375,11 @@
     if (self) { for (var q = 0; q < 4; q++) if (q !== p) { var v = pay(q); d[q] -= v; d[p] += v; } }
     else { var v2 = pay(ex.from); d[ex.from] -= v2; d[p] += v2; }
     var dl = (p === dealer || (!self && ex.from === dealer) || self) ? true : false;
-    say(p, self ? L('自摸！', 'Tsumo!') : L('胡！', 'Ron!'));
+    if (self) say(p, '自摸！', 'Tsumo!'); else say(p, '胡！', 'Ron!');
     K.beep(p === 0 ? 660 : 330, 0.5, 'triangle', 0.08, p === 0 ? 1320 : 165);
     finishHand({ winner: p, self: self, from: ex.from, t: t, d: d, k: k, dealerTai: dl });
   }
-  function endHand() { G.ended = true; msg(L('流局', 'Draw — wall exhausted')); finishHand({ winner: null, d: [0, 0, 0, 0] }); }
+  function endHand() { G.ended = true; msg('流局', 'Draw — wall exhausted'); finishHand({ winner: null, d: [0, 0, 0, 0] }); }
 
   async function finishHand(r) {
     if (G.dead) return;
@@ -394,9 +390,11 @@
     var stay = r.winner == null || r.winner === G.dealer;
     if (!stay) { M.dealer = (M.dealer + 1) % 4; M.rot++; }
     var done = M.rot >= 4 || M.hands >= MAXH;
-    K.save(SAVE, done ? null : M);
+    if (!NET) K.save(SAVE, done ? null : M);
+    broadcast();
     if (window.SC) SC.post('hand', { game: GAME, win: r.winner === 0, delta: r.d[0] });
     try { await sleep(900); } catch (e) { return; }
+    if (NET && NET.role === 'host') Object.keys(NET.rem).forEach(function (k) { NET.rem[k].send({ t: 'res', r: { winner: r.winner, self: r.self, from: r.from, t: r.t ? { list: r.t.list, tot: r.t.tot } : null, d: r.d, k: r.k, dealerTai: r.dealerTai }, done: done }); });
     showResult(r, done);
   }
   function showResult(r, done) {
@@ -423,15 +421,136 @@
     var rows = '<tr><th></th><th>' + L('本把', 'Deal') + '</th><th>' + L('總分', 'Total') + '</th></tr>';
     order.forEach(function (p) { rows += '<tr class="' + (p === 0 ? 'mine' : '') + '"><td>' + face(p) + ' ' + K.esc(name(p)) + '</td><td class="' + (r.d[p] >= 0 ? 'pos' : 'neg') + '">' + (r.d[p] > 0 ? '+' : '') + r.d[p] + '</td><td><b>' + M.tot[p] + '</b></td></tr>'; });
     $('hTable').innerHTML = rows;
-    $('bNext').textContent = done ? L('再打一將', 'New match') : L('下一把', 'Next deal');
+    $('bNext').textContent = isGuest() ? L('關閉（等房主開下一把）', 'Close (host deals next)') : done ? L('再打一將', 'New match') : L('下一把', 'Next deal');
     if (done) {
       var rank = order.indexOf(0) + 1;
       $('hTitle').textContent = title + ' — ' + L('一將結束，你第 ' + rank + ' 名', 'Match over: you placed #' + rank);
       if (window.SC) SC.post('gameover', { game: GAME, score: M.tot[0], rank: rank });
-      setTimeout(function () { if (window.SCLB) SCLB.offer({ game: GAME, mode: M.lv, score: M.tot[0], text: L(LV[M.lv][0], LV[M.lv][1]) + ' ' + (M.tot[0] > 0 ? '+' : '') + M.tot[0] + L(' 分', ' pts') }); }, 600);
+      if (!NET) setTimeout(function () { if (window.SCLB) SCLB.offer({ game: GAME, mode: M.lv, score: M.tot[0], text: L(LV[M.lv][0], LV[M.lv][1]) + ' ' + (M.tot[0] > 0 ? '+' : '') + M.tot[0] + L(' 分', ' pts') }); }, 600);
     }
     M.done = done;
     K.open('ovHand');
+  }
+
+  // ---------- 線上對戰 ----------
+  // NM[p]：座位名字（畫面座位，0 = 自己）。NET：null 單機；{role:'host', rem:{座位:連線}}；{role:'guest', conn}
+  var NM = [{ zh: '你', en: 'You', fc: '🙂' }].concat(BOTS), NET = null, pend = {}, pre = {}, askSeq = 0;
+  function myName() { var n = K.load('sc_lb_name', ''); return (typeof n === 'string' && n.trim()) ? n.trim().slice(0, 16) : L('房主', 'Host'); }
+  function setOffline() { NET = null; NM = [{ zh: '你', en: 'You', fc: '🙂' }].concat(BOTS); }
+  function isRemote(p) { return !!(NET && NET.role === 'host' && NET.rem[p]); }
+  function isHuman(p) { return p === 0 || isRemote(p); }
+  function isGuest() { return !!(NET && NET.role === 'guest'); }
+  // 問真人：自己用畫面按鈕，線上玩家送訊息過去等回覆（40 秒沒回就自動處理）
+  function askP(p, type, ops, k) {
+    if (p === 0) return type === 'discard' ? askDiscard() : type === 'self' ? askSelf(ops) : askClaim(ops, k);
+    var g = G;
+    if (type === 'discard' && pre[p] != null) { var pk = pre[p]; pre[p] = null; if (P[p].hand.indexOf(pk) >= 0) return Promise.resolve(pk); }
+    return new Promise(function (res) {
+      var id = ++askSeq, done = false;
+      function dflt() {
+        if (type === 'discard') return P[p].drawn != null && P[p].hand.indexOf(P[p].drawn) >= 0 ? P[p].drawn : botDiscard(p);
+        if (type === 'self') return ops.filter(function (o) { return o.id === 'tsumo'; })[0] || { id: 'discard' };
+        return ops.filter(function (o) { return o.id === 'hu'; })[0] || { id: 'pass' };
+      }
+      function fin(v, quiet) { if (done) return; done = true; clearTimeout(to); delete pend[p]; if (!quiet && NET && NET.rem[p]) NET.rem[p].send({ t: 'unask', id: id }); res(v); }
+      var to = setTimeout(function () { fin(dflt()); }, 40000);
+      pend[p] = { id: id, type: type, ops: ops, fin: fin, dflt: dflt };
+      NET.rem[p].send({ t: 'ask', id: id, type: type, ops: ops, k: k });
+    }).then(guard(g));
+  }
+  function snap(q) {
+    var rev = G.ended;
+    return { t: 'st', seat: q, nm: NM.map(function (n, i) { return i === 0 ? { zh: myName(), en: myName(), fc: '🙂' } : n; }),
+      P: P.map(function (pl, r) { return { hand: (r === q || rev) ? pl.hand : pl.hand.length, melds: pl.melds, flowers: pl.flowers, river: pl.river, drawn: r === q ? pl.drawn : null }; }),
+      dealer: G.dealer, turn: G.turn, last: G.last, ended: G.ended, left: Math.max(0, wallLeft()), say: G.say,
+      M: { lv: M.lv, tot: M.tot, hands: M.hands, rot: M.rot } };
+  }
+  function broadcast() { if (NET && NET.role === 'host' && G && P) Object.keys(NET.rem).forEach(function (k) { NET.rem[k].send(snap(+k)); }); }
+  function startHost(conns) {
+    leaveOnline(true); setOffline();
+    NET = { role: 'host', rem: {} };
+    var seats = [2, 1, 3];
+    conns.forEach(function (c, i) {
+      var p = seats[i]; NET.rem[p] = c;
+      NM[p] = { zh: c.name || L('玩家', 'Player') + (i + 1), en: c.name || 'Player ' + (i + 1), fc: ['🧑', '👧', '🧓'][i] };
+      c.onData = function (m) {
+        if (!m) return;
+        if (m.t === 'hello') { var n = String(m.name || '').slice(0, 16); if (n) { NM[p].zh = NM[p].en = n; render(G && G.ended); } return; }
+        if (m.t !== 'ans') return;
+        var pd = pend[p]; if (!pd || pd.id !== m.id) return;
+        if (pd.type === 'discard') { if (P[p].hand.indexOf(m.k) >= 0) pd.fin(m.k, true); }
+        else if (pd.type === 'self') { if (m.i >= 0 && pd.ops[m.i]) pd.fin(pd.ops[m.i], true); else { if (typeof m.k === 'number') pre[p] = m.k; pd.fin({ id: 'discard' }, true); } }
+        else pd.fin(m.i >= 0 && pd.ops[m.i] ? pd.ops[m.i] : { id: 'pass' }, true);
+      };
+      c.onClose = function () {
+        if (!NET || NET.rem[p] !== c) return;
+        delete NET.rem[p]; NM[p] = BOTS[p - 1];
+        K.toast(L('有玩家離線，改由電腦代打', 'A player left — AI takes over'));
+        var pd = pend[p]; if (pd) pd.fin(pd.dflt(), true);
+        if (G) render(G.ended);
+      };
+    });
+    K.toast(L('線上對局開始！', 'Online match started!'));
+    newMatch('normal');
+  }
+  function startGuest(conn) {
+    leaveOnline(true); setOffline();
+    if (G) { G.dead = true; G.ended = true; if (waiter) { var w = waiter; waiter = null; try { w.res({ id: 'pass' }); } catch (e) { /* 略過 */ } } }
+    NET = { role: 'guest', conn: conn };
+    conn.send({ t: 'hello', name: myName() });
+    $('msg').textContent = L('已加入房間，等待房主開始…', 'Joined. Waiting for the host to start…');
+    var mySeat = 0;
+    conn.onData = function (m) {
+      if (!m) return;
+      var q = m.seat != null ? m.seat : mySeat;
+      var vw = function (r) { return r == null || r < 0 ? r : (r - q + 4) % 4; };
+      var rot = function (a) { return [0, 1, 2, 3].map(function (v) { return a[(v + q) % 4]; }); };
+      if (m.t === 'st') {
+        mySeat = q;
+        var wasEnded = G && G.ended;
+        NM = rot(m.nm); NM[0] = { zh: '你', en: 'You', fc: '🙂' };
+        M = { lv: m.M.lv, tot: rot(m.M.tot), hands: m.M.hands, rot: m.M.rot, dealer: vw(m.dealer), online: true, done: M && M.done };
+        G = { dealer: vw(m.dealer), turn: vw(m.turn), last: m.last ? { k: m.last.k, by: vw(m.last.by) } : null, ended: m.ended, _left: m.left, say: m.say ? { p: vw(m.say.p), zh: m.say.zh, en: m.say.en } : null, guest: true };
+        P = rot(m.P).map(function (pl) { return { hand: Array.isArray(pl.hand) ? pl.hand.slice() : new Array(pl.hand).fill(-1), melds: pl.melds, flowers: pl.flowers, river: pl.river, drawn: pl.drawn }; });
+        if (wasEnded && !m.ended) K.close('ovHand');
+        if (m.last && (!lastSeen || lastSeen !== m.P[m.last.by].river.length + ':' + m.last.by)) { lastSeen = m.P[m.last.by].river.length + ':' + m.last.by; K.beep(420, 0.05, 'triangle', 0.04); }
+        render(G.ended);
+      } else if (m.t === 'ask') {
+        var send = function (v) { var o = { t: 'ans', id: m.id }; for (var x in v) o[x] = v[x]; conn.send(o); };
+        if (m.type === 'claim' && autoPass && !m.ops.some(function (o) { return o.id === 'hu'; })) { send({ i: -1 }); return; }
+        if (m.type === 'discard') waiter = { type: 'discard', id: m.id, res: function (k) { send({ k: k }); } };
+        else if (m.type === 'self') waiter = { type: 'self', id: m.id, ops: m.ops, res: function (v) { send(v && v.id === 'discard' ? { i: -1, k: v.k } : { i: m.ops.indexOf(v) }); } };
+        else waiter = { type: 'claim', id: m.id, ops: m.ops, k: m.k, res: function (v) { send({ i: m.ops.indexOf(v) }); } };
+        if (G) render(G.ended);
+        K.beep(700, 0.08, 'sine', 0.05);
+      } else if (m.t === 'unask') {
+        if (waiter && waiter.id === m.id) { waiter = null; if (G) render(G.ended); }
+      } else if (m.t === 'res') {
+        var r = m.r, rr = { winner: vw(r.winner), self: r.self, from: vw(r.from), t: r.t, d: rot(r.d), k: r.k, dealerTai: r.dealerTai };
+        showResult(rr, m.done);
+      }
+    };
+    var lastSeen = '';
+    conn.onClose = function () {
+      if (!NET || NET.conn !== conn) return;
+      NET = null; setOffline(); waiter = null;
+      K.toast(L('房主已離開，回到單機模式', 'The host left. Back to single player'), 3000);
+      K.close('ovHand'); G = null; newMatch('normal');
+    };
+  }
+  function leaveOnline(silent) {
+    if (!NET) return;
+    var n = NET; NET = null;
+    Object.keys(pend).forEach(function (k) { var pd = pend[k]; if (pd) pd.fin(pd.dflt(), true); });
+    if (n.role === 'guest') { n.conn.onClose = null; n.conn.close(); }
+    else Object.keys(n.rem).forEach(function (k) { n.rem[k].onClose = null; n.rem[k].close(); });
+    if (!silent) K.toast(L('已離開線上對戰', 'Left the online game'));
+  }
+  function openOnline(code) {
+    if (!window.SCNet) return;
+    SCNet.openLobby({ game: GAME, title: L('麻將大亨', 'Mahjong Tycoon'), max: 4, code: code, autoJoin: !!code,
+      onReady: function (conn) { if (conn.role === 'host') startHost([conn]); else startGuest(conn); },
+      onRoom: startHost });
   }
 
   // ---------- 玩家輸入 ----------
@@ -448,10 +567,11 @@
     var hc = k === 31 ? ' red' : k === 32 ? ' grn' : k === 33 ? ' wht' : '';
     return '<div class="mj h' + hc + ' ' + cls + '" data-k="' + k + '"><span class="a">' + (k === 33 ? '' : HON[k - 27]) + '</span></div>';
   }
-  function name(p) { return p === 0 ? L('你', 'You') : L(BOTS[p - 1].zh, BOTS[p - 1].en); }
-  function face(p) { return p === 0 ? '🙂' : BOTS[p - 1].fc; }
-  function msg(t) { $('msg').textContent = t; }
-  function say(p, t) { msg(name(p) + '：' + t); }
+  function name(p) { return p === 0 ? L('你', 'You') : L(NM[p].zh, NM[p].en); }
+  function face(p) { return p === 0 ? '🙂' : NM[p].fc; }
+  function sayText(x) { if (!x) return ''; return (x.p >= 0 ? name(x.p) + '：' : '') + L(x.zh, x.en); }
+  function msg(zh, en) { if (G) G.say = zh ? { p: -1, zh: zh, en: en || zh } : null; $('msg').textContent = sayText(G && G.say); }
+  function say(p, zh, en) { G.say = { p: p, zh: zh, en: en }; $('msg').textContent = sayText(G.say); }
   function meldHtml(pl, size) {
     return pl.melds.map(function (m) { return '<div class="meld">' + m.tiles.map(function (k, i) { return m.type === 'ankong' && (i === 0 || i === 3) ? '<div class="mj back ' + size + '"></div>' : tile(k, size); }).join('') + '</div>'; }).join('') +
       (pl.flowers.length ? '<div class="flw">' + pl.flowers.map(function (k) { return tile(k, 'xs'); }).join('') + '</div>' : '');
@@ -461,7 +581,7 @@
     for (var p = 1; p <= 3; p++) {
       var pl = P[p], sw = seatWind(p);
       var hid = reveal && G.ended ? '<div class="melds">' + pl.hand.slice().sort(function (a, b) { return a - b; }).map(function (k) { return tile(k, 'xs'); }).join('') + '</div>' : '<span class="cnt">' + pl.hand.length + L(' 張', ' tiles') + '</span>';
-      $('seat' + p).innerHTML = '<div class="av' + (G.turn === p && !G.ended ? ' turn' : '') + '"><span class="fc">' + BOTS[p - 1].fc + '<span class="wd' + (p === G.dealer ? ' dl' : '') + '">' + L(WIND[sw][0], WIND[sw][1]) + '</span></span><div><b>' + K.esc(name(p)) + (p === G.dealer ? L(' 莊', ' (D)') : '') + '</b><small>' + M.tot[p] + '</small></div></div>' + hid + '<div class="melds">' + meldHtml(pl, 'sm') + '</div>';
+      $('seat' + p).innerHTML = '<div class="av' + (G.turn === p && !G.ended ? ' turn' : '') + '"><span class="fc">' + face(p) + '<span class="wd' + (p === G.dealer ? ' dl' : '') + '">' + L(WIND[sw][0], WIND[sw][1]) + '</span></span><div><b>' + K.esc(name(p)) + (p === G.dealer ? L(' 莊', ' (D)') : '') + '</b><small>' + M.tot[p] + '</small></div></div>' + hid + '<div class="melds">' + meldHtml(pl, 'sm') + '</div>';
     }
     for (var q = 0; q < 4; q++) {
       var rv = $('rv' + q), river = P[q].river;
@@ -480,8 +600,11 @@
     $('hand').innerHTML = html;
     var myTurn = waiter && (waiter.type === 'discard' || waiter.type === 'self');
     $('bDiscard').disabled = !myTurn || sel < 0; $('bTip').disabled = !myTurn;
-    $('sub').textContent = L(LV[M.lv][0], LV[M.lv][1]) + L('・第 ', ' · deal ') + (M.hands + (G.ended ? 0 : 1)) + L(' 把', '');
+    $('sub').textContent = (M.online ? L('🌐 線上對戰', '🌐 Online') : L(LV[M.lv][0], LV[M.lv][1])) + L('・第 ', ' · deal ') + Math.max(1, M.hands + (G.ended ? 0 : 1)) + L(' 把', '');
+    $('msg').textContent = sayText(G.say);
+    $('bOnline').textContent = NET ? L('🌐 離開線上', '🌐 Leave online') : L('🌐 線上對戰', '🌐 Online');
     claimBar();
+    broadcast();
   }
   function claimBar() {
     var box = $('claim'); box.innerHTML = '';
@@ -515,8 +638,10 @@
     if (sel < 0) return;
     var el = $('hand').querySelector('[data-i="' + sel + '"]'); if (!el) return;
     var k = +el.getAttribute('data-k');
+    if (waiter.type === 'self' && isGuest()) { var gw = waiter; waiter = null; gw.res({ id: 'discard', k: k }); render(G.ended); return; }
     if (waiter.type === 'self') { var w = waiter; waiter = { type: 'discard', res: null }; w.res({ id: 'discard' }); setTimeout(function () { finishSelfDiscard(k); }, 0); return; }
     var ww = waiter; waiter = null; ww.res(k);
+    if (isGuest()) { sel = -1; tipK = -1; render(G.ended); }
   }
   function finishSelfDiscard(k) { if (waiter && waiter.type === 'discard') { var w = waiter; waiter = null; if (w.res) w.res(k); } }
   $('bDiscard').onclick = discardSel;
@@ -526,13 +651,22 @@
     if (e.target && /INPUT|TEXTAREA/.test(e.target.tagName)) return;
     if (e.key === 'Enter' && sel >= 0) { e.preventDefault(); discardSel(); }
   });
-  $('bNext').onclick = function () { K.close('ovHand'); if (M.done) openNew(); else playHand(); };
+  $('bNext').onclick = function () {
+    K.close('ovHand');
+    if (isGuest()) return;
+    if (M.done) { if (NET) newMatch('normal'); else openNew(); } else playHand();
+  };
+  $('bOnline').onclick = function () {
+    if (!NET) { openOnline(); return; }
+    if (!(Date.now() - (window._mjask || 0) < 2500)) { window._mjask = Date.now(); K.toast(L('再按一次離開線上對戰', 'Tap again to leave the online game')); return; }
+    leaveOnline(); setOffline(); newMatch('normal');
+  };
   function openNew() {
     var ch = $('lvChips'); ch.innerHTML = '';
     Object.keys(LV).forEach(function (k) { var b = document.createElement('button'); b.textContent = L(LV[k][0], LV[k][1]); if (M && M.lv === k) b.className = 'on'; b.onclick = function () { K.close('ovNew'); newMatch(k); }; ch.appendChild(b); });
     K.open('ovNew');
   }
-  $('bNew').onclick = openNew;
+  $('bNew').onclick = function () { if (NET) { $('bOnline').onclick(); return; } openNew(); };
   $('bRules').onclick = function () { $('rulesBody').innerHTML = [].map.call(document.querySelectorAll('.k-help article'), function (a) { return a.innerHTML; }).join(''); K.open('ovRules'); };
   $('bSound').onclick = function () { K.setMute(!K.muted); snd(); };
   function snd() { $('bSound').textContent = K.muted ? '🔇' : '🔊'; } snd();
@@ -541,16 +675,21 @@
 
   var epoch = 0;
   function newMatch(lv) {
+    if (isGuest()) return;
     epoch++;
     if (G) { G.dead = true; G.ended = true; if (waiter) { var w = waiter; waiter = null; w.res({ id: 'pass' }); } }
-    M = { lv: lv, dealer: 0, rot: 0, hands: 0, tot: [0, 0, 0, 0] };
-    K.save(SAVE, M);
-    if (window.SCLB) SCLB.start(GAME, lv);
-    if (window.SC) SC.post('start', { game: GAME, level: lv });
-    $('bLb').href = '/leaderboard/?game=mahjong&mode=' + lv;
+    M = { lv: lv, dealer: 0, rot: 0, hands: 0, tot: [0, 0, 0, 0], online: !!NET };
+    if (!NET) {
+      K.save(SAVE, M);
+      if (window.SCLB) SCLB.start(GAME, lv);
+      $('bLb').href = '/leaderboard/?game=mahjong&mode=' + lv;
+    }
+    if (window.SC) SC.post('start', { game: GAME, level: lv, online: !!NET });
     setTimeout(playHand, 30);
   }
+  var room = window.SCNet && SCNet.roomFromUrl();
   var sv = K.load(SAVE, null);
   if (sv && LV[sv.lv] && sv.rot < 4 && sv.hands < MAXH) { M = sv; $('bLb').href = '/leaderboard/?game=mahjong&mode=' + M.lv; if (window.SCLB && !SCLB.has(GAME, M.lv)) SCLB.start(GAME, M.lv); playHand(); }
   else newMatch('normal');
+  if (room) { SCNet.clearRoomFromUrl(); openOnline(room); }
 })();
