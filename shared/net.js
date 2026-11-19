@@ -168,6 +168,8 @@
           if (cancelled) return;
           var waits = shuffle(Object.keys(st).filter(function (k) { return st[k] === 'wait'; }).map(Number));
           var empties = Object.keys(st).filter(function (k) { return st[k] === 'empty'; }).map(Number);
+          // 偶爾配對伺服器沒回「查無此人」，探測結果會是 unknown；這時也可以去坐（真的有人坐會收到 unavailable-id，重新搜尋）
+          if (!empties.length) empties = Object.keys(st).filter(function (k) { return st[k] !== 'wait' && st[k] !== 'busy'; }).map(Number);
           (function next() {
             if (cancelled) return;
             if (!waits.length) { var me = peer; peer = null; try { me.destroy(); } catch (e) { /* 略過 */ } sit(Peer, empties, count(st).waiting); return; }

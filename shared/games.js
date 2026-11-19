@@ -8,8 +8,8 @@
   var GAMES = [
     { id: 'trader', no: '01', url: '/trader/', icon: '📈', color: '#ef4444', zh: '我愛操盤手', en: 'I Love Trading', dzh: '用真實股價與加密貨幣模擬投資 10 年', den: 'Trade real stocks and crypto over 10 years' },
     { id: 'ai', no: '02', url: '/ai/', icon: '🤖', color: '#f5b83d', zh: '搶救AI教父大作戰', en: 'Save the AI Godfather', dzh: '六關橫向闖關，打倒董事會機器人', den: 'Six-stage platformer with a boss fight' },
-    { id: 'darkchess', no: '03', url: '/darkchess/', icon: '帥', color: '#c0392b', zh: '暗棋破壞神', en: 'Dark Chess Destroyer', dzh: '翻棋對決電腦或線上真人', den: 'Dark chess vs. AI or friends online' },
-    { id: 'xiangqi', no: '04', url: '/xiangqi/', icon: '將', color: '#16181d', fg: '#16181d', zh: '象棋', en: 'Xiangqi', dzh: '楚河漢界，對戰電腦或線上真人', den: 'Chinese chess vs. AI or friends online' }
+    { id: 'darkchess', no: '03', url: '/darkchess/', icon: '帥', color: '#c0392b', zh: '暗棋破壞神', en: 'Dark Chess Destroyer', dzh: '翻棋對決電腦，或線上隨機配對真人', den: 'Dark chess vs. AI, or a random opponent online' },
+    { id: 'xiangqi', no: '04', url: '/xiangqi/', icon: '將', color: '#16181d', fg: '#16181d', zh: '象棋', en: 'Xiangqi', dzh: '楚河漢界，對戰電腦或線上隨機配對', den: 'Chinese chess vs. AI, or a random opponent online' }
   ];
   window.SC_GAMES = GAMES;
   var me = document.currentScript, cur = (me && me.getAttribute('data-game')) || '';
