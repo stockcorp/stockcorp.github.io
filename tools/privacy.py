@@ -1,6 +1,7 @@
 # 產生各遊戲的中英雙語隱私權頁：python3 tools/privacy.py
 import os
 G = {
+ '': ('Stockcorp 遊戲大廳（全站）', 'Stockcorp Game Lobby (whole site)', '#0b0f19', True),
  'ai': ('搶救 AI 教父大作戰', 'Save the AI Godfather', '#0b0f19', False),
  'darkchess': ('暗棋破壞神', 'Dark Chess Destroyer', '#120c08', True),
  'xiangqi': ('象棋', 'Xiangqi', '#120c08', True),
@@ -12,7 +13,7 @@ T = '''<!DOCTYPE html>
 <style>body{{margin:0;background:{bg};color:#e8e2d6;font-family:-apple-system,"Segoe UI","Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif}}.doc{{max-width:760px;margin:0 auto;padding:24px 20px 60px;line-height:1.8}}.doc h1{{font-size:24px;color:#f0c46a}}.doc h2{{font-size:18px;color:#ffe2b8;margin-top:22px}}a{{color:#f0c46a}}
 html[lang=en] .zh,html:not([lang=en]) .en{{display:none}}.lb{{float:right;background:#2a2a33;color:#fff;border:1px solid #555;border-radius:10px;padding:5px 12px;cursor:pointer}}</style></head>
 <body><div class="doc">
-<p><a href="./" data-en="← Back to the game">← 回到遊戲</a><button class="lb" data-lang-toggle>EN</button></p>
+<p><a href="./" data-en="{bken}">{bkzh}</a><button class="lb" data-lang-toggle>EN</button></p>
 <div class="zh">
 <h1>隱私權政策與廣告說明</h1><p>最後更新：2026 年 11 月 18 日</p>
 <h2>1. 關於本網站</h2><p>「{zh}」是一款免費的網頁遊戲，網站託管於 GitHub Pages。</p>
@@ -40,6 +41,6 @@ ENNET = '<h2>4. Online play</h2><p>When you play online, your browser connects t
 root = os.path.join(os.path.dirname(__file__), '..')
 for d, (zh, en, bg, net) in G.items():
     n = [5, 6, 7, 8] if net else [4, 5, 6, 7]
-    html = T.format(zh=zh, en=en, bg=bg, zhnet=ZHNET if net else '', ennet=ENNET if net else '', n1=n[0], n2=n[1], n3=n[2], n4=n[3])
+    html = T.format(bkzh='← 回到遊戲大廳' if d == '' else '← 回到遊戲', bken='← Back to the lobby' if d == '' else '← Back to the game', zh=zh, en=en, bg=bg, zhnet=ZHNET if net else '', ennet=ENNET if net else '', n1=n[0], n2=n[1], n3=n[2], n4=n[3])
     open(os.path.join(root, d, 'privacy.html'), 'w', encoding='utf-8').write(html)
     print('wrote', d)

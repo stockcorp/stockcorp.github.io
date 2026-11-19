@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>我愛操盤手｜股票、比特幣、房地產、基金投資模擬遊戲</title>
+<meta name="description" content="免費的投資模擬遊戲：用 10 年時間操作股票、比特幣、房地產與基金，面對新聞事件、利率變化與追繳保證金，挑戰成為股神。">
+<meta name="google-adsense-account" content="ca-pub-3440199491716602">
+<meta name="theme-color" content="#0f1420">
+<meta property="og:title" content="我愛操盤手｜投資模擬遊戲">
+<meta property="og:description" content="股票、比特幣、房地產、基金全包！10 年內達成財富目標，你能成為股神嗎？">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://stockcorp.github.io/trader/">
+<link rel="canonical" href="https://stockcorp.github.io/trader/">
+<link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/trader/?lang=zh">
+<link rel="alternate" hreflang="en" href="https://stockcorp.github.io/trader/?lang=en">
+<link rel="alternate" hreflang="x-default" href="https://stockcorp.github.io/trader/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%230f1420'/%3E%3Cpath d='M15 70 L38 45 L55 58 L85 25' stroke='%23ef4444' stroke-width='9' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="style.css?v=1.1">
+<!-- App 偵測與 AdSense 載入（共用）：App 內不載入 AdSense，請改用 AdMob。觸發方式見 /shared/app.js -->
+<script src="/shared/app.js?v=1.2"></script>
+<script src="/shared/games.js?v=1.3" data-game="trader" defer></script>
+</head>
+<body>
+<header class="topbar">
+  <div class="brand"><span class="logo">📈</span><div><h1 data-i18n="我愛操盤手">我愛操盤手</h1><small data-i18n="股票・比特幣・房地產・基金">股票・比特幣・房地產・基金</small></div></div>
+  <div class="date" id="dateBox"></div>
+  <div class="top-actions">
+    <button class="btn ghost" id="btnLang">EN</button>
+    <button class="btn ghost" id="btnHelp" data-i18n="玩法說明">玩法說明</button>
+    <button class="btn ghost" id="btnNew" data-i18n="新遊戲">新遊戲</button>
+  </div>
+</header>
+
+<section class="stats" id="stats"></section>
+
+<div class="actionbar" id="actionBar"></div>
+
+<div class="ad-wrap" id="adTop"></div>
+
+<main class="layout">
+  <section class="left">
+    <nav class="tabs" id="tabs"></nav>
+    <div id="listBox" class="card"></div>
+    <div id="detailBox" class="card"></div>
+  </section>
+  <aside class="right">
+    <div class="card" id="newsBox"></div>
+    <div class="card" id="netBox"></div>
+    <div class="ad-wrap" id="adSide"></div>
+    <div class="card" id="logBox"></div>
+  </aside>
+</main>
+
+<div class="ad-wrap" id="adBottom"></div>
+
+<footer class="foot">
+  <p data-i18n="真實市場模式只採用真實的名稱、代號與起始價格（資料來源：臺灣證券交易所、CoinGecko）；開局後的走勢、新聞與事件全部是<strong>電腦模擬</strong>，與真實公司無關，僅供娛樂與投資教育，<strong>不構成任何投資建議</strong>。">真實市場模式只採用真實的名稱、代號與起始價格（資料來源：臺灣證券交易所、CoinGecko）；開局後的走勢、新聞與事件全部是<strong>電腦模擬</strong>，與真實公司無關，僅供娛樂與投資教育，<strong>不構成任何投資建議</strong>。</p>
+  <p><a href="privacy.html" data-privacy="1" data-i18n="隱私權政策與廣告說明">隱私權政策與廣告說明</a> ・ <span data-i18n="台灣習慣：&lt;span class=&quot;up&quot;&gt;紅色代表上漲&lt;/span&gt;、&lt;span class=&quot;down&quot;&gt;綠色代表下跌&lt;/span&gt;">台灣習慣：<span class="up">紅色代表上漲</span>、<span class="down">綠色代表下跌</span></span></p>
+</footer>
+
+<div id="modalRoot"></div>
+<div id="toasts"></div>
+
+<script src="js/config.js?v=1.1"></script>
+<script src="js/data.js?v=1.1"></script>
+<script src="js/i18n.js?v=1.2"></script>
+<script src="js/market.js?v=1.1"></script>
+<script src="js/engine.js?v=1.1"></script>
+<script src="js/ui.js?v=1.1"></script>
+</body>
+</html>

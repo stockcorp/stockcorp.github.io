@@ -3,70 +3,114 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>我愛操盤手｜股票、比特幣、房地產、基金投資模擬遊戲</title>
-<meta name="description" content="免費的投資模擬遊戲：用 10 年時間操作股票、比特幣、房地產與基金，面對新聞事件、利率變化與追繳保證金，挑戰成為股神。">
+<title>Stockcorp 遊戲大廳｜免費網頁小遊戲：投資模擬、闖關、暗棋、象棋線上對戰</title>
+<meta name="description" content="免費網頁遊戲平台：我愛操盤手投資模擬、搶救AI教父橫向闖關、暗棋破壞神與象棋可對戰電腦或線上真人隨機配對。手機、平板、電腦都能玩。">
 <meta name="google-adsense-account" content="ca-pub-3440199491716602">
-<meta name="theme-color" content="#0f1420">
-<meta property="og:title" content="我愛操盤手｜投資模擬遊戲">
-<meta property="og:description" content="股票、比特幣、房地產、基金全包！10 年內達成財富目標，你能成為股神嗎？">
+<meta name="theme-color" content="#0b0f19">
+<meta property="og:title" content="Stockcorp 遊戲大廳">
+<meta property="og:description" content="投資模擬、闖關、暗棋、象棋線上對戰，打開瀏覽器就能玩。">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://stockcorp.github.io/">
 <link rel="canonical" href="https://stockcorp.github.io/">
 <link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/?lang=zh">
 <link rel="alternate" hreflang="en" href="https://stockcorp.github.io/?lang=en">
 <link rel="alternate" hreflang="x-default" href="https://stockcorp.github.io/">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%230f1420'/%3E%3Cpath d='M15 70 L38 45 L55 58 L85 25' stroke='%23ef4444' stroke-width='9' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
-<link rel="stylesheet" href="style.css?v=1.1">
-<!-- App 偵測與 AdSense 載入（共用）：App 內不載入 AdSense，請改用 AdMob。觸發方式見 /shared/app.js -->
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%230b0f19'/%3E%3Ctext x='50' y='68' font-size='56' text-anchor='middle'%3E%F0%9F%8E%AE%3C/text%3E%3C/svg%3E">
 <script src="/shared/app.js?v=1.2"></script>
-<script src="/shared/games.js?v=1.2" data-game="trader" defer></script>
+<script src="/shared/games.js?v=1.3" data-game="lobby"></script>
+<style>
+:root{--bg:#0b0f19;--card:#141a29;--line:#222b40;--txt:#e6ebf5;--mute:#8b97b3;--gold:#f5b83d;--green:#35e08a}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--txt);font-family:-apple-system,"Segoe UI","Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;-webkit-text-size-adjust:100%}
+body{min-height:100vh;padding:env(safe-area-inset-top) env(safe-area-inset-right) calc(env(safe-area-inset-bottom) + var(--sc-anchor,0px)) env(safe-area-inset-left)}
+.wrap{max-width:1180px;margin:0 auto;padding:16px clamp(12px,3vw,32px) 40px}
+header{display:flex;align-items:center;gap:12px;padding:8px 0 18px}
+.logo{width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#f5b83d,#ef4444);display:flex;align-items:center;justify-content:center;font-size:26px;flex:none;box-shadow:0 6px 18px rgba(239,68,68,.25)}
+header h1{margin:0;font-size:clamp(20px,3.2vw,28px);letter-spacing:1px}
+header p{margin:2px 0 0;color:var(--mute);font-size:13px}
+.lb{margin-left:auto;flex:none;background:var(--card);color:var(--txt);border:1px solid var(--line);border-radius:999px;padding:8px 14px;font-size:14px;cursor:pointer}
+.lb:hover{border-color:var(--gold)}
+.hero{background:radial-gradient(120% 140% at 0% 0%,#1d2a4a 0%,#141a29 55%);border:1px solid var(--line);border-radius:20px;padding:clamp(16px,3vw,28px);margin-bottom:22px;display:flex;flex-wrap:wrap;gap:14px;align-items:center}
+.hero h2{margin:0 0 6px;font-size:clamp(18px,2.6vw,24px)}
+.hero p{margin:0;color:#c3cce0;line-height:1.6;font-size:14.5px}
+.hero .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.chip{font-size:12.5px;padding:5px 10px;border-radius:999px;background:#0f1420;border:1px solid var(--line);color:#cfd8ea}
+.sec{display:flex;align-items:baseline;gap:10px;margin:6px 0 12px}
+.sec h3{margin:0;font-size:18px}
+.sec small{color:var(--mute)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:clamp(10px,1.6vw,18px)}
+.card{position:relative;display:flex;flex-direction:column;text-decoration:none;color:var(--txt);background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden;transition:transform .15s,border-color .15s,box-shadow .15s}
+.card:hover,.card:focus-visible{transform:translateY(-3px);border-color:var(--gold);box-shadow:0 10px 26px rgba(0,0,0,.35);outline:none}
+.art{height:120px;display:flex;align-items:center;justify-content:center;position:relative}
+.ico{width:76px;height:76px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:40px;font-weight:900;color:#fff;box-shadow:inset 0 -5px 0 rgba(0,0,0,.25),0 8px 20px rgba(0,0,0,.35)}
+.ico.t{font-family:"Kaiti TC","STKaiti","DFKai-SB","BiauKai",serif;background:#fdf3dc!important;color:#b91c1c;border:5px solid #b91c1c}
+.no{position:absolute;top:10px;left:12px;font:800 13px/1 ui-monospace,Menlo,Consolas,monospace;color:rgba(255,255,255,.75);letter-spacing:1px}
+.tag{position:absolute;top:10px;right:10px;font-size:11.5px;font-weight:700;padding:4px 8px;border-radius:999px;background:rgba(10,14,24,.75);border:1px solid rgba(255,255,255,.18)}
+.tag.on{color:var(--green);border-color:rgba(53,224,138,.45)}
+.body{padding:14px 16px 16px;display:flex;flex-direction:column;gap:6px;flex:1}
+.body b{font-size:17px}
+.body span{color:var(--mute);font-size:13.5px;line-height:1.5}
+.play{margin-top:auto;padding-top:10px;display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--gold);font-weight:700}
+.soon{opacity:.75}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);color:var(--mute);font-size:12.5px;line-height:1.7;display:flex;flex-wrap:wrap;gap:6px 16px;justify-content:space-between}
+.foot a{color:#cfd8ea}
+html.in-app .foot .web{display:none}
+@media(max-width:520px){.grid{grid-template-columns:1fr 1fr}.art{height:92px}.ico{width:58px;height:58px;font-size:30px}.body{padding:10px 12px 12px}.body b{font-size:15px}.body span{font-size:12px}.hero p{font-size:13.5px}}
+@media(max-width:340px){.grid{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){.card{transition:none}}
+</style>
 </head>
 <body>
-<header class="topbar">
-  <div class="brand"><span class="logo">📈</span><div><h1 data-i18n="我愛操盤手">我愛操盤手</h1><small data-i18n="股票・比特幣・房地產・基金">股票・比特幣・房地產・基金</small></div></div>
-  <div class="date" id="dateBox"></div>
-  <div class="top-actions">
-    <button class="btn ghost" id="btnLang">EN</button>
-    <button class="btn ghost" id="btnHelp" data-i18n="玩法說明">玩法說明</button>
-    <button class="btn ghost" id="btnNew" data-i18n="新遊戲">新遊戲</button>
-  </div>
-</header>
+<div class="wrap">
+  <header>
+    <div class="logo">🎮</div>
+    <div><h1 data-en="Stockcorp Game Lobby">Stockcorp 遊戲大廳</h1><p data-en="Free games on phone, tablet and desktop">手機、平板、電腦都能玩的免費遊戲</p></div>
+    <button class="lb" data-lang-toggle>EN</button>
+  </header>
 
-<section class="stats" id="stats"></section>
-
-<div class="actionbar" id="actionBar"></div>
-
-<div class="ad-wrap" id="adTop"></div>
-
-<main class="layout">
-  <section class="left">
-    <nav class="tabs" id="tabs"></nav>
-    <div id="listBox" class="card"></div>
-    <div id="detailBox" class="card"></div>
+  <section class="hero">
+    <div>
+      <h2 data-en="Pick a game and start playing">選一款，馬上開玩</h2>
+      <p data-en="No download, no sign-up. Dark Chess and Xiangqi support online play against real people: tap Random match to find an opponent, or share a room code with a friend.">不用下載、不用註冊。暗棋與象棋可以線上和真人對戰：按「隨機配對」自動找對手，或把房號傳給朋友一起玩。</p>
+      <div class="chips"><span class="chip" data-en="🌐 Online random match">🌐 線上隨機配對</span><span class="chip" data-en="🤖 4 AI levels">🤖 電腦四種難度</span><span class="chip" data-en="📱 Phone friendly">📱 手機直式也好玩</span><span class="chip" data-en="🈶 中文 / English">🈶 中文 / English</span></div>
+    </div>
   </section>
-  <aside class="right">
-    <div class="card" id="newsBox"></div>
-    <div class="card" id="netBox"></div>
-    <div class="ad-wrap" id="adSide"></div>
-    <div class="card" id="logBox"></div>
-  </aside>
-</main>
 
-<div class="ad-wrap" id="adBottom"></div>
+  <div class="sec"><h3 data-en="All games">全部遊戲</h3><small id="cnt"></small></div>
+  <div class="grid" id="grid"></div>
 
-<footer class="foot">
-  <p data-i18n="真實市場模式只採用真實的名稱、代號與起始價格（資料來源：臺灣證券交易所、CoinGecko）；開局後的走勢、新聞與事件全部是<strong>電腦模擬</strong>，與真實公司無關，僅供娛樂與投資教育，<strong>不構成任何投資建議</strong>。">真實市場模式只採用真實的名稱、代號與起始價格（資料來源：臺灣證券交易所、CoinGecko）；開局後的走勢、新聞與事件全部是<strong>電腦模擬</strong>，與真實公司無關，僅供娛樂與投資教育，<strong>不構成任何投資建議</strong>。</p>
-  <p><a href="privacy.html" data-privacy="1" data-i18n="隱私權政策與廣告說明">隱私權政策與廣告說明</a> ・ <span data-i18n="台灣習慣：&lt;span class=&quot;up&quot;&gt;紅色代表上漲&lt;/span&gt;、&lt;span class=&quot;down&quot;&gt;綠色代表下跌&lt;/span&gt;">台灣習慣：<span class="up">紅色代表上漲</span>、<span class="down">綠色代表下跌</span></span></p>
-</footer>
+  <div class="sec" style="margin-top:26px"><h3 data-en="Coming soon">即將推出</h3></div>
+  <div class="grid">
+    <div class="card soon"><div class="art" style="background:linear-gradient(135deg,#2b3550,#141a29)"><span class="ico" style="background:#3b4a6b">🏆</span></div>
+      <div class="body"><b data-en="Leaderboards">全球排行榜</b><span data-en="Compare your best scores with players around the world.">和全世界的玩家比一比最高分。</span></div></div>
+  </div>
 
-<div id="modalRoot"></div>
-<div id="toasts"></div>
-
-<script src="js/config.js?v=1.1"></script>
-<script src="js/data.js?v=1.1"></script>
-<script src="js/i18n.js?v=1.2"></script>
-<script src="js/market.js?v=1.1"></script>
-<script src="js/engine.js?v=1.1"></script>
-<script src="js/ui.js?v=1.1"></script>
+  <footer class="foot">
+    <span data-en="All games are free and for entertainment only. Progress is saved in your browser.">所有遊戲免費、僅供娛樂，進度只存在你的瀏覽器。</span>
+    <span><a href="privacy.html" data-en="Privacy policy">隱私權政策與廣告說明</a><span class="web">　·　© Liberty Digital Technology</span></span>
+  </footer>
+</div>
+<script>
+(function () {
+  'use strict';
+  var G = window.SC_GAMES || [], ONLINE = { darkchess: 1, xiangqi: 1 };
+  var grid = document.getElementById('grid');
+  function render() {
+    var en = SC.lang === 'en';
+    grid.innerHTML = G.map(function (g) {
+      var t = g.icon.length === 1 && /[一-鿿]/.test(g.icon);
+      var bg = 'linear-gradient(135deg,' + g.color + '55,#141a29 75%)';
+      return '<a class="card" href="' + g.url + '">' +
+        '<div class="art" style="background:' + bg + '"><span class="no">' + g.no + '</span>' +
+        (ONLINE[g.id] ? '<span class="tag on">● ' + (en ? 'Online PvP' : '線上對戰') + '</span>' : '') +
+        '<span class="ico' + (t ? ' t' : '') + '" style="background:' + g.color + (g.fg ? ';color:' + g.fg + ';border-color:' + g.fg : '') + '">' + g.icon + '</span></div>' +
+        '<div class="body"><b>' + (en ? g.en : g.zh) + '</b><span>' + (en ? g.den : g.dzh) + '</span>' +
+        '<span class="play">' + (en ? 'Play now' : '開始遊戲') + ' <span>▶</span></span></div></a>';
+    }).join('');
+    document.getElementById('cnt').textContent = en ? G.length + ' games' : '共 ' + G.length + ' 款';
+  }
+  render(); SC.onLang(render);
+})();
+</script>
 </body>
 </html>

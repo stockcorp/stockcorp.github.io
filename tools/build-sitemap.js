@@ -12,10 +12,13 @@ function lastmod(rel) {
   return new Date().toISOString().slice(0, 10);
 }
 const urls = [];
+// 根目錄是遊戲大廳
+urls.push({ loc: SITE + '/', mod: lastmod('index.html'), pri: '1.0', freq: 'weekly', alt: true });
+if (fs.existsSync(path.join(ROOT, 'privacy.html'))) urls.push({ loc: SITE + '/privacy.html', mod: lastmod('privacy.html'), pri: '0.3', freq: 'yearly', alt: true });
 games.forEach((g, i) => {
   const dir = g.url.replace(/^\//, ''), idx = dir + 'index.html';
   if (!fs.existsSync(path.join(ROOT, idx))) { console.warn('skip (missing):', idx); return; }
-  urls.push({ loc: SITE + g.url, mod: lastmod(dir || 'index.html'), pri: i === 0 ? '1.0' : '0.9', freq: 'weekly', alt: true });
+  urls.push({ loc: SITE + g.url, mod: lastmod(dir || 'index.html'), pri: '0.9', freq: 'weekly', alt: true });
   const pv = dir + 'privacy.html';
   if (fs.existsSync(path.join(ROOT, pv))) urls.push({ loc: SITE + '/' + pv, mod: lastmod(pv), pri: '0.3', freq: 'yearly', alt: true });
 });

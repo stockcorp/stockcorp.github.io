@@ -20,6 +20,24 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://stockcorp.github.io/privacy.html"/>
   </url>
   <url>
+    <loc>https://stockcorp.github.io/trader/</loc>
+    <lastmod>2026-11-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/trader/?lang=zh"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://stockcorp.github.io/trader/?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://stockcorp.github.io/trader/"/>
+  </url>
+  <url>
+    <loc>https://stockcorp.github.io/trader/privacy.html</loc>
+    <lastmod>2026-11-19</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/trader/privacy.html?lang=zh"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://stockcorp.github.io/trader/privacy.html?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://stockcorp.github.io/trader/privacy.html"/>
+  </url>
+  <url>
     <loc>https://stockcorp.github.io/ai/</loc>
     <lastmod>2026-11-18</lastmod>
     <changefreq>weekly</changefreq>

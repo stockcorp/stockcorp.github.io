@@ -4,7 +4,8 @@
 
 | 編號 | 遊戲 | 網址 | 資料夾 |
 |---|---|---|---|
-| 01 | 我愛操盤手 | https://stockcorp.github.io/ | 根目錄（`index.html`、`js/`、`style.css`） |
+| 00 | 遊戲大廳（平台首頁，RWD） | https://stockcorp.github.io/ | 根目錄 `index.html`（卡片清單自動讀 `shared/games.js`） |
+| 01 | 我愛操盤手 | https://stockcorp.github.io/trader/ | `trader/`（2026-11-19 從根目錄搬過來） |
 | 02 | 搶救AI教父大作戰 | https://stockcorp.github.io/ai/ | `ai/` |
 | 03 | 暗棋破壞神 | https://stockcorp.github.io/darkchess/ | `darkchess/` |
 | 04 | 象棋 | https://stockcorp.github.io/xiangqi/ | `xiangqi/` |
@@ -15,7 +16,7 @@
 
 - `shared/app.js`：每頁 `<head>` 同步載入。偵測是否在 App（WebView 套殼）內，網頁版載入 Google AdSense（`ca-pub-3440199491716602`），App 內不載入（App 請用 AdMob）。
 - `shared/games.js`：遊戲切換列。寬螢幕左右兩側顯示上一款／下一款，窄螢幕在頁面頂端。**新增遊戲只要在 `GAMES` 陣列加一筆**，所有頁面自動更新。App 內不顯示。
-- `shared/net.js`：線上玩家對戰（WebRTC 點對點，用 PeerJS 公用伺服器配對，房號 6 碼，也可用 `?room=房號` 連結直接加入）。房主負責驗證每一步；暗棋的蓋牌只有房主知道。PeerJS 函式庫放在 `shared/vendor/`，不依賴外部 CDN。
+- `shared/net.js`：線上玩家對戰（WebRTC 點對點，用 PeerJS 公用伺服器配對，房號 6 碼，也可用 `?room=房號` 連結直接加入）。**隨機配對**：20 個公開座位 ID（`stockcorp-<遊戲>-r1`～`r20`），按下後先探測座位，有人在等就連過去，沒人就自己坐一個位子等；等待人數＝探測到有人在等的座位數（估算值）。房主負責驗證每一步；暗棋的蓋牌只有房主知道。PeerJS 函式庫放在 `shared/vendor/`，不依賴外部 CDN。
 - 中英切換：所有遊戲共用語言設定（`SC.lang`、`SC.setLang()`），網址加 `?lang=en` 或 `?lang=zh` 可指定語言。HTML 元素加 `data-en="英文"` 會自動替換，按鈕加 `data-lang-toggle` 就是切換鈕。
 
 ## sitemap.xml 自動更新
@@ -42,6 +43,9 @@ App 內會：不載入 AdSense、隱藏遊戲切換列與說明區、套用瀏�
 網頁會用 `SC.post(type, data)` 通知原生端，例如 `ready`、`gamestart`、`gameover`、`levelclear`，原生端可用來插入 AdMob 插頁廣告。
 
 ## 各遊戲版本
+
+- 00 遊戲大廳 v1.0（2026-11-19）：平台首頁，手機兩欄、平板／電腦自動多欄；App 內不載入 AdSense。遊戲切換列加上「🏠 遊戲大廳」。
+- 03 暗棋破壞神 v1.2、04 象棋 v1.1：線上對戰新增隨機配對與等待人數估算。
 
 - 01 我愛操盤手 v1.2：與全站共用語言設定。
 - 02 搶救AI教父大作戰 v1.2：中英雙語（畫面上、暫停選單都能切換）。
