@@ -1,0 +1,5 @@
+:root{--bg:#07141f;--panel:#0d2131;--line:#1a3a52;--accent:#4ade80;--accent2:#16a34a}
+.wrap{max-width:520px;margin:0 auto;padding:10px}
+.stage{position:relative;margin:0 auto;max-width:min(420px,calc((100vh - 130px) * 420 / 680))}
+#cv{width:100%;display:block;border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,.6);touch-action:manipulation;cursor:pointer;user-select:none;-webkit-user-select:none}
+.msg{position:absolute;left:0;right:0;top:62%;text-align:center;font-weight:900;font-size:20px;color:#fff;text-shadow:0 2px 6px #000;pointer-events:none}

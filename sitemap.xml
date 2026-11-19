@@ -316,4 +316,184 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://stockcorp.github.io/go/privacy.html?lang=en"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://stockcorp.github.io/go/privacy.html"/>
   </url>
+  <url>
+    <loc>https://stockcorp.github.io/mines/</loc>
+    <lastmod>2026-11-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/mines/?lang=zh"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://stockcorp.github.io/mines/?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://stockcorp.github.io/mines/"/>
+  </url>
+  <url>
+    <loc>https://stockcorp.github.io/mines/privacy.html</loc>
+    <lastmod>2026-11-19</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/mines/privacy.html?lang=zh"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://stockcorp.github.io/mines/privacy.html?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://stockcorp.github.io/mines/privacy.html"/>
+  </url>
+  <url>
+    <loc>https://stockcorp.github.io/reversi/</loc>
+    <lastmod>2026-11-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/reversi/?lang=zh"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://stockcorp.github.io/reversi/?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://stockcorp.github.io/reversi/"/>
+  </url>
+  <url>
+    <loc>https://stockcorp.github.io/reversi/privacy.html</loc>
+    <lastmod>2026-11-19</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/reversi/privacy.html?lang=zh"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://stockcorp.github.io/reversi/privacy.html?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://stockcorp.github.io/reversi/privacy.html"/>
+  </url>
+  <url>
+    <loc>https://stockcorp.github.io/klondike/</loc>
+    <lastmod>2026-11-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/klondike/?lang=zh"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://stockcorp.github.io/klondike/?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://stockcorp.github.io/klondike/"/>
+  </url>
+  <url>
+    <loc>https://stockcorp.github.io/klondike/privacy.html</loc>
+    <lastmod>2026-11-19</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/klondike/privacy.html?lang=zh"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://stockcorp.github.io/klondike/privacy.html?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://stockcorp.github.io/klondike/privacy.html"/>
+  </url>
+  <url>
+    <loc>https://stockcorp.github.io/breakout/</loc>
+    <lastmod>2026-11-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/breakout/?lang=zh"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://stockcorp.github.io/breakout/?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://stockcorp.github.io/breakout/"/>
+  </url>
+  <url>
+    <loc>https://stockcorp.github.io/breakout/privacy.html</loc>
+    <lastmod>2026-11-19</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/breakout/privacy.html?lang=zh"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://stockcorp.github.io/breakout/privacy.html?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://stockcorp.github.io/breakout/privacy.html"/>
+  </url>
+  <url>
+    <loc>https://stockcorp.github.io/bubble/</loc>
+    <lastmod>2026-11-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/bubble/?lang=zh"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://stockcorp.github.io/bubble/?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://stockcorp.github.io/bubble/"/>
+  </url>
+  <url>
+    <loc>https://stockcorp.github.io/bubble/privacy.html</loc>
+    <lastmod>2026-11-19</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/bubble/privacy.html?lang=zh"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://stockcorp.github.io/bubble/privacy.html?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://stockcorp.github.io/bubble/privacy.html"/>
+  </url>
+  <url>
+    <loc>https://stockcorp.github.io/jewel/</loc>
+    <lastmod>2026-11-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/jewel/?lang=zh"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://stockcorp.github.io/jewel/?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://stockcorp.github.io/jewel/"/>
+  </url>
+  <url>
+    <loc>https://stockcorp.github.io/jewel/privacy.html</loc>
+    <lastmod>2026-11-19</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/jewel/privacy.html?lang=zh"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://stockcorp.github.io/jewel/privacy.html?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://stockcorp.github.io/jewel/privacy.html"/>
+  </url>
+  <url>
+    <loc>https://stockcorp.github.io/connect4/</loc>
+    <lastmod>2026-11-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/connect4/?lang=zh"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://stockcorp.github.io/connect4/?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://stockcorp.github.io/connect4/"/>
+  </url>
+  <url>
+    <loc>https://stockcorp.github.io/connect4/privacy.html</loc>
+    <lastmod>2026-11-19</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/connect4/privacy.html?lang=zh"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://stockcorp.github.io/connect4/privacy.html?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://stockcorp.github.io/connect4/privacy.html"/>
+  </url>
+  <url>
+    <loc>https://stockcorp.github.io/mole/</loc>
+    <lastmod>2026-11-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/mole/?lang=zh"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://stockcorp.github.io/mole/?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://stockcorp.github.io/mole/"/>
+  </url>
+  <url>
+    <loc>https://stockcorp.github.io/mole/privacy.html</loc>
+    <lastmod>2026-11-19</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/mole/privacy.html?lang=zh"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://stockcorp.github.io/mole/privacy.html?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://stockcorp.github.io/mole/privacy.html"/>
+  </url>
+  <url>
+    <loc>https://stockcorp.github.io/shooter/</loc>
+    <lastmod>2026-11-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/shooter/?lang=zh"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://stockcorp.github.io/shooter/?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://stockcorp.github.io/shooter/"/>
+  </url>
+  <url>
+    <loc>https://stockcorp.github.io/shooter/privacy.html</loc>
+    <lastmod>2026-11-19</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/shooter/privacy.html?lang=zh"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://stockcorp.github.io/shooter/privacy.html?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://stockcorp.github.io/shooter/privacy.html"/>
+  </url>
+  <url>
+    <loc>https://stockcorp.github.io/bird/</loc>
+    <lastmod>2026-11-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/bird/?lang=zh"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://stockcorp.github.io/bird/?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://stockcorp.github.io/bird/"/>
+  </url>
+  <url>
+    <loc>https://stockcorp.github.io/bird/privacy.html</loc>
+    <lastmod>2026-11-19</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/bird/privacy.html?lang=zh"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://stockcorp.github.io/bird/privacy.html?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://stockcorp.github.io/bird/privacy.html"/>
+  </url>
 </urlset>

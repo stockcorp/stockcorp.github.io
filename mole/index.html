@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title data-en="Whack-a-Mole | Free Online 60-Second Reaction Game">打地鼠｜免費線上打地鼠・60 秒挑戰反應力・全球排行榜</title>
+<meta name="description" content="免費線上打地鼠：60 秒內敲越多地鼠越好，金色地鼠分數加倍，連續命中有連擊加分，打到炸彈會扣分。分數上傳全球排行榜。">
+<meta name="google-adsense-account" content="ca-pub-3440199491716602">
+<meta name="theme-color" content="#1a140a">
+<meta property="og:title" content="打地鼠｜Stockcorp 遊戲大廳">
+<meta property="og:description" content="60 秒挑戰你的反應力。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://stockcorp.github.io/mole/">
+<link rel="canonical" href="https://stockcorp.github.io/mole/">
+<link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/mole/?lang=zh">
+<link rel="alternate" hreflang="en" href="https://stockcorp.github.io/mole/?lang=en">
+<link rel="alternate" hreflang="x-default" href="https://stockcorp.github.io/mole/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%23a16207'/%3E%3Ctext x='50' y='70' font-size='60' text-anchor='middle'%3E%F0%9F%94%A8%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/shared/kit.css?v=1.0">
+<link rel="stylesheet" href="style.css?v=1.0">
+<script src="/shared/app.js?v=1.2"></script>
+<script src="/shared/kit.js?v=1.0"></script>
+<script src="/shared/games.js?v=1.6" data-game="mole" defer></script>
+<script src="/shared/lb.js?v=1.0" defer></script>
+</head>
+<body>
+<header class="k-top">
+  <div class="k-brand"><span class="k-logo">🔨</span><div><h1 data-en="Whack-a-Mole">打地鼠</h1><small id="sub"></small></div></div>
+  <div class="k-acts">
+    <button class="btn ghost" data-lang-toggle>EN</button>
+    <button class="btn ghost" id="bSound">🔊</button>
+    <a class="btn ghost" id="bLb" href="/leaderboard/?game=mole&mode=60s" style="text-decoration:none">🏆</a>
+    <button class="btn" id="bNew" data-en="Start">開始</button>
+  </div>
+</header>
+<main class="wrap">
+  <div class="bar"><span><span data-en="Score">分數</span> <b id="score">0</b></span><span>⏱ <b id="clock">60</b></span><span id="combo"></span></div>
+  <div class="field" id="field"></div>
+  <p class="tip mute" data-en="Keyboard: number pad 1–9 matches the holes.">鍵盤也可以玩：數字鍵 1–9 對應九個洞（像手機撥號盤）。</p>
+</main>
+<section class="k-help"><article><h2 data-en="How to play">玩法</h2><p data-en="Press Start, then for 60 seconds hit every mole that pops up. 🐹 is worth 10 points and 👑 the golden mole 30. Don&#39;t hit 💣 — it costs 30 points and breaks your combo. The moles get faster as time runs down.">按「開始」後 60 秒內，地鼠從洞裡冒出來就趕快敲。🐹 一般地鼠 10 分，👑 金色地鼠 30 分；千萬別敲 💣 炸彈，會扣 30 分並中斷連擊。越到後面地鼠出現得越快。</p></article><article><h2 data-en="Combo">連擊</h2><p data-en="Each hit in a row adds 2 bonus points, up to 10. A miss, or a mole that escapes, resets the combo.">連續敲中不落空，每一下多加 2 分，最多加到 10 分；敲空或讓地鼠跑掉都會中斷連擊。</p></article><article><h2 data-en="Leaderboard">排行榜</h2><p data-en="Your score after 60 seconds can go on the global leaderboard.">60 秒結束時的分數可以上傳全球排行榜。</p></article></section>
+<footer class="k-foot"><span data-en="Free to play. Scores you choose to submit appear on the global leaderboard.">免費遊玩；選擇上傳的成績會顯示在全球排行榜。</span>　<a href="privacy.html" data-en="Privacy policy">隱私權政策與廣告說明</a></footer>
+<div class="k-ov" id="ovEnd" data-sticky><div class="k-modal center"><div class="k-big" id="endEmoji">🔨</div><h2 id="endTitle" data-en="Time&#39;s up!">時間到！</h2>
+  <div class="k-stats"><div><b id="endScore">0</b><span data-en="Score">分數</span></div><div><b id="endHits">0</b><span data-en="Hits">命中</span></div><div><b id="endCombo">0</b><span data-en="Best combo">最高連擊</span></div></div>
+  <p class="mute" id="endBest"></p><div class="k-row"><button class="btn big" id="bAgain" data-en="Play again">再玩一次</button><button class="btn ghost" data-close data-en="Close">關閉</button></div></div></div>
+<script src="game.js?v=1.0" defer></script>
+</body>
+</html>

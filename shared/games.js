@@ -22,7 +22,17 @@
     { id: 'link', no: '13', url: '/link/', icon: '🀄', color: '#16a34a', cat: ['puzzle', 'board'], zh: '麻將連連看', en: 'Mahjong Link', dzh: '找出能連線的兩張相同牌，清空整個盤面', den: 'Connect matching tiles and clear the board' },
     { id: 'gomoku', no: '14', url: '/gomoku/', icon: '⚫', color: '#a16207', fg: '#a16207', cat: ['board'], zh: '五子棋', en: 'Gomoku', dzh: '先連成五子就贏，對戰電腦或線上真人', den: 'Five in a row vs. AI or real players online' },
     { id: 'snake', no: '15', url: '/snake/', icon: '🐍', color: '#65a30d', cat: ['action'], zh: '貪吃蛇', en: 'Snake', dzh: '經典貪吃蛇，吃越多越長也越快', den: 'Classic snake — eat, grow and speed up' },
-    { id: 'go', no: '16', url: '/go/', icon: '⚪', color: '#334155', fg: '#334155', cat: ['board'], zh: '圍棋', en: 'Go', dzh: '9／13／19 路，對戰電腦或線上真人', den: '9×9 to 19×19 vs. AI or real players online' }
+    { id: 'go', no: '16', url: '/go/', icon: '⚪', color: '#334155', fg: '#334155', cat: ['board'], zh: '圍棋', en: 'Go', dzh: '9／13／19 路，對戰電腦或線上真人', den: '9×9 to 19×19 vs. AI or real players online' },
+    { id: 'mines', no: '17', url: '/mines/', icon: '💣', color: '#475569', fg: '#475569', cat: ['puzzle'], zh: '踩地雷', en: 'Minesweeper', dzh: '初級／中級／高級，比誰掃得快', den: 'Three sizes — clear the field fastest' },
+    { id: 'reversi', no: '18', url: '/reversi/', icon: '⚫', color: '#15803d', cat: ['board'], zh: '黑白棋', en: 'Reversi', dzh: '夾住就翻面，對戰電腦或線上真人', den: 'Flip discs vs. AI or real players online' },
+    { id: 'klondike', no: '19', url: '/klondike/', icon: '🃏', color: '#047857', cat: ['board', 'puzzle'], zh: '新接龍', en: 'Solitaire', dzh: '經典接龍，翻一張／翻三張', den: 'Classic Klondike, draw one or three' },
+    { id: 'breakout', no: '20', url: '/breakout/', icon: '🧱', color: '#ea580c', cat: ['action'], zh: '打磚塊', en: 'Brick Breaker', dzh: '彈球打碎磚塊，道具多球加長板', den: 'Smash bricks with power-ups' },
+    { id: 'bubble', no: '21', url: '/bubble/', icon: '🫧', color: '#7c3aed', cat: ['puzzle', 'action'], zh: '泡泡射擊', en: 'Bubble Shooter', dzh: '瞄準發射，三顆同色就消除', den: 'Aim, shoot and pop three of a colour' },
+    { id: 'jewel', no: '22', url: '/jewel/', icon: '💎', color: '#db2777', cat: ['puzzle'], zh: '寶石消消樂', en: 'Jewel Match', dzh: '兩分鐘三消挑戰，炸彈彩虹寶石', den: 'Two-minute match-3 with bombs and rainbows' },
+    { id: 'connect4', no: '23', url: '/connect4/', icon: '🔴', color: '#1d4ed8', cat: ['board'], zh: '四子棋', en: 'Connect Four', dzh: '先連四顆就贏，對戰電腦或線上真人', den: 'Four in a row vs. AI or real players online' },
+    { id: 'mole', no: '24', url: '/mole/', icon: '🔨', color: '#a16207', cat: ['action'], zh: '打地鼠', en: 'Whack-a-Mole', dzh: '60 秒反應力挑戰', den: '60-second reaction challenge' },
+    { id: 'shooter', no: '25', url: '/shooter/', icon: '🚀', color: '#0891b2', cat: ['action'], zh: '太空射擊', en: 'Space Shooter', dzh: '自動開火打下一波波敵機與魔王', den: 'Blast waves of enemies and bosses' },
+    { id: 'bird', no: '26', url: '/bird/', icon: '🐦', color: '#16a34a', cat: ['action'], zh: '飛飛鳥', en: 'Hop Bird', dzh: '點一下就飛，穿過竹林空隙', den: 'One tap to fly through the bamboo' }
   ];
   window.SC_CATS = [
     { id: 'all', zh: '全部', en: 'All', icon: '🎮' },

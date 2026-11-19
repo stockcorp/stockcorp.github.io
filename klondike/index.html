@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title data-en="Solitaire | Free Online Klondike Solitaire with Global Leaderboard">新接龍｜免費線上接龍（Klondike）・翻一張／翻三張・全球排行榜</title>
+<meta name="description" content="免費線上新接龍（Klondike 接龍）：翻一張或翻三張模式，點一下自動移牌、也可以拖曳，無限悔棋、一鍵自動完成。完成時間上傳全球排行榜。">
+<meta name="google-adsense-account" content="ca-pub-3440199491716602">
+<meta name="theme-color" content="#06281e">
+<meta property="og:title" content="新接龍｜Stockcorp 遊戲大廳">
+<meta property="og:description" content="經典接龍，點一下就自動移牌。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://stockcorp.github.io/klondike/">
+<link rel="canonical" href="https://stockcorp.github.io/klondike/">
+<link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/klondike/?lang=zh">
+<link rel="alternate" hreflang="en" href="https://stockcorp.github.io/klondike/?lang=en">
+<link rel="alternate" hreflang="x-default" href="https://stockcorp.github.io/klondike/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%23047857'/%3E%3Ctext x='50' y='70' font-size='60' text-anchor='middle'%3E%F0%9F%83%8F%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/shared/kit.css?v=1.0">
+<link rel="stylesheet" href="style.css?v=1.0">
+<script src="/shared/app.js?v=1.2"></script>
+<script src="/shared/kit.js?v=1.0"></script>
+<script src="/shared/games.js?v=1.6" data-game="klondike" defer></script>
+<script src="/shared/lb.js?v=1.0" defer></script>
+</head>
+<body>
+<header class="k-top">
+  <div class="k-brand"><span class="k-logo">🃏</span><div><h1 data-en="Solitaire">新接龍</h1><small id="sub"></small></div></div>
+  <div class="k-acts">
+    <button class="btn ghost" data-lang-toggle>EN</button>
+    <button class="btn ghost" id="bSound">🔊</button>
+    <a class="btn ghost" id="bLb" href="/leaderboard/?game=klondike&mode=draw1" style="text-decoration:none">🏆</a>
+    <button class="btn ghost" id="bUndo" data-en="↶ Undo">↶ 悔棋</button><button class="btn" id="bNew" data-en="New">新局</button>
+  </div>
+</header>
+<main class="wrap">
+  <div class="bar"><span>⏱ <b id="clock">0:00</b></span><span><span data-en="Moves">步數</span> <b id="moves">0</b></span><button class="btn sm" id="bAuto" style="display:none" data-en="✨ Auto finish">✨ 自動完成</button></div>
+  <div id="table"></div>
+</main>
+<section class="k-help"><article><h2 data-en="How to play">玩法</h2><p data-en="Build each suit from Ace to King on the four piles at the top right. In the seven columns below, stack cards in descending order with alternating colours; only a King may go into an empty column. Tap the deck at the top left to turn cards. Tap a card to move it automatically, or drag it.">把四種花色各自從 A 疊到 K 放進右上角就贏了。下方七疊牌要紅黑交錯、由大到小往下接；空的位置只能放 K。點左上角的牌堆翻牌。點一下牌會自動移到最適合的位置，也可以用拖的。</p></article><article><h2 data-en="Leaderboard">排行榜</h2><p data-en="Draw-one and draw-three each have a leaderboard for the time from your first move to the finish, measured by the server.">翻一張、翻三張各有排行榜，比的是從第一步到完成的時間（伺服器計時）。</p></article></section>
+<footer class="k-foot"><span data-en="Free to play. Scores you choose to submit appear on the global leaderboard.">免費遊玩；選擇上傳的成績會顯示在全球排行榜。</span>　<a href="privacy.html" data-en="Privacy policy">隱私權政策與廣告說明</a></footer>
+<div class="k-ov" id="ovNew"><div class="k-modal center"><h2 data-en="New game">開新局</h2><div class="k-chips lvs" id="lvChips"><button data-m="draw1" data-en="Draw one">翻一張</button><button data-m="draw3" data-en="Draw three">翻三張</button></div><div class="k-row"><button class="btn ghost" data-close data-en="Cancel">取消</button></div></div></div>
+<div class="k-ov" id="ovEnd" data-sticky><div class="k-modal center"><div class="k-big" id="endEmoji">🏆</div><h2 id="endTitle" data-en="Solved!">完成接龍！</h2>
+  <div class="k-stats"><div><b id="endTime">0</b><span data-en="Time">時間</span></div><div><b id="endMoves">0</b><span data-en="Moves">步數</span></div></div>
+  <p class="mute" id="endBest"></p><div class="k-row"><button class="btn big" id="bAgain" data-en="Play again">再玩一次</button><button class="btn ghost" data-close data-en="Close">關閉</button></div></div></div>
+<script src="game.js?v=1.0" defer></script>
+</body>
+</html>

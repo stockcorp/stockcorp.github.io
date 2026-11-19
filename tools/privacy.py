@@ -17,6 +17,16 @@ G = {
  'gomoku': ('五子棋', 'Gomoku', '#1a140c', True),
  'snake': ('貪吃蛇', 'Snake', '#0f1a0a', False),
  'go': ('圍棋', 'Go', '#14110c', True),
+ 'mines': ('踩地雷', 'Minesweeper', '#10161f', False),
+ 'reversi': ('黑白棋', 'Reversi', '#0c1a12', True),
+ 'klondike': ('新接龍', 'Solitaire', '#06281e', False),
+ 'breakout': ('打磚塊', 'Brick Breaker', '#160f0a', False),
+ 'bubble': ('泡泡射擊', 'Bubble Shooter', '#120d22', False),
+ 'jewel': ('寶石消消樂', 'Jewel Match', '#1a0b16', False),
+ 'connect4': ('四子棋', 'Connect Four', '#0b1226', True),
+ 'mole': ('打地鼠', 'Whack-a-Mole', '#1a140a', False),
+ 'shooter': ('太空射擊', 'Space Shooter', '#050b18', False),
+ 'bird': ('飛飛鳥', 'Hop Bird', '#07141f', False),
 }
 T = '''<!DOCTYPE html>
 <html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">

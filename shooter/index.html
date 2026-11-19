@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title data-en="Space Shooter | Free Online Arcade Shooter with Global Leaderboard">太空射擊｜免費線上飛機射擊遊戲・自動開火・全球排行榜</title>
+<meta name="description" content="免費線上太空射擊：拖曳戰機閃避敵機和子彈，自動開火擊落一波又一波的敵人，吃到能量升級火力，每五波會出現大魔王。分數上傳全球排行榜。">
+<meta name="google-adsense-account" content="ca-pub-3440199491716602">
+<meta name="theme-color" content="#050b18">
+<meta property="og:title" content="太空射擊｜Stockcorp 遊戲大廳">
+<meta property="og:description" content="拖曳戰機閃避，自動開火打下敵人。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://stockcorp.github.io/shooter/">
+<link rel="canonical" href="https://stockcorp.github.io/shooter/">
+<link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/shooter/?lang=zh">
+<link rel="alternate" hreflang="en" href="https://stockcorp.github.io/shooter/?lang=en">
+<link rel="alternate" hreflang="x-default" href="https://stockcorp.github.io/shooter/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%230891b2'/%3E%3Ctext x='50' y='70' font-size='60' text-anchor='middle'%3E%F0%9F%9A%80%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/shared/kit.css?v=1.0">
+<link rel="stylesheet" href="style.css?v=1.0">
+<script src="/shared/app.js?v=1.2"></script>
+<script src="/shared/kit.js?v=1.0"></script>
+<script src="/shared/games.js?v=1.6" data-game="shooter" defer></script>
+<script src="/shared/lb.js?v=1.0" defer></script>
+</head>
+<body>
+<header class="k-top">
+  <div class="k-brand"><span class="k-logo">🚀</span><div><h1 data-en="Space Shooter">太空射擊</h1><small id="sub"></small></div></div>
+  <div class="k-acts">
+    <button class="btn ghost" data-lang-toggle>EN</button>
+    <button class="btn ghost" id="bSound">🔊</button>
+    <a class="btn ghost" id="bLb" href="/leaderboard/?game=shooter&mode=classic" style="text-decoration:none">🏆</a>
+    <button class="btn" id="bNew" data-en="New">新局</button>
+  </div>
+</header>
+<main class="wrap">
+  <div class="bar"><span><span data-en="Score">分數</span> <b id="score">0</b></span><span><span data-en="Wave">波數</span> <b id="wave">1</b></span><span id="lives">🚀🚀🚀</span></div>
+  <div class="stage"><canvas id="cv" width="480" height="720"></canvas><div class="msg" id="msg"></div></div>
+</main>
+<section class="k-help"><article><h2 data-en="How to play">玩法</h2><p data-en="Drag your ship with the mouse or a finger (your finger can rest below the ship so it stays in view), or use the arrow keys / WASD. The ship fires on its own. Getting hit costs a ship; lose all three and the game ends.">用滑鼠或手指拖曳戰機（手指可以按在戰機下方，不會擋住視線），電腦用方向鍵或 WASD 也可以。戰機會自動開火。被敵機或子彈打中會少一架，三架用完遊戲結束。</p></article><article><h2 data-en="Power-ups">道具</h2><p data-en="Enemies drop power-ups: ⚡ more firepower (up to level 5), 🛡 a shield that absorbs one hit, 💥 clears all enemy bullets. A boss appears every fifth wave.">擊落敵機會掉出道具：⚡ 火力升級（最多五級）、🛡 護盾擋一次、💥 清除畫面上所有敵人子彈。每五波出現大魔王。</p></article><article><h2 data-en="Leaderboard">排行榜</h2><p data-en="Your final score can go on the global leaderboard.">遊戲結束時的總分可以上傳全球排行榜。</p></article></section>
+<footer class="k-foot"><span data-en="Free to play. Scores you choose to submit appear on the global leaderboard.">免費遊玩；選擇上傳的成績會顯示在全球排行榜。</span>　<a href="privacy.html" data-en="Privacy policy">隱私權政策與廣告說明</a></footer>
+<div class="k-ov" id="ovEnd" data-sticky><div class="k-modal center"><div class="k-big" id="endEmoji">🚀</div><h2 id="endTitle" data-en="Game over">遊戲結束</h2>
+  <div class="k-stats"><div><b id="endScore">0</b><span data-en="Score">分數</span></div><div><b id="endWave">0</b><span data-en="Wave">波數</span></div></div>
+  <p class="mute" id="endBest"></p><div class="k-row"><button class="btn big" id="bAgain" data-en="Play again">再玩一次</button><button class="btn ghost" data-close data-en="Close">關閉</button></div></div></div>
+<script src="game.js?v=1.0" defer></script>
+</body>
+</html>

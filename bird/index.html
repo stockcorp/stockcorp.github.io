@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title data-en="Hop Bird | Free Online One-Tap Flying Game with Leaderboard">飛飛鳥｜免費線上點一下就飛・穿過竹林・全球排行榜</title>
+<meta name="description" content="免費線上飛飛鳥：點一下螢幕或按空白鍵讓小鳥往上飛，穿過竹子間的空隙，每穿過一關得 1 分，越飛越快。分數上傳全球排行榜。">
+<meta name="google-adsense-account" content="ca-pub-3440199491716602">
+<meta name="theme-color" content="#07141f">
+<meta property="og:title" content="飛飛鳥｜Stockcorp 遊戲大廳">
+<meta property="og:description" content="點一下就飛，穿過竹林空隙。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://stockcorp.github.io/bird/">
+<link rel="canonical" href="https://stockcorp.github.io/bird/">
+<link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/bird/?lang=zh">
+<link rel="alternate" hreflang="en" href="https://stockcorp.github.io/bird/?lang=en">
+<link rel="alternate" hreflang="x-default" href="https://stockcorp.github.io/bird/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%2316a34a'/%3E%3Ctext x='50' y='70' font-size='60' text-anchor='middle'%3E%F0%9F%90%A6%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/shared/kit.css?v=1.0">
+<link rel="stylesheet" href="style.css?v=1.0">
+<script src="/shared/app.js?v=1.2"></script>
+<script src="/shared/kit.js?v=1.0"></script>
+<script src="/shared/games.js?v=1.6" data-game="bird" defer></script>
+<script src="/shared/lb.js?v=1.0" defer></script>
+</head>
+<body>
+<header class="k-top">
+  <div class="k-brand"><span class="k-logo">🐦</span><div><h1 data-en="Hop Bird">飛飛鳥</h1><small id="sub"></small></div></div>
+  <div class="k-acts">
+    <button class="btn ghost" data-lang-toggle>EN</button>
+    <button class="btn ghost" id="bSound">🔊</button>
+    <a class="btn ghost" id="bLb" href="/leaderboard/?game=bird&mode=classic" style="text-decoration:none">🏆</a>
+    <button class="btn" id="bNew" data-en="New">新局</button>
+  </div>
+</header>
+<main class="wrap">
+  <div class="stage"><canvas id="cv" width="420" height="680"></canvas><div class="msg" id="msg"></div></div>
+</main>
+<section class="k-help"><article><h2 data-en="How to play">玩法</h2><p data-en="Tap the screen (or press Space / ↑) to flap; stop tapping and the bird drops. Fly through the gap between the bamboo for a point. Hit the bamboo or the ground and the game ends. Every 10 points it gets a little faster.">點一下畫面（或按空白鍵、↑）小鳥就往上拍一下翅膀，不點就會往下掉。穿過竹子中間的空隙得 1 分，撞到竹子或地面就結束。每 10 分速度會變快一點。</p></article><article><h2 data-en="Medals">獎牌</h2><p data-en="Bronze at 10, silver at 25, gold at 50 and platinum at 100.">10 分銅牌、25 分銀牌、50 分金牌、100 分白金。</p></article><article><h2 data-en="Leaderboard">排行榜</h2><p data-en="Your score can go on the global leaderboard.">遊戲結束時的分數可以上傳全球排行榜。</p></article></section>
+<footer class="k-foot"><span data-en="Free to play. Scores you choose to submit appear on the global leaderboard.">免費遊玩；選擇上傳的成績會顯示在全球排行榜。</span>　<a href="privacy.html" data-en="Privacy policy">隱私權政策與廣告說明</a></footer>
+<div class="k-ov" id="ovEnd" data-sticky><div class="k-modal center"><div class="k-big" id="endEmoji">🐦</div><h2 id="endTitle" data-en="Game over">遊戲結束</h2>
+  <div class="k-stats"><div><b id="endScore">0</b><span data-en="Score">分數</span></div><div><b id="endMedal">0</b><span data-en="Medal">獎牌</span></div></div>
+  <p class="mute" id="endBest"></p><div class="k-row"><button class="btn big" id="bAgain" data-en="Play again">再玩一次</button><button class="btn ghost" data-close data-en="Close">關閉</button></div></div></div>
+<script src="game.js?v=1.0" defer></script>
+</body>
+</html>
