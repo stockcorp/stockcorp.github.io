@@ -358,6 +358,8 @@
       '<div class="field"><label>' + T('停利：上漲超過（%）') + '</label><input type="number" id="odTP" min="0" step="1" placeholder="50" value="' + (od && od.tp ? Math.round(od.tp * 100) : '') + '" inputmode="numeric"></div></div>' +
       '<div class="btn-row"><button class="btn" data-act="orderok">' + T('儲存') + '</button>' + (od ? '<button class="btn sell" data-act="orderdel">' + T('取消條件單') + '</button>' : '') + '<button class="btn ghost" data-act="closemodal">' + T('關閉') + '</button></div>');
   }
+  function lbUpload() { if (window.SCLB && S && S.finished) SCLB.offer({ game: 'trader', mode: S.mode, score: Math.round(E.netWorth(S)), text: money(E.netWorth(S)) }); }
+  document.addEventListener('click', function (e) { if (e.target.closest && e.target.closest('[data-act=lbup]')) lbUpload(); });
   function helpModal() {
     openModal('<div class="help"><h2>' + T('玩法說明') + '</h2>' +
       '<h3>' + T('🎯 目標') + '</h3><p>' + T('在 120 個月（10 年）內，把淨資產提高到模式目標。淨資產 = 現金 + 股票 + 加密貨幣 + 基金 + 房產市值 − 所有借款。淨資產歸零就破產。') + '</p>' +
@@ -435,11 +437,13 @@
     if (!S.lbSaved) { S.lbSaved = true; addLB({ mode: mode.name, nw, rank: rk.name, date: new Date().toISOString().slice(0, 10) }); save(); }
     const text = T('我在《我愛操盤手》（{0}）玩了 {1} 個月，最終淨資產 {2}，稱號「{3}」！你也來挑戰：{4}', [T(mode.name), S.month, money(nw), T(rk.name), location.origin + location.pathname]);
     window._shareText = text;
+    const canLB = window.SCLB && SCLB.has('trader', S.mode);
     openModal('<div class="center"><div style="font-size:42px">' + (S.bankrupt ? '💥' : nw >= S.target ? '🏆' : '📊') + '</div><h2>' + (S.bankrupt ? T('你破產了') : T('遊戲結束')) + '</h2>' +
       '<div class="big">' + money(nw) + '</div><div class="mute">' + T('目標 {0}（達成率 {1}%）', [money(S.target), (nw / S.target * 100).toFixed(0)]) + '</div>' +
       '<p style="font-size:20px;margin:10px 0 2px"><b>' + T('稱號：{0}', [T(rk.name)]) + '</b></p><p class="mute">' + T(rk.text) + '</p></div>' +
       '<div class="kv"><div><small>' + T('遊戲月數') + '</small><b>' + S.month + '</b></div><div><small>' + T('交易次數') + '</small><b>' + S.stats.trades + '</b></div><div><small>' + T('已實現損益') + '</small><b class="' + cls(S.stats.realized) + '">' + money(S.stats.realized) + '</b></div><div><small>' + T('成就') + '</small><b>' + Object.keys(S.ach).length + ' / ' + D.ACHIEVEMENTS.length + '</b></div></div>' +
-      '<div class="btn-row" style="justify-content:center"><button class="btn" data-act="newgame">' + T('再玩一次') + '</button><button class="btn ghost" data-act="share">' + T('複製成績分享') + '</button><button class="btn ghost" data-act="closemodal">' + T('關閉') + '</button></div>');
+      '<div class="btn-row" style="justify-content:center">' + (canLB ? '<button class="btn" data-act="lbup">🏆 ' + T('上傳全球排行榜') + '</button>' : '') + '<button class="btn" data-act="newgame">' + T('再玩一次') + '</button><button class="btn ghost" data-act="share">' + T('複製成績分享') + '</button><button class="btn ghost" data-act="closemodal">' + T('關閉') + '</button></div>');
+    if (canLB && !S.lbOffered) { S.lbOffered = true; save(); setTimeout(lbUpload, 600); }
   }
 
   /* ---------- 動作 ---------- */
@@ -463,7 +467,7 @@
     if (!r.ok) { toast(r.msg, 'bad'); return false; }
     toast(r.msg, r.pnl != null ? (r.pnl >= 0 ? 'good' : 'bad') : ''); achToast(r.ach); save(); renderAll(); return true;
   }
-  function newGame(mode, cfg) { S = E.newGame(mode, undefined, cfg); sel = firstStock(); tab = 'stock'; setup = null; save(); closeModal(); renderAll(); toast(T('遊戲開始！先看看本月新聞，再決定怎麼布局。')); }
+  function newGame(mode, cfg) { S = E.newGame(mode, undefined, cfg); if (window.SCLB) SCLB.start('trader', S.mode); sel = firstStock(); tab = 'stock'; setup = null; save(); closeModal(); renderAll(); toast(T('遊戲開始！先看看本月新聞，再決定怎麼布局。')); }
   function setLang(l) {
     I.setLang(l); renderAll();
     if ($('modalRoot').firstChild) { if ($('setupBox')) setupScreen(); else if ($('modalRoot').querySelector('[data-act=mode]')) startScreen(); else closeModal(); }

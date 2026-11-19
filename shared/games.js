@@ -59,7 +59,13 @@
     '.scg-item:hover{border-color:#f5b83d}',
     '.scg-item.cur{border-color:#35e08a;background:#10231b}',
     '.scg-item small{display:block;color:#8b97b3;font-size:12px;margin-top:3px;line-height:1.4}',
-    '.scg-item .scg-ico{flex:none}'
+    '.scg-item .scg-ico{flex:none}',
+    '.scg-home{pointer-events:auto;display:flex;align-items:center;justify-content:center;gap:6px;text-decoration:none;white-space:nowrap;font-weight:800;color:#1a1205!important;background:linear-gradient(135deg,#f5b83d,#ef8f3d)!important;border:0!important;border-radius:999px;box-shadow:0 4px 14px rgba(245,184,61,.35);font-family:-apple-system,"Segoe UI","Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif}',
+    '.scg-home:hover{filter:brightness(1.08);transform:translateY(-1px)}',
+    '.scg-rail .scg-home{width:calc(var(--sc-rail) - 12px);padding:10px 4px;font-size:13px;flex-direction:column;gap:2px;border-radius:14px}',
+    '.scg-rail .scg-home i{font-style:normal;font-size:22px;line-height:1}',
+    '@media(min-width:1400px){.scg-rail .scg-home{flex-direction:row;font-size:15px;gap:6px;padding:12px 6px}.scg-rail .scg-home i{font-size:18px}}',
+    '.scg-bar .scg-home{flex:none;padding:8px 12px;font-size:13.5px}'
   ].join('\n');
 
   function ico(g, size) { var t = g.icon.length === 1 && /[一-鿿]/.test(g.icon); return '<span class="scg-ico' + (t ? ' t' : '') + '" style="background:' + g.color + (g.fg ? ';color:' + g.fg + ';border-color:' + g.fg : '') + (size ? ';width:' + size + 'px;height:' + size + 'px' : '') + '">' + g.icon + '</span>'; }
@@ -72,13 +78,12 @@
     var st = document.createElement('style'); st.textContent = css; document.head.appendChild(st);
     var allTxt = en() ? '☰ All games' : '☰ 全部遊戲';
     var l = document.createElement('nav'); l.className = 'scg-rail l'; l.setAttribute('aria-label', 'previous game');
-    var homeTxt = en() ? '🏠 Lobby' : '🏠 遊戲大廳';
-    l.innerHTML = card(prev, -1) + '<button class="scg-all" type="button">' + allTxt + '</button><a class="scg-all" href="/" style="text-decoration:none">' + homeTxt + '</a>';
+    l.innerHTML = '<a class="scg-home" href="/"><i>🏠</i>' + (en() ? 'Lobby' : '遊戲大廳') + '</a>' + card(prev, -1) + '<button class="scg-all" type="button">' + allTxt + '</button>';
     var r = document.createElement('nav'); r.className = 'scg-rail r'; r.setAttribute('aria-label', 'next game');
-    r.innerHTML = card(next, 1) + '<button class="scg-all" type="button">' + allTxt + '</button>';
+    r.innerHTML = '<a class="scg-home" href="/leaderboard/"><i>🏆</i>' + (en() ? 'Ranks' : '排行榜') + '</a>' + card(next, 1) + '<button class="scg-all" type="button">' + allTxt + '</button>';
     var bar = document.createElement('nav'); bar.className = 'scg-bar'; bar.setAttribute('aria-label', 'games');
     bar.innerHTML = '<a class="p" href="' + prev.url + '"><b>◀</b><span class="t">' + prev.no + ' ' + nm(prev) + '</span></a>' +
-      '<a class="h" href="/" title="lobby" style="flex:none">🏠</a><button class="scg-all" type="button">☰</button>' +
+      '<a class="scg-home" href="/">🏠 ' + (en() ? 'Lobby' : '大廳') + '</a><button class="scg-all" type="button">☰</button>' +
       '<a class="n" href="' + next.url + '"><span class="t">' + next.no + ' ' + nm(next) + '</span><b>▶</b></a>';
     var ov = document.createElement('div'); ov.className = 'scg-ov';
     ov.innerHTML = '<div class="scg-box" role="dialog"><h3><span>' + (en() ? 'More games' : '更多遊戲') + '　<a href="/" style="font-size:13px;color:#f5b83d;text-decoration:none">🏠 ' + (en() ? 'Lobby' : '遊戲大廳') + '</a></span><button type="button" aria-label="close">×</button></h3><div class="scg-grid">' +

@@ -175,6 +175,7 @@
     leaveOnline(true);
     const myColor = pref.side === 'rand' ? (Math.random() < 0.5 ? 0 : 1) : pref.side === 'black' ? 1 : 0;
     G = fresh(X.newGame(), 'ai', myColor); sel = -1; hintPts = []; busy = false; rebuild(); save();
+    if (window.SCLB) SCLB.start('xiangqi', G.level);
     say('start'); toast(L('你執' + colName(myColor), 'You play ' + colName(myColor)));
     if (window.SC) SC.post('gamestart', { level: G.level });
     next();
@@ -235,6 +236,7 @@
     save(); paint(); G.res = res;
     if (window.SC) SC.post('gameover', { result: res, mode: G.mode, level: G.level });
     if (!quiet) setTimeout(() => showEnd(res), 900);
+    if (!quiet && res === 'w' && !online() && window.SCLB && SCLB.has('xiangqi', G.level)) { const sec = SCLB.elapsed('xiangqi'); setTimeout(() => SCLB.offer({ game: 'xiangqi', mode: G.level, score: sec, text: lvName(G.level) + L('・' + sec + ' 秒獲勝', ' · won in ' + sec + ' s') }), 2200); }
   }
   function showEnd(res) {
     if (!G.over) return;
