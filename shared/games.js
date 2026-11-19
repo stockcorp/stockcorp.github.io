@@ -6,14 +6,15 @@
 (function () {
   'use strict';
   var GAMES = [
-    { id: 'trader', no: '01', url: '/', icon: '📈', color: '#ef4444', zh: '我愛操盤手', en: 'I Love Trading', dzh: '用真實股價與加密貨幣模擬投資 10 年', den: 'Trade real stocks and crypto over 10 years' },
+    { id: 'trader', no: '01', url: '/trader/', icon: '📈', color: '#ef4444', zh: '我愛操盤手', en: 'I Love Trading', dzh: '用真實股價與加密貨幣模擬投資 10 年', den: 'Trade real stocks and crypto over 10 years' },
     { id: 'ai', no: '02', url: '/ai/', icon: '🤖', color: '#f5b83d', zh: '搶救AI教父大作戰', en: 'Save the AI Godfather', dzh: '六關橫向闖關，打倒董事會機器人', den: 'Six-stage platformer with a boss fight' },
     { id: 'darkchess', no: '03', url: '/darkchess/', icon: '帥', color: '#c0392b', zh: '暗棋破壞神', en: 'Dark Chess Destroyer', dzh: '翻棋對決電腦或線上真人', den: 'Dark chess vs. AI or friends online' },
     { id: 'xiangqi', no: '04', url: '/xiangqi/', icon: '將', color: '#16181d', fg: '#16181d', zh: '象棋', en: 'Xiangqi', dzh: '楚河漢界，對戰電腦或線上真人', den: 'Chinese chess vs. AI or friends online' }
   ];
   window.SC_GAMES = GAMES;
-  if (window.SC_IS_APP) return;
   var me = document.currentScript, cur = (me && me.getAttribute('data-game')) || '';
+  // 大廳頁只需要遊戲清單，不顯示切換列；App 內也不顯示
+  if (window.SC_IS_APP || cur === 'lobby') return;
   var idx = -1; for (var i = 0; i < GAMES.length; i++) if (GAMES[i].id === cur) idx = i;
   if (GAMES.length < 2) return;
   var en = function () { return /^en/i.test(document.documentElement.lang || ''); };
@@ -71,15 +72,16 @@
     var st = document.createElement('style'); st.textContent = css; document.head.appendChild(st);
     var allTxt = en() ? '☰ All games' : '☰ 全部遊戲';
     var l = document.createElement('nav'); l.className = 'scg-rail l'; l.setAttribute('aria-label', 'previous game');
-    l.innerHTML = card(prev, -1) + '<button class="scg-all" type="button">' + allTxt + '</button>';
+    var homeTxt = en() ? '🏠 Lobby' : '🏠 遊戲大廳';
+    l.innerHTML = card(prev, -1) + '<button class="scg-all" type="button">' + allTxt + '</button><a class="scg-all" href="/" style="text-decoration:none">' + homeTxt + '</a>';
     var r = document.createElement('nav'); r.className = 'scg-rail r'; r.setAttribute('aria-label', 'next game');
     r.innerHTML = card(next, 1) + '<button class="scg-all" type="button">' + allTxt + '</button>';
     var bar = document.createElement('nav'); bar.className = 'scg-bar'; bar.setAttribute('aria-label', 'games');
     bar.innerHTML = '<a class="p" href="' + prev.url + '"><b>◀</b><span class="t">' + prev.no + ' ' + nm(prev) + '</span></a>' +
-      '<button class="scg-all" type="button">☰</button>' +
+      '<a class="h" href="/" title="lobby" style="flex:none">🏠</a><button class="scg-all" type="button">☰</button>' +
       '<a class="n" href="' + next.url + '"><span class="t">' + next.no + ' ' + nm(next) + '</span><b>▶</b></a>';
     var ov = document.createElement('div'); ov.className = 'scg-ov';
-    ov.innerHTML = '<div class="scg-box" role="dialog"><h3><span>' + (en() ? 'More games' : '更多遊戲') + '</span><button type="button" aria-label="close">×</button></h3><div class="scg-grid">' +
+    ov.innerHTML = '<div class="scg-box" role="dialog"><h3><span>' + (en() ? 'More games' : '更多遊戲') + '　<a href="/" style="font-size:13px;color:#f5b83d;text-decoration:none">🏠 ' + (en() ? 'Lobby' : '遊戲大廳') + '</a></span><button type="button" aria-label="close">×</button></h3><div class="scg-grid">' +
       GAMES.map(function (g, i) { return '<a class="scg-item' + (i === idx ? ' cur' : '') + '" href="' + g.url + '">' + ico(g, 44) + '<span><b>' + g.no + '　' + nm(g) + '</b><small>' + (i === idx ? (en() ? 'Now playing · ' : '目前遊戲・') : '') + (en() ? g.den : g.dzh) + '</small></span></a>'; }).join('') + '</div></div>';
     document.body.insertBefore(bar, document.body.firstChild);
     document.body.appendChild(l); document.body.appendChild(r); document.body.appendChild(ov);
