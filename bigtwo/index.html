@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
 <title data-en="Big Two King | Free Online Big Two (Taiwan Rules) with Global Leaderboard">王者大老二｜免費線上大老二・台灣規則・對戰電腦・全球排行榜</title>
-<meta name="description" content="王者大老二：台灣規則線上大老二，單張、對子、順子、葫蘆、鐵支、同花順，四人桌對戰三位電腦，8 局總分上傳全球排行榜。Free online Big Two (Taiwanese rules) against three AI players.">
+<meta name="description" content="王者大老二：台灣規則線上大老二，單張、對子、順子、葫蘆、鐵支、同花順，對戰三位電腦或線上和朋友、隨機真人對戰，8 局總分上傳全球排行榜。Free online Big Two (Taiwanese rules) against three AI players.">
 <meta name="google-adsense-account" content="ca-pub-3440199491716602">
 <meta name="theme-color" content="#0d2a1d">
 <meta property="og:title" content="王者大老二｜Stockcorp 遊戲大廳">
@@ -22,6 +22,7 @@
 <script src="/shared/kit.js?v=1.0"></script>
 <script src="/shared/games.js?v=1.5" data-game="bigtwo" defer></script>
 <script src="/shared/lb.js?v=1.0" defer></script>
+<script src="/shared/net.js?v=1.6" defer></script>
 </head>
 <body>
 <header class="k-top">
@@ -30,6 +31,7 @@
     <button class="btn ghost" data-lang-toggle>EN</button>
     <button class="btn ghost" id="bSound">🔊</button>
     <a class="btn ghost" id="bLb" href="/leaderboard/?game=bigtwo&mode=normal" style="text-decoration:none">🏆</a>
+    <button class="btn ghost" id="bOnline">🌐 線上對戰</button>
     <button class="btn ghost" id="bRules" data-en="Rules">規則</button>
     <button class="btn" id="bNew" data-en="New match">新的一場</button>
   </div>
@@ -52,6 +54,7 @@
 <section class="k-help">
   <article><h2 data-en="Card order">牌的大小</h2><p data-en="3 is lowest and 2 is highest: 3 4 5 6 7 8 9 10 J Q K A 2. Suits from high to low: ♠ ♥ ♦ ♣ (Taiwan order). Whoever holds ♣3 leads the first trick and must play it.">由小到大：3 4 5 6 7 8 9 10 J Q K A 2；花色由大到小：♠黑桃 ♥紅心 ♦方塊 ♣梅花（台灣規則）。拿到梅花 3 的人先出，而且第一手必須包含梅花 3。</p></article>
   <article><h2 data-en="Hands">牌型</h2><p data-en="Single, Pair, and five-card hands: Straight &lt; Full House &lt; Four of a Kind &lt; Straight Flush. 2-3-4-5-6 is the biggest straight, then A-2-3-4-5, then 10-J-Q-K-A. Four of a Kind and Straight Flush are bombs: they can beat any single, pair or straight.">單張、對子、五張牌型：順子 &lt; 葫蘆 &lt; 鐵支 &lt; 同花順。順子以 2-3-4-5-6 最大，其次 A-2-3-4-5，再來 10-J-Q-K-A。鐵支與同花順是「炸彈」，可以壓任何單張、對子、順子、葫蘆。</p></article>
+  <article><h2 data-en="Play online">線上對戰</h2><p data-en="Press 🌐 Online: Random match pairs you with another player (the other two seats are AI), or create a room and send the 6-character code to up to 3 friends. Empty seats are filled by AI. Online games are not on the leaderboard.">按「🌐 線上對戰」：隨機配對會找一位真人對手（另外兩家是電腦）；也可以建立房間，把 6 碼房號傳給最多 3 位朋友，空位由電腦補。線上對局不列入排行榜。</p></article>
   <article><h2 data-en="Scoring">計分</h2><p data-en="When someone goes out, every other player loses one point per card left: ×2 with 8–9 cards, ×3 with 10–12, ×4 if they never played. The winner collects it all. A match is 8 deals; your total goes to the leaderboard.">有人出完牌時，其他人剩幾張扣幾分：剩 8–9 張 ×2、10–12 張 ×3、一張都沒出 ×4，全部給贏家。一場 8 局，總分可上傳排行榜。</p></article>
 </section>
 <footer class="k-foot"><span data-en="Free to play. Scores you choose to submit appear on the global leaderboard.">免費遊玩；選擇上傳的成績會顯示在全球排行榜。</span>　<a href="privacy.html" data-en="Privacy policy">隱私權政策與廣告說明</a></footer>

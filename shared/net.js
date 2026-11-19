@@ -27,7 +27,8 @@
   function code6() { var s = ''; for (var i = 0; i < 6; i++) s += ALPHA[(Math.random() * ALPHA.length) | 0]; return s; }
   function pid(game, code) { return 'stockcorp-' + game + '-' + code; }
 
-  function wrap(peer, dc, role, code) {
+  // shared：多人房間時同一個 peer 有多條連線，單一連線斷掉不能把 peer 關掉
+  function wrap(peer, dc, role, code, shared) {
     var c = { role: role, code: code, open: true, onData: null, onClose: null, last: Date.now() };
     var hb = setInterval(function () {
       if (!c.open) return;
@@ -37,13 +38,13 @@
     function end(reason) {
       if (!c.open) return; c.open = false; clearInterval(hb);
       try { dc.close(); } catch (e) { /* 略過 */ }
-      try { peer.destroy(); } catch (e) { /* 略過 */ }
+      if (!shared) try { peer.destroy(); } catch (e) { /* 略過 */ }
       if (c.onClose) c.onClose(reason || 'closed');
     }
     dc.on('data', function (m) { c.last = Date.now(); if (!m || m.t === '__ping') return; if (m.t === '__bye') { end('left'); return; } if (c.onData) c.onData(m); });
     dc.on('close', function () { end('closed'); });
     dc.on('error', function () { end('error'); });
-    peer.on('disconnected', function () { try { peer.reconnect(); } catch (e) { /* 略過 */ } });
+    if (!peer._sc_rc) { peer._sc_rc = 1; peer.on('disconnected', function () { try { peer.reconnect(); } catch (e) { /* 略過 */ } }); }
     c.send = function (m) { if (c.open) try { dc.send(m); } catch (e) { end('error'); } };
     c.close = function () { if (!c.open) return; try { dc.send({ t: '__bye' }); } catch (e) { /* 略過 */ } setTimeout(function () { end('self'); }, 150); };
     window.addEventListener('pagehide', function () { if (c.open) try { dc.send({ t: '__bye' }); } catch (e) { /* 略過 */ } });
@@ -51,8 +52,9 @@
   }
 
   // 建立房間
-  function host(game, onCode, onConn, onErr) {
-    var tries = 0, peer = null, cancelled = false;
+  // max：房間人數上限（含房主），預設 2；多人房間 onConn 會被呼叫多次
+  function host(game, onCode, onConn, onErr, max) {
+    var tries = 0, peer = null, cancelled = false, n = 0, multi = (max || 2) > 2;
     function attempt() {
       var code = code6();
       lib().then(function (Peer) {
@@ -63,17 +65,24 @@
           dc.on('open', function () {
             if (dc.metadata && dc.metadata.probe) { try { dc.send({ t: '__probe', busy: !!peer._sc_taken }); } catch (e) { /* 略過 */ } setTimeout(function () { try { dc.close(); } catch (e) { /* 略過 */ } }, 400); return; }
             if (peer._sc_taken) { try { dc.send({ t: '__full' }); } catch (e) { /* 略過 */ } setTimeout(function () { dc.close(); }, 300); return; }
-            peer._sc_taken = true; onConn(wrap(peer, dc, 'host', code));
+            n++; if (n >= (max || 2) - 1) peer._sc_taken = true;
+            var c = wrap(peer, dc, 'host', code, multi);
+            if (multi) { var oc = null; Object.defineProperty(c, 'onClose', { get: function () { return function (r) { n--; if (!peer._sc_locked) peer._sc_taken = false; if (oc) oc(r); }; }, set: function (f) { oc = f; } }); }
+            onConn(c);
           });
         });
         peer.on('error', function (e) {
           if (e && e.type === 'unavailable-id' && tries++ < 4) { try { peer.destroy(); } catch (x) { /* 略過 */ } attempt(); return; }
-          if (!peer._sc_taken) onErr(e && e.type || 'error');
+          if (!peer._sc_taken && !n) onErr(e && e.type || 'error');
         });
       }, function () { onErr('load'); });
     }
     attempt();
-    return function cancel() { cancelled = true; try { if (peer && !peer._sc_taken) peer.destroy(); } catch (e) { /* 略過 */ } };
+    var cancel = function () { cancelled = true; try { if (peer && !n) peer.destroy(); } catch (e) { /* 略過 */ } };
+    // 多人房間開局後不再收人；全部人都離開時關掉 peer
+    cancel.lock = function () { if (peer) { peer._sc_taken = true; peer._sc_locked = true; } };
+    cancel.destroy = function () { cancelled = true; try { if (peer) peer.destroy(); } catch (e) { /* 略過 */ } };
+    return cancel;
   }
   // 加入房間
   function join(game, code, onConn, onErr) {
@@ -298,6 +307,7 @@
     }
     function hosting() {
       homeGen++;
+      if ((o.max || 2) > 2) return hostingMulti();
       ov.innerHTML = '<div class="scn-box"><h2>🌐 ' + T('等待對手加入', 'Waiting for opponent') + '</h2><p>' + T('把房號告訴朋友：', 'Tell your friend this code:') + '</p>' +
         '<div class="scn-code">······</div><div class="scn-row"><button class="scn-btn" data-a="copy" disabled>' + T('複製邀請連結', 'Copy invite link') + '</button><button class="scn-btn g" data-a="back">' + T('返回', 'Back') + '</button></div>' +
         '<div class="scn-st"><span class="scn-spin"></span>' + T('建立房間中…', 'Creating room…') + '</div><p class="scn-note">' + T('對方加入前請不要關閉這個頁面。', 'Keep this page open until your friend joins.') + '</p></div>';
@@ -313,6 +323,44 @@
         link = location.origin + location.pathname + '?room=' + code;
         st.innerHTML = '<span class="scn-spin"></span>' + T('房間已建立，等待對手加入…', 'Room ready. Waiting for your opponent…');
       }, done, function (e) { st.className = 'scn-st err'; st.textContent = errText(e); });
+    }
+    // 多人房間（大老二、麻將）：房主看到已加入人數，按「開始」才開局，空位由電腦補
+    function hostingMulti() {
+      var conns = [], link = '';
+      ov.innerHTML = '<div class="scn-box"><h2>🌐 ' + T('建立房間', 'Your room') + '・' + o.title + '</h2><p>' + T('把房號告訴朋友（最多 ' + (o.max - 1) + ' 位）：', 'Share this code (up to ' + (o.max - 1) + ' friends):') + '</p>' +
+        '<div class="scn-code">······</div><div class="scn-cnt scn-who"></div>' +
+        '<div class="scn-row"><button class="scn-btn" data-a="copy" disabled>' + T('複製邀請連結', 'Copy invite link') + '</button></div>' +
+        '<div class="scn-row"><button class="scn-btn r" data-a="go" disabled>' + T('開始（空位由電腦補）', 'Start (AI fills empty seats)') + '</button><button class="scn-btn g" data-a="back">' + T('返回', 'Back') + '</button></div>' +
+        '<div class="scn-st"><span class="scn-spin"></span>' + T('建立房間中…', 'Creating room…') + '</div></div>';
+      var st = ov.querySelector('.scn-st'), cp = ov.querySelector('[data-a=copy]'), go = ov.querySelector('[data-a=go]'), who = ov.querySelector('.scn-who');
+      function upd() {
+        who.textContent = T('已加入：' + conns.length + ' 位朋友', 'Joined: ' + conns.length + ' friend(s)') + (conns.length ? '（' + conns.map(function (c) { return c.name || '?'; }).join('、') + '）' : '');
+        go.disabled = !conns.length;
+      }
+      ov.querySelector('[data-a=back]').onclick = function () { conns.forEach(function (c) { c.close(); }); if (cancel && cancel.destroy) cancel.destroy(); cancel = null; home(); };
+      cp.onclick = function () {
+        var txt = T('來跟我玩' + o.title + '！房號 ', 'Play ' + o.title + ' with me! Room code ') + link.split('room=')[1] + '\n' + link;
+        if (navigator.share) { navigator.share({ title: o.title, text: txt, url: link }).catch(function () { /* 略過 */ }); return; }
+        (navigator.clipboard ? navigator.clipboard.writeText(txt) : Promise.reject()).then(function () { cp.textContent = T('已複製！', 'Copied!'); }, function () { window.prompt(T('複製這個連結：', 'Copy this link:'), link); });
+      };
+      go.onclick = function () {
+        if (!conns.length) return;
+        if (cancel && cancel.lock) cancel.lock();
+        conns.forEach(function (c) { c.onData = null; c.onClose = null; });
+        closed = true; ov.remove(); o.onRoom(conns.slice());
+      };
+      cancel = host(o.game, function (code) {
+        ov.querySelector('.scn-code').textContent = code; cp.disabled = false;
+        link = location.origin + location.pathname + '?room=' + code;
+        st.innerHTML = '<span class="scn-spin"></span>' + T('等朋友加入，人到齊就按開始', 'Waiting for friends. Press Start when ready');
+        upd();
+      }, function (c) {
+        conns.push(c);
+        c.onData = function (m) { if (m && m.t === 'hello') { c.name = String(m.name || '').slice(0, 16); upd(); } };
+        c.onClose = function () { conns = conns.filter(function (x) { return x !== c; }); upd(); };
+        c.send({ t: 'lobby' });
+        upd(); if (window.K && K.beep) K.beep(660, 0.12, 'triangle', 0.06);
+      }, function (e) { st.className = 'scn-st err'; st.textContent = errText(e); }, o.max);
     }
     home();
     return close;
