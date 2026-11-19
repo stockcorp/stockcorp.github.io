@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title data-en="Nonogram | Free Online Picross Logic Puzzles with Leaderboard">數織｜免費線上數織（Nonogram、Picross）・邏輯填格・全球排行榜</title>
+<meta name="description" content="免費線上數織（Nonogram、Picross、繪圖方塊）：依照每一列、每一行的數字提示，推理哪些格子要塗黑。題目隨機產生，保證只靠邏輯就能解開，5×5、10×10、15×15 三種大小，解題時間上傳全球排行榜。">
+<meta name="google-adsense-account" content="ca-pub-3440199491716602">
+<meta name="theme-color" content="#100c1c">
+<meta property="og:title" content="數織｜Stockcorp 遊戲大廳">
+<meta property="og:description" content="看數字提示塗格子，純邏輯推理。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://stockcorp.github.io/nonogram/">
+<link rel="canonical" href="https://stockcorp.github.io/nonogram/">
+<link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/nonogram/?lang=zh">
+<link rel="alternate" hreflang="en" href="https://stockcorp.github.io/nonogram/?lang=en">
+<link rel="alternate" hreflang="x-default" href="https://stockcorp.github.io/nonogram/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%237c3aed'/%3E%3Ctext x='50' y='70' font-size='60' text-anchor='middle'%3E%F0%9F%A7%A9%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/shared/kit.css?v=1.0">
+<link rel="stylesheet" href="style.css?v=1.0">
+<script src="/shared/app.js?v=1.2"></script>
+<script src="/shared/kit.js?v=1.0"></script>
+<script src="/shared/games.js?v=1.6" data-game="nonogram" defer></script>
+<script src="/shared/lb.js?v=1.0" defer></script>
+</head>
+<body>
+<header class="k-top">
+  <div class="k-brand"><span class="k-logo">🧩</span><div><h1 data-en="Nonogram">數織</h1><small id="sub"></small></div></div>
+  <div class="k-acts">
+    <button class="btn ghost" data-lang-toggle>EN</button>
+    <button class="btn ghost" id="bSound">🔊</button>
+    <a class="btn ghost" id="bLb" href="/leaderboard/?game=nonogram&mode=10x10" style="text-decoration:none">🏆</a>
+    <button class="btn ghost" id="bMode">⬛ <span data-en="Fill">塗黑</span></button><button class="btn" id="bNew" data-en="New">新局</button>
+  </div>
+</header>
+<main class="wrap">
+  <div class="bar"><span>⏱ <b id="clock">0:00</b></span><button class="btn ghost sm" id="bUndo" data-en="↶ Undo">↶ 悔棋</button><button class="btn ghost sm" id="bCheck" data-en="Check">檢查</button></div>
+  <div class="boardWrap"><canvas id="cv"></canvas></div>
+</main>
+<section class="k-help"><article><h2 data-en="How to play">玩法</h2><p data-en="The numbers beside each row and above each column give the lengths of the runs of filled squares in that line, in order, with at least one blank between runs. “3 1” means three filled in a row, a gap, then one more. Fill in every square that should be filled to win.">每一列左邊、每一行上面的數字，代表那一排「連續塗黑的格子」有幾段、每段多長，段和段之間至少隔一格空白。例如「3 1」表示先有連續 3 格，隔至少一格，再有 1 格。用推理把所有該塗的格子塗黑就過關。</p></article><article><h2 data-en="Controls">操作</h2><p data-en="Tap to fill, tap again to clear. Switch to ✕ mode to mark squares you know are blank. Drag to paint several squares at once. On a computer, right-click marks ✕.">點一下塗黑、再點一下清除。切換成「✕ 打叉」模式可以標記確定是空白的格子。按住拖曳可以一次塗很多格。電腦可以用右鍵打叉。</p></article><article><h2 data-en="Leaderboard">排行榜</h2><p data-en="Each size has its own leaderboard for solving time, measured by the server.">每種大小各有排行榜，比的是解題時間（伺服器計時）。</p></article></section>
+<footer class="k-foot"><span data-en="Free to play. Scores you choose to submit appear on the global leaderboard.">免費遊玩；選擇上傳的成績會顯示在全球排行榜。</span>　<a href="privacy.html" data-en="Privacy policy">隱私權政策與廣告說明</a></footer>
+<div class="k-ov" id="ovNew"><div class="k-modal center"><h2 data-en="New puzzle">新題目</h2><div class="k-chips lvs" id="lvChips"><button data-m="5x5">5×5</button><button data-m="10x10">10×10</button><button data-m="15x15">15×15</button></div><div class="k-row"><button class="btn ghost" data-close data-en="Cancel">取消</button></div></div></div>
+<div class="k-ov" id="ovEnd" data-sticky><div class="k-modal center"><div class="k-big" id="endEmoji">🧩</div><h2 id="endTitle" data-en="Solved!">解開了！</h2>
+  <div class="k-stats"><div><b id="endTime">0</b><span data-en="Time">時間</span></div><div><b id="endSize">0</b><span data-en="Size">大小</span></div></div>
+  <p class="mute" id="endBest"></p><div class="k-row"><button class="btn big" id="bAgain" data-en="Play again">再玩一次</button><button class="btn ghost" data-close data-en="Close">關閉</button></div></div></div>
+<script src="game.js?v=1.0" defer></script>
+</body>
+</html>
