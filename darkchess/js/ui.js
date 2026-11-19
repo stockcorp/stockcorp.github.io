@@ -180,6 +180,7 @@
     leaveOnline(true);
     const first = pref.first === 'rand' ? (Math.random() < 0.5 ? 0 : 1) : pref.first === 'ai' ? 1 : 0;
     G = fresh(D.newGame({ first, rookRun: pref.rookRun }), 'ai', 0);
+    if (window.SCLB) SCLB.start('darkchess', G.level);
     sel = -1; hintCells = []; busy = false; rebuild(); layout(); save();
     say('start'); toast(first === 0 ? L('你先翻棋', 'You flip first') : L('破壞神先手', 'The Destroyer goes first'));
     if (window.SC) SC.post('gamestart', { level: G.level });
@@ -258,6 +259,7 @@
     if (window.SC) SC.post('gameover', { result: res, mode: G.mode, level: G.level });
     G.res = res;
     if (!quiet) setTimeout(() => showEnd(res), 900);
+    if (!quiet && res === 'w' && !online() && window.SCLB && SCLB.has('darkchess', G.level)) { const sec = SCLB.elapsed('darkchess'); setTimeout(() => SCLB.offer({ game: 'darkchess', mode: G.level, score: sec, text: lvName(G.level) + L('・' + sec + ' 秒獲勝', ' · won in ' + sec + ' s') }), 2200); }
   }
   function showEnd(res) {
     if (!G.over) return;

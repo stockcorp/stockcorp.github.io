@@ -186,6 +186,7 @@
   function tile(cx, ry) { if (ry < 0 || ry >= R) return ' '; if (cx < 0 || cx >= G.w) return '#'; return G.grid[ry][cx]; }
   function loadLevel(i) {
     const L = LV.build(i), sv = lvSave(i);
+    if (root.SCLB) root.SCLB.start('ai', String(i + 1));
     G = { i, name: L.name, nameEn: L.nameEn, tip: L.tip, tipEn: L.tipEn, th: TH[L.theme], w: L.w, grid: L.rows.map(r => r.split('')), items: [], en: [], plats: [], shots: [], parts: [], texts: [], lasers: [], cam: 0, shake: 0, time: 0, coins: 0, gotShares: [false, false, false], hits: 0, boss: null, won: false, tipT: 5 };
     let sIdx = 0; const hpMax = 3 + upg('hp');
     for (let r = 0; r < R; r++) for (let x = 0; x < L.w; x++) {
@@ -346,6 +347,8 @@
     SV.coins += G.coins; SV.unlocked = Math.max(SV.unlocked, Math.min(LV.count, G.i + 2));
     lastResult = { stars, coins: G.coins, time: G.time, shares: G.gotShares.filter(Boolean).length, newShares, hits: G.hits, last: G.i === LV.count - 1 }; save();
     if (root.SC) root.SC.post('levelclear', { level: G.i + 1, stars, shares: lastResult.shares });
+    const lvNo = G.i + 1, secs = Math.round(G.time * 10) / 10;
+    if (root.SCLB) setTimeout(() => root.SCLB.offer({ game: 'ai', mode: String(lvNo), score: secs, text: Lg('第 ' + lvNo + ' 關・' + secs.toFixed(1) + ' 秒', 'Stage ' + lvNo + ' · ' + secs.toFixed(1) + ' s') }), 1600);
   }
 
   /* ---------- 關卡繪製 ---------- */

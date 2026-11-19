@@ -14,6 +14,7 @@ function lastmod(rel) {
 const urls = [];
 // 根目錄是遊戲大廳
 urls.push({ loc: SITE + '/', mod: lastmod('index.html'), pri: '1.0', freq: 'weekly', alt: true });
+urls.push({ loc: SITE + '/leaderboard/', mod: lastmod('leaderboard'), pri: '0.8', freq: 'daily', alt: true });
 if (fs.existsSync(path.join(ROOT, 'privacy.html'))) urls.push({ loc: SITE + '/privacy.html', mod: lastmod('privacy.html'), pri: '0.3', freq: 'yearly', alt: true });
 games.forEach((g, i) => {
   const dir = g.url.replace(/^\//, ''), idx = dir + 'index.html';
