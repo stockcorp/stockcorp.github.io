@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title data-en="Pop Star | Free Online Tap-to-Pop Block Puzzle">消滅星星｜免費線上消除遊戲・點同色方塊・全球排行榜</title>
+<meta name="description" content="免費線上消滅星星：點兩個以上相連的同色方塊就能消除，一次消越多分數越高（個數平方 × 5）。剩下的方塊越少獎勵越多，達到目標分數就進入下一關。分數上傳全球排行榜。">
+<meta name="google-adsense-account" content="ca-pub-3440199491716602">
+<meta name="theme-color" content="#16070c">
+<meta property="og:title" content="消滅星星｜Stockcorp 遊戲大廳">
+<meta property="og:description" content="點同色方塊消除，一次消越多越高分。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://stockcorp.github.io/popstar/">
+<link rel="canonical" href="https://stockcorp.github.io/popstar/">
+<link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/popstar/?lang=zh">
+<link rel="alternate" hreflang="en" href="https://stockcorp.github.io/popstar/?lang=en">
+<link rel="alternate" hreflang="x-default" href="https://stockcorp.github.io/popstar/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%23e11d48'/%3E%3Ctext x='50' y='70' font-size='60' text-anchor='middle'%3E%E2%AD%90%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/shared/kit.css?v=1.0">
+<link rel="stylesheet" href="style.css?v=1.0">
+<script src="/shared/app.js?v=1.2"></script>
+<script src="/shared/kit.js?v=1.0"></script>
+<script src="/shared/games.js?v=1.6" data-game="popstar" defer></script>
+<script src="/shared/lb.js?v=1.0" defer></script>
+</head>
+<body>
+<header class="k-top">
+  <div class="k-brand"><span class="k-logo">⭐</span><div><h1 data-en="Pop Star">消滅星星</h1><small id="sub"></small></div></div>
+  <div class="k-acts">
+    <button class="btn ghost" data-lang-toggle>EN</button>
+    <button class="btn ghost" id="bSound">🔊</button>
+    <a class="btn ghost" id="bLb" href="/leaderboard/?game=popstar&mode=classic" style="text-decoration:none">🏆</a>
+    <button class="btn" id="bNew" data-en="New">新局</button>
+  </div>
+</header>
+<main class="wrap">
+  <div class="bar"><span><span data-en="Level">關卡</span> <b id="level">1</b></span><span><span data-en="Target">目標</span> <b id="target">1000</b></span><span><span data-en="Score">分數</span> <b id="score">0</b></span></div>
+  <div class="msg" id="msg"></div>
+  <div class="boardWrap"><canvas id="cv"></canvas></div>
+</main>
+<section class="k-help"><article><h2 data-en="How to play">玩法</h2><p data-en="Tap two or more touching blocks of the same colour to pop them. Blocks above fall down and empty columns slide left. Popping n blocks scores n × n × 5, so build big groups first. The level ends when nothing can be popped; leaving fewer than 10 blocks earns a bonus.">點一下兩個以上相連的同色方塊就會一起消失，上面的方塊往下掉、空掉的直行會往左靠。一次消 n 個得 n × n × 5 分，所以盡量湊大塊再消。沒有可以消的方塊時這一關結束，剩下不到 10 個有額外獎勵。</p></article><article><h2 data-en="Levels">過關</h2><p data-en="Reach the target score when a level ends to move on — the target rises each level. Fall short and the game is over.">關卡結束時總分達到目標分數就進入下一關，目標每關提高；沒達到就遊戲結束。</p></article><article><h2 data-en="Leaderboard">排行榜</h2><p data-en="Your final score can go on the global leaderboard.">遊戲結束時的總分可以上傳全球排行榜。</p></article></section>
+<footer class="k-foot"><span data-en="Free to play. Scores you choose to submit appear on the global leaderboard.">免費遊玩；選擇上傳的成績會顯示在全球排行榜。</span>　<a href="privacy.html" data-en="Privacy policy">隱私權政策與廣告說明</a></footer>
+<div class="k-ov" id="ovEnd" data-sticky><div class="k-modal center"><div class="k-big" id="endEmoji">⭐</div><h2 id="endTitle" data-en="Game over">遊戲結束</h2>
+  <div class="k-stats"><div><b id="endScore">0</b><span data-en="Score">分數</span></div><div><b id="endLevel">0</b><span data-en="Level">關卡</span></div></div>
+  <p class="mute" id="endBest"></p><div class="k-row"><button class="btn big" id="bAgain" data-en="Play again">再玩一次</button><button class="btn ghost" data-close data-en="Close">關閉</button></div></div></div>
+<script src="game.js?v=1.0" defer></script>
+</body>
+</html>

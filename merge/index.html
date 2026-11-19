@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title data-en="Fruit Merge | Free Online Drop-and-Merge Fruit Game">水果合成｜免費線上合成大西瓜・物理掉落合成・全球排行榜</title>
+<meta name="description" content="免費線上水果合成：把水果丟進箱子，兩顆一樣的水果碰在一起就會合成更大的水果，一路合成到大西瓜！水果堆超過紅線就結束。真實物理掉落，分數上傳全球排行榜。">
+<meta name="google-adsense-account" content="ca-pub-3440199491716602">
+<meta name="theme-color" content="#0f170d">
+<meta property="og:title" content="水果合成｜Stockcorp 遊戲大廳">
+<meta property="og:description" content="一樣的水果碰在一起就合成，目標大西瓜。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://stockcorp.github.io/merge/">
+<link rel="canonical" href="https://stockcorp.github.io/merge/">
+<link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/merge/?lang=zh">
+<link rel="alternate" hreflang="en" href="https://stockcorp.github.io/merge/?lang=en">
+<link rel="alternate" hreflang="x-default" href="https://stockcorp.github.io/merge/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%2316a34a'/%3E%3Ctext x='50' y='70' font-size='60' text-anchor='middle'%3E%F0%9F%8D%89%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/shared/kit.css?v=1.0">
+<link rel="stylesheet" href="style.css?v=1.0">
+<script src="/shared/app.js?v=1.2"></script>
+<script src="/shared/kit.js?v=1.0"></script>
+<script src="/shared/games.js?v=1.6" data-game="merge" defer></script>
+<script src="/shared/lb.js?v=1.0" defer></script>
+</head>
+<body>
+<header class="k-top">
+  <div class="k-brand"><span class="k-logo">🍉</span><div><h1 data-en="Fruit Merge">水果合成</h1><small id="sub"></small></div></div>
+  <div class="k-acts">
+    <button class="btn ghost" data-lang-toggle>EN</button>
+    <button class="btn ghost" id="bSound">🔊</button>
+    <a class="btn ghost" id="bLb" href="/leaderboard/?game=merge&mode=classic" style="text-decoration:none">🏆</a>
+    <button class="btn" id="bNew" data-en="New">新局</button>
+  </div>
+</header>
+<main class="wrap">
+  <div class="bar"><span><span data-en="Score">分數</span> <b id="score">0</b></span><span><span data-en="Next">下一顆</span> <b id="next"></b></span><span><span data-en="Best fruit">最大</span> <b id="big">🍒</b></span></div>
+  <div class="stage"><canvas id="cv" width="400" height="600"></canvas></div>
+</main>
+<section class="k-help"><article><h2 data-en="How to play">玩法</h2><p data-en="Move your finger (or mouse) left and right to aim, and let go to drop. Two matching fruits that touch merge into the next one: 🍒→🍓→🍇→🍊→🍎→🍐→🍑→🍍→🥥→🍈→🍉. If the pile stays above the red line too long, the game ends.">左右移動手指（或滑鼠）決定位置，放開就把水果丟下去。兩顆一樣的水果碰在一起會合成下一級的水果：🍒→🍓→🍇→🍊→🍎→🍐→🍑→🍍→🥥→🍈→🍉。水果堆超過上方紅線太久，遊戲就結束。</p></article><article><h2 data-en="Leaderboard">排行榜</h2><p data-en="Every merge scores, and bigger fruit score more. Your final score can go on the global leaderboard.">每次合成都會得分，越大的水果分數越高。遊戲結束時的分數可以上傳全球排行榜。</p></article></section>
+<footer class="k-foot"><span data-en="Free to play. Scores you choose to submit appear on the global leaderboard.">免費遊玩；選擇上傳的成績會顯示在全球排行榜。</span>　<a href="privacy.html" data-en="Privacy policy">隱私權政策與廣告說明</a></footer>
+<div class="k-ov" id="ovEnd" data-sticky><div class="k-modal center"><div class="k-big" id="endEmoji">🍉</div><h2 id="endTitle" data-en="Game over">遊戲結束</h2>
+  <div class="k-stats"><div><b id="endScore">0</b><span data-en="Score">分數</span></div><div><b id="endBig">0</b><span data-en="Biggest fruit">最大水果</span></div></div>
+  <p class="mute" id="endBest"></p><div class="k-row"><button class="btn big" id="bAgain" data-en="Play again">再玩一次</button><button class="btn ghost" data-close data-en="Close">關閉</button></div></div></div>
+<script src="game.js?v=1.0" defer></script>
+</body>
+</html>

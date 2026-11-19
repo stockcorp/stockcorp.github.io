@@ -1,0 +1,5 @@
+:root{--bg:#0f170d;--panel:#18241a;--line:#2c4430;--accent:#86efac;--accent2:#16a34a}
+.wrap{max-width:520px;margin:0 auto;padding:8px}
+.bar{display:flex;justify-content:center;gap:16px;margin-bottom:8px;font-size:15px;color:var(--mute);align-items:center}.bar b{color:#fff;font-variant-numeric:tabular-nums;font-size:16px}
+.stage{margin:0 auto;max-width:min(420px,calc((100vh - 170px) * 400 / 600))}
+#cv{width:100%;display:block;border-radius:16px;background:linear-gradient(#fef3c7,#fde68a);box-shadow:0 10px 30px rgba(0,0,0,.5);touch-action:none}
