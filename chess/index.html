@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title data-en="Chess | Free Online Chess vs AI or Real Players">西洋棋｜免費線上西洋棋・對戰電腦或線上真人・全球排行榜</title>
+<meta name="description" content="免費線上西洋棋：完整國際規則（入堡、吃過路兵、升變、三次重複和局），可對戰三種強度的電腦，也能線上隨機配對或用房號找朋友。擊敗電腦的時間可上傳全球排行榜。">
+<meta name="google-adsense-account" content="ca-pub-3440199491716602">
+<meta name="theme-color" content="#1a120b">
+<meta property="og:title" content="西洋棋｜Stockcorp 遊戲大廳">
+<meta property="og:description" content="完整國際規則，對戰電腦或線上真人。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://stockcorp.github.io/chess/">
+<link rel="canonical" href="https://stockcorp.github.io/chess/">
+<link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/chess/?lang=zh">
+<link rel="alternate" hreflang="en" href="https://stockcorp.github.io/chess/?lang=en">
+<link rel="alternate" hreflang="x-default" href="https://stockcorp.github.io/chess/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%2392400e'/%3E%3Ctext x='50' y='70' font-size='60' text-anchor='middle'%3E%E2%99%9E%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/shared/kit.css?v=1.0">
+<link rel="stylesheet" href="style.css?v=1.0">
+<script src="/shared/app.js?v=1.2"></script>
+<script src="/shared/kit.js?v=1.0"></script>
+<script src="/shared/games.js?v=1.6" data-game="chess" defer></script>
+<script src="/shared/lb.js?v=1.0" defer></script>
+<script src="/shared/net.js?v=1.7" defer></script>
+</head>
+<body>
+<header class="k-top">
+  <div class="k-brand"><span class="k-logo">♞</span><div><h1 data-en="Chess">西洋棋</h1><small id="sub"></small></div></div>
+  <div class="k-acts">
+    <button class="btn ghost" data-lang-toggle>EN</button>
+    <button class="btn ghost" id="bSound">🔊</button>
+    <a class="btn ghost" id="bLb" href="/leaderboard/?game=chess&mode=normal" style="text-decoration:none">🏆</a>
+    <button class="btn ghost" id="bOnline">🌐 線上對戰</button><button class="btn" id="bNew" data-en="New">新局</button>
+  </div>
+</header>
+<main class="wrap">
+  <div class="players"><div class="pl" id="plB"><i class="st w"></i><div><b id="nmB"></b><small data-en="White">白方</small></div></div><div class="vs" id="status"></div><div class="pl" id="plW"><i class="st b"></i><div><b id="nmW"></b><small data-en="Black">黑方</small></div></div></div>
+  <div class="board" id="board"><canvas id="cv"></canvas><div id="promo"></div></div>
+  <div class="acts"><button class="btn ghost" id="bUndo">↶ <span data-en="Undo">悔棋</span> (<b id="undoN">3</b>)</button><button class="btn ghost" id="bResign" data-en="Resign">認輸</button></div>
+</main>
+<section class="k-help"><article><h2 data-en="Rules">規則</h2><p data-en="White moves first. Checkmate the enemy king to win. Tap one of your pieces to see where it can go, then tap a highlighted square. A pawn that reaches the last rank promotes to a queen, rook, bishop or knight. Stalemate, the fifty-move rule, threefold repetition and insufficient material are draws.">白方先走，把對方的國王「將死」（被攻擊又無路可逃）就獲勝。點自己的棋子會顯示能走的位置，再點目標格就走過去。兵走到底線可以升變成后、車、象或馬。逼和、50 步內沒吃子也沒動兵、同一局面出現三次、雙方子力不足都算和局。</p></article><article><h2 data-en="Play online">線上對戰</h2><p data-en="Press 🌐 Online for a random match or a room code. Sides swap every game. Online games are not on the leaderboard.">按「🌐 線上對戰」隨機配對或建立房間找朋友，每局交換先後手。線上對局不列入排行榜。</p></article><article><h2 data-en="Leaderboard">排行榜</h2><p data-en="Beat the computer and your time (measured by the server) can go on that level&#39;s leaderboard.">擊敗電腦後，從開局到獲勝的時間（伺服器計時）可以上傳該難度的排行榜。</p></article></section>
+<footer class="k-foot"><span data-en="Free to play. Scores you choose to submit appear on the global leaderboard.">免費遊玩；選擇上傳的成績會顯示在全球排行榜。</span>　<a href="privacy.html" data-en="Privacy policy">隱私權政策與廣告說明</a></footer>
+<div class="k-ov" id="ovNew"><div class="k-modal center"><h2 data-en="New game vs computer">對戰電腦</h2><p class="mute" data-en="Difficulty">難度</p><div class="k-chips lvs" id="lvChips"></div>
+  <p class="mute" data-en="You play">你執</p><div class="k-chips" id="colChips"><button data-c="1" class="on" data-en="White (first)">白方（先手）</button><button data-c="2" data-en="Black">黑方</button></div>
+  <div class="k-row"><button class="btn big" id="bGo" data-en="Start">開始</button><button class="btn ghost" data-close data-en="Cancel">取消</button></div></div></div>
+<div class="k-ov" id="ovEnd"><div class="k-modal center"><div class="k-big" id="endEmoji">🏆</div><h2 id="endTitle"></h2><p class="mute" id="endNote"></p><div class="k-row"><button class="btn big" id="bAgain"></button><button class="btn ghost" data-close data-en="View board">看棋盤</button></div></div></div>
+<script src="/shared/duel.js?v=1.0" defer></script>
+<script src="game.js?v=1.0" defer></script>
+</body>
+</html>

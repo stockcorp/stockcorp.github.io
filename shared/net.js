@@ -13,17 +13,16 @@
   var T = function (zh, en) { return window.SC ? SC.t(zh, en) : zh; };
   var ALPHA = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
   // 連線設定：STUN 找出自己的公開位址；TURN 是「中繼」，手機 4G/5G、公司網路這類無法直連的情況靠它轉送。
-  // 1) PeerJS 官方免費 TURN（備用）  2) 我們自己的 Linode /api/turn.php 發的短效 TURN 帳號（Cloudflare 或自架 coturn）
+  // TURN 帳號由 Linode /api/turn.php 發（Cloudflare 或自架 coturn）。PeerJS、openrelay 的免費 TURN 實測已失效（2026-11），不再使用。
   var TURN_API = 'https://game.ldigi.com.tw/api/turn.php';
   var ICE = { iceServers: [
-    { urls: ['stun:stun.cloudflare.com:3478', 'stun:stun.l.google.com:19302'] },
-    { urls: ['turn:eu-0.turn.peerjs.com:3478', 'turn:us-0.turn.peerjs.com:3478'], username: 'peerjs', credential: 'peerjsp' }
+    { urls: ['stun:stun.cloudflare.com:3478', 'stun:stun.l.google.com:19302'] }
   ], sdpSemantics: 'unified-plan' };
   var iceP = null;
   function iceReady() {
     if (iceP) return iceP;
     iceP = new Promise(function (res) {
-      var add = function (list) { if (list && list.length) ICE.iceServers = list.concat(ICE.iceServers.filter(function (x) { return x.username !== 'peerjs'; })); res(); };
+      var add = function (list) { if (list && list.length) ICE.iceServers = list.concat(ICE.iceServers); res(); };
       try { var c = JSON.parse(sessionStorage.getItem('sc_turn') || 'null'); if (c && c.exp > Date.now() / 1000 + 600) { add(c.ice); return; } } catch (e) { /* 略過 */ }
       if (!window.fetch) { res(); return; }
       var done = false, t = setTimeout(function () { if (!done) { done = true; res(); } }, 3500);
