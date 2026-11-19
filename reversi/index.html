@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title data-en="Reversi | Free Online Reversi vs AI or Real Players">黑白棋｜免費線上黑白棋（奧賽羅）・對戰電腦或線上真人・全球排行榜</title>
+<meta name="description" content="免費線上黑白棋：8×8 棋盤，夾住對方棋子就翻成自己的顏色，最後棋子多的一方獲勝。可對戰三種強度的電腦，也能線上隨機配對或用房號找朋友；擊敗電腦的時間可上傳全球排行榜。">
+<meta name="google-adsense-account" content="ca-pub-3440199491716602">
+<meta name="theme-color" content="#0c1a12">
+<meta property="og:title" content="黑白棋｜Stockcorp 遊戲大廳">
+<meta property="og:description" content="夾住就翻面，對戰電腦或線上真人。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://stockcorp.github.io/reversi/">
+<link rel="canonical" href="https://stockcorp.github.io/reversi/">
+<link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/reversi/?lang=zh">
+<link rel="alternate" hreflang="en" href="https://stockcorp.github.io/reversi/?lang=en">
+<link rel="alternate" hreflang="x-default" href="https://stockcorp.github.io/reversi/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%2315803d'/%3E%3Ctext x='50' y='70' font-size='60' text-anchor='middle'%3E%E2%9A%AB%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/shared/kit.css?v=1.0">
+<link rel="stylesheet" href="style.css?v=1.0">
+<script src="/shared/app.js?v=1.2"></script>
+<script src="/shared/kit.js?v=1.0"></script>
+<script src="/shared/games.js?v=1.6" data-game="reversi" defer></script>
+<script src="/shared/lb.js?v=1.0" defer></script>
+<script src="/shared/net.js?v=1.6" defer></script>
+</head>
+<body>
+<header class="k-top">
+  <div class="k-brand"><span class="k-logo">⚫</span><div><h1 data-en="Reversi">黑白棋</h1><small id="sub"></small></div></div>
+  <div class="k-acts">
+    <button class="btn ghost" data-lang-toggle>EN</button>
+    <button class="btn ghost" id="bSound">🔊</button>
+    <a class="btn ghost" id="bLb" href="/leaderboard/?game=reversi&mode=normal" style="text-decoration:none">🏆</a>
+    <button class="btn ghost" id="bOnline">🌐 線上對戰</button><button class="btn" id="bNew" data-en="New">新局</button>
+  </div>
+</header>
+<main class="wrap">
+  <div class="players"><div class="pl" id="plB"><i class="st b"></i><div><b id="nmB"></b><small><span id="cntB">2</span> <span data-en="discs">子</span></small></div></div><div class="vs" id="status"></div><div class="pl" id="plW"><i class="st w"></i><div><b id="nmW"></b><small><span id="cntW">2</span> <span data-en="discs">子</span></small></div></div></div>
+  <div class="board" id="board"><canvas id="cv"></canvas></div>
+  <div class="acts"><button class="btn ghost" id="bUndo">↶ <span data-en="Undo">悔棋</span> (<b id="undoN">3</b>)</button><button class="btn ghost" id="bHint" data-en="Show moves">顯示可下位置</button><button class="btn ghost" id="bResign" data-en="Resign">認輸</button></div>
+</main>
+<section class="k-help"><article><h2 data-en="Rules">規則</h2><p data-en="Black moves first. Each move must trap at least one line of your opponent&#39;s discs between the new disc and one of yours (across, down or diagonally); every trapped disc flips to your colour. If you cannot move you pass. When neither player can move, the one with more discs wins.">黑棋先下。每一步都必須把對方的棋子「夾」在新下的子和自己原有的子之間（橫、直、斜都算），被夾住的子全部翻成你的顏色。沒有地方可下就自動跳過；雙方都不能下時結束，棋子多的一方獲勝。</p></article><article><h2 data-en="Play online">線上對戰</h2><p data-en="Press 🌐 Online for a random match or a room code. Colours swap every game. Online games are not on the leaderboard.">按「🌐 線上對戰」隨機配對或建立房間找朋友，每局交換先後手。線上對局不列入排行榜。</p></article><article><h2 data-en="Leaderboard">排行榜</h2><p data-en="Beat the computer and your time (measured by the server) can go on that level&#39;s leaderboard.">擊敗電腦後，從開局到獲勝的時間（伺服器計時）可以上傳該難度的排行榜。</p></article></section>
+<footer class="k-foot"><span data-en="Free to play. Scores you choose to submit appear on the global leaderboard.">免費遊玩；選擇上傳的成績會顯示在全球排行榜。</span>　<a href="privacy.html" data-en="Privacy policy">隱私權政策與廣告說明</a></footer>
+<div class="k-ov" id="ovNew"><div class="k-modal center"><h2 data-en="New game vs computer">對戰電腦</h2><p class="mute" data-en="Difficulty">難度</p><div class="k-chips lvs" id="lvChips"></div>
+  <p class="mute" data-en="Your colour">你執</p><div class="k-chips" id="colChips"><button data-c="1" class="on" data-en="⚫ Black (first)">⚫ 黑棋（先手）</button><button data-c="2" data-en="⚪ White">⚪ 白棋</button></div>
+  <div class="k-row"><button class="btn big" id="bGo" data-en="Start">開始</button><button class="btn ghost" data-close data-en="Cancel">取消</button></div></div></div>
+<div class="k-ov" id="ovEnd"><div class="k-modal center"><div class="k-big" id="endEmoji">🏆</div><h2 id="endTitle"></h2><p class="mute" id="endNote"></p><div class="k-row"><button class="btn big" id="bAgain"></button><button class="btn ghost" data-close data-en="View board">看棋盤</button></div></div></div>
+<script src="game.js?v=1.0" defer></script>
+</body>
+</html>

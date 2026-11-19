@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title data-en="Brick Breaker | Free Online Breakout with Power-ups and Leaderboard">打磚塊｜免費線上打磚塊・道具加長板子、多顆球・全球排行榜</title>
+<meta name="description" content="免費線上打磚塊：左右移動板子把球彈回去，打碎所有磚塊進入下一關，接住道具可以加長板子、分出多顆球、放慢球速。分數上傳全球排行榜。">
+<meta name="google-adsense-account" content="ca-pub-3440199491716602">
+<meta name="theme-color" content="#160f0a">
+<meta property="og:title" content="打磚塊｜Stockcorp 遊戲大廳">
+<meta property="og:description" content="彈球打碎磚塊，一關比一關難。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://stockcorp.github.io/breakout/">
+<link rel="canonical" href="https://stockcorp.github.io/breakout/">
+<link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/breakout/?lang=zh">
+<link rel="alternate" hreflang="en" href="https://stockcorp.github.io/breakout/?lang=en">
+<link rel="alternate" hreflang="x-default" href="https://stockcorp.github.io/breakout/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%23ea580c'/%3E%3Ctext x='50' y='70' font-size='60' text-anchor='middle'%3E%F0%9F%A7%B1%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/shared/kit.css?v=1.0">
+<link rel="stylesheet" href="style.css?v=1.0">
+<script src="/shared/app.js?v=1.2"></script>
+<script src="/shared/kit.js?v=1.0"></script>
+<script src="/shared/games.js?v=1.6" data-game="breakout" defer></script>
+<script src="/shared/lb.js?v=1.0" defer></script>
+</head>
+<body>
+<header class="k-top">
+  <div class="k-brand"><span class="k-logo">🧱</span><div><h1 data-en="Brick Breaker">打磚塊</h1><small id="sub"></small></div></div>
+  <div class="k-acts">
+    <button class="btn ghost" data-lang-toggle>EN</button>
+    <button class="btn ghost" id="bSound">🔊</button>
+    <a class="btn ghost" id="bLb" href="/leaderboard/?game=breakout&mode=classic" style="text-decoration:none">🏆</a>
+    <button class="btn" id="bNew" data-en="New">新局</button>
+  </div>
+</header>
+<main class="wrap">
+  <div class="bar"><span><span data-en="Score">分數</span> <b id="score">0</b></span><span><span data-en="Level">關卡</span> <b id="level">1</b></span><span id="lives">❤️❤️❤️</span></div>
+  <div class="stage"><canvas id="cv" width="480" height="640"></canvas><div class="msg" id="msg"></div></div>
+</main>
+<section class="k-help"><article><h2 data-en="How to play">玩法</h2><p data-en="Move the paddle with your mouse, finger or the arrow keys; tap or press Space to launch. Clear every brick to reach the next level. Missing the ball costs a life — lose all three and the game ends.">滑鼠、手指拖曳或方向鍵移動板子，點一下或按空白鍵發球。打碎所有磚塊進入下一關；球掉下去會少一條命，三條命用完遊戲結束。</p></article><article><h2 data-en="Power-ups">道具</h2><p data-en="Broken bricks sometimes drop power-ups: ↔ wider paddle, ●● extra ball, 🐢 slower ball, ❤️ extra life.">打碎磚塊有機會掉出道具：↔ 加長板子、●● 多一顆球、🐢 球變慢、❤️ 多一條命。</p></article><article><h2 data-en="Leaderboard">排行榜</h2><p data-en="Your final score can go on the global leaderboard.">遊戲結束時的總分可以上傳全球排行榜。</p></article></section>
+<footer class="k-foot"><span data-en="Free to play. Scores you choose to submit appear on the global leaderboard.">免費遊玩；選擇上傳的成績會顯示在全球排行榜。</span>　<a href="privacy.html" data-en="Privacy policy">隱私權政策與廣告說明</a></footer>
+<div class="k-ov" id="ovEnd" data-sticky><div class="k-modal center"><div class="k-big" id="endEmoji">🧱</div><h2 id="endTitle" data-en="Game over">遊戲結束</h2>
+  <div class="k-stats"><div><b id="endScore">0</b><span data-en="Score">分數</span></div><div><b id="endLevel">0</b><span data-en="Level">關卡</span></div></div>
+  <p class="mute" id="endBest"></p><div class="k-row"><button class="btn big" id="bAgain" data-en="Play again">再玩一次</button><button class="btn ghost" data-close data-en="Close">關閉</button></div></div></div>
+<script src="game.js?v=1.0" defer></script>
+</body>
+</html>

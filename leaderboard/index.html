@@ -9,7 +9,7 @@
 <link rel="canonical" href="https://stockcorp.github.io/leaderboard/">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%230b0f19'/%3E%3Ctext x='50' y='68' font-size='56' text-anchor='middle'%3E%F0%9F%8F%86%3C/text%3E%3C/svg%3E">
 <script src="/shared/app.js?v=1.2"></script>
-<script src="/shared/games.js?v=1.5" data-game="lobby"></script>
+<script src="/shared/games.js?v=1.6" data-game="lobby"></script>
 <script src="/shared/lb.js?v=1.0"></script>
 <style>
 :root{--bg:#0b0f19;--card:#141a29;--line:#222b40;--txt:#e6ebf5;--mute:#8b97b3;--gold:#f5b83d}
@@ -82,7 +82,17 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) calc(env(safe-a
     link: { modes: [['hard', '困難', 'Hard'], ['normal', '普通', 'Normal'], ['easy', '簡單', 'Easy']], unit: 'sec', d: ['最快清空盤面（伺服器計時）', 'Fastest clear (server-timed)'] },
     gomoku: { modes: [['hard', '困難', 'Hard'], ['normal', '普通', 'Normal'], ['easy', '簡單', 'Easy']], unit: 'sec', d: ['最快擊敗電腦（伺服器計時）', 'Fastest win vs. AI (server-timed)'] },
     snake: { modes: [['classic', '經典', 'Classic']], unit: 'pt', d: ['單局最高分', 'Highest score in one game'] },
-    go: { modes: [['9-hard', '9 路困難', '9×9 Hard'], ['9-normal', '9 路普通', '9×9 Normal'], ['9-easy', '9 路簡單', '9×9 Easy'], ['13-hard', '13 路困難', '13×13 Hard'], ['13-normal', '13 路普通', '13×13 Normal'], ['13-easy', '13 路簡單', '13×13 Easy']], unit: 'sec', d: ['最快擊敗電腦（伺服器計時）', 'Fastest win vs. AI (server-timed)'] }
+    go: { modes: [['9-hard', '9 路困難', '9×9 Hard'], ['9-normal', '9 路普通', '9×9 Normal'], ['9-easy', '9 路簡單', '9×9 Easy'], ['13-hard', '13 路困難', '13×13 Hard'], ['13-normal', '13 路普通', '13×13 Normal'], ['13-easy', '13 路簡單', '13×13 Easy']], unit: 'sec', d: ['最快擊敗電腦（伺服器計時）', 'Fastest win vs. AI (server-timed)'] },
+    mines: { modes: [['hard', '高級', 'Expert'], ['normal', '中級', 'Intermediate'], ['easy', '初級', 'Beginner']], unit: 'sec', d: ['最快掃完（伺服器計時）', 'Fastest clear (server-timed)'] },
+    reversi: { modes: [['hard', '困難', 'Hard'], ['normal', '普通', 'Normal'], ['easy', '簡單', 'Easy']], unit: 'sec', d: ['最快擊敗電腦（伺服器計時）', 'Fastest win vs. AI (server-timed)'] },
+    klondike: { modes: [['draw1', '翻一張', 'Draw one'], ['draw3', '翻三張', 'Draw three']], unit: 'sec', d: ['最快完成（伺服器計時）', 'Fastest solve (server-timed)'] },
+    breakout: { modes: [['classic', '經典', 'Classic']], unit: 'pt', d: ['單局最高分', 'Highest score in one game'] },
+    bubble: { modes: [['classic', '經典', 'Classic']], unit: 'pt', d: ['單局最高分', 'Highest score in one game'] },
+    jewel: { modes: [['2min', '兩分鐘', 'Two minutes']], unit: 'pt', d: ['兩分鐘內最高分', 'Highest score in two minutes'] },
+    connect4: { modes: [['hard', '困難', 'Hard'], ['normal', '普通', 'Normal'], ['easy', '簡單', 'Easy']], unit: 'sec', d: ['最快擊敗電腦（伺服器計時）', 'Fastest win vs. AI (server-timed)'] },
+    mole: { modes: [['60s', '60 秒', '60 seconds']], unit: 'pt', d: ['60 秒內最高分', 'Highest score in 60 seconds'] },
+    shooter: { modes: [['classic', '經典', 'Classic']], unit: 'pt', d: ['單局最高分', 'Highest score in one game'] },
+    bird: { modes: [['classic', '經典', 'Classic']], unit: 'pt', d: ['單局最高分（穿過幾關）', 'Highest score (gaps passed)'] }
   };
   var q = new URLSearchParams(location.search);
   var st = { game: CFG[q.get('game')] ? q.get('game') : 'trader', mode: q.get('mode') || '', period: q.get('period') === 'month' ? 'month' : 'all' };
@@ -103,7 +113,7 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) calc(env(safe-a
       return '<button data-g="' + id + '" class="' + (id === st.game ? 'on' : '') + '"><span class="ico' + (tt ? ' t' : '') + '" style="background:' + g.color + (g.fg ? ';color:' + g.fg + ';border-color:' + g.fg : '') + '">' + g.icon + '</span>' + (SC.lang === 'en' ? g.en : g.zh) + '</button>';
     }).join('');
     var c = CFG[st.game];
-    if (!c.modes.some(function (m) { return m[0] === st.mode; })) st.mode = st.game === 'trader' ? 'normal' : (st.game === 'bigtwo' || st.game === 'mahjong' || st.game === 'link' || st.game === 'gomoku') ? 'normal' : st.game === 'go' ? '9-normal' : st.game === 'sudoku' ? 'easy' : c.modes[0][0];
+    if (!c.modes.some(function (m) { return m[0] === st.mode; })) st.mode = st.game === 'trader' ? 'normal' : (st.game === 'bigtwo' || st.game === 'mahjong' || st.game === 'link' || st.game === 'gomoku' || st.game === 'reversi' || st.game === 'connect4') ? 'normal' : (st.game === 'mines' || st.game === 'sudoku') ? 'easy' : st.game === 'go' ? '9-normal' : st.game === 'sudoku' ? 'easy' : c.modes[0][0];
     $('modes').innerHTML = c.modes.map(function (m) { return '<button data-m="' + m[0] + '" class="' + (m[0] === st.mode ? 'on' : '') + '">' + SC.t(m[1], m[2]) + '</button>'; }).join('');
     [].forEach.call($('period').children, function (b) { b.classList.toggle('on', b.getAttribute('data-p') === st.period); });
     $('desc').textContent = SC.t(c.d[0], c.d[1]);

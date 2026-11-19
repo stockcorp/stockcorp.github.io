@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title data-en="Minesweeper | Free Online Minesweeper with Global Leaderboard">踩地雷｜免費線上踩地雷・三種難度・全球排行榜</title>
+<meta name="description" content="免費線上踩地雷：初級 9×9、中級 16×16、高級 16×30，第一下保證安全，長按或切換插旗模式插旗，雙擊數字快速翻開。解題時間上傳全球排行榜。">
+<meta name="google-adsense-account" content="ca-pub-3440199491716602">
+<meta name="theme-color" content="#10161f">
+<meta property="og:title" content="踩地雷｜Stockcorp 遊戲大廳">
+<meta property="og:description" content="經典踩地雷三種難度，比誰掃得快。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://stockcorp.github.io/mines/">
+<link rel="canonical" href="https://stockcorp.github.io/mines/">
+<link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/mines/?lang=zh">
+<link rel="alternate" hreflang="en" href="https://stockcorp.github.io/mines/?lang=en">
+<link rel="alternate" hreflang="x-default" href="https://stockcorp.github.io/mines/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%23475569'/%3E%3Ctext x='50' y='70' font-size='60' text-anchor='middle'%3E%F0%9F%92%A3%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/shared/kit.css?v=1.0">
+<link rel="stylesheet" href="style.css?v=1.0">
+<script src="/shared/app.js?v=1.2"></script>
+<script src="/shared/kit.js?v=1.0"></script>
+<script src="/shared/games.js?v=1.6" data-game="mines" defer></script>
+<script src="/shared/lb.js?v=1.0" defer></script>
+</head>
+<body>
+<header class="k-top">
+  <div class="k-brand"><span class="k-logo">💣</span><div><h1 data-en="Minesweeper">踩地雷</h1><small id="sub"></small></div></div>
+  <div class="k-acts">
+    <button class="btn ghost" data-lang-toggle>EN</button>
+    <button class="btn ghost" id="bSound">🔊</button>
+    <a class="btn ghost" id="bLb" href="/leaderboard/?game=mines&mode=easy" style="text-decoration:none">🏆</a>
+    <button class="btn" id="bNew" data-en="New">新局</button>
+  </div>
+</header>
+<main class="wrap">
+  <div class="bar"><span>💣 <b id="left">0</b></span><button class="btn ghost sm" id="bFlag">🚩 <span data-en="Flag mode">插旗模式</span> <i id="flagOn">OFF</i></button><span>⏱ <b id="clock">0:00</b></span></div>
+  <div class="boardWrap"><canvas id="cv"></canvas></div>
+  <p class="tip mute" data-en="Tap to open · long-press or right-click to flag · tap a number whose flags are all placed to open its neighbours.">點一下翻開；長按或按右鍵插旗；數字旁的旗子插滿後點數字，會一次翻開周圍。</p>
+</main>
+<section class="k-help"><article><h2 data-en="How to play">玩法</h2><p data-en="Open every square that has no mine. A number tells you how many of the 8 squares around it hold mines. Your first click is always safe.">翻開所有沒有地雷的格子就贏了。數字代表周圍 8 格有幾顆地雷。第一下一定不會踩到地雷。</p></article><article><h2 data-en="Leaderboard">排行榜</h2><p data-en="The time from the start to the clear is measured by the server and can go on the leaderboard for each level.">從開局到掃完的時間由伺服器計算，可以上傳初級、中級、高級各自的排行榜。</p></article></section>
+<footer class="k-foot"><span data-en="Free to play. Scores you choose to submit appear on the global leaderboard.">免費遊玩；選擇上傳的成績會顯示在全球排行榜。</span>　<a href="privacy.html" data-en="Privacy policy">隱私權政策與廣告說明</a></footer>
+<div class="k-ov" id="ovNew"><div class="k-modal center"><h2 data-en="New game">開新局</h2><div class="k-chips lvs" id="lvChips"></div><div class="k-row"><button class="btn ghost" data-close data-en="Cancel">取消</button></div></div></div>
+<div class="k-ov" id="ovEnd" data-sticky><div class="k-modal center"><div class="k-big" id="endEmoji">🎉</div><h2 id="endTitle" data-en="Cleared!">全部掃完！</h2>
+  <div class="k-stats"><div><b id="endTime">0</b><span data-en="Time">時間</span></div><div><b id="endLv">0</b><span data-en="Level">難度</span></div></div>
+  <p class="mute" id="endBest"></p><div class="k-row"><button class="btn big" id="bAgain" data-en="Play again">再玩一次</button><button class="btn ghost" data-close data-en="Close">關閉</button></div></div></div>
+<script src="game.js?v=1.0" defer></script>
+</body>
+</html>
