@@ -60,8 +60,8 @@ html[lang=en] .zh,html:not([lang=en]) .en{{display:none}}.lb{{float:right;backgr
 </div>
 </div></body></html>
 '''
-ZHNET = '<h2>4. 線上對戰</h2><p>使用線上對戰時，你的瀏覽器會連到 PeerJS 公用配對伺服器（0.peerjs.com）與 Google、Cloudflare 的 STUN 伺服器來建立點對點（WebRTC）連線。連線建立後，對局資料直接在你和對手的裝置之間傳送，雙方的 IP 位址會被對方的瀏覽器得知。我們不保存房號、對局或聊天表情紀錄。</p>\n'
-ENNET = '<h2>4. Online play</h2><p>When you play online, your browser connects to the public PeerJS matchmaking server (0.peerjs.com) and to Google and Cloudflare STUN servers to set up a peer-to-peer (WebRTC) connection. Once connected, game data travels directly between you and your opponent, and each browser can see the other\'s IP address. We do not store room codes, games or emotes.</p>\n'
+ZHNET = '<h2>4. 線上對戰</h2><p>使用線上對戰時，你的瀏覽器會連到 PeerJS 公用配對伺服器（0.peerjs.com）與 Google、Cloudflare 的 STUN 伺服器來建立點對點（WebRTC）連線。連線建立後，對局資料直接在你和對手的裝置之間傳送，雙方的 IP 位址會被對方的瀏覽器得知。如果網路無法直連（例如手機行動網路），對局資料會經由 TURN 中繼伺服器（PeerJS、Cloudflare 或本站的 game.ldigi.com.tw）轉送；中繼伺服器只轉送、不保存內容。我們不保存房號、對局或聊天表情紀錄。</p>\n'
+ENNET = '<h2>4. Online play</h2><p>When you play online, your browser connects to the public PeerJS matchmaking server (0.peerjs.com) and to Google and Cloudflare STUN servers to set up a peer-to-peer (WebRTC) connection. Once connected, game data travels directly between you and your opponent, and each browser can see the other\'s IP address. If a direct connection is not possible (for example on mobile data), game data is relayed through a TURN server (PeerJS, Cloudflare or our own game.ldigi.com.tw), which forwards it without storing it. We do not store room codes, games or emotes.</p>\n'
 root = os.path.join(os.path.dirname(__file__), '..')
 for d, (zh, en, bg, net) in G.items():
     n = [5, 6, 7, 8] if net else [4, 5, 6, 7]

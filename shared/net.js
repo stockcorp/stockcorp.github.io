@@ -3,7 +3,7 @@
    - 隨機配對：用 SEATS 個公開「等候座位」ID（stockcorp-<game>-rN）。有人在等就連過去，沒人就自己佔一個座位等；
      等待中的人會定期探測編號比自己小的座位，有人就主動合併，避免兩人各等各的。等待人數靠探測座位估算。
    - 連線建立後資料直接在兩台裝置之間傳送；房主負責驗證每一步，避免作弊。
-   - 不需要帳號，也不經過我們的伺服器（本站沒有伺服器）。
+   - 不需要帳號。手機網路等無法直連時，資料會經由 TURN 中繼伺服器轉送（只轉送、不保存）。
    用法：
      SCNet.openLobby({ game: 'darkchess', title: '暗棋', onReady: function (conn) { ... } })
      conn.role  'host' | 'guest'
@@ -12,14 +12,48 @@
   'use strict';
   var T = function (zh, en) { return window.SC ? SC.t(zh, en) : zh; };
   var ALPHA = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-  var ICE = { iceServers: [{ urls: 'stun:stun.l.google.com:19302' }, { urls: 'stun:stun1.l.google.com:19302' }, { urls: 'stun:stun.cloudflare.com:3478' }] };
+  // 連線設定：STUN 找出自己的公開位址；TURN 是「中繼」，手機 4G/5G、公司網路這類無法直連的情況靠它轉送。
+  // 1) PeerJS 官方免費 TURN（備用）  2) 我們自己的 Linode /api/turn.php 發的短效 TURN 帳號（Cloudflare 或自架 coturn）
+  var TURN_API = 'https://game.ldigi.com.tw/api/turn.php';
+  var ICE = { iceServers: [
+    { urls: ['stun:stun.cloudflare.com:3478', 'stun:stun.l.google.com:19302'] },
+    { urls: ['turn:eu-0.turn.peerjs.com:3478', 'turn:us-0.turn.peerjs.com:3478'], username: 'peerjs', credential: 'peerjsp' }
+  ], sdpSemantics: 'unified-plan' };
+  var iceP = null;
+  function iceReady() {
+    if (iceP) return iceP;
+    iceP = new Promise(function (res) {
+      var add = function (list) { if (list && list.length) ICE.iceServers = list.concat(ICE.iceServers.filter(function (x) { return x.username !== 'peerjs'; })); res(); };
+      try { var c = JSON.parse(sessionStorage.getItem('sc_turn') || 'null'); if (c && c.exp > Date.now() / 1000 + 600) { add(c.ice); return; } } catch (e) { /* 略過 */ }
+      if (!window.fetch) { res(); return; }
+      var done = false, t = setTimeout(function () { if (!done) { done = true; res(); } }, 3500);
+      fetch(TURN_API, { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (j) {
+        if (done) return; done = true; clearTimeout(t);
+        if (j && j.ok && j.iceServers && j.iceServers.length) { try { sessionStorage.setItem('sc_turn', JSON.stringify({ ice: j.iceServers, exp: j.exp || 0 })); } catch (e) { /* 略過 */ } add(j.iceServers); } else res();
+      }).catch(function () { if (!done) { done = true; clearTimeout(t); res(); } });
+    });
+    return iceP;
+  }
+  // 手機切到別的 App（例如去 LINE 傳房號）時，和配對伺服器的連線會被系統切斷；回來時自動重連，房間才找得到
+  var live = [];
+  function mkPeer(Peer, id) {
+    var peer = id ? new Peer(id, { config: ICE, debug: 0 }) : new Peer({ config: ICE, debug: 0 });
+    live.push(peer);
+    peer.on('disconnected', function () { setTimeout(function () { if (!peer.destroyed && peer.disconnected) try { peer.reconnect(); } catch (e) { /* 略過 */ } }, 400); });
+    peer.on('close', function () { var i = live.indexOf(peer); if (i >= 0) live.splice(i, 1); });
+    return peer;
+  }
+  document.addEventListener('visibilitychange', function () {
+    if (document.hidden) return;
+    live.forEach(function (p) { if (!p.destroyed && p.disconnected) try { p.reconnect(); } catch (e) { /* 略過 */ } });
+  });
   var libP = null;
   function lib() {
-    if (window.Peer) return Promise.resolve(window.Peer);
     if (libP) return libP;
+    if (window.Peer) { libP = iceReady().then(function () { return window.Peer; }); return libP; }
     libP = new Promise(function (res, rej) {
       var s = document.createElement('script'); s.src = '/shared/vendor/peerjs-1.5.5.min.js';
-      s.onload = function () { res(window.Peer); }; s.onerror = function () { libP = null; rej(new Error('load')); };
+      s.onload = function () { iceReady().then(function () { res(window.Peer); }); }; s.onerror = function () { libP = null; rej(new Error('load')); };
       document.head.appendChild(s);
     });
     return libP;
@@ -33,10 +67,12 @@
     var hb = setInterval(function () {
       if (!c.open) return;
       try { dc.send({ t: '__ping' }); } catch (e) { /* 略過 */ }
-      if (Date.now() - c.last > 25000) end('timeout');
+      if (!document.hidden && Date.now() - c.last > 40000) end('timeout');
     }, 5000);
+    var vis = function () { if (!document.hidden) c.last = Date.now(); };
+    document.addEventListener('visibilitychange', vis);
     function end(reason) {
-      if (!c.open) return; c.open = false; clearInterval(hb);
+      if (!c.open) return; c.open = false; clearInterval(hb); document.removeEventListener('visibilitychange', vis);
       try { dc.close(); } catch (e) { /* 略過 */ }
       if (!shared) try { peer.destroy(); } catch (e) { /* 略過 */ }
       if (c.onClose) c.onClose(reason || 'closed');
@@ -44,7 +80,6 @@
     dc.on('data', function (m) { c.last = Date.now(); if (!m || m.t === '__ping') return; if (m.t === '__bye') { end('left'); return; } if (c.onData) c.onData(m); });
     dc.on('close', function () { end('closed'); });
     dc.on('error', function () { end('error'); });
-    if (!peer._sc_rc) { peer._sc_rc = 1; peer.on('disconnected', function () { try { peer.reconnect(); } catch (e) { /* 略過 */ } }); }
     c.send = function (m) { if (c.open) try { dc.send(m); } catch (e) { end('error'); } };
     c.close = function () { if (!c.open) return; try { dc.send({ t: '__bye' }); } catch (e) { /* 略過 */ } setTimeout(function () { end('self'); }, 150); };
     window.addEventListener('pagehide', function () { if (c.open) try { dc.send({ t: '__bye' }); } catch (e) { /* 略過 */ } });
@@ -59,7 +94,7 @@
       var code = code6();
       lib().then(function (Peer) {
         if (cancelled) return;
-        peer = new Peer(pid(game, code), { config: ICE, debug: 0 });
+        peer = mkPeer(Peer, pid(game, code));
         peer.on('open', function () { onCode(code); });
         peer.on('connection', function (dc) {
           dc.on('open', function () {
@@ -89,8 +124,8 @@
     var peer = null, done = false, cancelled = false;
     lib().then(function (Peer) {
       if (cancelled) return;
-      peer = new Peer({ config: ICE, debug: 0 });
-      var to = setTimeout(function () { if (!done) { done = true; onErr('timeout'); try { peer.destroy(); } catch (e) { /* 略過 */ } } }, 20000);
+      peer = mkPeer(Peer);
+      var to = setTimeout(function () { if (!done) { done = true; onErr('timeout'); try { peer.destroy(); } catch (e) { /* 略過 */ } } }, 32000);
       peer.on('open', function () {
         var dc = peer.connect(pid(game, code), { reliable: true, serialization: 'json' });
         dc.on('open', function () {
@@ -135,7 +170,7 @@
   function estimate(game) {
     return lib().then(function (Peer) {
       return new Promise(function (res) {
-        var peer = new Peer({ config: ICE, debug: 0 }), t = setTimeout(function () { try { peer.destroy(); } catch (e) { /* 略過 */ } res(null); }, 9000);
+        var peer = mkPeer(Peer), t = setTimeout(function () { try { peer.destroy(); } catch (e) { /* 略過 */ } res(null); }, 9000);
         peer.on('open', function () { probe(peer, game, seatList()).then(function (st) { clearTimeout(t); try { peer.destroy(); } catch (e) { /* 略過 */ } res(count(st)); }); });
         peer.on('error', function (e) { if (e && e.type !== 'peer-unavailable') { clearTimeout(t); try { peer.destroy(); } catch (x) { /* 略過 */ } res(null); } });
       });
@@ -146,7 +181,7 @@
     var dc, ok = false, fail = false;
     function bad(r) { if (ok || fail) return; fail = true; clearTimeout(to); peer.off && peer.off('error', onErr); try { dc.close(); } catch (e) { /* 略過 */ } onFail(r); }
     function onErr(e) { if (e && e.type === 'peer-unavailable' && seatOf(game, e.message) === k) bad('gone'); }
-    var to = setTimeout(function () { bad('timeout'); }, 9000);
+    var to = setTimeout(function () { bad('timeout'); }, 15000);
     peer.on('error', onErr);
     try { dc = peer.connect(seatId(game, k), { reliable: true, serialization: 'json' }); } catch (e) { bad('error'); return; }
     dc.on('open', function () {
@@ -170,7 +205,7 @@
       if (cancelled) return;
       if (++rounds > 6) { onErr('server-error'); return; }
       onStatus({ phase: 'search' });
-      peer = new Peer({ config: ICE, debug: 0 });
+      peer = mkPeer(Peer);
       peer.on('error', function (e) { if (e && e.type !== 'peer-unavailable' && !joining && !cancelled) { kill(); onErr(e.type || 'error'); } });
       peer.on('open', function () {
         probe(peer, game, seatList()).then(function (st) {
@@ -192,7 +227,7 @@
       if (cancelled) return;
       if (!empties.length) { onErr('busy-seats'); return; }
       var k = empties[(Math.random() * empties.length) | 0];
-      peer = new Peer(seatId(game, k), { config: ICE, debug: 0 });
+      peer = mkPeer(Peer, seatId(game, k));
       peer.on('open', function () {
         onStatus({ phase: 'wait', seat: k, waiting: others });
         // 定期探測編號比自己小的座位；有人在等就主動過去，避免兩人各等各的
@@ -242,11 +277,13 @@
     '.scn-btn.r{background:linear-gradient(#7fe0a8,#2fae6c);color:#06210f;font-size:17px;padding:14px}.scn-cnt{font-size:13px;color:#9fe3bb;text-align:center;margin-top:6px;min-height:18px}.scn-hr{border:0;border-top:1px solid #33415e;margin:14px 0 4px}';
   var styled = false;
   function errText(e) {
-    return ({ 'peer-unavailable': T('找不到這個房號，請確認房號或請對方重新建立房間。', 'Room not found. Check the code or ask your friend to create a new room.'),
-      full: T('這個房間已經有人了。', 'This room is already full.'), timeout: T('連線逾時，請再試一次。部分公司或校園網路會擋住點對點連線，可改用手機網路。', 'Connection timed out. Some office or school networks block peer-to-peer play; try mobile data.'),
+    return ({ 'peer-unavailable': T('找不到這個房號。請確認房號，並請房主回到遊戲頁面（手機切到別的 App 時房間會暫停）。', 'Room not found. Check the code and ask the host to return to the game page (a room pauses while the host is in another app).'),
+      full: T('這個房間已經有人了。', 'This room is already full.'), timeout: T('連線逾時，請再試一次；若一直失敗，請雙方都改用 Wi-Fi 或換一個網路。', 'Connection timed out. Please try again; if it keeps failing, both players should try Wi-Fi or another network.'),
+      'socket-error': T('和配對伺服器的連線中斷，請再試一次。', 'Lost the connection to the matchmaking server. Please try again.'), 'socket-closed': T('和配對伺服器的連線中斷，請再試一次。', 'Lost the connection to the matchmaking server. Please try again.'),
+      disconnected: T('和配對伺服器的連線中斷，請再試一次。', 'Lost the connection to the matchmaking server. Please try again.'), webrtc: T('點對點連線建立失敗，請雙方換個網路再試。', 'Could not set up the direct connection. Both players should try another network.'),
       network: T('無法連到配對伺服器，請檢查網路。', 'Cannot reach the matchmaking server. Check your connection.'), 'server-error': T('配對伺服器忙碌，請稍後再試。', 'Matchmaking server is busy. Please try again later.'),
       'busy-seats': T('隨機配對的座位暫時滿了，請稍後再試，或改用房號邀請朋友。', 'Random-match seats are full right now. Try again soon, or invite a friend with a room code.'),
-      load: T('連線元件載入失敗，請重新整理頁面。', 'Failed to load the online module. Please reload.'), 'browser-incompatible': T('這個瀏覽器不支援線上對戰。', 'This browser does not support online play.') })[e] || T('連線失敗（' + e + '），請再試一次。', 'Connection failed (' + e + '). Please try again.');
+      load: T('連線元件載入失敗，請重新整理頁面。', 'Failed to load the online module. Please reload.'), 'browser-incompatible': T('這個瀏覽器不支援線上對戰。若是在 LINE、Facebook 裡開啟，請改用 Safari 或 Chrome 開啟網頁。', 'This browser does not support online play. If you opened it inside LINE or Facebook, open the page in Safari or Chrome instead.') })[e] || T('連線失敗（' + e + '），請再試一次。', 'Connection failed (' + e + '). Please try again.');
   }
   function openLobby(o) {
     if (!styled) { var st = document.createElement('style'); st.textContent = css; document.head.appendChild(st); styled = true; }
