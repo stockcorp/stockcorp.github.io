@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title data-en="Coin Tycoon | 10-Minute Idle Business Race with Global Leaderboard">金幣大亨｜10 分鐘急速經營遊戲・全球排行榜</title>
+<meta name="description" content="金幣大亨：10 分鐘急速經營，從檸檬水攤做到太空礦業，點金幣、買店面、抓幸運金幣，總收入上傳全球排行榜。Coin Tycoon: a 10-minute idle business race with a global leaderboard.">
+<meta name="google-adsense-account" content="ca-pub-3440199491716602">
+<meta name="theme-color" content="#1a1206">
+<meta property="og:title" content="金幣大亨｜Stockcorp 遊戲大廳">
+<meta property="og:description" content="10 分鐘從小攤販做到億萬富翁，看誰賺最多。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://stockcorp.github.io/coin/">
+<link rel="canonical" href="https://stockcorp.github.io/coin/">
+<link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/coin/?lang=zh">
+<link rel="alternate" hreflang="en" href="https://stockcorp.github.io/coin/?lang=en">
+<link rel="alternate" hreflang="x-default" href="https://stockcorp.github.io/coin/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%23d97706'/%3E%3Ctext x='50' y='70' font-size='60' text-anchor='middle'%3E%F0%9F%92%B0%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/shared/kit.css?v=1.0">
+<link rel="stylesheet" href="style.css?v=1.0">
+<script src="/shared/app.js?v=1.2"></script>
+<script src="/shared/kit.js?v=1.0"></script>
+<script src="/shared/games.js?v=1.5" data-game="coin" defer></script>
+<script src="/shared/lb.js?v=1.0" defer></script>
+</head>
+<body>
+<header class="k-top">
+  <div class="k-brand"><span class="k-logo">💰</span><div><h1 data-en="Coin Tycoon">金幣大亨</h1><small data-en="Earn as much as you can in 10 minutes">10 分鐘內賺最多錢</small></div></div>
+  <div class="k-acts">
+    <button class="btn ghost" data-lang-toggle>EN</button>
+    <button class="btn ghost" id="bSound">🔊</button>
+    <a class="btn ghost" href="/leaderboard/?game=coin&mode=10min" style="text-decoration:none">🏆</a>
+    <button class="btn" id="bNew" data-en="Restart">重新開始</button>
+  </div>
+</header>
+<main class="wrap">
+  <section class="hud">
+    <div class="h1"><span data-en="Cash">現金</span><b id="cash">0</b></div>
+    <div class="h1"><span data-en="Per second">每秒收入</span><b id="ips">0</b></div>
+    <div class="h1 tm"><span data-en="Time left">剩餘時間</span><b id="timer">10:00</b></div>
+    <div class="h1"><span data-en="Total earned">累計收入</span><b id="total">0</b></div>
+  </section>
+  <div class="prog"><i id="progBar"></i></div>
+  <section class="play">
+    <div class="tapZone">
+      <button class="coin" id="coin" aria-label="tap"><span>$</span></button>
+      <div class="tapInfo"><span data-en="Per tap">每次點擊</span> <b id="perTap">1</b></div>
+      <div class="fever" id="fever"></div>
+      <div class="ups" id="ups"></div>
+    </div>
+    <div class="shop">
+      <div class="shopHead"><h2 data-en="Businesses">事業</h2><div class="k-chips qty" id="qty"><button data-q="1" class="on">×1</button><button data-q="10">×10</button><button data-q="max">MAX</button></div></div>
+      <div class="biz" id="biz"></div>
+    </div>
+  </section>
+  <div class="gold" id="gold" hidden>🪙</div>
+</main>
+<section class="k-help">
+  <article><h2 data-en="How to play">玩法</h2><p data-en="You have 10 minutes. Tap the big coin for cash, buy businesses that earn money every second, and keep reinvesting. Each business doubles its income at 10, 25, 50 and 100 units. Your total earnings when time runs out is your score.">限時 10 分鐘。點大金幣賺錢，買下會自動生錢的事業，再把錢滾進去。每種事業擁有 10、25、50、100 間時收入翻倍。時間到時的「累計收入」就是你的成績。</p></article>
+  <article><h2 data-en="Lucky coins">幸運金幣</h2><p data-en="A golden coin flies across the screen now and then. Grab it for a cash bonus or a 15-second frenzy that multiplies all income by 7.">畫面上偶爾會飛過幸運金幣，點到可以拿一筆獎金，或觸發 15 秒「狂熱」：所有收入 ×7。</p></article>
+  <article><h2 data-en="Leaderboard">排行榜</h2><p data-en="The 10-minute clock keeps running even if you switch apps, so stay focused. When time is up you can submit your total to the global leaderboard.">切到別的 App 時計時也不會停，專心衝刺吧！時間到可以把累計收入上傳全球排行榜。</p></article>
+</section>
+<footer class="k-foot"><span data-en="Free to play. Scores you choose to submit appear on the global leaderboard.">免費遊玩；選擇上傳的成績會顯示在全球排行榜。</span>　<a href="privacy.html" data-en="Privacy policy">隱私權政策與廣告說明</a></footer>
+
+<div class="k-ov" id="ovStart" data-sticky>
+  <div class="k-modal center">
+    <div class="k-big">💰</div>
+    <h2 data-en="10-minute Coin Rush">10 分鐘金幣衝刺</h2>
+    <p data-en="Start with a lemonade stand and build an empire. The clock starts when you press Start.">從一個檸檬水攤開始，打造你的商業帝國。按下開始就計時。</p>
+    <p class="mute" id="bestLine"></p>
+    <div class="k-row"><button class="btn big" id="bStart" data-en="Start">開始</button></div>
+  </div>
+</div>
+<div class="k-ov" id="ovEnd" data-sticky>
+  <div class="k-modal center">
+    <div class="k-big">⏰</div>
+    <h2 data-en="Time's up!">時間到！</h2>
+    <div class="k-stats"><div><b id="endTotal">0</b><span data-en="Total earned">累計收入</span></div><div><b id="endBiz">0</b><span data-en="Businesses owned">擁有事業</span></div></div>
+    <p class="mute" id="endBest"></p>
+    <div class="k-row"><button class="btn big" id="bAgain" data-en="Play again">再玩一次</button><button class="btn ghost" id="bUpload" data-en="🏆 Submit score">🏆 上傳成績</button></div>
+  </div>
+</div>
+<script src="game.js?v=1.0" defer></script>
+</body>
+</html>

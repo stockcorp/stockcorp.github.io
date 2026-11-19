@@ -5,11 +5,26 @@
    寬螢幕：左右兩側固定「上一款／下一款」；窄螢幕：頁面最上方一條切換列。App 內（SC_IS_APP）不顯示。 */
 (function () {
   'use strict';
+  // cat：board 棋牌、puzzle 益智、action 動作、racing 競速、sim 模擬經營（可多個）
   var GAMES = [
-    { id: 'trader', no: '01', url: '/trader/', icon: '📈', color: '#ef4444', zh: '我愛操盤手', en: 'I Love Trading', dzh: '用真實股價與加密貨幣模擬投資 10 年', den: 'Trade real stocks and crypto over 10 years' },
-    { id: 'ai', no: '02', url: '/ai/', icon: '🤖', color: '#f5b83d', zh: '搶救AI教父大作戰', en: 'Save the AI Godfather', dzh: '六關橫向闖關，打倒董事會機器人', den: 'Six-stage platformer with a boss fight' },
-    { id: 'darkchess', no: '03', url: '/darkchess/', icon: '帥', color: '#c0392b', zh: '暗棋破壞神', en: 'Dark Chess Destroyer', dzh: '翻棋對決電腦，或線上隨機配對真人', den: 'Dark chess vs. AI, or a random opponent online' },
-    { id: 'xiangqi', no: '04', url: '/xiangqi/', icon: '將', color: '#16181d', fg: '#16181d', zh: '象棋', en: 'Xiangqi', dzh: '楚河漢界，對戰電腦或線上隨機配對', den: 'Chinese chess vs. AI, or a random opponent online' }
+    { id: 'trader', no: '01', url: '/trader/', icon: '📈', color: '#ef4444', cat: ['sim'], zh: '我愛操盤手', en: 'I Love Trading', dzh: '用真實股價與加密貨幣模擬投資 10 年', den: 'Trade real stocks and crypto over 10 years' },
+    { id: 'ai', no: '02', url: '/ai/', icon: '🤖', color: '#f5b83d', cat: ['action'], zh: '搶救AI教父大作戰', en: 'Save the AI Godfather', dzh: '六關橫向闖關，打倒董事會機器人', den: 'Six-stage platformer with a boss fight' },
+    { id: 'darkchess', no: '03', url: '/darkchess/', icon: '帥', color: '#c0392b', cat: ['board'], zh: '暗棋破壞神', en: 'Dark Chess Destroyer', dzh: '翻棋對決電腦，或線上隨機配對真人', den: 'Dark chess vs. AI, or a random opponent online' },
+    { id: 'xiangqi', no: '04', url: '/xiangqi/', icon: '將', color: '#16181d', fg: '#16181d', cat: ['board'], zh: '象棋', en: 'Xiangqi', dzh: '楚河漢界，對戰電腦或線上隨機配對', den: 'Chinese chess vs. AI, or a random opponent online' },
+    { id: 'bigtwo', no: '05', url: '/bigtwo/', icon: '🃏', color: '#7c3aed', cat: ['board'], zh: '王者大老二', en: 'Big Two King', dzh: '台灣規則大老二，四人桌對戰三位電腦', den: 'Taiwanese Big Two against three AI players' },
+    { id: 'mahjong', no: '06', url: '/mahjong/', icon: '🀄', color: '#0f766e', cat: ['board'], zh: '麻將大亨', en: 'Mahjong Tycoon', dzh: '台灣十六張麻將，台數計分打一將', den: 'Taiwanese 16-tile mahjong with tai scoring' },
+    { id: '2048', no: '07', url: '/2048/', icon: '🔢', color: '#edc22e', cat: ['puzzle'], zh: '2048', en: '2048', dzh: '滑動合併數字，挑戰 2048 以上', den: 'Slide and merge tiles to reach 2048' },
+    { id: 'coin', no: '08', url: '/coin/', icon: '💰', color: '#d97706', cat: ['sim'], zh: '金幣大亨', en: 'Coin Tycoon', dzh: '10 分鐘急速經營，看誰賺最多', den: '10-minute idle business race' },
+    { id: 'racing', no: '09', url: '/racing/', icon: '🏎️', color: '#2563eb', cat: ['racing', 'action'], zh: '極速賽車', en: 'Turbo Racer', dzh: '高速公路閃車、吃金幣、開氮氣', den: 'Dodge traffic, grab coins, hit the nitro' },
+    { id: 'sudoku', no: '10', url: '/sudoku/', icon: '🧩', color: '#0891b2', cat: ['puzzle'], zh: '數獨', en: 'Sudoku', dzh: '三種難度，筆記模式，比誰解得快', den: 'Three levels, pencil marks, beat the clock' }
+  ];
+  window.SC_CATS = [
+    { id: 'all', zh: '全部', en: 'All', icon: '🎮' },
+    { id: 'board', zh: '棋牌', en: 'Board & Cards', icon: '♟️' },
+    { id: 'puzzle', zh: '益智', en: 'Puzzle', icon: '🧠' },
+    { id: 'action', zh: '動作', en: 'Action', icon: '⚡' },
+    { id: 'racing', zh: '競速', en: 'Racing', icon: '🏁' },
+    { id: 'sim', zh: '模擬經營', en: 'Simulation', icon: '💼' }
   ];
   window.SC_GAMES = GAMES;
   var me = document.currentScript, cur = (me && me.getAttribute('data-game')) || '';

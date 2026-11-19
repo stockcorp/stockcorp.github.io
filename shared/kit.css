@@ -1,0 +1,49 @@
+/* stockcorp.github.io 共用：新遊戲的基本外觀（標題列、按鈕、彈窗、提示、頁尾）。
+   各遊戲用 --accent / --bg / --panel 等變數換顏色。 */
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{--bg:#0b0f19;--panel:#141a29;--line:#26314a;--text:#e9eef8;--mute:#8f9bb6;--accent:#f5b83d;--accent2:#ef8f3d;--ink:#1a1205;--sc-anchor:0px}
+html,body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,"Segoe UI","Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;-webkit-text-size-adjust:100%}
+body{min-height:100vh;padding:env(safe-area-inset-top) env(safe-area-inset-right) calc(env(safe-area-inset-bottom) + var(--sc-anchor)) env(safe-area-inset-left);overscroll-behavior:none}
+a{color:var(--accent)}
+.k-top{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--line);background:rgba(0,0,0,.25);flex-wrap:wrap}
+.k-brand{display:flex;align-items:center;gap:10px;min-width:0;flex:1}
+.k-logo{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex:none;background:linear-gradient(135deg,var(--accent),var(--accent2));box-shadow:0 4px 14px rgba(0,0,0,.35)}
+.k-brand h1{margin:0;font-size:clamp(17px,2.6vw,21px);letter-spacing:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.k-brand small{display:block;color:var(--mute);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.k-acts{display:flex;gap:6px;flex-wrap:wrap}
+.btn{border:0;background:linear-gradient(135deg,var(--accent),var(--accent2));color:var(--ink);font-weight:800;border-radius:12px;padding:9px 15px;font-size:15px;cursor:pointer;font-family:inherit;box-shadow:0 3px 0 rgba(0,0,0,.35);touch-action:manipulation}
+.btn:active{transform:translateY(2px);box-shadow:0 1px 0 rgba(0,0,0,.35)}
+.btn.ghost{background:var(--panel);color:var(--text);border:1px solid var(--line);box-shadow:none;font-weight:600}
+.btn.ghost:hover{border-color:var(--accent)}
+.btn.big{font-size:18px;padding:12px 24px}
+.btn.sm{font-size:13px;padding:6px 10px;border-radius:10px}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.k-ov{position:fixed;inset:0;z-index:50;background:rgba(4,6,12,.72);display:none;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(3px)}
+.k-ov.on{display:flex}
+.k-modal{width:100%;max-width:460px;max-height:90vh;overflow:auto;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:18px 18px 16px;box-shadow:0 20px 60px rgba(0,0,0,.55)}
+.k-modal.wide{max-width:640px}
+.k-modal h2{margin:0 0 10px;font-size:21px}
+.k-modal h3{margin:14px 0 8px;font-size:15px;color:var(--mute)}
+.k-modal p,.k-modal li{line-height:1.65;font-size:14.5px;color:#cdd5e6}
+.k-modal.center{text-align:center}
+.k-row{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:14px}
+.k-chips{display:flex;flex-wrap:wrap;gap:6px}
+.k-chips button{padding:8px 14px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--text);font-size:14px;cursor:pointer;font-family:inherit}
+.k-chips button.on{background:var(--accent);color:var(--ink);border-color:var(--accent);font-weight:800}
+.k-chips button small{display:block;font-size:11px;opacity:.75;font-weight:400}
+.k-big{font-size:46px;line-height:1.1;margin:4px 0}
+.k-stats{display:flex;justify-content:center;gap:18px;margin:10px 0}
+.k-stats div{display:flex;flex-direction:column;align-items:center}
+.k-stats b{font-size:22px;color:var(--accent)}
+.k-stats span{font-size:12px;color:var(--mute)}
+.k-toast{position:fixed;left:50%;bottom:calc(24px + var(--sc-anchor) + env(safe-area-inset-bottom));transform:translateX(-50%) translateY(20px);background:rgba(20,26,41,.96);border:1px solid var(--line);color:var(--text);padding:10px 16px;border-radius:12px;font-size:14px;opacity:0;pointer-events:none;transition:.25s;z-index:60;max-width:90vw;text-align:center}
+.k-toast.on{opacity:1;transform:translateX(-50%)}
+.k-foot{max-width:980px;margin:0 auto;padding:14px 16px 24px;color:var(--mute);font-size:12.5px;line-height:1.7;text-align:center}
+.k-help{max-width:980px;margin:0 auto;padding:0 14px;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.k-help article{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px 14px}
+.k-help h2{font-size:16px;margin:0 0 6px}
+.k-help p{font-size:13.5px;line-height:1.65;color:#c3cbdc;margin:0 0 6px}
+html.in-app .k-help,html.in-app .k-foot .web{display:none}
+.mute{color:var(--mute)}
+.k-brand{min-width:150px}
+@media(max-width:560px){.k-top{padding:8px 10px;gap:6px}.k-acts{gap:4px}.k-acts .btn{padding:7px 10px;font-size:13px;border-radius:10px}.k-logo{width:34px;height:34px;font-size:19px;border-radius:10px}.k-brand small{font-size:11px}}

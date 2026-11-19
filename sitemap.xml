@@ -100,4 +100,112 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://stockcorp.github.io/xiangqi/privacy.html?lang=en"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://stockcorp.github.io/xiangqi/privacy.html"/>
   </url>
+  <url>
+    <loc>https://stockcorp.github.io/bigtwo/</loc>
+    <lastmod>2026-11-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/bigtwo/?lang=zh"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://stockcorp.github.io/bigtwo/?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://stockcorp.github.io/bigtwo/"/>
+  </url>
+  <url>
+    <loc>https://stockcorp.github.io/bigtwo/privacy.html</loc>
+    <lastmod>2026-11-19</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/bigtwo/privacy.html?lang=zh"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://stockcorp.github.io/bigtwo/privacy.html?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://stockcorp.github.io/bigtwo/privacy.html"/>
+  </url>
+  <url>
+    <loc>https://stockcorp.github.io/mahjong/</loc>
+    <lastmod>2026-11-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/mahjong/?lang=zh"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://stockcorp.github.io/mahjong/?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://stockcorp.github.io/mahjong/"/>
+  </url>
+  <url>
+    <loc>https://stockcorp.github.io/mahjong/privacy.html</loc>
+    <lastmod>2026-11-19</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/mahjong/privacy.html?lang=zh"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://stockcorp.github.io/mahjong/privacy.html?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://stockcorp.github.io/mahjong/privacy.html"/>
+  </url>
+  <url>
+    <loc>https://stockcorp.github.io/2048/</loc>
+    <lastmod>2026-11-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/2048/?lang=zh"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://stockcorp.github.io/2048/?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://stockcorp.github.io/2048/"/>
+  </url>
+  <url>
+    <loc>https://stockcorp.github.io/2048/privacy.html</loc>
+    <lastmod>2026-11-19</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/2048/privacy.html?lang=zh"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://stockcorp.github.io/2048/privacy.html?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://stockcorp.github.io/2048/privacy.html"/>
+  </url>
+  <url>
+    <loc>https://stockcorp.github.io/coin/</loc>
+    <lastmod>2026-11-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/coin/?lang=zh"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://stockcorp.github.io/coin/?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://stockcorp.github.io/coin/"/>
+  </url>
+  <url>
+    <loc>https://stockcorp.github.io/coin/privacy.html</loc>
+    <lastmod>2026-11-19</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/coin/privacy.html?lang=zh"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://stockcorp.github.io/coin/privacy.html?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://stockcorp.github.io/coin/privacy.html"/>
+  </url>
+  <url>
+    <loc>https://stockcorp.github.io/racing/</loc>
+    <lastmod>2026-11-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/racing/?lang=zh"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://stockcorp.github.io/racing/?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://stockcorp.github.io/racing/"/>
+  </url>
+  <url>
+    <loc>https://stockcorp.github.io/racing/privacy.html</loc>
+    <lastmod>2026-11-19</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/racing/privacy.html?lang=zh"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://stockcorp.github.io/racing/privacy.html?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://stockcorp.github.io/racing/privacy.html"/>
+  </url>
+  <url>
+    <loc>https://stockcorp.github.io/sudoku/</loc>
+    <lastmod>2026-11-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/sudoku/?lang=zh"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://stockcorp.github.io/sudoku/?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://stockcorp.github.io/sudoku/"/>
+  </url>
+  <url>
+    <loc>https://stockcorp.github.io/sudoku/privacy.html</loc>
+    <lastmod>2026-11-19</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/sudoku/privacy.html?lang=zh"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://stockcorp.github.io/sudoku/privacy.html?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://stockcorp.github.io/sudoku/privacy.html"/>
+  </url>
 </urlset>

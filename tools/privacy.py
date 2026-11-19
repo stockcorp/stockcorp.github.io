@@ -5,6 +5,12 @@ G = {
  'ai': ('搶救 AI 教父大作戰', 'Save the AI Godfather', '#0b0f19', False),
  'darkchess': ('暗棋破壞神', 'Dark Chess Destroyer', '#120c08', True),
  'xiangqi': ('象棋', 'Xiangqi', '#120c08', True),
+ 'bigtwo': ('王者大老二', 'Big Two King', '#0d2a1d', False),
+ 'mahjong': ('麻將大亨', 'Mahjong Tycoon', '#0b2a26', False),
+ '2048': ('2048', '2048', '#2a241c', False),
+ 'coin': ('金幣大亨', 'Coin Tycoon', '#1a1206', False),
+ 'racing': ('極速賽車', 'Turbo Racer', '#0a1020', False),
+ 'sudoku': ('數獨', 'Sudoku', '#0b1420', False),
 }
 T = '''<!DOCTYPE html>
 <html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
