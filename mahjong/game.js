@@ -654,6 +654,7 @@
   $('bNext').onclick = function () {
     K.close('ovHand');
     if (isGuest()) return;
+    if (G && !G.ended) return; // 連點兩下不要開兩把
     if (M.done) { if (NET) newMatch('normal'); else openNew(); } else playHand();
   };
   $('bOnline').onclick = function () {

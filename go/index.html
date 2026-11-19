@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title data-en="Go | Free Online Go (Weiqi / Baduk) vs AI or Real Players">圍棋｜免費線上圍棋・9 路 13 路 19 路・對戰電腦或線上真人</title>
+<meta name="description" content="免費線上圍棋：9 路、13 路、19 路棋盤，中國規則數子、貼 7.5 目。可以對戰三種強度的電腦（9 路、13 路）、同一台雙人對弈，也能線上隨機配對或用房號找朋友；擊敗電腦的時間可上傳全球排行榜。">
+<meta name="google-adsense-account" content="ca-pub-3440199491716602">
+<meta name="theme-color" content="#14110c">
+<meta property="og:title" content="圍棋｜Stockcorp 遊戲大廳">
+<meta property="og:description" content="9 路、13 路、19 路圍棋，對戰電腦或線上真人。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://stockcorp.github.io/go/">
+<link rel="canonical" href="https://stockcorp.github.io/go/">
+<link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/go/?lang=zh">
+<link rel="alternate" hreflang="en" href="https://stockcorp.github.io/go/?lang=en">
+<link rel="alternate" hreflang="x-default" href="https://stockcorp.github.io/go/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%23334155'/%3E%3Ctext x='50' y='70' font-size='60' text-anchor='middle'%3E%E2%9A%AA%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/shared/kit.css?v=1.0">
+<link rel="stylesheet" href="style.css?v=1.0">
+<script src="/shared/app.js?v=1.2"></script>
+<script src="/shared/kit.js?v=1.0"></script>
+<script src="/shared/games.js?v=1.5" data-game="go" defer></script>
+<script src="/shared/lb.js?v=1.0" defer></script>
+<script src="/shared/net.js?v=1.6" defer></script>
+<script src="engine.js?v=1.0" defer></script>
+</head>
+<body>
+<header class="k-top">
+  <div class="k-brand"><span class="k-logo">⚪</span><div><h1 data-en="Go">圍棋</h1><small id="sub"></small></div></div>
+  <div class="k-acts">
+    <button class="btn ghost" data-lang-toggle>EN</button>
+    <button class="btn ghost" id="bSound">🔊</button>
+    <a class="btn ghost" id="bLb" href="/leaderboard/?game=go&mode=9-normal" style="text-decoration:none">🏆</a>
+    <button class="btn ghost" id="bOnline">🌐 線上對戰</button>
+    <button class="btn" id="bNew" data-en="New">新局</button>
+  </div>
+</header>
+<main class="wrap">
+  <div class="players"><div class="pl" id="plB"><i class="st b"></i><div><b id="nmB"></b><small id="capB"></small></div></div><div class="vs" id="status"></div><div class="pl" id="plW"><i class="st w"></i><div><b id="nmW"></b><small id="capW"></small></div></div></div>
+  <div class="board" id="board"><canvas id="cv"></canvas><div class="think" id="think" hidden><span class="spin"></span><span data-en="Thinking…">思考中…</span></div></div>
+  <div class="acts" id="acts">
+    <button class="btn ghost" id="bPass" data-en="Pass">虛手（Pass）</button>
+    <button class="btn ghost" id="bUndo">↶ <span data-en="Undo">悔棋</span> <b id="undoN"></b></button>
+    <button class="btn ghost" id="bResign" data-en="Resign">認輸</button>
+  </div>
+  <div class="scorebar" id="scorebar" hidden>
+    <p id="scoreText"></p>
+    <p class="mute" id="scoreHint" data-en="Tap a group to mark it dead or alive, then confirm.">點一塊棋可以切換死活，確認後計分。</p>
+    <div class="k-row"><button class="btn big" id="bConfirm" data-en="Confirm result">確認結果</button><button class="btn ghost" id="bResume" data-en="Keep playing">繼續下</button></div>
+  </div>
+</main>
+<section class="k-help">
+  <article><h2 data-en="Rules">規則</h2><p data-en="Black plays first. Stones with no liberties (empty points next to them) are captured. Suicide is not allowed, and you may not retake a ko immediately. When both players pass in a row the game ends and is scored by area (Chinese rules): your stones on the board plus the empty points you surround. White gets 7.5 points komi.">黑棋先下。一塊棋沒有「氣」（相鄰的空點）就被提掉。不能自殺，也不能馬上提回打劫。雙方連續虛手（Pass）就終局，以中國規則數子：棋盤上自己的活子加上圍住的空點，白棋另貼 7.5 目。</p></article>
+  <article><h2 data-en="Modes">模式</h2><p data-en="Play the computer on 9×9 or 13×13 at three strengths, two people on one device on any size, or online on any size (random match or room code, colours swap each game). At the end, the game guesses which stones are dead; you can tap a group to change it before confirming.">可以在 9 路、13 路對戰三種強度的電腦；任何大小都能同一台雙人對弈，或線上隨機配對、用房號找朋友（每局交換黑白）。終局時程式會先判斷死子，你可以點一塊棋修改後再確認。</p></article>
+  <article><h2 data-en="Leaderboard">排行榜</h2><p data-en="Beat the computer and the time from the start of the game (measured by the server) can go on the leaderboard for that board size and strength. The win is checked against the game's own dead-stone estimate.">擊敗電腦後，從開局到獲勝的時間（由伺服器計算）可以上傳該棋盤大小與強度的排行榜；勝負以程式自動判斷的死活為準。</p></article>
+</section>
+<footer class="k-foot"><span data-en="Free to play. Scores you choose to submit appear on the global leaderboard.">免費遊玩；選擇上傳的成績會顯示在全球排行榜。</span>　<a href="privacy.html" data-en="Privacy policy">隱私權政策與廣告說明</a></footer>
+<div class="k-ov" id="ovNew"><div class="k-modal center"><h2 data-en="New game">開新局</h2>
+  <p class="mute" data-en="Opponent">對手</p><div class="k-chips" id="modeChips"><button data-m="ai" class="on" data-en="Computer">電腦</button><button data-m="local" data-en="Two players, one device">雙人同機</button></div>
+  <p class="mute" data-en="Board">棋盤</p><div class="k-chips" id="sizeChips"><button data-s="9" class="on" data-en="9×9">9 路</button><button data-s="13" data-en="13×13">13 路</button><button data-s="19" data-en="19×19">19 路</button></div>
+  <div id="aiOpts"><p class="mute" data-en="Strength">強度</p><div class="k-chips" id="lvChips"></div>
+  <p class="mute" data-en="Your colour">你執</p><div class="k-chips" id="colChips"><button data-c="1" class="on" data-en="⚫ Black (first)">⚫ 黑棋（先手）</button><button data-c="2" data-en="⚪ White">⚪ 白棋</button></div></div>
+  <p class="mute small" id="sizeNote"></p>
+  <div class="k-row"><button class="btn big" id="bGo" data-en="Start">開始</button><button class="btn ghost" data-close data-en="Cancel">取消</button></div></div></div>
+<div class="k-ov" id="ovEnd"><div class="k-modal center"><div class="k-big" id="endEmoji">🏆</div><h2 id="endTitle"></h2><p class="mute" id="endNote"></p>
+  <div class="k-row"><button class="btn big" id="bAgain"></button><button class="btn ghost" data-close data-en="View board">看棋盤</button></div></div></div>
+<script src="game.js?v=1.0" defer></script>
+</body>
+</html>

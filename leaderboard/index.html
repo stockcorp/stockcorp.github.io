@@ -81,7 +81,8 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) calc(env(safe-a
     blast: { modes: [['classic', '經典 8×8', 'Classic 8×8']], unit: 'pt', d: ['單局最高分', 'Highest score in one game'] },
     link: { modes: [['hard', '困難', 'Hard'], ['normal', '普通', 'Normal'], ['easy', '簡單', 'Easy']], unit: 'sec', d: ['最快清空盤面（伺服器計時）', 'Fastest clear (server-timed)'] },
     gomoku: { modes: [['hard', '困難', 'Hard'], ['normal', '普通', 'Normal'], ['easy', '簡單', 'Easy']], unit: 'sec', d: ['最快擊敗電腦（伺服器計時）', 'Fastest win vs. AI (server-timed)'] },
-    snake: { modes: [['classic', '經典', 'Classic']], unit: 'pt', d: ['單局最高分', 'Highest score in one game'] }
+    snake: { modes: [['classic', '經典', 'Classic']], unit: 'pt', d: ['單局最高分', 'Highest score in one game'] },
+    go: { modes: [['9-hard', '9 路困難', '9×9 Hard'], ['9-normal', '9 路普通', '9×9 Normal'], ['9-easy', '9 路簡單', '9×9 Easy'], ['13-hard', '13 路困難', '13×13 Hard'], ['13-normal', '13 路普通', '13×13 Normal'], ['13-easy', '13 路簡單', '13×13 Easy']], unit: 'sec', d: ['最快擊敗電腦（伺服器計時）', 'Fastest win vs. AI (server-timed)'] }
   };
   var q = new URLSearchParams(location.search);
   var st = { game: CFG[q.get('game')] ? q.get('game') : 'trader', mode: q.get('mode') || '', period: q.get('period') === 'month' ? 'month' : 'all' };
@@ -102,7 +103,7 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) calc(env(safe-a
       return '<button data-g="' + id + '" class="' + (id === st.game ? 'on' : '') + '"><span class="ico' + (tt ? ' t' : '') + '" style="background:' + g.color + (g.fg ? ';color:' + g.fg + ';border-color:' + g.fg : '') + '">' + g.icon + '</span>' + (SC.lang === 'en' ? g.en : g.zh) + '</button>';
     }).join('');
     var c = CFG[st.game];
-    if (!c.modes.some(function (m) { return m[0] === st.mode; })) st.mode = st.game === 'trader' ? 'normal' : (st.game === 'bigtwo' || st.game === 'mahjong' || st.game === 'link' || st.game === 'gomoku') ? 'normal' : st.game === 'sudoku' ? 'easy' : c.modes[0][0];
+    if (!c.modes.some(function (m) { return m[0] === st.mode; })) st.mode = st.game === 'trader' ? 'normal' : (st.game === 'bigtwo' || st.game === 'mahjong' || st.game === 'link' || st.game === 'gomoku') ? 'normal' : st.game === 'go' ? '9-normal' : st.game === 'sudoku' ? 'easy' : c.modes[0][0];
     $('modes').innerHTML = c.modes.map(function (m) { return '<button data-m="' + m[0] + '" class="' + (m[0] === st.mode ? 'on' : '') + '">' + SC.t(m[1], m[2]) + '</button>'; }).join('');
     [].forEach.call($('period').children, function (b) { b.classList.toggle('on', b.getAttribute('data-p') === st.period); });
     $('desc').textContent = SC.t(c.d[0], c.d[1]);

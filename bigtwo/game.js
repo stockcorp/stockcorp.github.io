@@ -208,7 +208,7 @@
       return;
     }
     busy = true;
-    setTimeout(function () { if (gen !== GEN) return; busy = false; botTurn(); }, FAST ? 5 : 650 + Math.random() * 500);
+    setTimeout(function () { if (gen !== GEN || G.turn !== p || G.over) return; busy = false; botTurn(); }, FAST ? 5 : 650 + Math.random() * 500);
   }
   function botTurn() {
     if (G.over || G.turn === 0) return;
@@ -218,6 +218,10 @@
   }
   function act(p, mv) {
     clearTimeout(turnTimer);
+    // 防呆：不是他的回合、或要出的牌不在手上，一律不處理（避免重複觸發造成重複出牌）
+    if (!G || G.over || p !== G.turn) return;
+    if (mv && !mv.cs.every(function (c) { return G.hands[p].indexOf(c) >= 0; })) return;
+    if (!mv && G.lead) return;
     if (mv) {
       G.hands[p] = G.hands[p].filter(function (c) { return mv.cs.indexOf(c) < 0; });
       G.top = mv; G.topBy = p; G.lead = false; G.first = false; G.passes = 0; G.last[p] = mv.cs; G.played[p] += mv.cs.length;
@@ -448,6 +452,7 @@
   $('bNext').onclick = function () {
     K.close('ovHand');
     if (isGuest()) return;
+    if (G && !G.over) return; // 連點兩下不要發兩次牌
     if (M.hand >= HANDS) { if (NET) newMatch('normal'); else openNew(); } else deal();
   };
   $('bOnline').onclick = function () {

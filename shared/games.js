@@ -21,7 +21,8 @@
     { id: 'blast', no: '12', url: '/blast/', icon: '💥', color: '#ea580c', cat: ['puzzle'], zh: '方塊爆破', en: 'Block Blast', dzh: '把方塊拖進 8×8，排滿就爆破，慢慢想不趕時間', den: 'Drag pieces into an 8×8 grid and clear lines' },
     { id: 'link', no: '13', url: '/link/', icon: '🀄', color: '#16a34a', cat: ['puzzle', 'board'], zh: '麻將連連看', en: 'Mahjong Link', dzh: '找出能連線的兩張相同牌，清空整個盤面', den: 'Connect matching tiles and clear the board' },
     { id: 'gomoku', no: '14', url: '/gomoku/', icon: '⚫', color: '#a16207', fg: '#a16207', cat: ['board'], zh: '五子棋', en: 'Gomoku', dzh: '先連成五子就贏，對戰電腦或線上真人', den: 'Five in a row vs. AI or real players online' },
-    { id: 'snake', no: '15', url: '/snake/', icon: '🐍', color: '#65a30d', cat: ['action'], zh: '貪吃蛇', en: 'Snake', dzh: '經典貪吃蛇，吃越多越長也越快', den: 'Classic snake — eat, grow and speed up' }
+    { id: 'snake', no: '15', url: '/snake/', icon: '🐍', color: '#65a30d', cat: ['action'], zh: '貪吃蛇', en: 'Snake', dzh: '經典貪吃蛇，吃越多越長也越快', den: 'Classic snake — eat, grow and speed up' },
+    { id: 'go', no: '16', url: '/go/', icon: '⚪', color: '#334155', fg: '#334155', cat: ['board'], zh: '圍棋', en: 'Go', dzh: '9／13／19 路，對戰電腦或線上真人', den: '9×9 to 19×19 vs. AI or real players online' }
   ];
   window.SC_CATS = [
     { id: 'all', zh: '全部', en: 'All', icon: '🎮' },
