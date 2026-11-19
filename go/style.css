@@ -1,0 +1,23 @@
+:root{--bg:#14110c;--panel:#221d14;--line:#43392a;--text:#f5efe3;--mute:#c4b597;--accent:#e2c275;--accent2:#a1813a;--ink:#2a1f05}
+body{background:radial-gradient(ellipse at top,#2a2214 0,#14110c 70%)}
+.wrap{max-width:680px;margin:0 auto;padding:10px}
+.players{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center;margin-bottom:10px}
+.pl{display:flex;align-items:center;gap:8px;background:var(--panel);border:2px solid var(--line);border-radius:14px;padding:6px 10px;min-width:0}
+.pl.turn{border-color:#facc15;box-shadow:0 0 14px rgba(250,204,21,.45)}
+.pl b{display:block;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.pl small{font-size:12px;color:var(--mute)}
+#plW{flex-direction:row-reverse;text-align:right}
+.st{width:26px;height:26px;border-radius:50%;flex:none;box-shadow:0 2px 4px rgba(0,0,0,.5)}
+.st.b{background:radial-gradient(circle at 35% 30%,#666,#111 60%)}.st.w{background:radial-gradient(circle at 35% 30%,#fff,#d4d4d4 70%)}
+.vs{font-size:13px;color:var(--accent);font-weight:800;text-align:center;max-width:130px}
+.board{position:relative;width:100%;aspect-ratio:1;border-radius:10px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,.5);touch-action:manipulation}
+.board canvas{width:100%;height:100%;display:block;cursor:pointer}
+.think{position:absolute;right:10px;top:10px;background:rgba(20,17,12,.8);color:#fde68a;border-radius:999px;padding:5px 12px;font-size:13px;display:flex;gap:6px;align-items:center}
+.think[hidden]{display:none}
+.spin{width:12px;height:12px;border:2px solid #fde68a;border-right-color:transparent;border-radius:50%;animation:sp .8s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.acts{display:flex;justify-content:center;gap:8px;margin-top:10px;flex-wrap:wrap}
+.scorebar{margin-top:10px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:10px;text-align:center}
+.scorebar[hidden]{display:none}
+.scorebar p{margin:4px 0}#scoreText{font-weight:800;font-size:16px}
+.small{font-size:12px}
+#modeChips,#sizeChips,#lvChips,#colChips{justify-content:center}

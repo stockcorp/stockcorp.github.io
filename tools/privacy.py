@@ -16,6 +16,7 @@ G = {
  'link': ('麻將連連看', 'Mahjong Link', '#0c2016', False),
  'gomoku': ('五子棋', 'Gomoku', '#1a140c', True),
  'snake': ('貪吃蛇', 'Snake', '#0f1a0a', False),
+ 'go': ('圍棋', 'Go', '#14110c', True),
 }
 T = '''<!DOCTYPE html>
 <html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
