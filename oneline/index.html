@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title data-en="One Line | Free Online One-Stroke Path Puzzle, 3-Minute Challenge">一筆畫｜免費線上一筆畫連線・3 分鐘挑戰・全球排行榜</title>
+<meta name="description" content="免費線上一筆畫：從起點出發，一筆走完所有格子、每格只能經過一次。3 分鐘內解越多題越好，題目越來越大，成績上傳全球排行榜。">
+<meta name="google-adsense-account" content="ca-pub-3440199491716602">
+<meta name="theme-color" content="#061820">
+<meta property="og:title" content="一筆畫｜Stockcorp 遊戲大廳">
+<meta property="og:description" content="一筆走完所有格子，3 分鐘挑戰。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://stockcorp.github.io/oneline/">
+<link rel="canonical" href="https://stockcorp.github.io/oneline/">
+<link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/oneline/?lang=zh">
+<link rel="alternate" hreflang="en" href="https://stockcorp.github.io/oneline/?lang=en">
+<link rel="alternate" hreflang="x-default" href="https://stockcorp.github.io/oneline/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%230891b2'/%3E%3Ctext x='50' y='70' font-size='60' text-anchor='middle'%3E%E2%9C%8F%EF%B8%8F%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/shared/kit.css?v=1.0">
+<link rel="stylesheet" href="style.css?v=1.0">
+<script src="/shared/app.js?v=1.2"></script>
+<script src="/shared/kit.js?v=1.0"></script>
+<script src="/shared/games.js?v=1.6" data-game="oneline" defer></script>
+<script src="/shared/lb.js?v=1.0" defer></script>
+</head>
+<body>
+<header class="k-top">
+  <div class="k-brand"><span class="k-logo">✏️</span><div><h1 data-en="One Line">一筆畫</h1><small id="sub"></small></div></div>
+  <div class="k-acts">
+    <button class="btn ghost" data-lang-toggle>EN</button>
+    <button class="btn ghost" id="bSound">🔊</button>
+    <a class="btn ghost" id="bLb" href="/leaderboard/?game=oneline&mode=3min" style="text-decoration:none">🏆</a>
+    <button class="btn" id="bNew" data-en="Start">開始</button>
+  </div>
+</header>
+<main class="wrap">
+  <div class="bar"><span>⏱ <b id="clock">3:00</b></span><span><span data-en="Solved">解開</span> <b id="solved">0</b></span><button class="btn ghost sm" id="bClear" data-en="Clear">清除</button><button class="btn ghost sm" id="bSkip" data-en="Skip (−10s)">跳過（−10 秒）</button></div>
+  <div class="boardWrap"><canvas id="cv"></canvas><div class="msg" id="msg"></div></div>
+</main>
+<section class="k-help"><article><h2 data-en="How to play">玩法</h2><p data-en="Start from the glowing square and drag your finger (or mouse) through every open square exactly once, moving up, down, left or right. Drag back to undo. Fill every square to get the next puzzle.">從亮起的起點出發，手指（或滑鼠）按住拖曳，一筆經過所有空白格子，每一格只能走一次、只能上下左右移動。走錯了往回拖就能退回。走滿所有格子就換下一題。</p></article><article><h2 data-en="Leaderboard">排行榜</h2><p data-en="The number of puzzles you solve in 3 minutes can go on the leaderboard. Skipping costs 10 seconds.">3 分鐘內解開的題數可以上傳排行榜。跳過一題會扣 10 秒。</p></article></section>
+<footer class="k-foot"><span data-en="Free to play. Scores you choose to submit appear on the global leaderboard.">免費遊玩；選擇上傳的成績會顯示在全球排行榜。</span>　<a href="privacy.html" data-en="Privacy policy">隱私權政策與廣告說明</a></footer>
+<div class="k-ov" id="ovEnd" data-sticky><div class="k-modal center"><div class="k-big" id="endEmoji">✏️</div><h2 id="endTitle" data-en="Time&#39;s up!">時間到！</h2>
+  <div class="k-stats"><div><b id="endSolved">0</b><span data-en="Solved">解開題數</span></div><div><b id="endBig">0</b><span data-en="Largest board">最大盤面</span></div></div>
+  <p class="mute" id="endBest"></p><div class="k-row"><button class="btn big" id="bAgain" data-en="Play again">再玩一次</button><button class="btn ghost" data-close data-en="Close">關閉</button></div></div></div>
+<script src="game.js?v=1.0" defer></script>
+</body>
+</html>
