@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title data-en="Game Studio | Free Online Game Dev Tycoon Simulator">遊戲工作室｜免費線上遊戲公司經營模擬・開發遊戲・全球排行榜</title>
+<meta name="description" content="免費線上遊戲工作室：模擬經營一間遊戲開發公司，自由搭配 6 種類型和 8 種題材、選擇規模與開發重點、投放行銷，看媒體評分與銷量；升級團隊與引擎、累積粉絲、追流行。10 年後的資金上傳全球排行榜。">
+<meta name="google-adsense-account" content="ca-pub-3440199491716602">
+<meta name="theme-color" content="#120d1f">
+<meta property="og:title" content="遊戲工作室｜Stockcorp 遊戲大廳">
+<meta property="og:description" content="經營遊戲公司 10 年的模擬遊戲。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://stockcorp.github.io/studio/">
+<link rel="canonical" href="https://stockcorp.github.io/studio/">
+<link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/studio/?lang=zh">
+<link rel="alternate" hreflang="en" href="https://stockcorp.github.io/studio/?lang=en">
+<link rel="alternate" hreflang="x-default" href="https://stockcorp.github.io/studio/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%238b5cf6'/%3E%3Ctext x='50' y='70' font-size='60' text-anchor='middle'%3E%F0%9F%8E%AE%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/shared/kit.css?v=1.0">
+<link rel="stylesheet" href="style.css?v=1.0">
+<script src="/shared/app.js?v=1.2"></script>
+<script src="/shared/kit.js?v=1.0"></script>
+<script src="/shared/games.js?v=1.7" data-game="studio" defer></script>
+<script src="/shared/lb.js?v=1.0" defer></script>
+</head>
+<body>
+<header class="k-top">
+  <div class="k-brand"><span class="k-logo">🎮</span><div><h1 data-en="Game Studio">遊戲工作室</h1><small id="sub"></small></div></div>
+  <div class="k-acts">
+    <button class="btn ghost" data-lang-toggle>EN</button>
+    <button class="btn ghost" id="bSound">🔊</button>
+    <a class="btn ghost" id="bLb" href="/leaderboard/?game=studio&mode=10years" style="text-decoration:none">🏆</a>
+    <button class="btn" id="bNew" data-en="Restart">重來</button>
+  </div>
+</header>
+<main class="wrap">
+  <div class="hud"><span class="pill">💰 <b id="money">$100K</b></span><span class="pill">📅 <b id="turn">1 年上半</b></span><span class="pill">👥 <span data-en="Fans">粉絲</span> <b id="fans">0</b></span></div>
+  <div class="stage" id="stage"><canvas id="cv" width="480" height="660"></canvas><div class="big" id="big"></div>
+    <div class="cover" id="cover"><div class="ic">🎮</div><h3 data-en="Game Studio">遊戲工作室</h3><p data-en="Run a game company for 10 years. Choose genre, theme, size and focus, read the reviews, then reinvest in your team. Find the perfect genre-and-theme matches to score a hit!">經營一間遊戲公司 10 年：決定類型、題材、規模和開發重點，看評分與銷量，再把賺到的錢拿去升級團隊。找出「絕配」的組合就能大賣！</p><button class="btn big2" id="bStart" data-en="Start">開始</button></div></div>
+
+</main>
+<section class="k-help"><article><h2 data-en="How to play">玩法</h2><p data-en="Each turn is half a year, 20 turns in total. For every project pick a genre and a theme, then the size (small 1 turn, medium 2, large 3 — bigger costs more and sells more), two focus areas and a marketing budget, then start development. Four critics score the finished game; higher scores sell better.">每半年是一回合，共 20 回合。每次開發先選「類型」和「題材」，再選規模（小 1 回合、中 2 回合、大 3 回合，越大成本越高、賣得也越多）、兩個開發重點、以及行銷預算，然後開始開發。完成後會有 4 位評審打分，分數越高賣越好。</p></article><article><h2 data-en="How to score a hit">賺大錢的訣竅</h2><p data-en="① Genres and themes have chemistry — perfect, good, so-so or bad. Once you try a combo, the result is marked on the button. ② Each genre has two ideal focus areas; the reviews hint at what was missing. ③ Every year one trending genre sells 40% more. ④ Players get bored if you repeat yourself. ⑤ Upgrading your team and engine steadily raises scores, and good games build a fan base.">① 類型和題材有相性：絕配、不錯、普通、不搭，做過一次就會記在按鈕上。② 每種類型有最適合的兩個開發重點，評語會提示你哪裡不足。③ 每年有一種「流行類型」銷量 +40%。④ 連續做一樣的東西玩家會膩。⑤ 升級團隊和引擎可以穩定拉高評分，好遊戲會累積粉絲。</p></article><article><h2 data-en="Leaderboard">排行榜</h2><p data-en="The leaderboard ranks your company's cash after 10 years.">比 10 年結束時公司的資金。</p></article></section>
+<footer class="k-foot"><span data-en="Free to play. Scores you choose to submit appear on the global leaderboard.">免費遊玩；選擇上傳的成績會顯示在全球排行榜。</span>　<a href="privacy.html" data-en="Privacy policy">隱私權政策與廣告說明</a></footer>
+<div class="k-ov" id="ovEnd" data-sticky><div class="k-modal center"><div class="k-big" id="endEmoji">🎮</div><h2 id="endTitle" data-en="10 Years Later">10 年過去了</h2>
+  <div class="k-stats"><div><b id="endMoney">0</b><span data-en="Final cash">最終資金</span></div><div><b id="endBestQ">0</b><span data-en="Best score">最高評分</span></div><div><b id="endGames">0</b><span data-en="Games released">發行款數</span></div></div>
+  <p class="mute" id="endBest"></p><div class="k-row"><button class="btn big" id="bAgain" data-en="Play again">再玩一次</button><button class="btn ghost" data-close data-en="Close">關閉</button></div></div></div>
+<script src="/shared/fx.js?v=1.0" defer></script>
+<script src="game.js?v=1.0" defer></script>
+</body>
+</html>
