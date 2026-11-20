@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title data-en="Derby Day | Free Online Horse Racing Game">賽馬｜免費線上賽馬遊戲・體力配速・超車衝線・全球排行榜</title>
+<meta name="description" content="免費線上賽馬：騎上你的賽馬和 5 匹對手比 1000 公尺。按住衝刺消耗體力、跟在別人後面省力、換跑道超車、吃紅蘿蔔補體力、閃開泥巴。冠軍的完賽時間上傳全球排行榜。">
+<meta name="google-adsense-account" content="ca-pub-3440199491716602">
+<meta name="theme-color" content="#08150d">
+<meta property="og:title" content="賽馬｜Stockcorp 遊戲大廳">
+<meta property="og:description" content="配速、超車、衝線的賽馬遊戲。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://stockcorp.github.io/derby/">
+<link rel="canonical" href="https://stockcorp.github.io/derby/">
+<link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/derby/?lang=zh">
+<link rel="alternate" hreflang="en" href="https://stockcorp.github.io/derby/?lang=en">
+<link rel="alternate" hreflang="x-default" href="https://stockcorp.github.io/derby/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%2316a34a'/%3E%3Ctext x='50' y='70' font-size='60' text-anchor='middle'%3E%F0%9F%8F%87%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/shared/kit.css?v=1.0">
+<link rel="stylesheet" href="style.css?v=1.0">
+<script src="/shared/app.js?v=1.2"></script>
+<script src="/shared/kit.js?v=1.0"></script>
+<script src="/shared/games.js?v=1.7" data-game="derby" defer></script>
+<script src="/shared/lb.js?v=1.0" defer></script>
+</head>
+<body>
+<header class="k-top">
+  <div class="k-brand"><span class="k-logo">🏇</span><div><h1 data-en="Derby Day">賽馬</h1><small id="sub"></small></div></div>
+  <div class="k-acts">
+    <button class="btn ghost" data-lang-toggle>EN</button>
+    <button class="btn ghost" id="bSound">🔊</button>
+    <a class="btn ghost" id="bLb" href="/leaderboard/?game=derby&mode=classic" style="text-decoration:none">🏆</a>
+    <button class="btn" id="bNew" data-en="Restart">重來</button>
+  </div>
+</header>
+<main class="wrap">
+  <div class="hud"><span class="pill">⏱ <b id="time">0:00.0</b></span><span class="pill">🏇 <span data-en="Pos">名次</span> <b id="pos">1/6</b></span><span class="pill">🏁 <span data-en="Left">剩</span> <b id="left">1000 m</b></span></div>
+  <div class="stage" id="stage"><canvas id="cv" width="480" height="620"></canvas><div class="big" id="big"></div>
+    <div class="cover" id="cover"><div class="ic">🏇</div><h3 data-en="Derby Day">賽馬</h3><p data-en="A 1,000 m turf race. Holding Sprint burns stamina; letting go recovers it. Time your moves, grab carrots, and go all-out down the stretch!">1000 公尺草地賽。按住衝刺會消耗體力，放開慢慢回復 — 抓準時機超車、吃紅蘿蔔、最後直線全力衝！</p><button class="btn big2" id="bStart" data-en="Start">開始</button></div></div>
+  <div class="touch auto" id="touch"></div>
+
+</main>
+<section class="k-help"><article><h2 data-en="How to play">玩法</h2><p data-en="Hold Sprint (Space) to speed up — it drains stamina fast. Release to cruise and recover. If stamina hits zero your horse is exhausted and slows for several seconds. Use ▲ ▼ (Up/Down) to change lanes: a horse directly ahead blocks you, but following it saves stamina. 🥕 on the track restores stamina; mud slows you down.">按住「衝刺」（空白鍵）加速，但體力會快速下降；放開則以巡航速度前進並慢慢回復體力。體力歸零會「力竭」，要掉速好幾秒。用 ▲ ▼（方向鍵上下）換跑道：正前方有馬會被擋住，但跟在後面比較省力。跑道上的 🥕 可以補體力，泥巴會讓你減速。</p></article><article><h2 data-en="Leaderboard">排行榜</h2><p data-en="Only wins count. The leaderboard ranks finishing time (measured by the server) — lower is better.">只有拿到第 1 名才能上榜，比的是完賽時間（伺服器計時），越短越好。</p></article></section>
+<footer class="k-foot"><span data-en="Free to play. Scores you choose to submit appear on the global leaderboard.">免費遊玩；選擇上傳的成績會顯示在全球排行榜。</span>　<a href="privacy.html" data-en="Privacy policy">隱私權政策與廣告說明</a></footer>
+<div class="k-ov" id="ovEnd" data-sticky><div class="k-modal center"><div class="k-big" id="endEmoji">🏇</div><h2 id="endTitle" data-en="Race Over">比賽結束</h2>
+  <div class="k-stats"><div><b id="endPos">0</b><span data-en="Position">名次</span></div><div><b id="endTime">0</b><span data-en="Time">時間</span></div><div><b id="endTop">0</b><span data-en="Top speed">最高速</span></div></div>
+  <p class="mute" id="endBest"></p><div class="k-row"><button class="btn big" id="bAgain" data-en="Play again">再玩一次</button><button class="btn ghost" data-close data-en="Close">關閉</button></div></div></div>
+<script src="/shared/fx.js?v=1.0" defer></script>
+<script src="game.js?v=1.0" defer></script>
+</body>
+</html>
