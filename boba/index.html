@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title data-en="Boba Shop | Free Online Bubble Tea Shop Game">珍奶手搖店｜免費線上手搖飲料店經營遊戲・接單做飲料・全球排行榜</title>
+<meta name="description" content="免費線上珍奶手搖店：客人上門點珍珠奶茶、綠茶、抹茶拿鐵，加珍珠、椰果、布丁、冰塊。照著訂單快速做好送出賺小費，客人越來越多、訂單越來越複雜。營業額上傳全球排行榜。">
+<meta name="google-adsense-account" content="ca-pub-3440199491716602">
+<meta name="theme-color" content="#1c120a">
+<meta property="og:title" content="珍奶手搖店｜Stockcorp 遊戲大廳">
+<meta property="og:description" content="接單、做飲料、賺小費的手搖店。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://stockcorp.github.io/boba/">
+<link rel="canonical" href="https://stockcorp.github.io/boba/">
+<link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/boba/?lang=zh">
+<link rel="alternate" hreflang="en" href="https://stockcorp.github.io/boba/?lang=en">
+<link rel="alternate" hreflang="x-default" href="https://stockcorp.github.io/boba/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%23d97706'/%3E%3Ctext x='50' y='70' font-size='60' text-anchor='middle'%3E%F0%9F%A7%8B%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/shared/kit.css?v=1.0">
+<link rel="stylesheet" href="style.css?v=1.0">
+<script src="/shared/app.js?v=1.2"></script>
+<script src="/shared/kit.js?v=1.0"></script>
+<script src="/shared/games.js?v=1.7" data-game="boba" defer></script>
+<script src="/shared/lb.js?v=1.0" defer></script>
+</head>
+<body>
+<header class="k-top">
+  <div class="k-brand"><span class="k-logo">🧋</span><div><h1 data-en="Boba Shop">珍奶手搖店</h1><small id="sub"></small></div></div>
+  <div class="k-acts">
+    <button class="btn ghost" data-lang-toggle>EN</button>
+    <button class="btn ghost" id="bSound">🔊</button>
+    <a class="btn ghost" id="bLb" href="/leaderboard/?game=boba&mode=classic" style="text-decoration:none">🏆</a>
+    <button class="btn" id="bNew" data-en="Restart">重來</button>
+  </div>
+</header>
+<main class="wrap">
+  <div class="hud"><span class="pill">💰 <b id="money">$0</b></span><span class="pill">🧋 <span data-en="Sold">賣出</span> <b id="served">0</b></span><span class="pill">❤️ <b id="life">3</b></span></div>
+  <div class="stage" id="stage"><canvas id="cv" width="480" height="660"></canvas><div class="big" id="big"></div>
+    <div class="cover" id="cover"><div class="ic">🧋</div><h3 data-en="Boba Shop">珍奶手搖店</h3><p data-en="Make exactly what each customer orders: tap the toppings and tea, then tap the customer to serve. Faster service means bigger tips — lose 3 customers and the shop closes!">客人點什麼就做什麼：先點配料和茶，做好後點客人送出。動作越快小費越多，氣走 3 位客人就打烊！</p><button class="btn big2" id="bStart" data-en="Start">開始</button></div></div>
+
+</main>
+<section class="k-help"><article><h2 data-en="How to play">玩法</h2><p data-en="The bubble above each customer is their order: one tea plus 0–3 toppings. Tap the toppings and tea below to build the cup, then tap that customer to serve it. Made a mistake? Hit 🗑 and start over. Customers leave angry when their patience runs out — lose 3 and it is game over. Keyboard: 1–4 tea, Q W E R toppings, A S D serve, X trash.">客人頭上的對話框是訂單：一種茶加上 0 到 3 種配料。在下方點配料和茶把杯子做好，再點那位客人送出。做錯了就按 🗑 倒掉重做。客人的耐心條歸零就會生氣離開，氣走 3 位就結束。鍵盤：1–4 選茶、Q W E R 加配料、A S D 送給三位客人、X 倒掉。</p></article><article><h2 data-en="Leaderboard">排行榜</h2><p data-en="The leaderboard ranks total revenue including tips. Consecutive correct orders build a combo bonus.">比單局營業額（含小費）。連續做對有連擊加成。</p></article></section>
+<footer class="k-foot"><span data-en="Free to play. Scores you choose to submit appear on the global leaderboard.">免費遊玩；選擇上傳的成績會顯示在全球排行榜。</span>　<a href="privacy.html" data-en="Privacy policy">隱私權政策與廣告說明</a></footer>
+<div class="k-ov" id="ovEnd" data-sticky><div class="k-modal center"><div class="k-big" id="endEmoji">🧋</div><h2 id="endTitle" data-en="Closing Time">打烊了</h2>
+  <div class="k-stats"><div><b id="endMoney">0</b><span data-en="Revenue">營業額</span></div><div><b id="endServed">0</b><span data-en="Cups sold">賣出杯數</span></div><div><b id="endCombo">0</b><span data-en="Best combo">最高連擊</span></div></div>
+  <p class="mute" id="endBest"></p><div class="k-row"><button class="btn big" id="bAgain" data-en="Play again">再玩一次</button><button class="btn ghost" data-close data-en="Close">關閉</button></div></div></div>
+<script src="/shared/fx.js?v=1.0" defer></script>
+<script src="game.js?v=1.0" defer></script>
+</body>
+</html>
