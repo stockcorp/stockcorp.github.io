@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title data-en="Mini City | Free Online City Building Strategy Game">迷你城市｜免費線上城市建設遊戲・都市規劃・全球排行榜</title>
+<meta name="description" content="免費線上迷你城市：7×7 的土地、20 年的時間，蓋住宅、公寓、商店、工廠、公園、學校和發電廠，平衡人口、就業、電力與污染。最終人口上傳全球排行榜。">
+<meta name="google-adsense-account" content="ca-pub-3440199491716602">
+<meta name="theme-color" content="#0a1420">
+<meta property="og:title" content="迷你城市｜Stockcorp 遊戲大廳">
+<meta property="og:description" content="20 年蓋出你的迷你城市。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://stockcorp.github.io/city/">
+<link rel="canonical" href="https://stockcorp.github.io/city/">
+<link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/city/?lang=zh">
+<link rel="alternate" hreflang="en" href="https://stockcorp.github.io/city/?lang=en">
+<link rel="alternate" hreflang="x-default" href="https://stockcorp.github.io/city/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%230ea5e9'/%3E%3Ctext x='50' y='70' font-size='60' text-anchor='middle'%3E%F0%9F%8F%99%EF%B8%8F%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/shared/kit.css?v=1.0">
+<link rel="stylesheet" href="style.css?v=1.0">
+<script src="/shared/app.js?v=1.2"></script>
+<script src="/shared/kit.js?v=1.0"></script>
+<script src="/shared/games.js?v=1.7" data-game="city" defer></script>
+<script src="/shared/lb.js?v=1.0" defer></script>
+</head>
+<body>
+<header class="k-top">
+  <div class="k-brand"><span class="k-logo">🏙️</span><div><h1 data-en="Mini City">迷你城市</h1><small id="sub"></small></div></div>
+  <div class="k-acts">
+    <button class="btn ghost" data-lang-toggle>EN</button>
+    <button class="btn ghost" id="bSound">🔊</button>
+    <a class="btn ghost" id="bLb" href="/leaderboard/?game=city&mode=20years" style="text-decoration:none">🏆</a>
+    <button class="btn" id="bNew" data-en="Restart">重來</button>
+  </div>
+</header>
+<main class="wrap">
+  <div class="hud"><span class="pill">👥 <span data-en="Pop">人口</span> <b id="pop">0</b></span><span class="pill">💰 <b id="money">$800</b></span><span class="pill">📅 <span data-en="Year">第</span> <b id="year">1/20</b></span></div>
+  <div class="stage" id="stage"><canvas id="cv" width="480" height="660"></canvas><div class="big" id="big"></div>
+    <div class="cover" id="cover"><div class="ic">🏙️</div><h3 data-en="Mini City">迷你城市</h3><p data-en="You have 20 years to turn an empty plot into a city. Homes need jobs, power and parks — and keep factories away from houses. How big can your population get?">你有 20 年把空地蓋成城市：住宅要有工作、電力和公園，工廠別蓋在住宅旁。看你能養出多少人口！</p><button class="btn big2" id="bStart" data-en="Start">開始</button></div></div>
+
+</main>
+<section class="k-help"><article><h2 data-en="How to play">玩法</h2><p data-en="Pick a building below, then tap an empty tile to build it. Choose Demolish and tap a building to remove it. Tap any building to see its current stats. Press Next Year when you are done: population grows toward whichever is lower — housing capacity or the number of jobs — and you collect taxes and business income.">先在下方選建築，再點空地蓋下去；選「拆除」再點建築可以拆掉。點任何建築可以看它目前的數值。蓋好後按「下一年」：人口會朝「住宅容量」和「工作數」中較低的那個成長，並收到稅金和商業收入。</p></article><article><h2 data-en="Planning tips">規劃要點</h2><p data-en="A park next to a home adds +3 capacity and a shop +2; a factory or power plant next door costs −4. A school gives +4 to homes within two tiles. Each job supports 1.6 people. One power plant supplies 14 buildings; unpowered homes lose half their capacity and unpowered shops and factories shut down. Shop income depends on how many homes are adjacent. Apartments unlock in year 6 and can be built on top of a house to upgrade it.">住宅旁邊有公園 +3 容量、有商店 +2；旁邊是工廠或電廠 −4。學校讓兩格內的住宅 +4。每個工作可以養 1.6 個人。一座電廠供 14 棟建築用電，沒電的住宅容量減半、商店工廠停擺。商店的收入看旁邊有幾棟住宅。公寓第 6 年解鎖，可以直接蓋在住宅上升級。</p></article><article><h2 data-en="Leaderboard">排行榜</h2><p data-en="The leaderboard ranks your population at the end of year 20.">比第 20 年結束時的人口。</p></article></section>
+<footer class="k-foot"><span data-en="Free to play. Scores you choose to submit appear on the global leaderboard.">免費遊玩；選擇上傳的成績會顯示在全球排行榜。</span>　<a href="privacy.html" data-en="Privacy policy">隱私權政策與廣告說明</a></footer>
+<div class="k-ov" id="ovEnd" data-sticky><div class="k-modal center"><div class="k-big" id="endEmoji">🏙️</div><h2 id="endTitle" data-en="20 Years Later">20 年過去了</h2>
+  <div class="k-stats"><div><b id="endPop">0</b><span data-en="Population">最終人口</span></div><div><b id="endBld">0</b><span data-en="Buildings">建築數</span></div><div><b id="endMoney">0</b><span data-en="Cash left">剩餘資金</span></div></div>
+  <p class="mute" id="endBest"></p><div class="k-row"><button class="btn big" id="bAgain" data-en="Play again">再玩一次</button><button class="btn ghost" data-close data-en="Close">關閉</button></div></div></div>
+<script src="/shared/fx.js?v=1.0" defer></script>
+<script src="game.js?v=1.0" defer></script>
+</body>
+</html>
