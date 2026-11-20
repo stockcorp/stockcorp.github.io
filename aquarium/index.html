@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title data-en="Dream Aquarium | Free Online Fish Tank Tycoon Game">夢幻水族箱｜免費線上養魚經營遊戲・餵魚收金幣・全球排行榜</title>
+<meta name="description" content="免費線上夢幻水族箱：餵孔雀魚、小丑魚、神仙魚，魚長大會吐出金幣和鑽石，收錢再買更多魚、升級飼料、請螃蟹幫忙撿錢，還要打退來偷吃的鯊魚。5 分鐘內的資金上傳全球排行榜。">
+<meta name="google-adsense-account" content="ca-pub-3440199491716602">
+<meta name="theme-color" content="#06131c">
+<meta property="og:title" content="夢幻水族箱｜Stockcorp 遊戲大廳">
+<meta property="og:description" content="餵魚、收金幣、打鯊魚的水族箱。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://stockcorp.github.io/aquarium/">
+<link rel="canonical" href="https://stockcorp.github.io/aquarium/">
+<link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/aquarium/?lang=zh">
+<link rel="alternate" hreflang="en" href="https://stockcorp.github.io/aquarium/?lang=en">
+<link rel="alternate" hreflang="x-default" href="https://stockcorp.github.io/aquarium/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%2306b6d4'/%3E%3Ctext x='50' y='70' font-size='60' text-anchor='middle'%3E%F0%9F%90%A0%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/shared/kit.css?v=1.0">
+<link rel="stylesheet" href="style.css?v=1.0">
+<script src="/shared/app.js?v=1.2"></script>
+<script src="/shared/kit.js?v=1.0"></script>
+<script src="/shared/games.js?v=1.7" data-game="aquarium" defer></script>
+<script src="/shared/lb.js?v=1.0" defer></script>
+</head>
+<body>
+<header class="k-top">
+  <div class="k-brand"><span class="k-logo">🐠</span><div><h1 data-en="Dream Aquarium">夢幻水族箱</h1><small id="sub"></small></div></div>
+  <div class="k-acts">
+    <button class="btn ghost" data-lang-toggle>EN</button>
+    <button class="btn ghost" id="bSound">🔊</button>
+    <a class="btn ghost" id="bLb" href="/leaderboard/?game=aquarium&mode=5min" style="text-decoration:none">🏆</a>
+    <button class="btn" id="bNew" data-en="Restart">重來</button>
+  </div>
+</header>
+<main class="wrap">
+  <div class="hud"><span class="pill">💰 <b id="money">$150</b></span><span class="pill">⏱ <b id="time">5:00</b></span><span class="pill">🐟 <span data-en="Fish">魚</span> <b id="fish">2</b></span></div>
+  <div class="stage" id="stage"><canvas id="cv" width="480" height="660"></canvas><div class="big" id="big"></div>
+    <div class="cover" id="cover"><div class="ic">🐠</div><h3 data-en="Dream Aquarium">夢幻水族箱</h3><p data-en="Tap the water to feed, tap coins to collect them, then buy more and better fish. Hungry fish die — and tap the shark fast when it shows up! How much can you earn in 5 minutes?">點水面餵魚、點金幣收錢，再買更多更貴的魚。魚餓太久會死，鯊魚來了要趕快點牠！5 分鐘看你能賺多少。</p><button class="btn big2" id="bStart" data-en="Start">開始</button></div></div>
+
+</main>
+<section class="k-help"><article><h2 data-en="How to play">玩法</h2><p data-en="Tap anywhere in the water to drop a food pellet ($3 each). Well-fed fish grow up and then drop coins regularly — tap coins or swipe across them to collect. A ❗ above a fish means it is starving and will die soon. Use the buttons below to buy fish and upgrades: clownfish and angelfish pay much more, and crabs pick up coins that sink to the bottom.">點水裡任何地方會丟下一顆飼料（每顆 $3）。魚吃飽會長大，長大後定時吐出金幣；點金幣或按住滑過去就能收錢。魚頭上出現 ❗ 表示很餓，再不餵就會死掉。用下方按鈕買魚和升級：小丑魚和神仙魚吐的錢更多，螃蟹會幫你撿沉到底的金幣。</p></article><article><h2 data-en="Sharks">鯊魚</h2><p data-en="After a ⚠️ warning a shark swims in to eat your fish. Tap it repeatedly to drain its health and drive it off — it drops a pearl when defeated.">畫面出現 ⚠️ 之後鯊魚會游進來吃魚。連續點牠把血量打完就能趕走，還會掉下一顆珍珠。</p></article><article><h2 data-en="Leaderboard">排行榜</h2><p data-en="The leaderboard ranks the cash you hold when the 5 minutes are up.">比 5 分鐘結束時手上的資金。</p></article></section>
+<footer class="k-foot"><span data-en="Free to play. Scores you choose to submit appear on the global leaderboard.">免費遊玩；選擇上傳的成績會顯示在全球排行榜。</span>　<a href="privacy.html" data-en="Privacy policy">隱私權政策與廣告說明</a></footer>
+<div class="k-ov" id="ovEnd" data-sticky><div class="k-modal center"><div class="k-big" id="endEmoji">🐠</div><h2 id="endTitle" data-en="Time's Up!">時間到！</h2>
+  <div class="k-stats"><div><b id="endMoney">0</b><span data-en="Final cash">最終資金</span></div><div><b id="endFish">0</b><span data-en="Fish">魚的數量</span></div><div><b id="endShark">0</b><span data-en="Sharks beaten">打退鯊魚</span></div></div>
+  <p class="mute" id="endBest"></p><div class="k-row"><button class="btn big" id="bAgain" data-en="Play again">再玩一次</button><button class="btn ghost" data-close data-en="Close">關閉</button></div></div></div>
+<script src="/shared/fx.js?v=1.0" defer></script>
+<script src="game.js?v=1.0" defer></script>
+</body>
+</html>
