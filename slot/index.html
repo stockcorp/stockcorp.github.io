@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title data-en="Slot Racer | Free Online One-Button Slot Car Racing">軌道賽車｜免費線上一鍵軌道車・過彎太快會飛出去・全球排行榜</title>
+<meta name="description" content="免費線上軌道賽車：經典軌道車玩法，只要一根手指，按住加速、放開減速，過彎太快就會衝出軌道。三條賽道對戰電腦，5 圈完賽時間上傳全球排行榜。">
+<meta name="google-adsense-account" content="ca-pub-3440199491716602">
+<meta name="theme-color" content="#0b1220">
+<meta property="og:title" content="軌道賽車｜Stockcorp 遊戲大廳">
+<meta property="og:description" content="一鍵軌道車：按住加速，過彎別太快。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://stockcorp.github.io/slot/">
+<link rel="canonical" href="https://stockcorp.github.io/slot/">
+<link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/slot/?lang=zh">
+<link rel="alternate" hreflang="en" href="https://stockcorp.github.io/slot/?lang=en">
+<link rel="alternate" hreflang="x-default" href="https://stockcorp.github.io/slot/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%230ea5e9'/%3E%3Ctext x='50' y='70' font-size='60' text-anchor='middle'%3E%F0%9F%95%B9%EF%B8%8F%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/shared/kit.css?v=1.0">
+<link rel="stylesheet" href="style.css?v=1.0">
+<script src="/shared/app.js?v=1.2"></script>
+<script src="/shared/kit.js?v=1.0"></script>
+<script src="/shared/games.js?v=1.7" data-game="slot" defer></script>
+<script src="/shared/lb.js?v=1.0" defer></script>
+</head>
+<body>
+<header class="k-top">
+  <div class="k-brand"><span class="k-logo">🕹️</span><div><h1 data-en="Slot Racer">軌道賽車</h1><small id="sub"></small></div></div>
+  <div class="k-acts">
+    <button class="btn ghost" data-lang-toggle>EN</button>
+    <button class="btn ghost" id="bSound">🔊</button>
+    <a class="btn ghost" id="bLb" href="/leaderboard/?game=slot&mode=easy" style="text-decoration:none">🏆</a>
+    <button class="btn" id="bNew" data-en="Restart">重來</button>
+  </div>
+</header>
+<main class="wrap">
+  <div class="hud"><span class="pill">🔁 <span data-en="Lap">圈數</span> <b id="lap">0/5</b></span><span class="pill">🏅 <b id="pos">—</b></span><span class="pill">⏱ <b id="time">0:00.0</b></span></div>
+  <div class="stage" id="stage"><canvas id="cv" width="480" height="620"></canvas><div class="big" id="big"></div>
+    <div class="cover" id="cover"><div class="ic">🕹️</div><h3 data-en="Slot Racer">軌道賽車</h3><p data-en="One finger: hold to speed up, let go to slow down. Take a bend too fast and the car flies off the track!">只用一根手指：按住加速、放開減速。過彎太快車子會飛出軌道！</p><div class="k-chips" id="trk"><button data-m="easy" class="on" data-en="Oval">橢圓道</button><button data-m="normal" data-en="Twister">扭扭道</button><button data-m="hard" data-en="Monster">魔王道</button></div><button class="btn big2" id="bStart" data-en="Start">開始</button></div></div>
+  <div class="touch" id="touch"></div>
+
+</main>
+<section class="k-help"><article><h2 data-en="How to play">玩法</h2><p data-en="Hold the screen (or Space, or the button below) to accelerate and let go to slow down. Stay flat out on the straights and lift before each bend so the car can hold the curve. When the grip meter turns red you are about to fly off; a crashed car takes a moment to be put back. First to finish 5 laps wins.">按住畫面（或空白鍵、下方按鈕）加速，放開就減速。直線盡量按到底，進彎前放開，讓車速降到彎道承受得住。下方的抓地表變紅就是快飛出去了；飛出軌道要等一下才會被放回來。先跑完 5 圈的贏。</p></article><article><h2 data-en="Leaderboard">排行榜</h2><p data-en="Each track has its own leaderboard for the 5-lap time, measured by the server.">三條賽道各有排行榜，比的是跑完 5 圈的時間（伺服器計時）。</p></article></section>
+<footer class="k-foot"><span data-en="Free to play. Scores you choose to submit appear on the global leaderboard.">免費遊玩；選擇上傳的成績會顯示在全球排行榜。</span>　<a href="privacy.html" data-en="Privacy policy">隱私權政策與廣告說明</a></footer>
+<div class="k-ov" id="ovEnd" data-sticky><div class="k-modal center"><div class="k-big" id="endEmoji">🕹️</div><h2 id="endTitle" data-en="Finished!">完賽！</h2>
+  <div class="k-stats"><div><b id="endPos">0</b><span data-en="Result">結果</span></div><div><b id="endTime">0</b><span data-en="Total time">總時間</span></div><div><b id="endOff">0</b><span data-en="Crashes">飛出次數</span></div></div>
+  <p class="mute" id="endBest"></p><div class="k-row"><button class="btn big" id="bAgain" data-en="Play again">再玩一次</button><button class="btn ghost" data-close data-en="Close">關閉</button></div></div></div>
+<script src="/shared/fx.js?v=1.0" defer></script>
+<script src="game.js?v=1.0" defer></script>
+</body>
+</html>
