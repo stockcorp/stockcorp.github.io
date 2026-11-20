@@ -3,7 +3,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://stockcorp.github.io/</loc>
-    <lastmod>2026-11-20</lastmod>
+    <lastmod>2026-11-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/?lang=zh"/>
@@ -12,7 +12,7 @@
   </url>
   <url>
     <loc>https://stockcorp.github.io/leaderboard/</loc>
-    <lastmod>2026-11-20</lastmod>
+    <lastmod>2026-11-21</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/leaderboard/?lang=zh"/>
@@ -30,7 +30,7 @@
   </url>
   <url>
     <loc>https://stockcorp.github.io/trader/</loc>
-    <lastmod>2026-11-20</lastmod>
+    <lastmod>2026-11-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/trader/?lang=zh"/>
@@ -48,7 +48,7 @@
   </url>
   <url>
     <loc>https://stockcorp.github.io/ai/</loc>
-    <lastmod>2026-11-20</lastmod>
+    <lastmod>2026-11-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/ai/?lang=zh"/>
@@ -66,7 +66,7 @@
   </url>
   <url>
     <loc>https://stockcorp.github.io/darkchess/</loc>
-    <lastmod>2026-11-20</lastmod>
+    <lastmod>2026-11-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/darkchess/?lang=zh"/>
@@ -84,7 +84,7 @@
   </url>
   <url>
     <loc>https://stockcorp.github.io/xiangqi/</loc>
-    <lastmod>2026-11-20</lastmod>
+    <lastmod>2026-11-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/xiangqi/?lang=zh"/>
@@ -102,7 +102,7 @@
   </url>
   <url>
     <loc>https://stockcorp.github.io/bigtwo/</loc>
-    <lastmod>2026-11-20</lastmod>
+    <lastmod>2026-11-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/bigtwo/?lang=zh"/>
@@ -120,7 +120,7 @@
   </url>
   <url>
     <loc>https://stockcorp.github.io/mahjong/</loc>
-    <lastmod>2026-11-20</lastmod>
+    <lastmod>2026-11-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/mahjong/?lang=zh"/>
@@ -138,7 +138,7 @@
   </url>
   <url>
     <loc>https://stockcorp.github.io/2048/</loc>
-    <lastmod>2026-11-20</lastmod>
+    <lastmod>2026-11-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/2048/?lang=zh"/>
@@ -156,7 +156,7 @@
   </url>
   <url>
     <loc>https://stockcorp.github.io/coin/</loc>
-    <lastmod>2026-11-20</lastmod>
+    <lastmod>2026-11-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/coin/?lang=zh"/>
@@ -174,7 +174,7 @@
   </url>
   <url>
     <loc>https://stockcorp.github.io/racing/</loc>
-    <lastmod>2026-11-20</lastmod>
+    <lastmod>2026-11-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/racing/?lang=zh"/>
@@ -192,7 +192,7 @@
   </url>
   <url>
     <loc>https://stockcorp.github.io/sudoku/</loc>
-    <lastmod>2026-11-20</lastmod>
+    <lastmod>2026-11-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/sudoku/?lang=zh"/>
@@ -210,7 +210,7 @@
   </url>
   <url>
     <loc>https://stockcorp.github.io/stack/</loc>
-    <lastmod>2026-11-20</lastmod>
+    <lastmod>2026-11-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/stack/?lang=zh"/>
@@ -228,7 +228,7 @@
   </url>
   <url>
     <loc>https://stockcorp.github.io/blast/</loc>
-    <lastmod>2026-11-20</lastmod>
+    <lastmod>2026-11-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/blast/?lang=zh"/>
@@ -246,7 +246,7 @@
   </url>
   <url>
     <loc>https://stockcorp.github.io/link/</loc>
-    <lastmod>2026-11-20</lastmod>
+    <lastmod>2026-11-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/link/?lang=zh"/>
@@ -264,7 +264,7 @@
   </url>
   <url>
     <loc>https://stockcorp.github.io/gomoku/</loc>
-    <lastmod>2026-11-20</lastmod>
+    <lastmod>2026-11-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/gomoku/?lang=zh"/>
@@ -282,7 +282,7 @@
   </url>
   <url>
     <loc>https://stockcorp.github.io/snake/</loc>
-    <lastmod>2026-11-20</lastmod>
+    <lastmod>2026-11-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/snake/?lang=zh"/>
@@ -300,7 +300,7 @@
   </url>
   <url>
     <loc>https://stockcorp.github.io/go/</loc>
-    <lastmod>2026-11-20</lastmod>
+    <lastmod>2026-11-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/go/?lang=zh"/>
@@ -318,7 +318,7 @@
   </url>
   <url>
     <loc>https://stockcorp.github.io/mines/</loc>
-    <lastmod>2026-11-20</lastmod>
+    <lastmod>2026-11-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/mines/?lang=zh"/>
@@ -336,7 +336,7 @@
   </url>
   <url>
     <loc>https://stockcorp.github.io/reversi/</loc>
-    <lastmod>2026-11-20</lastmod>
+    <lastmod>2026-11-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/reversi/?lang=zh"/>
@@ -354,7 +354,7 @@
   </url>
   <url>
     <loc>https://stockcorp.github.io/klondike/</loc>
-    <lastmod>2026-11-20</lastmod>
+    <lastmod>2026-11-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/klondike/?lang=zh"/>
@@ -372,7 +372,7 @@
   </url>
   <url>
     <loc>https://stockcorp.github.io/breakout/</loc>
-    <lastmod>2026-11-20</lastmod>
+    <lastmod>2026-11-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/breakout/?lang=zh"/>
@@ -390,7 +390,7 @@
   </url>
   <url>
     <loc>https://stockcorp.github.io/bubble/</loc>
-    <lastmod>2026-11-20</lastmod>
+    <lastmod>2026-11-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/bubble/?lang=zh"/>
@@ -408,7 +408,7 @@
   </url>
   <url>
     <loc>https://stockcorp.github.io/jewel/</loc>
-    <lastmod>2026-11-20</lastmod>
+    <lastmod>2026-11-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/jewel/?lang=zh"/>
@@ -426,7 +426,7 @@
   </url>
   <url>
     <loc>https://stockcorp.github.io/connect4/</loc>
-    <lastmod>2026-11-20</lastmod>
+    <lastmod>2026-11-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/connect4/?lang=zh"/>
@@ -444,7 +444,7 @@
   </url>
   <url>
     <loc>https://stockcorp.github.io/mole/</loc>
-    <lastmod>2026-11-20</lastmod>
+    <lastmod>2026-11-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/mole/?lang=zh"/>
@@ -462,7 +462,7 @@
   </url>
   <url>
     <loc>https://stockcorp.github.io/shooter/</loc>
-    <lastmod>2026-11-20</lastmod>
+    <lastmod>2026-11-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/shooter/?lang=zh"/>
@@ -480,7 +480,7 @@
   </url>
   <url>
     <loc>https://stockcorp.github.io/bird/</loc>
-    <lastmod>2026-11-20</lastmod>
+    <lastmod>2026-11-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/bird/?lang=zh"/>
@@ -498,7 +498,7 @@
   </url>
   <url>
     <loc>https://stockcorp.github.io/chess/</loc>
-    <lastmod>2026-11-20</lastmod>
+    <lastmod>2026-11-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/chess/?lang=zh"/>
@@ -516,7 +516,7 @@
   </url>
   <url>
     <loc>https://stockcorp.github.io/cchk/</loc>
-    <lastmod>2026-11-20</lastmod>
+    <lastmod>2026-11-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/cchk/?lang=zh"/>
@@ -534,7 +534,7 @@
   </url>
   <url>
     <loc>https://stockcorp.github.io/uttt/</loc>
-    <lastmod>2026-11-20</lastmod>
+    <lastmod>2026-11-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/uttt/?lang=zh"/>
@@ -552,7 +552,7 @@
   </url>
   <url>
     <loc>https://stockcorp.github.io/spider/</loc>
-    <lastmod>2026-11-20</lastmod>
+    <lastmod>2026-11-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/spider/?lang=zh"/>
@@ -570,7 +570,7 @@
   </url>
   <url>
     <loc>https://stockcorp.github.io/hearts/</loc>
-    <lastmod>2026-11-20</lastmod>
+    <lastmod>2026-11-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/hearts/?lang=zh"/>
@@ -588,7 +588,7 @@
   </url>
   <url>
     <loc>https://stockcorp.github.io/pickred/</loc>
-    <lastmod>2026-11-20</lastmod>
+    <lastmod>2026-11-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/pickred/?lang=zh"/>
@@ -606,7 +606,7 @@
   </url>
   <url>
     <loc>https://stockcorp.github.io/blackjack/</loc>
-    <lastmod>2026-11-20</lastmod>
+    <lastmod>2026-11-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/blackjack/?lang=zh"/>
@@ -624,7 +624,7 @@
   </url>
   <url>
     <loc>https://stockcorp.github.io/ab/</loc>
-    <lastmod>2026-11-20</lastmod>
+    <lastmod>2026-11-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/ab/?lang=zh"/>
@@ -642,7 +642,7 @@
   </url>
   <url>
     <loc>https://stockcorp.github.io/wordle/</loc>
-    <lastmod>2026-11-20</lastmod>
+    <lastmod>2026-11-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/wordle/?lang=zh"/>
@@ -660,7 +660,7 @@
   </url>
   <url>
     <loc>https://stockcorp.github.io/nonogram/</loc>
-    <lastmod>2026-11-20</lastmod>
+    <lastmod>2026-11-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/nonogram/?lang=zh"/>
@@ -678,7 +678,7 @@
   </url>
   <url>
     <loc>https://stockcorp.github.io/sokoban/</loc>
-    <lastmod>2026-11-20</lastmod>
+    <lastmod>2026-11-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/sokoban/?lang=zh"/>
@@ -696,7 +696,7 @@
   </url>
   <url>
     <loc>https://stockcorp.github.io/oneline/</loc>
-    <lastmod>2026-11-20</lastmod>
+    <lastmod>2026-11-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/oneline/?lang=zh"/>
@@ -714,7 +714,7 @@
   </url>
   <url>
     <loc>https://stockcorp.github.io/pipes/</loc>
-    <lastmod>2026-11-20</lastmod>
+    <lastmod>2026-11-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/pipes/?lang=zh"/>
@@ -732,7 +732,7 @@
   </url>
   <url>
     <loc>https://stockcorp.github.io/slide/</loc>
-    <lastmod>2026-11-20</lastmod>
+    <lastmod>2026-11-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/slide/?lang=zh"/>
@@ -750,7 +750,7 @@
   </url>
   <url>
     <loc>https://stockcorp.github.io/popstar/</loc>
-    <lastmod>2026-11-20</lastmod>
+    <lastmod>2026-11-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/popstar/?lang=zh"/>
@@ -768,7 +768,7 @@
   </url>
   <url>
     <loc>https://stockcorp.github.io/merge/</loc>
-    <lastmod>2026-11-20</lastmod>
+    <lastmod>2026-11-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/merge/?lang=zh"/>
@@ -786,7 +786,7 @@
   </url>
   <url>
     <loc>https://stockcorp.github.io/miner/</loc>
-    <lastmod>2026-11-20</lastmod>
+    <lastmod>2026-11-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/miner/?lang=zh"/>
@@ -804,7 +804,7 @@
   </url>
   <url>
     <loc>https://stockcorp.github.io/jump/</loc>
-    <lastmod>2026-11-20</lastmod>
+    <lastmod>2026-11-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/jump/?lang=zh"/>
@@ -822,7 +822,7 @@
   </url>
   <url>
     <loc>https://stockcorp.github.io/tiles/</loc>
-    <lastmod>2026-11-20</lastmod>
+    <lastmod>2026-11-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/tiles/?lang=zh"/>
@@ -840,7 +840,7 @@
   </url>
   <url>
     <loc>https://stockcorp.github.io/runner/</loc>
-    <lastmod>2026-11-20</lastmod>
+    <lastmod>2026-11-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/runner/?lang=zh"/>
@@ -858,7 +858,7 @@
   </url>
   <url>
     <loc>https://stockcorp.github.io/tank/</loc>
-    <lastmod>2026-11-20</lastmod>
+    <lastmod>2026-11-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/tank/?lang=zh"/>
@@ -876,7 +876,7 @@
   </url>
   <url>
     <loc>https://stockcorp.github.io/blob/</loc>
-    <lastmod>2026-11-20</lastmod>
+    <lastmod>2026-11-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/blob/?lang=zh"/>
@@ -894,7 +894,7 @@
   </url>
   <url>
     <loc>https://stockcorp.github.io/hockey/</loc>
-    <lastmod>2026-11-20</lastmod>
+    <lastmod>2026-11-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/hockey/?lang=zh"/>
@@ -912,7 +912,7 @@
   </url>
   <url>
     <loc>https://stockcorp.github.io/memory/</loc>
-    <lastmod>2026-11-20</lastmod>
+    <lastmod>2026-11-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/memory/?lang=zh"/>
@@ -939,7 +939,7 @@
   </url>
   <url>
     <loc>https://stockcorp.github.io/highway/privacy.html</loc>
-    <lastmod>2026-11-20</lastmod>
+    <lastmod>2026-11-21</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/highway/privacy.html?lang=zh"/>
@@ -957,7 +957,7 @@
   </url>
   <url>
     <loc>https://stockcorp.github.io/circuit/privacy.html</loc>
-    <lastmod>2026-11-20</lastmod>
+    <lastmod>2026-11-21</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/circuit/privacy.html?lang=zh"/>
@@ -975,7 +975,7 @@
   </url>
   <url>
     <loc>https://stockcorp.github.io/drag/privacy.html</loc>
-    <lastmod>2026-11-20</lastmod>
+    <lastmod>2026-11-21</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/drag/privacy.html?lang=zh"/>
@@ -993,7 +993,7 @@
   </url>
   <url>
     <loc>https://stockcorp.github.io/hill/privacy.html</loc>
-    <lastmod>2026-11-20</lastmod>
+    <lastmod>2026-11-21</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/hill/privacy.html?lang=zh"/>
@@ -1011,7 +1011,7 @@
   </url>
   <url>
     <loc>https://stockcorp.github.io/slot/privacy.html</loc>
-    <lastmod>2026-11-20</lastmod>
+    <lastmod>2026-11-21</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/slot/privacy.html?lang=zh"/>
@@ -1029,7 +1029,7 @@
   </url>
   <url>
     <loc>https://stockcorp.github.io/ski/privacy.html</loc>
-    <lastmod>2026-11-20</lastmod>
+    <lastmod>2026-11-21</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/ski/privacy.html?lang=zh"/>
@@ -1047,7 +1047,7 @@
   </url>
   <url>
     <loc>https://stockcorp.github.io/tunnel/privacy.html</loc>
-    <lastmod>2026-11-20</lastmod>
+    <lastmod>2026-11-21</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/tunnel/privacy.html?lang=zh"/>
@@ -1065,7 +1065,7 @@
   </url>
   <url>
     <loc>https://stockcorp.github.io/derby/privacy.html</loc>
-    <lastmod>2026-11-20</lastmod>
+    <lastmod>2026-11-21</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/derby/privacy.html?lang=zh"/>
@@ -1083,7 +1083,7 @@
   </url>
   <url>
     <loc>https://stockcorp.github.io/taxi/privacy.html</loc>
-    <lastmod>2026-11-20</lastmod>
+    <lastmod>2026-11-21</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/taxi/privacy.html?lang=zh"/>
@@ -1101,7 +1101,7 @@
   </url>
   <url>
     <loc>https://stockcorp.github.io/parking/privacy.html</loc>
-    <lastmod>2026-11-20</lastmod>
+    <lastmod>2026-11-21</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/parking/privacy.html?lang=zh"/>
@@ -1119,7 +1119,7 @@
   </url>
   <url>
     <loc>https://stockcorp.github.io/boba/privacy.html</loc>
-    <lastmod>2026-11-20</lastmod>
+    <lastmod>2026-11-21</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/boba/privacy.html?lang=zh"/>
@@ -1137,7 +1137,7 @@
   </url>
   <url>
     <loc>https://stockcorp.github.io/farm/privacy.html</loc>
-    <lastmod>2026-11-20</lastmod>
+    <lastmod>2026-11-21</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/farm/privacy.html?lang=zh"/>
@@ -1155,7 +1155,7 @@
   </url>
   <url>
     <loc>https://stockcorp.github.io/nightmarket/privacy.html</loc>
-    <lastmod>2026-11-20</lastmod>
+    <lastmod>2026-11-21</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/nightmarket/privacy.html?lang=zh"/>
@@ -1173,7 +1173,7 @@
   </url>
   <url>
     <loc>https://stockcorp.github.io/city/privacy.html</loc>
-    <lastmod>2026-11-20</lastmod>
+    <lastmod>2026-11-21</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/city/privacy.html?lang=zh"/>
@@ -1191,7 +1191,7 @@
   </url>
   <url>
     <loc>https://stockcorp.github.io/metro/privacy.html</loc>
-    <lastmod>2026-11-20</lastmod>
+    <lastmod>2026-11-21</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/metro/privacy.html?lang=zh"/>
@@ -1209,7 +1209,7 @@
   </url>
   <url>
     <loc>https://stockcorp.github.io/aquarium/privacy.html</loc>
-    <lastmod>2026-11-20</lastmod>
+    <lastmod>2026-11-21</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/aquarium/privacy.html?lang=zh"/>
@@ -1227,7 +1227,7 @@
   </url>
   <url>
     <loc>https://stockcorp.github.io/diner/privacy.html</loc>
-    <lastmod>2026-11-20</lastmod>
+    <lastmod>2026-11-21</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/diner/privacy.html?lang=zh"/>
@@ -1245,7 +1245,7 @@
   </url>
   <url>
     <loc>https://stockcorp.github.io/studio/privacy.html</loc>
-    <lastmod>2026-11-20</lastmod>
+    <lastmod>2026-11-21</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/studio/privacy.html?lang=zh"/>
@@ -1263,7 +1263,7 @@
   </url>
   <url>
     <loc>https://stockcorp.github.io/colony/privacy.html</loc>
-    <lastmod>2026-11-20</lastmod>
+    <lastmod>2026-11-21</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/colony/privacy.html?lang=zh"/>
@@ -1281,7 +1281,7 @@
   </url>
   <url>
     <loc>https://stockcorp.github.io/atc/privacy.html</loc>
-    <lastmod>2026-11-20</lastmod>
+    <lastmod>2026-11-21</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/atc/privacy.html?lang=zh"/>
