@@ -56,7 +56,27 @@
     { id: 'tank', no: '47', url: '/tank/', icon: '🪖', color: '#4d7c0f', cat: ['action'], zh: '坦克大戰', en: 'Tank Battle', dzh: '守住基地、擊毀所有敵軍坦克', den: 'Defend your base from enemy tanks' },
     { id: 'blob', no: '48', url: '/blob/', icon: '🔵', color: '#0d9488', cat: ['action'], zh: '吞噬球球', en: 'Blob Eater', dzh: '大球吃小球，越吃越大', den: 'Eat smaller blobs and grow' },
     { id: 'hockey', no: '49', url: '/hockey/', icon: '🏒', color: '#dc2626', cat: ['action'], zh: '空氣曲棍球', en: 'Air Hockey', dzh: '把冰球撞進對方球門', den: 'Slam the puck past the computer' },
-    { id: 'memory', no: '50', url: '/memory/', icon: '🃏', color: '#0ea5e9', cat: ['puzzle'], zh: '記憶翻牌', en: 'Memory Match', dzh: '翻牌配對，考驗記憶力', den: 'Flip cards and find the pairs' }
+    { id: 'memory', no: '50', url: '/memory/', icon: '🃏', color: '#0ea5e9', cat: ['puzzle'], zh: '記憶翻牌', en: 'Memory Match', dzh: '翻牌配對，考驗記憶力', den: 'Flip cards and find the pairs' },
+    { id: 'highway', no: '51', url: '/highway/', icon: '🏎️', color: '#f97316', cat: ['racing'], zh: '極速公路', en: 'Highway Rush', dzh: '偽 3D 公路狂飆，閃車流衝檢查點', den: 'Pseudo-3D highway racing through traffic' },
+    { id: 'circuit', no: '52', url: '/circuit/', icon: '🏁', color: '#ef4444', cat: ['racing'], zh: '甩尾賽車場', en: 'Drift Circuit', dzh: '俯視賽道甩尾過彎，三條賽道', den: 'Top-down drift racing on three tracks' },
+    { id: 'drag', no: '53', url: '/drag/', icon: '🚦', color: '#eab308', cat: ['racing'], zh: '直線加速賽', en: 'Drag Race', dzh: '抓起跑、抓換檔，四分之一英里對決', den: 'Nail the launch and shifts over a quarter mile' },
+    { id: 'hill', no: '54', url: '/hill/', icon: '🚙', color: '#84cc16', cat: ['racing'], zh: '登山越野車', en: 'Hill Climber', dzh: '物理越野車，顧油量別翻車', den: 'Physics hill climbing — watch your fuel' },
+    { id: 'slot', no: '55', url: '/slot/', icon: '🛞', color: '#f43f5e', cat: ['racing'], zh: '軌道賽車', en: 'Slot Racer', dzh: '一鍵軌道車，過彎太快會飛出去', den: 'One-button slot cars — too fast and you fly off' },
+    { id: 'ski', no: '56', url: '/ski/', icon: '⛷️', color: '#0ea5e9', cat: ['racing'], zh: '滑雪競速', en: 'Ski Racer', dzh: '高山曲道滑雪，穿旗門衝終點', den: 'Downhill slalom through the gates' },
+    { id: 'tunnel', no: '57', url: '/tunnel/', icon: '🚀', color: '#a855f7', cat: ['racing'], zh: '太空隧道', en: 'Space Tunnel', dzh: '3D 霓虹隧道高速閃避', den: 'Dodge panels in a 3D neon tunnel' },
+    { id: 'derby', no: '58', url: '/derby/', icon: '🏇', color: '#16a34a', cat: ['racing'], zh: '賽馬', en: 'Derby Day', dzh: '配速、超車、最後直線衝刺', den: 'Pace yourself, overtake and sprint home' },
+    { id: 'taxi', no: '59', url: '/taxi/', icon: '🚕', color: '#f59e0b', cat: ['racing'], zh: '計程車衝衝衝', en: 'Taxi Rush', dzh: '開放城市接客送客，3 分鐘賺最多', den: 'Open-city fares against a 3-minute clock' },
+    { id: 'parking', no: '60', url: '/parking/', icon: '🅿️', color: '#3b82f6', cat: ['racing'], zh: '停車大師', en: 'Parking Master', dzh: '20 關真實手感的停車挑戰', den: '20 levels of realistic parking' },
+    { id: 'boba', no: '61', url: '/boba/', icon: '🧋', color: '#d97706', cat: ['sim'], zh: '珍奶手搖店', en: 'Boba Shop', dzh: '接單、做飲料、賺小費', den: 'Take orders, mix drinks, earn tips' },
+    { id: 'farm', no: '62', url: '/farm/', icon: '🌾', color: '#65a30d', cat: ['sim'], zh: '開心農場', en: 'Happy Farm', dzh: '4 分鐘一季的農場經營', den: 'Run a farm for a 4-minute season' },
+    { id: 'nightmarket', no: '63', url: '/nightmarket/', icon: '🏮', color: '#ef4444', cat: ['sim'], zh: '夜市大亨', en: 'Night Market Tycoon', dzh: '14 天的夜市攤販經營', den: '14 days of street-food business' },
+    { id: 'city', no: '64', url: '/city/', icon: '🏙️', color: '#0ea5e9', cat: ['sim'], zh: '迷你城市', en: 'Mini City', dzh: '20 年蓋出你的迷你城市', den: 'Build a city in 20 years' },
+    { id: 'metro', no: '65', url: '/metro/', icon: '🚇', color: '#2563eb', cat: ['sim'], zh: '地鐵大亨', en: 'Metro Tycoon', dzh: '拉線蓋地鐵，別讓車站擠爆', den: 'Draw metro lines and keep stations flowing' },
+    { id: 'aquarium', no: '66', url: '/aquarium/', icon: '🐠', color: '#06b6d4', cat: ['sim'], zh: '夢幻水族箱', en: 'Dream Aquarium', dzh: '餵魚、收金幣、打鯊魚', den: 'Feed fish, collect coins, fight sharks' },
+    { id: 'diner', no: '67', url: '/diner/', icon: '🍽️', color: '#f43f5e', cat: ['sim'], zh: '美味餐廳', en: 'Tasty Diner', dzh: '一人服務生的餐廳時間管理', den: 'One-waiter restaurant time management' },
+    { id: 'studio', no: '68', url: '/studio/', icon: '🎮', color: '#8b5cf6', cat: ['sim'], zh: '遊戲工作室', en: 'Game Studio', dzh: '經營遊戲公司 10 年', den: 'Run a game company for 10 years' },
+    { id: 'colony', no: '69', url: '/colony/', icon: '🪐', color: '#ea580c', cat: ['sim'], zh: '太空殖民地', en: 'Space Colony', dzh: '火星基地的資源管理生存', den: 'Mars base survival and resource management' },
+    { id: 'atc', no: '70', url: '/atc/', icon: '🛫', color: '#0ea5e9', cat: ['sim'], zh: '塔台管制員', en: 'Tower Control', dzh: '畫航線引導飛機安全降落', den: 'Draw flight paths and land every plane' }
   ];
   window.SC_CATS = [
     { id: 'all', zh: '全部', en: 'All', icon: '🎮' },
