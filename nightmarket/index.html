@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title data-en="Night Market Tycoon | Free Online Street Food Business Sim">夜市大亨｜免費線上夜市攤販經營遊戲・備料定價・全球排行榜</title>
+<meta name="description" content="免費線上夜市大亨：經營雞排、珍奶、地瓜球、剉冰、麻辣燙五種攤位，14 天內依天氣預報與假日人潮決定備料量和售價，累積人氣、升級招牌與冰箱。最終資金上傳全球排行榜。">
+<meta name="google-adsense-account" content="ca-pub-3440199491716602">
+<meta name="theme-color" content="#140a12">
+<meta property="og:title" content="夜市大亨｜Stockcorp 遊戲大廳">
+<meta property="og:description" content="14 天的夜市攤販經營。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://stockcorp.github.io/nightmarket/">
+<link rel="canonical" href="https://stockcorp.github.io/nightmarket/">
+<link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/nightmarket/?lang=zh">
+<link rel="alternate" hreflang="en" href="https://stockcorp.github.io/nightmarket/?lang=en">
+<link rel="alternate" hreflang="x-default" href="https://stockcorp.github.io/nightmarket/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%23ef4444'/%3E%3Ctext x='50' y='70' font-size='60' text-anchor='middle'%3E%F0%9F%8F%AE%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/shared/kit.css?v=1.0">
+<link rel="stylesheet" href="style.css?v=1.0">
+<script src="/shared/app.js?v=1.2"></script>
+<script src="/shared/kit.js?v=1.0"></script>
+<script src="/shared/games.js?v=1.7" data-game="nightmarket" defer></script>
+<script src="/shared/lb.js?v=1.0" defer></script>
+</head>
+<body>
+<header class="k-top">
+  <div class="k-brand"><span class="k-logo">🏮</span><div><h1 data-en="Night Market Tycoon">夜市大亨</h1><small id="sub"></small></div></div>
+  <div class="k-acts">
+    <button class="btn ghost" data-lang-toggle>EN</button>
+    <button class="btn ghost" id="bSound">🔊</button>
+    <a class="btn ghost" id="bLb" href="/leaderboard/?game=nightmarket&mode=14days" style="text-decoration:none">🏆</a>
+    <button class="btn" id="bNew" data-en="Restart">重來</button>
+  </div>
+</header>
+<main class="wrap">
+  <div class="hud"><span class="pill">💰 <b id="money">$3,000</b></span><span class="pill">📅 <span data-en="Day">第</span> <b id="day">1/14</b></span><span class="pill">⭐ <span data-en="Fame">人氣</span> <b id="rep">100</b></span></div>
+  <div class="stage" id="stage"><canvas id="cv" width="480" height="660"></canvas><div class="big" id="big"></div>
+    <div class="cover" id="cover"><div class="ic">🏮</div><h3 data-en="Night Market Tycoon">夜市大亨</h3><p data-en="Run night-market stalls for 14 days. Read the weather and the crowd, decide how much to prepare and what to charge, then expand. Too much stock is wasted — too little leaves money on the table!">14 天的夜市生意：看天氣和人潮決定每攤備多少料、賣多少錢，賺了錢再開新攤位。備太多會浪費，備太少會錯過生意！</p><button class="btn big2" id="bStart" data-en="Start">開始</button></div></div>
+
+</main>
+<section class="k-help"><article><h2 data-en="How to play">玩法</h2><p data-en="Before opening each night, check the weather forecast and the crowd (weekday, weekend, temple fair). Set how many portions to prepare (± buttons) and the price for each stall, then press Open. Unsold food is wasted; high prices drive customers away and hurt your fame; selling out too early disappoints people too. Spend profits in the Shop on new stalls and equipment.">每天開市前，先看天氣預報和今天的人潮（平日、週末、廟會）。替每個攤位設定備料數量（± 鈕）和售價，再按「開市」。賣不完的食材會浪費；賣太貴客人會變少、人氣下降；常常賣光讓客人撲空也會掉人氣。賺到錢可以到「商店」開新攤位或買設備。</p></article><article><h2 data-en="Weather tips">天氣小抄</h2><p data-en="Hot: shaved ice and boba sell like crazy, hot pot does not. Cold snap: hot pot booms, ice flops. Rain: half the crowd stays home. Fried chicken and sweet-potato balls are steady in any weather. Forecasts are right about 85% of the time.">悶熱：剉冰和珍奶大賣，麻辣燙沒人吃。寒流：麻辣燙大賣，冰品很慘。下雨：人潮少一半。雞排和地瓜球比較不受天氣影響。預報大約 85% 準。</p></article><article><h2 data-en="Leaderboard">排行榜</h2><p data-en="The leaderboard ranks your cash after day 14.">比第 14 天結束時的資金。</p></article></section>
+<footer class="k-foot"><span data-en="Free to play. Scores you choose to submit appear on the global leaderboard.">免費遊玩；選擇上傳的成績會顯示在全球排行榜。</span>　<a href="privacy.html" data-en="Privacy policy">隱私權政策與廣告說明</a></footer>
+<div class="k-ov" id="ovEnd" data-sticky><div class="k-modal center"><div class="k-big" id="endEmoji">🏮</div><h2 id="endTitle" data-en="14 Days Done!">14 天結束！</h2>
+  <div class="k-stats"><div><b id="endMoney">0</b><span data-en="Final cash">最終資金</span></div><div><b id="endBestDay">0</b><span data-en="Best day">單日最高淨利</span></div><div><b id="endStall">0</b><span data-en="Stalls">攤位數</span></div></div>
+  <p class="mute" id="endBest"></p><div class="k-row"><button class="btn big" id="bAgain" data-en="Play again">再玩一次</button><button class="btn ghost" data-close data-en="Close">關閉</button></div></div></div>
+<script src="/shared/fx.js?v=1.0" defer></script>
+<script src="game.js?v=1.0" defer></script>
+</body>
+</html>
