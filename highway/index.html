@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title data-en="Highway Rush | Free Online 3D Road Racing Game">極速公路｜免費線上 3D 公路賽車・超車搶時間・全球排行榜</title>
+<meta name="description" content="免費線上極速公路：仿 3D 視角的公路賽車，海岸、沙漠、夜晚都市、雪地、森林五種場景，穿梭車陣、貼身超車補氮氣，在時間內衝過檢查點。距離分數上傳全球排行榜。">
+<meta name="google-adsense-account" content="ca-pub-3440199491716602">
+<meta name="theme-color" content="#0a0f1c">
+<meta property="og:title" content="極速公路｜Stockcorp 遊戲大廳">
+<meta property="og:description" content="3D 視角公路狂飆，超車搶時間。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://stockcorp.github.io/highway/">
+<link rel="canonical" href="https://stockcorp.github.io/highway/">
+<link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/highway/?lang=zh">
+<link rel="alternate" hreflang="en" href="https://stockcorp.github.io/highway/?lang=en">
+<link rel="alternate" hreflang="x-default" href="https://stockcorp.github.io/highway/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%23e11d48'/%3E%3Ctext x='50' y='70' font-size='60' text-anchor='middle'%3E%F0%9F%8F%8E%EF%B8%8F%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/shared/kit.css?v=1.0">
+<link rel="stylesheet" href="style.css?v=1.0">
+<script src="/shared/app.js?v=1.2"></script>
+<script src="/shared/kit.js?v=1.0"></script>
+<script src="/shared/games.js?v=1.7" data-game="highway" defer></script>
+<script src="/shared/lb.js?v=1.0" defer></script>
+</head>
+<body>
+<header class="k-top">
+  <div class="k-brand"><span class="k-logo">🏎️</span><div><h1 data-en="Highway Rush">極速公路</h1><small id="sub"></small></div></div>
+  <div class="k-acts">
+    <button class="btn ghost" data-lang-toggle>EN</button>
+    <button class="btn ghost" id="bSound">🔊</button>
+    <a class="btn ghost" id="bLb" href="/leaderboard/?game=highway&mode=classic" style="text-decoration:none">🏆</a>
+    <button class="btn" id="bNew" data-en="Restart">重來</button>
+  </div>
+</header>
+<main class="wrap">
+  <div class="hud"><span class="pill">🏎️ <b id="spd">0</b></span><span class="pill">⏱ <span data-en="Time">時間</span> <b id="time">50</b></span><span class="pill">📍 <span data-en="Dist">距離</span> <b id="dist">0 m</b></span></div>
+  <div class="stage" id="stage"><canvas id="cv" width="480" height="620"></canvas><div class="big" id="big"></div>
+    <div class="cover" id="cover"><div class="ic">🏎️</div><h3 data-en="Highway Rush">極速公路</h3><p data-en="Reach each checkpoint before the clock runs out. Pass cars closely to refill nitro, then hold 🔥 to boost!">趕在時間用完前衝到下一個檢查點。貼著車子超車可以補氮氣，按住 🔥 氮氣加速！</p><button class="btn big2" id="bStart" data-en="Start">開始</button></div></div>
+  <div class="touch auto" id="touch"></div>
+
+</main>
+<section class="k-help"><article><h2 data-en="How to play">玩法</h2><p data-en="The car accelerates on its own. Steer with ◀ ▶ (or the arrow keys) and hold Brake (↓) for sharp bends. Reach a checkpoint before time runs out to add time and change scenery. Hitting traffic slows you badly, the verge is slow, and roadside trees stop you dead.">車子會自動加速，用 ◀ ▶（或方向鍵）左右閃車，按住「煞車」（↓）減速過彎。時間歸零前衝過檢查點會加時間，場景也會跟著換。撞到車會大幅減速，開出路面會變慢，撞到路邊的樹就停下來。</p></article><article><h2 data-en="Nitro">氮氣</h2><p data-en="Passing another car at close range refills nitro, and so does each checkpoint. Hold 🔥 (Space) to burn it for 30% more top speed.">從別的車旁邊「擦身而過」會補氮氣，通過檢查點也會補。按住 🔥（空白鍵）使用，極速提高三成。</p></article><article><h2 data-en="Leaderboard">排行榜</h2><p data-en="Score is distance plus overtaking and near-miss bonuses; it can go on the global leaderboard when the run ends.">分數＝行駛距離＋超車與擦身獎勵，遊戲結束時可以上傳全球排行榜。</p></article></section>
+<footer class="k-foot"><span data-en="Free to play. Scores you choose to submit appear on the global leaderboard.">免費遊玩；選擇上傳的成績會顯示在全球排行榜。</span>　<a href="privacy.html" data-en="Privacy policy">隱私權政策與廣告說明</a></footer>
+<div class="k-ov" id="ovEnd" data-sticky><div class="k-modal center"><div class="k-big" id="endEmoji">🏎️</div><h2 id="endTitle" data-en="Time up!">時間到！</h2>
+  <div class="k-stats"><div><b id="endScore">0</b><span data-en="Score">分數</span></div><div><b id="endDist">0</b><span data-en="Distance">距離</span></div><div><b id="endPass">0</b><span data-en="Overtakes">超車</span></div></div>
+  <p class="mute" id="endBest"></p><div class="k-row"><button class="btn big" id="bAgain" data-en="Play again">再玩一次</button><button class="btn ghost" data-close data-en="Close">關閉</button></div></div></div>
+<script src="/shared/fx.js?v=1.0" defer></script>
+<script src="game.js?v=1.0" defer></script>
+</body>
+</html>

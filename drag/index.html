@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title data-en="Drag Racer | Free Online Quarter-Mile Drag Racing">直線加速賽｜免費線上零四加速賽・抓轉速換檔・改裝升級・全球排行榜</title>
+<meta name="description" content="免費線上直線加速賽：看燈號起跑、抓準轉速換檔，在 402 公尺直線擊敗 8 位對手。贏了拿獎金改裝引擎、輪胎、變速箱與氮氣。最佳成績上傳全球排行榜。">
+<meta name="google-adsense-account" content="ca-pub-3440199491716602">
+<meta name="theme-color" content="#0b0d14">
+<meta property="og:title" content="直線加速賽｜Stockcorp 遊戲大廳">
+<meta property="og:description" content="看燈起跑、抓轉速換檔的零四加速賽。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://stockcorp.github.io/drag/">
+<link rel="canonical" href="https://stockcorp.github.io/drag/">
+<link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/drag/?lang=zh">
+<link rel="alternate" hreflang="en" href="https://stockcorp.github.io/drag/?lang=en">
+<link rel="alternate" hreflang="x-default" href="https://stockcorp.github.io/drag/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%23dc2626'/%3E%3Ctext x='50' y='70' font-size='60' text-anchor='middle'%3E%F0%9F%9A%A6%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/shared/kit.css?v=1.0">
+<link rel="stylesheet" href="style.css?v=1.0">
+<script src="/shared/app.js?v=1.2"></script>
+<script src="/shared/kit.js?v=1.0"></script>
+<script src="/shared/games.js?v=1.7" data-game="drag" defer></script>
+<script src="/shared/lb.js?v=1.0" defer></script>
+</head>
+<body>
+<header class="k-top">
+  <div class="k-brand"><span class="k-logo">🚦</span><div><h1 data-en="Drag Racer">直線加速賽</h1><small id="sub"></small></div></div>
+  <div class="k-acts">
+    <button class="btn ghost" data-lang-toggle>EN</button>
+    <button class="btn ghost" id="bSound">🔊</button>
+    <a class="btn ghost" id="bLb" href="/leaderboard/?game=drag&mode=quarter" style="text-decoration:none">🏆</a>
+    
+  </div>
+</header>
+<main class="wrap">
+  <div class="hud"><span class="pill">💰 <b id="cash">$0</b></span><span class="pill">🆚 <span data-en="Rival">對手</span> <b id="rival">1/8</b></span><span class="pill">⏱ <span data-en="Best">最佳</span> <b id="bestEt">—</b></span></div>
+  <div class="stage" id="stage"><canvas id="cv" width="480" height="600"></canvas><div class="big" id="big"></div>
+    <div class="cover" id="cover"></div></div>
+  <div class="touch" id="touch"></div>
+
+</main>
+<section class="k-help"><article><h2 data-en="How to play">玩法</h2><p data-en="Before the start, hold Gas to keep the revs in the green zone, then hit Launch the moment the light turns green — too early is a foul and you lose. After that the throttle is flat out: tap Shift when the needle reaches the green zone; the better your timing, the faster you go. Nitro 🔥 works once per race.">起跑前按住「油門」把轉速維持在綠色區，綠燈一亮就按「起跑」；太早按算偷跑直接輸。起跑後油門自動全開，轉速指針進到綠色區時按「換檔」，越準加速越快。氮氣 🔥 每場只能用一次。</p></article><article><h2 data-en="Upgrades">改裝</h2><p data-en="Winning pays prize money. Spend it in the garage on the engine (power), tyres (launch grip), gearbox (faster shifts) and nitro (longer burn), then take on faster rivals.">贏了對手可以拿獎金，在車庫升級引擎（馬力）、輪胎（起跑抓地）、變速箱（換檔更快）和氮氣（噴更久），再挑戰更強的對手。</p></article><article><h2 data-en="Leaderboard">排行榜</h2><p data-en="The leaderboard ranks the time from green light to the finish line, reaction included (measured by the server) — lower is better.">比的是從綠燈亮起到衝線的時間（含反應時間，伺服器計時），越短越好。</p></article></section>
+<footer class="k-foot"><span data-en="Free to play. Scores you choose to submit appear on the global leaderboard.">免費遊玩；選擇上傳的成績會顯示在全球排行榜。</span>　<a href="privacy.html" data-en="Privacy policy">隱私權政策與廣告說明</a></footer>
+<div class="k-ov" id="ovEnd" data-sticky><div class="k-modal center"><div class="k-big" id="endEmoji">🚦</div><h2 id="endTitle" data-en="Race over">比賽結束</h2>
+  <div class="k-stats"><div><b id="endEt">0</b><span data-en="Time">成績</span></div><div><b id="endRt">0</b><span data-en="Reaction">反應</span></div><div><b id="endSpd">0</b><span data-en="Trap speed">尾速</span></div></div>
+  <p class="mute" id="endBest"></p><div class="k-row"><button class="btn big" id="bAgain" data-en="Play again">再玩一次</button><button class="btn ghost" data-close data-en="Close">關閉</button></div></div></div>
+<script src="/shared/fx.js?v=1.0" defer></script>
+<script src="game.js?v=1.0" defer></script>
+</body>
+</html>
