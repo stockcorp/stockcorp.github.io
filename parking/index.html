@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title data-en="Parking Master | Free Online Car Parking Game with 20 Levels">停車大師｜免費線上停車遊戲・倒車入庫・路邊停車 20 關・全球排行榜</title>
+<meta name="description" content="免費線上停車遊戲：俯視視角、真實轉向手感，20 關包含車頭入庫、倒車入庫、路邊停車、斜角車格、車庫與會動的車流。撞越少、停越快分數越高，總分上傳全球排行榜。">
+<meta name="google-adsense-account" content="ca-pub-3440199491716602">
+<meta name="theme-color" content="#0d1422">
+<meta property="og:title" content="停車大師｜Stockcorp 遊戲大廳">
+<meta property="og:description" content="20 關真實手感的停車挑戰。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://stockcorp.github.io/parking/">
+<link rel="canonical" href="https://stockcorp.github.io/parking/">
+<link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/parking/?lang=zh">
+<link rel="alternate" hreflang="en" href="https://stockcorp.github.io/parking/?lang=en">
+<link rel="alternate" hreflang="x-default" href="https://stockcorp.github.io/parking/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%233b82f6'/%3E%3Ctext x='50' y='70' font-size='60' text-anchor='middle'%3E%F0%9F%85%BF%EF%B8%8F%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/shared/kit.css?v=1.0">
+<link rel="stylesheet" href="style.css?v=1.0">
+<script src="/shared/app.js?v=1.2"></script>
+<script src="/shared/kit.js?v=1.0"></script>
+<script src="/shared/games.js?v=1.7" data-game="parking" defer></script>
+<script src="/shared/lb.js?v=1.0" defer></script>
+</head>
+<body>
+<header class="k-top">
+  <div class="k-brand"><span class="k-logo">🅿️</span><div><h1 data-en="Parking Master">停車大師</h1><small id="sub"></small></div></div>
+  <div class="k-acts">
+    <button class="btn ghost" data-lang-toggle>EN</button>
+    <button class="btn ghost" id="bSound">🔊</button>
+    <a class="btn ghost" id="bLb" href="/leaderboard/?game=parking&mode=stars" style="text-decoration:none">🏆</a>
+    <button class="btn" id="bMenu" data-en="Levels">選關</button><button class="btn" id="bNew" data-en="Retry">重來</button>
+  </div>
+</header>
+<main class="wrap">
+  <div class="hud"><span class="pill">🅿️ <span data-en="Level">關卡</span> <b id="lvl">1/20</b></span><span class="pill">⏱ <b id="time">0.0</b></span><span class="pill">💥 <span data-en="Hits">碰撞</span> <b id="hit">0/3</b></span></div>
+  <div class="stage" id="stage"><canvas id="cv" width="480" height="620"></canvas><div class="big" id="big"></div>
+    <div class="cover" id="cover"><div class="ic">🅿️</div><h3 data-en="Parking Master">停車大師</h3><p data-en="Park fully inside the glowing bay with the car straight. Fewer bumps and faster parking earn more stars!">把車完整停進發亮的車格、車身擺正。撞越少、停越快，星星越多！</p><div class="lv" id="lv"></div><div class="tot" id="tot"></div><button class="btn" id="bSubmit" data-en="🏆 Submit total score" style="display:none">🏆 上傳總分</button><button class="btn big2" id="bStart" data-en="Start">開始</button></div></div>
+  <div class="touch auto" id="touch"></div>
+
+</main>
+<section class="k-help"><article><h2 data-en="How to play">玩法</h2><p data-en="Steer with ◀ ▶, press ▲ to drive forward and ▼ to reverse (keyboard: arrow keys or WASD). The car stops by itself when you release the pedals. Get the whole car inside the glowing bay, lined up with it, and come to a stop to clear the level. Either direction is fine. You may bump into things at most 3 times per level.">用 ◀ ▶ 打方向盤、▲ 前進、▼ 倒車（鍵盤：方向鍵或 WASD）。放開油門車子會自己停下來。把整台車停進發亮的車格、車身和車格對齊並停穩，就過關。車頭朝哪邊都可以。每關最多只能撞 3 次。</p></article><article><h2 data-en="Scoring & leaderboard">計分與排行榜</h2><p data-en="Each level is worth up to 1,000 points: 400 for clearing it, 150 per star (3 stars with no bumps, one less per bump) and the rest is a time bonus. The leaderboard ranks the sum of your best scores over all 20 levels.">每關最高 1000 分：過關 400 分，每顆星 150 分（沒撞到 3 星，每撞一次少一顆），其餘是時間獎勵。排行榜比 20 關最佳成績的總分。</p></article></section>
+<footer class="k-foot"><span data-en="Free to play. Scores you choose to submit appear on the global leaderboard.">免費遊玩；選擇上傳的成績會顯示在全球排行榜。</span>　<a href="privacy.html" data-en="Privacy policy">隱私權政策與廣告說明</a></footer>
+<div class="k-ov" id="ovEnd" data-sticky><div class="k-modal center"><div class="k-big" id="endEmoji">🅿️</div><h2 id="endTitle" data-en="Parked!">停好了！</h2>
+  <div class="k-stats"><div><b id="endStar">0</b><span data-en="Rating">評價</span></div><div><b id="endTime">0</b><span data-en="Time">時間</span></div><div><b id="endScore">0</b><span data-en="Level score">本關分數</span></div></div>
+  <p class="mute" id="endBest"></p><div class="k-row"><button class="btn big" id="bAgain" data-en="Play again">再玩一次</button><button class="btn ghost" data-close data-en="Close">關閉</button></div></div></div>
+<script src="/shared/fx.js?v=1.0" defer></script>
+<script src="game.js?v=1.0" defer></script>
+</body>
+</html>
