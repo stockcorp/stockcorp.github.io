@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title data-en="Tasty Diner | Free Online Restaurant Time-Management Game">美味餐廳｜免費線上餐廳經營遊戲・帶位點餐送餐・全球排行榜</title>
+<meta name="description" content="免費線上美味餐廳：一個人包辦帶位、點餐、送餐、結帳、收桌，安排最順的動線讓每桌客人都開心。客人越來越多、菜越來越多，小費和連擊讓營業額衝高。營業額上傳全球排行榜。">
+<meta name="google-adsense-account" content="ca-pub-3440199491716602">
+<meta name="theme-color" content="#1a0f14">
+<meta property="og:title" content="美味餐廳｜Stockcorp 遊戲大廳">
+<meta property="og:description" content="一人服務生的餐廳時間管理。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://stockcorp.github.io/diner/">
+<link rel="canonical" href="https://stockcorp.github.io/diner/">
+<link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/diner/?lang=zh">
+<link rel="alternate" hreflang="en" href="https://stockcorp.github.io/diner/?lang=en">
+<link rel="alternate" hreflang="x-default" href="https://stockcorp.github.io/diner/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%23f43f5e'/%3E%3Ctext x='50' y='70' font-size='60' text-anchor='middle'%3E%F0%9F%8D%BD%EF%B8%8F%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/shared/kit.css?v=1.0">
+<link rel="stylesheet" href="style.css?v=1.0">
+<script src="/shared/app.js?v=1.2"></script>
+<script src="/shared/kit.js?v=1.0"></script>
+<script src="/shared/games.js?v=1.7" data-game="diner" defer></script>
+<script src="/shared/lb.js?v=1.0" defer></script>
+</head>
+<body>
+<header class="k-top">
+  <div class="k-brand"><span class="k-logo">🍽️</span><div><h1 data-en="Tasty Diner">美味餐廳</h1><small id="sub"></small></div></div>
+  <div class="k-acts">
+    <button class="btn ghost" data-lang-toggle>EN</button>
+    <button class="btn ghost" id="bSound">🔊</button>
+    <a class="btn ghost" id="bLb" href="/leaderboard/?game=diner&mode=classic" style="text-decoration:none">🏆</a>
+    <button class="btn" id="bNew" data-en="Restart">重來</button>
+  </div>
+</header>
+<main class="wrap">
+  <div class="hud"><span class="pill">💰 <b id="money">$0</b></span><span class="pill">🍽️ <span data-en="Tables">桌數</span> <b id="served">0</b></span><span class="pill">❤️ <b id="life">3</b></span></div>
+  <div class="stage" id="stage"><canvas id="cv" width="480" height="660"></canvas><div class="big" id="big"></div>
+    <div class="cover" id="cover"><div class="ic">🍽️</div><h3 data-en="Tasty Diner">美味餐廳</h3><p data-en="You are the only waiter: seat guests, take orders, serve food, collect payment and clear tables. Keep people waiting too long and they storm out — lose 3 parties and you are closed!">你是餐廳唯一的服務生：帶位、點餐、送餐、收錢、收桌子，一個人全包。客人等太久會生氣走人，氣走 3 組就打烊！</p><button class="btn big2" id="bStart" data-en="Start">開始</button></div></div>
+
+</main>
+<section class="k-help"><article><h2 data-en="How to play">玩法</h2><p data-en="Just follow the icon above each table: guests at the door → tap any free table to seat them; 📋 → tap the table to take the order (the kitchen starts cooking); food ready at the pass → tap it to pick it up (two plates at most), then tap its table to serve; 💵 → tap the table to collect payment; 🧽 → tap the table to clear it. The waiter does jobs in the order you tap them, so you can queue several actions.">照著每一桌頭上的圖示點它就好：門口有客人 → 點任何一張空桌讓他們入座；📋 → 點桌子點餐（廚房會開始做菜）；出菜口的菜做好了 → 點菜拿起來（一次最多拿兩盤），再點那一桌送過去；💵 → 點桌子收錢；🧽 → 點桌子收拾。服務生會照你點的順序一件一件做，可以連續點好幾件事排隊。</p></article><article><h2 data-en="Leaderboard">排行榜</h2><p data-en="The leaderboard ranks total revenue including tips. More hearts left means a bigger tip, and consecutive happy parties build a combo bonus.">比單局營業額（含小費）。客人的愛心越多小費越高，連續讓客人滿意離開有連擊加成。</p></article></section>
+<footer class="k-foot"><span data-en="Free to play. Scores you choose to submit appear on the global leaderboard.">免費遊玩；選擇上傳的成績會顯示在全球排行榜。</span>　<a href="privacy.html" data-en="Privacy policy">隱私權政策與廣告說明</a></footer>
+<div class="k-ov" id="ovEnd" data-sticky><div class="k-modal center"><div class="k-big" id="endEmoji">🍽️</div><h2 id="endTitle" data-en="Closing Time">打烊了</h2>
+  <div class="k-stats"><div><b id="endMoney">0</b><span data-en="Revenue">營業額</span></div><div><b id="endServed">0</b><span data-en="Tables served">服務桌數</span></div><div><b id="endCombo">0</b><span data-en="Best combo">最高連擊</span></div></div>
+  <p class="mute" id="endBest"></p><div class="k-row"><button class="btn big" id="bAgain" data-en="Play again">再玩一次</button><button class="btn ghost" data-close data-en="Close">關閉</button></div></div></div>
+<script src="/shared/fx.js?v=1.0" defer></script>
+<script src="game.js?v=1.0" defer></script>
+</body>
+</html>
