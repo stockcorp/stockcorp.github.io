@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title data-en="Happy Farm | Free Online Farming Sim Game">開心農場｜免費線上農場經營遊戲・播種澆水收成・全球排行榜</title>
+<meta name="description" content="免費線上開心農場：4 分鐘一季的農場經營，種紅蘿蔔、番茄、玉米、草莓、南瓜，澆水、趕烏鴉、收成賣錢，再擴建農地、買灑水器、肥料和收割機。季末資金上傳全球排行榜。">
+<meta name="google-adsense-account" content="ca-pub-3440199491716602">
+<meta name="theme-color" content="#0e1a0b">
+<meta property="og:title" content="開心農場｜Stockcorp 遊戲大廳">
+<meta property="og:description" content="4 分鐘一季的農場經營。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://stockcorp.github.io/farm/">
+<link rel="canonical" href="https://stockcorp.github.io/farm/">
+<link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/farm/?lang=zh">
+<link rel="alternate" hreflang="en" href="https://stockcorp.github.io/farm/?lang=en">
+<link rel="alternate" hreflang="x-default" href="https://stockcorp.github.io/farm/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%2365a30d'/%3E%3Ctext x='50' y='70' font-size='60' text-anchor='middle'%3E%F0%9F%8C%BE%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/shared/kit.css?v=1.0">
+<link rel="stylesheet" href="style.css?v=1.0">
+<script src="/shared/app.js?v=1.2"></script>
+<script src="/shared/kit.js?v=1.0"></script>
+<script src="/shared/games.js?v=1.7" data-game="farm" defer></script>
+<script src="/shared/lb.js?v=1.0" defer></script>
+</head>
+<body>
+<header class="k-top">
+  <div class="k-brand"><span class="k-logo">🌾</span><div><h1 data-en="Happy Farm">開心農場</h1><small id="sub"></small></div></div>
+  <div class="k-acts">
+    <button class="btn ghost" data-lang-toggle>EN</button>
+    <button class="btn ghost" id="bSound">🔊</button>
+    <a class="btn ghost" id="bLb" href="/leaderboard/?game=farm&mode=season" style="text-decoration:none">🏆</a>
+    <button class="btn" id="bNew" data-en="Restart">重來</button>
+  </div>
+</header>
+<main class="wrap">
+  <div class="hud"><span class="pill">💰 <b id="money">$50</b></span><span class="pill">⏱ <b id="time">4:00</b></span><span class="pill">🧺 <span data-en="Harvests">收成</span> <b id="harv">0</b></span></div>
+  <div class="stage" id="stage"><canvas id="cv" width="480" height="660"></canvas><div class="big" id="big"></div>
+    <div class="cover" id="cover"><div class="ic">🌾</div><h3 data-en="Happy Farm">開心農場</h3><p data-en="One season lasts 4 minutes: plant, water and harvest, then reinvest in more land, better seeds and equipment. How much can you earn?">一季 4 分鐘：播種、澆水、收成，賺到錢就擴建農地、買更貴的種子和設備。看你一季能賺多少！</p><button class="btn big2" id="bStart" data-en="Start">開始</button></div></div>
+
+</main>
+<section class="k-help"><article><h2 data-en="How to play">玩法</h2><p data-en="Pick a seed below, then tap an empty plot to plant it (drag across a row to plant quickly). Halfway through, crops get thirsty: tap to water them. Tap ripe crops to harvest and sell — leave them too long and they wither. Tap crows to chase them away. Spend your earnings on 🔒 plots, a sprinkler (auto-water), fertiliser (faster growth), a scarecrow (no crows) and a harvester (auto-harvest).">先在下方選種子，再點空的田地播種（可以按住滑過一整排）。作物長到一半會口渴，點一下澆水才會繼續長；成熟後點一下收成賣錢，放太久會枯掉。烏鴉飛來要趕快點牠趕走。賺到錢可以點 🔒 擴建田地，或買灑水器（自動澆水）、肥料（長更快）、稻草人（趕烏鴉）、收割機（自動收成）。</p></article><article><h2 data-en="Leaderboard">排行榜</h2><p data-en="The leaderboard ranks the cash you hold when the season ends. Unharvested crops do not count, so harvest everything before time runs out.">比季末手上的資金。還沒收成的作物不算，最後幾秒記得收完。</p></article></section>
+<footer class="k-foot"><span data-en="Free to play. Scores you choose to submit appear on the global leaderboard.">免費遊玩；選擇上傳的成績會顯示在全球排行榜。</span>　<a href="privacy.html" data-en="Privacy policy">隱私權政策與廣告說明</a></footer>
+<div class="k-ov" id="ovEnd" data-sticky><div class="k-modal center"><div class="k-big" id="endEmoji">🌾</div><h2 id="endTitle" data-en="Season Over">這一季結束了</h2>
+  <div class="k-stats"><div><b id="endMoney">0</b><span data-en="Final cash">季末資金</span></div><div><b id="endHarv">0</b><span data-en="Harvests">收成次數</span></div><div><b id="endPlot">0</b><span data-en="Plots">田地</span></div></div>
+  <p class="mute" id="endBest"></p><div class="k-row"><button class="btn big" id="bAgain" data-en="Play again">再玩一次</button><button class="btn ghost" data-close data-en="Close">關閉</button></div></div></div>
+<script src="/shared/fx.js?v=1.0" defer></script>
+<script src="game.js?v=1.0" defer></script>
+</body>
+</html>
