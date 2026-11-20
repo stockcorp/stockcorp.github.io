@@ -9,7 +9,7 @@
 <link rel="canonical" href="https://stockcorp.github.io/leaderboard/">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%230b0f19'/%3E%3Ctext x='50' y='68' font-size='56' text-anchor='middle'%3E%F0%9F%8F%86%3C/text%3E%3C/svg%3E">
 <script src="/shared/app.js?v=1.2"></script>
-<script src="/shared/games.js?v=1.7" data-game="lobby"></script>
+<script src="/shared/games.js?v=1.8" data-game="lobby"></script>
 <script src="/shared/lb.js?v=1.0"></script>
 <style>
 :root{--bg:#0b0f19;--card:#141a29;--line:#222b40;--txt:#e6ebf5;--mute:#8b97b3;--gold:#f5b83d}
@@ -116,7 +116,27 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) calc(env(safe-a
     tank: { modes: [['classic', '經典', 'Classic']], unit: 'pt', d: ['單局最高分', 'Highest score in one game'] },
     blob: { modes: [['classic', '經典', 'Classic']], unit: 'pt', d: ['最大體重', 'Biggest mass reached'] },
     hockey: { modes: [['hard', '困難', 'Hard'], ['normal', '普通', 'Normal'], ['easy', '簡單', 'Easy']], unit: 'sec', d: ['最快擊敗電腦（伺服器計時）', 'Fastest win vs. AI (server-timed)'] },
-    memory: { modes: [['4x4', '4×4', '4×4'], ['6x6', '6×6', '6×6']], unit: 'sec', d: ['最快配對完成（伺服器計時）', 'Fastest clear (server-timed)'] }
+    memory: { modes: [['4x4', '4×4', '4×4'], ['6x6', '6×6', '6×6']], unit: 'sec', d: ['最快配對完成（伺服器計時）', 'Fastest clear (server-timed)'] },
+    highway: { modes: [['classic', '經典', 'Classic']], unit: 'pt', d: ['單局最高分', 'Highest score in one run'] },
+    circuit: { modes: [['ring', '環形道', 'Ring'], ['serpent', '蛇形道', 'Serpent'], ['gp', '大獎賽', 'Grand Prix']], unit: 'sec', d: ['第 1 名完賽的最短時間', 'Fastest winning race time'] },
+    drag: { modes: [['quarter', '402 公尺', 'Quarter mile']], unit: 'sec', d: ['402 公尺最短時間', 'Fastest quarter-mile time'] },
+    hill: { modes: [['classic', '經典', 'Classic']], unit: 'm', d: ['單趟最遠距離', 'Longest distance in one run'] },
+    slot: { modes: [['easy', '橢圓道', 'Oval'], ['normal', '扭扭道', 'Twister'], ['hard', '魔王道', 'Monster']], unit: 'sec', d: ['第 1 名完賽的最短時間', 'Fastest winning race time'] },
+    ski: { modes: [['classic', '1500 公尺', '1,500 m']], unit: 'sec', d: ['完賽最短時間', 'Fastest finishing time'] },
+    tunnel: { modes: [['classic', '經典', 'Classic']], unit: 'pt', d: ['單局最高分', 'Highest score in one run'] },
+    derby: { modes: [['classic', '1000 公尺', '1,000 m']], unit: 'sec', d: ['冠軍完賽的最短時間', 'Fastest winning time'] },
+    taxi: { modes: [['3min', '3 分鐘', '3 minutes']], unit: 'usd', d: ['3 分鐘內的總收入', 'Total earnings in 3 minutes'] },
+    parking: { modes: [['stars', '總分', 'Total']], unit: 'pt', d: ['20 關最佳成績總分', 'Sum of best scores over 20 levels'] },
+    boba: { modes: [['classic', '經典', 'Classic']], unit: 'usd', d: ['單局營業額', 'Revenue in one run'] },
+    farm: { modes: [['season', '一季', 'Season']], unit: 'usd', d: ['季末資金', 'Cash at the end of the season'] },
+    nightmarket: { modes: [['14days', '14 天', '14 days']], unit: 'usd', d: ['第 14 天結束時的資金', 'Cash after day 14'] },
+    city: { modes: [['20years', '20 年', '20 years']], unit: 'n', sfx: [' 人', ' people'], d: ['第 20 年的人口', 'Population after 20 years'] },
+    metro: { modes: [['classic', '經典', 'Classic']], unit: 'n', sfx: [' 人', ' passengers'], d: ['載送的乘客數', 'Passengers delivered'] },
+    aquarium: { modes: [['5min', '5 分鐘', '5 minutes']], unit: 'usd', d: ['5 分鐘結束時的資金', 'Cash after 5 minutes'] },
+    diner: { modes: [['classic', '經典', 'Classic']], unit: 'usd', d: ['單局營業額', 'Revenue in one run'] },
+    studio: { modes: [['10years', '10 年', '10 years']], unit: 'usd', d: ['10 年後的公司資金', 'Company cash after 10 years'] },
+    colony: { modes: [['classic', '60 火星日', '60 sols']], unit: 'pt', d: ['殖民分數', 'Colony score'] },
+    atc: { modes: [['classic', '經典', 'Classic']], unit: 'n', sfx: [' 架次', ' landed'], d: ['安全降落的架次', 'Aircraft landed safely'] }
   };
   var q = new URLSearchParams(location.search);
   var st = { game: CFG[q.get('game')] ? q.get('game') : 'trader', mode: q.get('mode') || '', period: q.get('period') === 'month' ? 'month' : 'all' };
@@ -129,7 +149,7 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) calc(env(safe-a
     return s + (a >= 1e8 ? (a / 1e8).toFixed(2) + ' 億' : a >= 1e4 ? (a / 1e4).toFixed(0) + ' 萬' : Math.round(a).toLocaleString('zh-TW')) + ' 元';
   }
   function big(v) { var a = Math.abs(v), s = v < 0 ? '-' : ''; if (SC.lang === 'en') return s + (a >= 1e12 ? (a / 1e12).toFixed(2) + 'T' : a >= 1e9 ? (a / 1e9).toFixed(2) + 'B' : a >= 1e6 ? (a / 1e6).toFixed(2) + 'M' : Math.round(a).toLocaleString('en')); return s + (a >= 1e12 ? (a / 1e12).toFixed(2) + ' 兆' : a >= 1e8 ? (a / 1e8).toFixed(2) + ' 億' : a >= 1e4 ? (a / 1e4).toFixed(1) + ' 萬' : Math.round(a).toLocaleString('zh-TW')); }
-  function fmt(v) { var u = CFG[st.game].unit; if (u === 'money') return money(v); if (u === 'pt') return Math.round(v).toLocaleString(SC.lang === 'en' ? 'en' : 'zh-TW') + SC.t(' 分', ' pts'); if (u === 'coin') return '🪙 ' + big(v); if (u === 'lv') return Math.round(v) + SC.t(' 關', ' levels'); if (u === 'cnt') return Math.round(v) + SC.t(' 題', ' solved'); var m = Math.floor(v / 60), s = v - m * 60; return m ? m + SC.t(' 分 ', 'm ') + Math.round(s) + SC.t(' 秒', 's') : (Math.round(v * 10) / 10) + SC.t(' 秒', 's'); }
+  function fmt(v) { var u = CFG[st.game].unit; if (u === 'money') return money(v); if (u === 'pt') return Math.round(v).toLocaleString(SC.lang === 'en' ? 'en' : 'zh-TW') + SC.t(' 分', ' pts'); if (u === 'usd') return '$' + Math.round(v).toLocaleString('en'); if (u === 'm') return Math.round(v).toLocaleString('en') + ' m'; if (u === 'n') return Math.round(v).toLocaleString('en') + SC.t(CFG[st.game].sfx[0], CFG[st.game].sfx[1]); if (u === 'coin') return '🪙 ' + big(v); if (u === 'lv') return Math.round(v) + SC.t(' 關', ' levels'); if (u === 'cnt') return Math.round(v) + SC.t(' 題', ' solved'); var m = Math.floor(v / 60), s = v - m * 60; return m ? m + SC.t(' 分 ', 'm ') + Math.round(s) + SC.t(' 秒', 's') : (Math.round(v * 10) / 10) + SC.t(' 秒', 's'); }
   function gameOf(id) { for (var i = 0; i < GAMES.length; i++) if (GAMES[i].id === id) return GAMES[i]; return { zh: id, en: id, icon: '🎮', color: '#333', url: '/' }; }
   function renderTabs() {
     $('games').innerHTML = (window.SC_GAMES || []).map(function (g) { return g.id; }).filter(function (id) { return CFG[id]; }).map(function (id) {
