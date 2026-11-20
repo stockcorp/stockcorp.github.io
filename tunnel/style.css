@@ -1,0 +1,20 @@
+:root{--bg:#07051a;--panel:#120d2e;--line:#2b2060;--accent:#c084fc;--accent2:#7c3aed}
+.wrap{max-width:520px;margin:0 auto;padding:8px}
+.hud{display:flex;justify-content:center;gap:6px;margin-bottom:8px;flex-wrap:wrap}
+.pill{background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:5px 12px;font-size:12.5px;color:var(--mute);display:flex;align-items:center;gap:6px;white-space:nowrap}
+.pill b{color:#fff;font-size:15px;font-variant-numeric:tabular-nums}
+.stage{position:relative;margin:0 auto;border-radius:16px;overflow:hidden;box-shadow:0 14px 40px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.07);max-width:min(480px,calc((100vh - 250px) * 480 / 620))}
+.stage canvas{width:100%;display:block;touch-action:none;user-select:none;-webkit-user-select:none;aspect-ratio:480/620}
+.big{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;font:900 68px ui-rounded,system-ui,sans-serif;color:#fff;text-shadow:0 4px 18px rgba(0,0,0,.75)}
+.big.pop{animation:pop .7s}@keyframes pop{0%{transform:scale(2.2);opacity:0}25%{transform:scale(1);opacity:1}100%{opacity:.9}}
+.cover{position:absolute;inset:0;background:rgba(5,8,15,.74);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center;padding:22px;z-index:5}
+.cover.off{display:none}.cover .ic{font-size:54px;line-height:1;filter:drop-shadow(0 6px 12px rgba(0,0,0,.5))}
+.cover h3{margin:0;font-size:24px;color:#fff;letter-spacing:1px}.cover p{margin:0;color:#cbd5e1;font-size:14px;line-height:1.6;max-width:340px}
+.cover .btn.big2{font-size:18px;padding:12px 34px;border-radius:999px;box-shadow:0 6px 0 rgba(0,0,0,.35),0 0 24px var(--accent2)}
+.cover .k-chips{justify-content:center}
+.touch{display:flex;justify-content:space-between;gap:8px;margin:10px auto 0;user-select:none;-webkit-user-select:none;max-width:480px}
+.touch .gap{flex:1}
+.tb{min-width:78px;height:70px;border-radius:18px;border:1px solid var(--line);background:linear-gradient(var(--panel),rgba(0,0,0,.4));color:#fff;font-size:22px;font-weight:900;touch-action:none;box-shadow:0 4px 0 rgba(0,0,0,.5);cursor:pointer}
+.tb.on{transform:translateY(3px);box-shadow:0 1px 0 rgba(0,0,0,.5);filter:brightness(1.5)}
+.tb.wide{flex:1}.tb.go{background:linear-gradient(var(--accent),var(--accent2));color:#07111f;border:0}
+@media (hover:hover) and (min-width:900px){.touch.auto{display:none}}
