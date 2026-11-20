@@ -9,3 +9,15 @@
 .row.fin i{background:#22c55e}
 @keyframes bl{50%{opacity:.3}}
 .tip{text-align:center;font-size:12px;margin-top:8px}
+
+/* v1.1 強化：滑動動畫、漸層琴鍵、進度條 */
+body{background:radial-gradient(circle at 50% 0,#1e1b4b,#0b0b10 65%) fixed}
+.stage{background:linear-gradient(#f8fafc,#e2e8f0);box-shadow:0 16px 40px rgba(0,0,0,.6),0 0 0 3px #312e81}
+.stage::before{content:"";position:absolute;left:0;top:0;height:5px;width:var(--p,0%);background:linear-gradient(90deg,#38bdf8,#a78bfa,#f472b6);z-index:3;transition:width .1s}
+.row i{background:linear-gradient(#fff,#f1f5f9);border-color:#d5dbe6}
+.row i.k{background:linear-gradient(160deg,#334155,#0f172a 60%);box-shadow:inset 0 3px 0 rgba(255,255,255,.18),inset 0 -6px 0 rgba(0,0,0,.4);border-radius:6px}
+.row i.k:active{filter:brightness(1.6)}
+.row i.done{background:linear-gradient(160deg,hsl(var(--h,220) 85% 72%),hsl(var(--h,220) 80% 55%));box-shadow:inset 0 3px 0 rgba(255,255,255,.35);border-radius:6px;opacity:.75}
+.row i.start{box-shadow:inset 0 3px 0 rgba(255,255,255,.18),0 0 0 3px #a78bfa inset;animation:st 1s infinite}
+@keyframes st{50%{filter:brightness(1.5)}}
+.row.fin i{background:linear-gradient(#4ade80,#16a34a)}
