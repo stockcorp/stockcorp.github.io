@@ -45,6 +45,7 @@
     G.cap[p].push(c); grp.forEach(function (x) { G.cap[p].push(x); });
     var v = val(c) + grp.reduce(function (a, x) { return a + val(x); }, 0);
     K.beep(v ? 760 : 560, 0.06, 'triangle', 0.05);
+    if (v && p === 0) { K.float(K.at, '+' + v, '#fde047', 18 + Math.min(14, v / 4)); K.burst(K.at, { n: 8 + Math.min(20, v), c: ['#f87171', '#fde047', '#fff'], size: 4, sp: 170 }); K.buzz(10); }
     return v;
   }
   function playHand(p, c, grp) {

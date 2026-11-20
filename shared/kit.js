@@ -71,6 +71,7 @@
   K.pop = function (el, sc) { anim(el, [{ transform: 'scale(1)' }, { transform: 'scale(' + (sc || 1.18) + ')' }, { transform: 'scale(1)' }], { duration: 260, easing: 'ease-out' }); };
   K.drop = function (el) { anim(el, [{ transform: 'translateY(-18px) scale(.8)', opacity: 0 }, { transform: 'translateY(2px) scale(1.04)', opacity: 1, offset: 0.7 }, { transform: 'none', opacity: 1 }], { duration: 300, easing: 'ease-out' }); };
   K.glow = function (el, c) { anim(el, [{ boxShadow: '0 0 0 0 ' + (c || '#fde047') }, { boxShadow: '0 0 22px 6px ' + (c || '#fde047') }, { boxShadow: '0 0 0 0 rgba(0,0,0,0)' }], { duration: 650, easing: 'ease-out' }); };
+  K.at = null; d.addEventListener('pointerdown', function (e) { K.at = { x: e.clientX, y: e.clientY }; }, true);
   K.buzz = function (ms) { try { if (!K.muted && navigator.vibrate) navigator.vibrate(ms || 12); } catch (e) { /* 略過 */ } };
   K.tune = function (notes, gap, type, vol) { (notes || []).forEach(function (f, i) { setTimeout(function () { K.beep(f, 0.16, type || 'triangle', vol || 0.06); }, i * (gap || 90)); }); };
   K.win = function () { K.confetti(); K.tune([523, 659, 784, 1047, 1319], 95); };

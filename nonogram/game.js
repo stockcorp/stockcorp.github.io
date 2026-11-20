@@ -119,7 +119,7 @@
   cv.addEventListener('contextmenu', function (e) { e.preventDefault(); });
   function set(i, v) {
     if (!S.started) { S.started = true; S.t0 = Date.now(); if (window.SCLB) SCLB.start(GAME, S.sz); if (window.SC) SC.post('start', { game: GAME, level: S.sz }); tick = setInterval(function () { if (!S.over) $('clock').textContent = K.fmtTime(Math.floor((Date.now() - S.t0) / 1000)); }, 500); }
-    S.g[i] = v; K.beep(v === 1 ? 520 : v === 2 ? 380 : 300, 0.02, 'sine', 0.02); draw();
+    S.g[i] = v; K.beep(v === 1 ? 520 : v === 2 ? 380 : 300, 0.02, 'sine', 0.02); if (v === 1 && K.at) K.burst(K.at, { n: 2, c: ['#a78bfa', '#fff'], size: 2.5, sp: 60, life: 0.25, g: 0 }); draw();
   }
   function check(auto) {
     var n = S.n;
@@ -134,7 +134,7 @@
     if (nb) { best[S.sz] = t; K.save('scnono_best', best); }
     $('endTime').textContent = K.fmtTime(t); $('endSize').textContent = S.sz.replace('x', '×');
     $('endBest').textContent = nb ? L('🎉 新的個人紀錄！', '🎉 New personal best!') : L('個人最佳：', 'Personal best: ') + K.fmtTime(best[S.sz]);
-    K.beep(523, 0.5, 'triangle', 0.07, 1046);
+    K.tune([523, 659, 784, 1047, 1319], 95);
     if (window.SC) SC.post('gameover', { game: GAME, win: true, sec: t });
     setTimeout(function () { K.open('ovEnd'); if (window.SCLB) { var sec = SCLB.elapsed(GAME) || t; SCLB.offer({ game: GAME, mode: S.sz, score: sec, text: S.sz.replace('x', '×') + ' ' + K.fmtTime(sec) }); } }, 600);
   }

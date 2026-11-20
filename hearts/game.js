@@ -105,7 +105,7 @@
     G.hands[p].splice(G.hands[p].indexOf(c), 1); G.trick.push({ p: p, c: c }); G.played[c] = 1;
     if (G.trick.length > 1 && su(c) !== su(G.trick[0].c)) G.voids[p][su(G.trick[0].c)] = 1;
     if (su(c) === 3) G.broken = true;
-    K.beep(c === QS ? 200 : su(c) === 3 ? 520 : 440, 0.05, 'triangle', 0.04);
+    K.beep(c === QS ? 200 : su(c) === 3 ? 520 : 440, 0.05, 'triangle', 0.04); if (c === QS) { var tb = document.querySelector('.table'); K.shake(tb, 7); K.float(tb, '♠Q！', '#f87171', 30); K.buzz(30); }
     render();
     if (G.trick.length === 4) {
       var g = gen; busy = true;
@@ -127,7 +127,7 @@
   }
   function endHand() {
     var add = G.taken.slice(), moon = add.indexOf(26);
-    if (moon >= 0) { add = [26, 26, 26, 26]; add[moon] = 0; setMsg(L(NAMES[moon][0], NAMES[moon][1]) + L(' 射月成功！', ' shot the moon!')); K.beep(880, 0.4, 'triangle', 0.07, 1320); }
+    if (moon >= 0) { add = [26, 26, 26, 26]; add[moon] = 0; setMsg(L(NAMES[moon][0], NAMES[moon][1]) + L(' 射月成功！', ' shot the moon!')); K.tune([523, 659, 784, 1047, 1319], 90); K.confetti(90); K.float(null, '🌙 ' + L('射月！', 'Shot the moon!'), '#fde047', 34); }
     for (var p = 0; p < 4; p++) G.tot[p] += add[p];
     G.hist.push(add); G.hand++;
     var done = G.tot.some(function (x) { return x >= 100; });

@@ -27,7 +27,7 @@
   function play(s, m) {
     if (typeof m !== 'number' || moves(s).indexOf(m) < 0) return false;
     apply(s, m); K.beep(s.side === 2 ? 520 : 440, 0.05, 'triangle', 0.045);
-    if (s.sm[(m / 9) | 0] && s.sm[(m / 9) | 0] !== 3) setTimeout(function () { K.beep(780, 0.12, 'sine', 0.05, 1040); }, 60);
+    if (s.sm[(m / 9) | 0] && s.sm[(m / 9) | 0] !== 3) setTimeout(function () { K.tune([660, 880, 1175], 60); try { var rc = cv.getBoundingClientRect(), b = (m / 9) | 0, pad = size * 0.02, B = (size - pad * 2) / 3, at = { x: rc.left + pad + (b % 3 + 0.5) * B, y: rc.top + pad + (((b / 3) | 0) + 0.5) * B }, w = s.sm[b]; K.burst(at, { n: 26, star: 1, c: w === 1 ? ['#f87171', '#fff', '#fde047'] : ['#60a5fa', '#fff', '#fde047'], size: 7, sp: 220 }); K.shake($('board'), 5); K.buzz(15); } catch (e) { /* 略過 */ } }, 60);
     return true;
   }
   function result(s) {
@@ -93,13 +93,14 @@
   function draw() {
     if (!D || !D.S) return;
     var s = D.S, pad = size * 0.02, B = (size - pad * 2) / 3, cs = B / 3;
-    ctx.fillStyle = '#0f172a'; ctx.fillRect(0, 0, size, size);
+    var bgG = ctx.createLinearGradient(0, 0, size, size); bgG.addColorStop(0, '#1e1b4b'); bgG.addColorStop(1, '#0f172a'); ctx.fillStyle = bgG; ctx.fillRect(0, 0, size, size);
     var avail = moves(s), my = D.myTurn();
     for (var b = 0; b < 9; b++) {
       var bx = pad + (b % 3) * B, by = pad + ((b / 3) | 0) * B;
       var playable = !s.win && !s.sm[b] && (s.next < 0 || s.next === b);
       ctx.fillStyle = playable && !D.over ? (s.side === 1 ? 'rgba(239,68,68,.16)' : 'rgba(59,130,246,.18)') : 'rgba(255,255,255,.03)';
       ctx.fillRect(bx + 4, by + 4, B - 8, B - 8);
+      if (playable && !D.over) { ctx.shadowColor = s.side === 1 ? '#f87171' : '#60a5fa'; ctx.shadowBlur = 14; ctx.strokeStyle = s.side === 1 ? 'rgba(248,113,113,.9)' : 'rgba(96,165,250,.9)'; ctx.lineWidth = 2.5; ctx.strokeRect(bx + 4, by + 4, B - 8, B - 8); ctx.shadowBlur = 0; }
       ctx.strokeStyle = 'rgba(148,163,184,.55)'; ctx.lineWidth = 1.5;
       for (var k = 1; k < 3; k++) { ctx.beginPath(); ctx.moveTo(bx + k * cs, by + 10); ctx.lineTo(bx + k * cs, by + B - 10); ctx.moveTo(bx + 10, by + k * cs); ctx.lineTo(bx + B - 10, by + k * cs); ctx.stroke(); }
       for (k = 0; k < 9; k++) {

@@ -13,3 +13,7 @@
 .lvs,#colChips{justify-content:center}
 .st.r{background:radial-gradient(circle at 35% 30%,#fca5a5,#dc2626 70%)}.st.u{background:radial-gradient(circle at 35% 30%,#93c5fd,#2563eb 70%)}
 .board{background:radial-gradient(circle,#3b2416,#1a100c 72%);border-radius:50%}
+
+/* v1.1 */
+body{background:radial-gradient(circle at 50% -10%,#3a1f10,var(--bg) 62%) fixed}
+#board{filter:drop-shadow(0 16px 26px rgba(0,0,0,.55))}

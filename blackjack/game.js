@@ -88,6 +88,7 @@
     S.chips = Math.round(S.chips);
     msg(res.join(' / ') + (net ? '（' + (net > 0 ? '+' : '') + Math.round(net) + '）' : ''));
     K.beep(net > 0 ? 880 : net < 0 ? 220 : 500, 0.2, 'triangle', 0.06, net > 0 ? 1320 : undefined);
+    var fe = document.querySelector('.felt'); if (net > 0) { K.tune([660, 880, 1320], 70); K.float(fe, '+' + Math.round(net), '#fde047', 34); K.burst(fe, { n: net >= 150 ? 50 : 24, c: ['#fde047', '#fbbf24', '#fff'], size: 6, sp: 280, star: net >= 150 }); if (net >= 300) K.confetti(70); } else if (net < 0) { K.float(fe, String(Math.round(net)), '#f87171', 28); K.shake(fe, 6); }
     S.phase = 'bet'; S.bet = 0;
     if (S.hand >= HANDS || S.chips <= 0) { S.phase = 'over'; render(); return setTimeout(finish, 900); }
     render();
