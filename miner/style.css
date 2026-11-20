@@ -5,3 +5,7 @@
 #cv{width:100%;display:block;border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,.5);touch-action:manipulation;cursor:pointer}
 .tnt{position:absolute;right:8px;top:8px;border:0;border-radius:12px;background:rgba(0,0,0,.45);color:#fff;font-size:20px;padding:6px 10px;cursor:pointer}
 .msg{position:absolute;left:0;right:0;top:40%;text-align:center;font-weight:900;font-size:22px;color:#fff;text-shadow:0 2px 8px #000;pointer-events:none}
+
+/* v1.1 氛圍 */
+body{background:radial-gradient(circle at 50% -10%,#5a3a0a,var(--bg) 62%) fixed}
+#cv{box-shadow:0 0 0 3px rgba(250,204,21,.35),0 0 28px rgba(250,204,21,.22),0 14px 36px rgba(0,0,0,.6)}

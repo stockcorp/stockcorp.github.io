@@ -129,3 +129,6 @@ a{color:var(--gold)}
 .avatar.sage .eyes::before,.avatar.sage .eyes::after{background:#e9f7f3;box-shadow:none;transform:none;height:3px;top:18px}
 .avatar.sage .mouth{border-color:#e9f7f3;height:4px}
 .movelist{max-width:980px;margin:0 auto;font-size:13px;color:var(--mute);text-align:center;min-height:18px}
+
+/* 特效畫布比棋盤寬，窄螢幕不要撐出橫向捲動 */
+html,body{overflow-x:clip}

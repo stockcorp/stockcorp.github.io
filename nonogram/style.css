@@ -5,3 +5,7 @@
 #cv{display:block;touch-action:none;user-select:none;-webkit-user-select:none;border-radius:8px}
 #bMode.x{border-color:#f87171;color:#fca5a5}
 .lvs{justify-content:center}.lvs button{min-width:90px}
+
+/* v1.1 氛圍 */
+body{background:radial-gradient(circle at 50% -10%,#2e1065,var(--bg) 62%) fixed}
+#cv{box-shadow:0 0 0 3px rgba(167,139,250,.35),0 0 28px rgba(167,139,250,.22),0 14px 36px rgba(0,0,0,.6)}

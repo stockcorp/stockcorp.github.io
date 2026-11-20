@@ -4,3 +4,7 @@
 .boardWrap{display:flex;justify-content:center}
 #cv{display:block;touch-action:manipulation;border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,.5)}
 .lvs{justify-content:center}.lvs button{min-width:90px}
+
+/* v1.1 氛圍 */
+body{background:radial-gradient(circle at 50% -10%,#0c4a6e,var(--bg) 62%) fixed}
+#cv{box-shadow:0 0 0 3px rgba(56,189,248,.35),0 0 28px rgba(56,189,248,.22),0 14px 36px rgba(0,0,0,.6)}

@@ -4,3 +4,7 @@
 #cv{width:100%;display:block;border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,.5);touch-action:none;user-select:none;-webkit-user-select:none}
 .msg{position:absolute;left:0;right:0;top:36%;text-align:center;font-weight:900;font-size:20px;color:#7c2d12;pointer-events:none}
 .ctl{display:flex;justify-content:space-between;gap:12px;margin-top:12px}.ctl .btn{flex:1;height:64px;font-size:18px;touch-action:none;user-select:none;-webkit-user-select:none}
+
+/* v1.1 氛圍 */
+body{background:radial-gradient(circle at 50% -10%,#7c2d12,var(--bg) 62%) fixed}
+#cv{box-shadow:0 0 0 3px rgba(251,146,60,.35),0 0 28px rgba(251,146,60,.22),0 14px 36px rgba(0,0,0,.6)}

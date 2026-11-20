@@ -3,3 +3,7 @@
 .bar{display:flex;justify-content:center;gap:16px;margin-bottom:8px;font-size:15px;color:var(--mute);align-items:center}.bar b{color:#fff;font-variant-numeric:tabular-nums;font-size:16px}
 .stage{margin:0 auto;max-width:min(420px,calc((100vh - 170px) * 400 / 600))}
 #cv{width:100%;display:block;border-radius:16px;background:linear-gradient(#fef3c7,#fde68a);box-shadow:0 10px 30px rgba(0,0,0,.5);touch-action:none}
+
+/* v1.1 氛圍 */
+body{background:radial-gradient(circle at 50% -10%,#14532d,var(--bg) 62%) fixed}
+#cv{box-shadow:0 0 0 3px rgba(134,239,172,.35),0 0 28px rgba(134,239,172,.22),0 14px 36px rgba(0,0,0,.6)}

@@ -10,3 +10,7 @@
 .lvgrid{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin:10px 0}
 .lvgrid button{height:42px;border-radius:10px;border:1px solid var(--line);background:var(--panel);color:#fff;font-weight:800;cursor:pointer}
 .lvgrid button.done{background:#166534}.lvgrid button:disabled{opacity:.35}
+
+/* v1.1 氛圍 */
+body{background:radial-gradient(circle at 50% -10%,#5a3a1a,var(--bg) 62%) fixed}
+#cv{box-shadow:0 0 0 3px rgba(251,191,36,.35),0 0 28px rgba(251,191,36,.22),0 14px 36px rgba(0,0,0,.6)}
