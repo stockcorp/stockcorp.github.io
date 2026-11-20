@@ -5,3 +5,7 @@
 #cv{width:100%;display:block;border-radius:22px;box-shadow:0 10px 30px rgba(0,0,0,.6);touch-action:none}
 .msg{position:absolute;left:0;right:0;top:46%;text-align:center;font-weight:900;font-size:24px;color:#1e293b;pointer-events:none}
 .lvs{justify-content:center}
+
+/* v1.1 霓虹冰場 */
+#cv{box-shadow:0 0 0 3px #312e81,0 0 30px rgba(167,139,250,.45),0 14px 40px rgba(0,0,0,.7)}
+.msg{color:#fff;font-size:34px;text-shadow:0 0 18px #a78bfa,0 3px 0 rgba(0,0,0,.5);letter-spacing:2px}
