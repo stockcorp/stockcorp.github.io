@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title data-en="Ski Racer | Free Online Downhill Slalom Skiing Game">滑雪競速｜免費線上高山滑雪曲道賽・穿旗門・全球排行榜</title>
+<meta name="description" content="免費線上滑雪競速：高山曲道滑雪，左右切雪穿過旗門、閃樹和石頭、飛越跳台，蹲低可以更快。1500 公尺賽道的完賽時間上傳全球排行榜。">
+<meta name="google-adsense-account" content="ca-pub-3440199491716602">
+<meta name="theme-color" content="#0a1522">
+<meta property="og:title" content="滑雪競速｜Stockcorp 遊戲大廳">
+<meta property="og:description" content="高山曲道滑雪，穿旗門衝終點。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://stockcorp.github.io/ski/">
+<link rel="canonical" href="https://stockcorp.github.io/ski/">
+<link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/ski/?lang=zh">
+<link rel="alternate" hreflang="en" href="https://stockcorp.github.io/ski/?lang=en">
+<link rel="alternate" hreflang="x-default" href="https://stockcorp.github.io/ski/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%230ea5e9'/%3E%3Ctext x='50' y='70' font-size='60' text-anchor='middle'%3E%E2%9B%B7%EF%B8%8F%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/shared/kit.css?v=1.0">
+<link rel="stylesheet" href="style.css?v=1.0">
+<script src="/shared/app.js?v=1.2"></script>
+<script src="/shared/kit.js?v=1.0"></script>
+<script src="/shared/games.js?v=1.7" data-game="ski" defer></script>
+<script src="/shared/lb.js?v=1.0" defer></script>
+</head>
+<body>
+<header class="k-top">
+  <div class="k-brand"><span class="k-logo">⛷️</span><div><h1 data-en="Ski Racer">滑雪競速</h1><small id="sub"></small></div></div>
+  <div class="k-acts">
+    <button class="btn ghost" data-lang-toggle>EN</button>
+    <button class="btn ghost" id="bSound">🔊</button>
+    <a class="btn ghost" id="bLb" href="/leaderboard/?game=ski&mode=classic" style="text-decoration:none">🏆</a>
+    <button class="btn" id="bNew" data-en="Restart">重來</button>
+  </div>
+</header>
+<main class="wrap">
+  <div class="hud"><span class="pill">⏱ <b id="time">0:00.0</b></span><span class="pill">🚩 <span data-en="Gates">旗門</span> <b id="gate">0/0</b></span><span class="pill">💨 <b id="spd">0 km/h</b></span></div>
+  <div class="stage" id="stage"><canvas id="cv" width="480" height="620"></canvas><div class="big" id="big"></div>
+    <div class="cover" id="cover"><div class="ic">⛷️</div><h3 data-en="Ski Racer">滑雪競速</h3><p data-en="Carve left and right, pass through every gate and race to the finish. Missed gates and trees cost time!">左右切雪轉彎，穿過每一道旗門衝到終點。漏門、撞樹都會浪費時間！</p><button class="btn big2" id="bStart" data-en="Start">開始</button></div></div>
+  <div class="touch auto" id="touch"></div>
+
+</main>
+<section class="k-help"><article><h2 data-en="How to play">玩法</h2><p data-en="Steer with ◀ ▶ (or the arrow keys) and ski between the two flags of every red or blue gate. Hold Tuck (↓ or Space) to go faster, at the cost of slower turning. Missing a gate slows you sharply, and trees or rocks knock you over. Yellow ramps launch you into the air with a speed boost.">用 ◀ ▶（或方向鍵）左右轉彎，從紅、藍旗門的兩支旗子中間穿過去。按住「蹲低」（↓ 或空白鍵）速度更快，但轉彎比較遲鈍。漏掉旗門會被大幅減速，撞到樹或石頭會摔倒。黃色跳台可以飛起來並加速。</p></article><article><h2 data-en="Leaderboard">排行榜</h2><p data-en="The course is a fixed 1,500 m. The leaderboard ranks finishing time (measured by the server) — lower is better.">賽道固定 1500 公尺，比的是完賽時間（伺服器計時），越短越好。</p></article></section>
+<footer class="k-foot"><span data-en="Free to play. Scores you choose to submit appear on the global leaderboard.">免費遊玩；選擇上傳的成績會顯示在全球排行榜。</span>　<a href="privacy.html" data-en="Privacy policy">隱私權政策與廣告說明</a></footer>
+<div class="k-ov" id="ovEnd" data-sticky><div class="k-modal center"><div class="k-big" id="endEmoji">⛷️</div><h2 id="endTitle" data-en="Finish!">抵達終點！</h2>
+  <div class="k-stats"><div><b id="endTime">0</b><span data-en="Time">時間</span></div><div><b id="endGate">0</b><span data-en="Gates">旗門</span></div><div><b id="endTop">0</b><span data-en="Top speed">最高速</span></div></div>
+  <p class="mute" id="endBest"></p><div class="k-row"><button class="btn big" id="bAgain" data-en="Play again">再玩一次</button><button class="btn ghost" data-close data-en="Close">關閉</button></div></div></div>
+<script src="/shared/fx.js?v=1.0" defer></script>
+<script src="game.js?v=1.0" defer></script>
+</body>
+</html>

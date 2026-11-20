@@ -146,7 +146,7 @@
     $('endBest').textContent = b.isNew ? L('🎉 新的個人紀錄！', '🎉 New personal best!') : L('個人最佳：', 'Personal best: ') + fmt(b.best);
     if (window.SC) SC.post('gameover', { game: GAME, win: pos === 1, sec: t });
     var sec = window.SCLB ? (SCLB.elapsed(GAME) || t) : t;
-    setTimeout(function () { S.run = false; eng.stop(); squeal.stop(); K.open('ovEnd'); $('cover').classList.remove('off'); if (window.SCLB) SCLB.offer({ game: GAME, mode: trk, score: sec, text: L(TRACKS[trk].n[0], TRACKS[trk].n[1]) + '・' + L('第 ', 'P') + pos + L(' 名', '') }); }, 1800);
+    var s0 = S; setTimeout(function () { if (S !== s0) return; S.run = false; eng.stop(); squeal.stop(); K.open('ovEnd'); $('cover').classList.remove('off'); if (window.SCLB) SCLB.offer({ game: GAME, mode: trk, score: sec, text: L(TRACKS[trk].n[0], TRACKS[trk].n[1]) + '・' + L('第 ', 'P') + pos + L(' 名', '') }); }, 1800);
   }
 
   // ---------- 繪圖 ----------

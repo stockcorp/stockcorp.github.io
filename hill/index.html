@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title data-en="Hill Climber | Free Online Physics Hill-Climb Driving Game">登山越野車｜免費線上物理越野爬坡・全球排行榜</title>
+<meta name="description" content="免費線上登山越野車：側視物理越野，控制油門與煞車在起伏的山路上保持平衡，撿油桶補油、空翻拿獎勵，從草原一路開到沙漠、雪山和月球。距離上傳全球排行榜。">
+<meta name="google-adsense-account" content="ca-pub-3440199491716602">
+<meta name="theme-color" content="#0e1510">
+<meta property="og:title" content="登山越野車｜Stockcorp 遊戲大廳">
+<meta property="og:description" content="物理越野爬坡，別翻車、別沒油。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://stockcorp.github.io/hill/">
+<link rel="canonical" href="https://stockcorp.github.io/hill/">
+<link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/hill/?lang=zh">
+<link rel="alternate" hreflang="en" href="https://stockcorp.github.io/hill/?lang=en">
+<link rel="alternate" hreflang="x-default" href="https://stockcorp.github.io/hill/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%2365a30d'/%3E%3Ctext x='50' y='70' font-size='60' text-anchor='middle'%3E%F0%9F%9A%99%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/shared/kit.css?v=1.0">
+<link rel="stylesheet" href="style.css?v=1.0">
+<script src="/shared/app.js?v=1.2"></script>
+<script src="/shared/kit.js?v=1.0"></script>
+<script src="/shared/games.js?v=1.7" data-game="hill" defer></script>
+<script src="/shared/lb.js?v=1.0" defer></script>
+</head>
+<body>
+<header class="k-top">
+  <div class="k-brand"><span class="k-logo">🚙</span><div><h1 data-en="Hill Climber">登山越野車</h1><small id="sub"></small></div></div>
+  <div class="k-acts">
+    <button class="btn ghost" data-lang-toggle>EN</button>
+    <button class="btn ghost" id="bSound">🔊</button>
+    <a class="btn ghost" id="bLb" href="/leaderboard/?game=hill&mode=classic" style="text-decoration:none">🏆</a>
+    <button class="btn" id="bNew" data-en="Restart">重來</button>
+  </div>
+</header>
+<main class="wrap">
+  <div class="hud"><span class="pill">📍 <span data-en="Dist">距離</span> <b id="dist">0 m</b></span><span class="pill">🪙 <b id="coin">0</b></span><span class="pill">🏆 <span data-en="Best">最佳</span> <b id="best">0 m</b></span></div>
+  <div class="stage" id="stage"><canvas id="cv" width="560" height="430"></canvas><div class="big" id="big"></div>
+    <div class="cover" id="cover"><div class="ic">🚙</div><h3 data-en="Hill Climber">登山越野車</h3><p data-en="Hit the gas, climb the hills and don’t flip! Grab fuel cans — coins top up a little fuel too.">踩油門爬坡、小心別翻車！撿油桶補油，金幣也能補一點油。</p><button class="btn big2" id="bStart" data-en="Start">開始</button></div></div>
+  <div class="touch" id="touch"></div>
+
+</main>
+<section class="k-help"><article><h2 data-en="How to play">玩法</h2><p data-en="Hold Gas (right) to drive and Brake (left) to slow or reverse. In the air, Gas tilts the nose up and Brake tilts it down — use that to land flat. The run ends if the driver’s head hits the ground or you run out of fuel and stop.">按住右邊「油門」前進，左邊「煞車」減速或倒車。車子在空中時，油門會讓車頭往上翹、煞車會讓車頭往下壓，用來調整落地姿勢。駕駛的頭撞到地面，或是油用完停下來，遊戲就結束。</p></article><article><h2 data-en="Fuel and bonuses">油料與獎勵</h2><p data-en="Fuel burns all the time. ⛽ cans fill the tank and each 🪙 coin adds a little. Land a full flip for 15% bonus fuel. The hills get steeper the farther you go — eventually you reach the Moon, where gravity is lower.">油會一直消耗，路上的 ⛽ 油桶可以加滿，🪙 金幣每個補一點點。在空中完成一圈空翻再平安落地，可以多補 15% 的油。越遠山越陡，還會開到月球（重力變小）。</p></article><article><h2 data-en="Leaderboard">排行榜</h2><p data-en="Your farthest distance in metres can go on the global leaderboard.">開得最遠的距離（公尺）可以上傳全球排行榜。</p></article></section>
+<footer class="k-foot"><span data-en="Free to play. Scores you choose to submit appear on the global leaderboard.">免費遊玩；選擇上傳的成績會顯示在全球排行榜。</span>　<a href="privacy.html" data-en="Privacy policy">隱私權政策與廣告說明</a></footer>
+<div class="k-ov" id="ovEnd" data-sticky><div class="k-modal center"><div class="k-big" id="endEmoji">🚙</div><h2 id="endTitle" data-en="Game over">遊戲結束</h2>
+  <div class="k-stats"><div><b id="endDist">0</b><span data-en="Distance">距離</span></div><div><b id="endCoin">0</b><span data-en="Coins">金幣</span></div><div><b id="endFlip">0</b><span data-en="Flips">空翻</span></div></div>
+  <p class="mute" id="endBest"></p><div class="k-row"><button class="btn big" id="bAgain" data-en="Play again">再玩一次</button><button class="btn ghost" data-close data-en="Close">關閉</button></div></div></div>
+<script src="/shared/fx.js?v=1.0" defer></script>
+<script src="game.js?v=1.0" defer></script>
+</body>
+</html>
