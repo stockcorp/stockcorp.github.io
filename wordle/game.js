@@ -46,7 +46,7 @@
     S.cur.split('').forEach(function (ch, i) { if (!S.keys[ch] || rank[res[i]] > rank[S.keys[ch]]) S.keys[ch] = res[i]; });
     var word = S.cur; S.cur = '';
     render();
-    K.beep(res.every(function (x) { return x === 'g'; }) ? 880 : 500, 0.08, 'triangle', 0.04);
+    var nr = $('grid').children[S.rows.length - 1]; if (nr) { nr.classList.add('new'); res.forEach(function (x, i) { setTimeout(function () { K.beep(x === 'g' ? 880 : x === 'y' ? 660 : 330, 0.07, 'triangle', 0.04); if (x === 'g' && nr.children[i]) K.burst(nr.children[i], { n: 5, c: ['#4ade80', '#fff'], size: 3, sp: 90, life: 0.4 }); }, 130 * i + 200); }); }
     if (word === S.ans) return win();
     if (S.rows.length === 6) lose();
   }
@@ -57,7 +57,7 @@
     $('endEmoji').textContent = '🟩'; $('endTitle').textContent = L('猜中了！', 'Solved!');
     $('endTime').textContent = K.fmtTime(t); $('endTries').textContent = S.rows.length + '/6';
     $('endBest').textContent = (nb ? L('🎉 新的個人紀錄！', '🎉 New personal best!') : L('個人最佳：', 'Personal best: ') + K.fmtTime(best)) + '　' + S.ans.toUpperCase();
-    K.beep(523, 0.5, 'triangle', 0.07, 1046);
+    setTimeout(function () { K.tune([523, 659, 784, 1047, 1319], 95); var wr = $('grid').children[S.rows.length - 1]; if (wr) wr.classList.add('win'); }, 800);
     if (window.SC) SC.post('gameover', { game: GAME, win: true, sec: t });
     setTimeout(function () { K.open('ovEnd'); if (window.SCLB) { var sec = SCLB.elapsed(GAME) || t; SCLB.offer({ game: GAME, mode: 'classic', score: sec, text: S.rows.length + L(' 次猜中', ' tries') }); } }, 1500);
   }

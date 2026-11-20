@@ -47,3 +47,18 @@ html.in-app .k-help,html.in-app .k-foot .web{display:none}
 .mute{color:var(--mute)}
 .k-brand{min-width:150px}
 @media(max-width:560px){.k-top{padding:8px 10px;gap:6px}.k-acts{gap:4px}.k-acts .btn{padding:7px 10px;font-size:13px;border-radius:10px}.k-logo{width:34px;height:34px;font-size:19px;border-radius:10px}.k-brand small{font-size:11px}}
+
+/* v1.1 微互動：按鈕回饋、彈窗彈出、結算圖示跳動 */
+.btn{transition:transform .08s,filter .15s}
+.btn:not(:disabled):hover{filter:brightness(1.1)}
+.btn:not(:disabled):active{transform:translateY(2px) scale(.97)}
+.k-ov.on{animation:kfade .22s}
+.k-ov.on>.k-modal{animation:kpop .34s cubic-bezier(.2,1.25,.4,1)}
+@keyframes kfade{from{opacity:0}}
+@keyframes kpop{from{transform:translateY(22px) scale(.9);opacity:0}}
+.k-big{display:inline-block;animation:kbob 1.8s ease-in-out infinite;filter:drop-shadow(0 6px 10px rgba(0,0,0,.4))}
+@keyframes kbob{50%{transform:translateY(-7px) rotate(-5deg)}}
+.k-stats div{background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:12px;padding:8px 14px;min-width:74px}
+.k-stats b{font-variant-numeric:tabular-nums}
+.k-logo{transition:transform .2s}.k-brand:hover .k-logo{transform:rotate(-8deg) scale(1.08)}
+@media (prefers-reduced-motion:reduce){.k-big,.k-ov.on,.k-ov.on>.k-modal{animation:none}}

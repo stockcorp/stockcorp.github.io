@@ -13,14 +13,17 @@
     if (S.over) return;
     if (k === 'del') S.cur = S.cur.slice(0, -1);
     else if (k === 'go') return submit();
-    else if (S.cur.length < 4 && S.cur.indexOf(k) < 0) { S.cur += k; K.beep(600 + (+k) * 30, 0.03, 'sine', 0.03); }
+    else if (S.cur.length < 4 && S.cur.indexOf(k) < 0) { S.cur += k; K.beep(600 + (+k) * 30, 0.03, 'sine', 0.03); setTimeout(function () { var sl = $('slots').children[S.cur.length - 1]; if (sl) K.pop(sl, 1.2); }, 0); }
     render();
   }
   function submit() {
     if (S.cur.length !== 4) { var s = $('slots'); s.classList.remove('shake'); void s.offsetWidth; s.classList.add('shake'); return; }
     if (!S.started) { S.started = true; S.t0 = Date.now(); if (window.SCLB) SCLB.start(GAME, 'classic'); if (window.SC) SC.post('start', { game: GAME }); tick = setInterval(function () { if (!S.over) $('clock').textContent = K.fmtTime(Math.floor((Date.now() - S.t0) / 1000)); }, 500); }
     var r = score(S.cur); S.hist.push([S.cur, r]);
-    var row = document.createElement('div'); row.innerHTML = S.cur + '<span><b class="a">' + r[0] + 'A</b> <b class="b">' + r[1] + 'B</b></span>'; $('hist').appendChild(row);
+    var row = document.createElement('div'); var pegs = ''; for (var pi = 0; pi < 4; pi++) pegs += '<u class="' + (pi < r[0] ? 'pa' : pi < r[0] + r[1] ? 'pb' : '') + '"></u>';
+    row.innerHTML = '<em>' + S.hist.length + '</em>' + S.cur + '<span><s>' + pegs + '</s><b class="a">' + r[0] + 'A</b> <b class="b">' + r[1] + 'B</b></span>'; $('hist').appendChild(row); K.drop(row);
+    if (r[0] >= 2 && r[0] < 4) { K.burst(row, { n: 6 + r[0] * 4, c: ['#4ade80', '#fff'], size: 4, sp: 140 }); K.float(row, r[0] === 3 ? L('只差一點！', 'So close!') : L('有進展！', 'Getting there!'), '#4ade80', 16); }
+    else if (r[0] + r[1] === 0) K.float(row, L('全部排除！', 'All ruled out!'), '#94a3b8', 15);
     $('cnt').textContent = S.hist.length;
     S.cur = '';
     if (r[0] === 4) return win();
@@ -33,7 +36,7 @@
     var t = Math.floor((Date.now() - S.t0) / 1000), best = K.load('scab_best', 0), nb = !best || t < best; if (nb) K.save('scab_best', t);
     $('endTime').textContent = K.fmtTime(t); $('endCnt').textContent = S.hist.length;
     $('endBest').textContent = (nb ? L('🎉 新的個人紀錄！', '🎉 New personal best!') : L('個人最佳：', 'Personal best: ') + K.fmtTime(best)) + '　' + L('答案 ', 'Answer ') + S.ans;
-    K.beep(523, 0.5, 'triangle', 0.07, 1046); render();
+    K.tune([523, 659, 784, 1047, 1319], 95); render();
     if (window.SC) SC.post('gameover', { game: GAME, win: true, sec: t });
     setTimeout(function () { K.open('ovEnd'); if (window.SCLB) { var sec = SCLB.elapsed(GAME) || t; SCLB.offer({ game: GAME, mode: 'classic', score: sec, text: S.hist.length + L(' 次猜中・', ' guesses · ') + K.fmtTime(sec) }); } }, 500);
   }
