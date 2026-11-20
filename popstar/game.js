@@ -26,14 +26,18 @@
     if (!S || S.over || S.busy || !S.g[c] || S.g[c][r] === undefined) return;
     var g = group(c, r); if (g.length < 2) { K.beep(150, 0.04, 'square', 0.02); return; }
     if (!S.started) { S.started = true; if (window.SCLB) SCLB.start(GAME, 'classic'); if (window.SC) SC.post('start', { game: GAME }); }
-    var pts = g.length * g.length * 5, size2 = cellSize();
-    g.forEach(function (p) { var xy = pos(p[0], p[1]); for (var k = 0; k < 3; k++) anim.push({ x: xy[0] + size2 / 2, y: xy[1] + size2 / 2, vx: (Math.random() - 0.5) * 300, vy: -Math.random() * 300, c: COL[S.g[p[0]][p[1]]], t: 0.6 }); });
+    var pts = g.length * g.length * 5, size2 = cellSize(), tap = pos(c, r), tcol = COL[S.g[c][r]];
+    g.forEach(function (p) { var xy = pos(p[0], p[1]); for (var k = 0; k < 6; k++) anim.push({ x: xy[0] + size2 / 2, y: xy[1] + size2 / 2, vx: (Math.random() - 0.5) * 300, vy: -Math.random() * 300, c: COL[S.g[p[0]][p[1]]], t: 0.6 }); });
     var rm = {}; g.forEach(function (p) { (rm[p[0]] = rm[p[0]] || []).push(p[1]); });
     Object.keys(rm).forEach(function (c2) { rm[c2].sort(function (a, b) { return b - a; }).forEach(function (r2) { S.g[c2].splice(r2, 1); }); });
     S.g = S.g.filter(function (col) { return col.length; });
     S.score += pts; $('score').textContent = S.score.toLocaleString();
     msg(g.length + L(' 連消 +', ' popped +') + pts);
     K.beep(500 + Math.min(g.length, 20) * 30, 0.1, 'triangle', 0.05); navigator.vibrate && navigator.vibrate(10);
+    var rc = cv.getBoundingClientRect(), at = { x: rc.left + (tap[0] + size2 / 2) / size * rc.width, y: rc.top + (tap[1] + size2 / 2) / size * rc.width };
+    K.float(at, '+' + pts, '#fde047', Math.min(34, 16 + g.length * 1.6));
+    if (g.length >= 5) { K.burst(at, { n: Math.min(40, g.length * 3), star: 1, c: [tcol, '#fff', '#fde047'], size: 7, sp: 240 }); K.tune([660, 880, 1100 + g.length * 20], 60); }
+    if (g.length >= 8) { K.shake(cv, Math.min(12, g.length)); K.float({ x: rc.left + rc.width / 2, y: rc.top + rc.height * 0.3 }, g.length >= 14 ? L('太神啦！', 'UNREAL!') : g.length >= 11 ? L('超厲害！', 'AMAZING!') : L('漂亮！', 'NICE!'), '#f472b6', 34); }
     draw();
     if (!anyMove()) { S.busy = true; setTimeout(endLevel, 700); }
   }
@@ -43,7 +47,7 @@
     msg(L('剩 ', 'Left ') + k + L(' 個，獎勵 ', ', bonus ') + bonus);
     setTimeout(function () {
       S.busy = false;
-      if (S.score >= target(S.level)) { K.beep(660, 0.3, 'triangle', 0.06, 1320); K.toast(L('過關！', 'Level clear!'), 1000); nextLevel(); }
+      if (S.score >= target(S.level)) { K.win(); K.toast(L('過關！', 'Level clear!'), 1000); nextLevel(); }
       else gameOver();
     }, 1400);
   }
