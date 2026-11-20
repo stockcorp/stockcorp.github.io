@@ -4,3 +4,7 @@
 .msg{text-align:center;height:24px;font-weight:800;color:#fde68a}
 .boardWrap{display:flex;justify-content:center}
 #cv{display:block;touch-action:manipulation;border-radius:12px;background:#0d0408;box-shadow:0 10px 30px rgba(0,0,0,.5)}
+
+/* v1.1 氛圍 */
+body{background:radial-gradient(circle at 50% -10%,#701a45,var(--bg) 62%) fixed}
+#cv{box-shadow:0 0 0 3px rgba(244,114,182,.35),0 0 28px rgba(244,114,182,.22),0 14px 36px rgba(0,0,0,.6)}

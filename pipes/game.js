@@ -84,7 +84,7 @@
     if (nb) { best[S.lv] = t; K.save('scpipes_best', best); }
     $('endTime').textContent = K.fmtTime(t); $('endTaps').textContent = S.taps;
     $('endBest').textContent = nb ? L('🎉 新的個人紀錄！', '🎉 New personal best!') : L('個人最佳：', 'Personal best: ') + K.fmtTime(best[S.lv]);
-    K.tune([523, 659, 784, 1047, 1319], 95);
+    K.tune([523, 659, 784, 1047, 1319], 95); K.burst(cv, { n: 46, c: ['#38bdf8', '#7dd3fc', '#fff'], size: 6, sp: 320, g: 500 });
     if (window.SC) SC.post('gameover', { game: GAME, win: true, sec: t });
     setTimeout(function () { K.open('ovEnd'); if (window.SCLB) { var sec = SCLB.elapsed(GAME) || t; SCLB.offer({ game: GAME, mode: S.lv, score: sec, text: S.n + '×' + S.n + ' ' + K.fmtTime(sec) }); } }, 600);
   }
