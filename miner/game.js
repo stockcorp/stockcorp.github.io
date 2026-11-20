@@ -59,11 +59,13 @@
       else if (r < 0.75) { v = 0; S.tnt++; txt = '🧨 +1'; }
       else { v = 0; S.strong = 1; txt = L('💪 力量藥水！', '💪 Strength!'); }
     } else txt = '$' + v;
+function scr(x, y, w) { var r = cv.getBoundingClientRect(), k = r.width / w; return { x: r.left + x * k, y: r.top + y * k }; }
     S.money += v; S.pop.push({ x: OX, y: OY - 10, t: 1, txt: txt }); hud();
+    if (v >= 100) { K.burst(scr(OX, OY, W), { n: v >= 300 ? 30 : 14, star: v >= 300, c: v >= 300 ? ['#a5f3fc', '#fff', '#fde047'] : ['#fde047', '#fbbf24', '#fff'], sp: 220, size: 6 }); if (v >= 300) K.shake(cv, 5); }
     K.beep(v >= 300 ? 1200 : v ? 880 : 500, 0.1, 'triangle', 0.05, v >= 300 ? 1600 : undefined);
   }
   function endLevel() {
-    if (S.money >= target(S.level)) { K.beep(660, 0.3, 'triangle', 0.06, 1320); K.toast(L('過關！', 'Level clear!'), 1000); S.strong = 0; nextLevel(); }
+    if (S.money >= target(S.level)) { K.win(); K.toast(L('過關！', 'Level clear!'), 1000); S.strong = 0; nextLevel(); }
     else gameOver();
   }
   function gameOver() {

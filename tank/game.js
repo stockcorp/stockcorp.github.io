@@ -91,7 +91,7 @@
         else if (v === 2) { gone = true; boom(b.x, b.y, 5); }
       }
       if (!gone) {
-        if (b.me) { for (var k = 0; k < S.foes.length; k++) { var f = S.foes[k]; if (b.x > f.x + 2 && b.x < f.x + T - 2 && b.y > f.y + 2 && b.y < f.y + T - 2) { gone = true; f.hp--; boom(b.x, b.y, 10); if (f.hp <= 0) { f.dead = true; S.score += f.arm ? 200 : 100; boom(f.x + T / 2, f.y + T / 2, 26); K.beep(120, 0.3, 'sawtooth', 0.06, 50); hud(); } else K.beep(500, 0.05, 'square', 0.03); break; } } }
+        if (b.me) { for (var k = 0; k < S.foes.length; k++) { var f = S.foes[k]; if (b.x > f.x + 2 && b.x < f.x + T - 2 && b.y > f.y + 2 && b.y < f.y + T - 2) { gone = true; f.hp--; boom(b.x, b.y, 10); if (f.hp <= 0) { f.dead = true; S.score += f.arm ? 200 : 100; boom(f.x + T / 2, f.y + T / 2, 26); K.float(scr(f.x + T / 2, f.y, W), '+' + (f.arm ? 200 : 100), '#fde047', 18); K.beep(120, 0.3, 'sawtooth', 0.06, 50); hud(); } else K.beep(500, 0.05, 'square', 0.03); break; } } }
         else if (!S.me.dead && b.x > S.me.x + 2 && b.x < S.me.x + T - 2 && b.y > S.me.y + 2 && b.y < S.me.y + T - 2) { gone = true; if (!S.me.shield) hitMe(); }
         // 子彈互相抵銷
         for (var j = 0; j < S.bul.length && !gone; j++) { var o = S.bul[j]; if (o !== b && o.me !== b.me && Math.abs(o.x - b.x) < 8 && Math.abs(o.y - b.y) < 8) { gone = true; o.dead = true; } }
@@ -101,9 +101,10 @@
     S.bul = S.bul.filter(function (b) { return !b.dead && !b.own.dead; });
     S.foes = S.foes.filter(function (f) { return !f.dead; });
     S.boom.forEach(function (x) { x.t -= dt; }); S.boom = S.boom.filter(function (x) { return x.t > 0; });
-    if (!S.left && !S.foes.length && !S.clear) { S.clear = 1; S.score += 500; hud(); msg(L('過關！+500', 'Stage clear! +500'), 1500); K.beep(660, 0.4, 'triangle', 0.06, 1320); setTimeout(function () { if (!S.over) nextStage(); }, 1800); }
+    if (!S.left && !S.foes.length && !S.clear) { S.clear = 1; S.score += 500; hud(); msg(L('過關！+500', 'Stage clear! +500'), 1500); K.win(); setTimeout(function () { if (!S.over) nextStage(); }, 1800); }
   }
-  function boom(x, y, r) { S.boom.push({ x: x, y: y, r: r, t: 0.3 }); }
+  function scr(x, y, w) { var r = cv.getBoundingClientRect(), k = r.width / w; return { x: r.left + x * k, y: r.top + y * k }; }
+  function boom(x, y, r) { S.boom.push({ x: x, y: y, r: r, t: 0.3 }); if (r >= 20) { K.burst(scr(x, y, W), { n: 22, c: ['#f97316', '#fde047', '#fff', '#78716c'], sp: 230, size: 5 }); K.shake(cv, r >= 30 ? 10 : 5); } else K.burst(scr(x, y, W), { n: 5, c: ['#fdba74', '#fff'], sp: 90, size: 3, life: 0.3 }); }
   function hitMe() {
     var me = S.me; me.dead = true; me.respawn = 1.5; S.lives--; boom(me.x + T / 2, me.y + T / 2, 30); hud();
     K.beep(90, 0.5, 'sawtooth', 0.08, 40); navigator.vibrate && navigator.vibrate([80, 40, 80]);
