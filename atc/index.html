@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title data-en="Tower Control | Free Online Air Traffic Control Line-Drawing Game">塔台管制員｜免費線上航管遊戲・畫航線引導飛機降落・全球排行榜</title>
+<meta name="description" content="免費線上塔台管制員：用手指替客機、小飛機和直升機畫出航線，引導到對應顏色的跑道或停機坪降落，注意速度差與交會點，避免空中相撞。降落架次上傳全球排行榜。">
+<meta name="google-adsense-account" content="ca-pub-3440199491716602">
+<meta name="theme-color" content="#08131c">
+<meta property="og:title" content="塔台管制員｜Stockcorp 遊戲大廳">
+<meta property="og:description" content="畫航線引導飛機安全降落。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://stockcorp.github.io/atc/">
+<link rel="canonical" href="https://stockcorp.github.io/atc/">
+<link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/atc/?lang=zh">
+<link rel="alternate" hreflang="en" href="https://stockcorp.github.io/atc/?lang=en">
+<link rel="alternate" hreflang="x-default" href="https://stockcorp.github.io/atc/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%230ea5e9'/%3E%3Ctext x='50' y='70' font-size='60' text-anchor='middle'%3E%F0%9F%9B%AB%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/shared/kit.css?v=1.0">
+<link rel="stylesheet" href="style.css?v=1.0">
+<script src="/shared/app.js?v=1.2"></script>
+<script src="/shared/kit.js?v=1.0"></script>
+<script src="/shared/games.js?v=1.7" data-game="atc" defer></script>
+<script src="/shared/lb.js?v=1.0" defer></script>
+</head>
+<body>
+<header class="k-top">
+  <div class="k-brand"><span class="k-logo">🛫</span><div><h1 data-en="Tower Control">塔台管制員</h1><small id="sub"></small></div></div>
+  <div class="k-acts">
+    <button class="btn ghost" data-lang-toggle>EN</button>
+    <button class="btn ghost" id="bSound">🔊</button>
+    <a class="btn ghost" id="bLb" href="/leaderboard/?game=atc&mode=classic" style="text-decoration:none">🏆</a>
+    <button class="btn" id="bNew" data-en="Restart">重來</button>
+  </div>
+</header>
+<main class="wrap">
+  <div class="hud"><span class="pill">🛬 <span data-en="Landed">降落</span> <b id="score">0</b></span><span class="pill">🏆 <span data-en="Best">最佳</span> <b id="best">0</b></span><span class="pill">✈️ <span data-en="In air">空中</span> <b id="air">0</b></span></div>
+  <div class="stage" id="stage"><canvas id="cv" width="480" height="660"></canvas><div class="big" id="big"></div>
+    <div class="cover" id="cover"><div class="ic">🛫</div><h3 data-en="Tower Control">塔台管制員</h3><p data-en="Drag a path from each aircraft to the runway of the same colour and land it safely. Traffic keeps building — never let two aircraft collide!">用手指從飛機拉一條路線到同顏色的跑道，讓它安全降落。飛機越來越多，千萬別讓兩架撞在一起！</p><button class="btn big2" id="bStart" data-en="Start">開始</button></div></div>
+
+</main>
+<section class="k-help"><article><h2 data-en="How to play">玩法</h2><p data-en="Press on an aircraft and drag to draw its route to a runway: red jets land on the long red runway, yellow light planes on the short yellow runway, and blue helicopters on the blue helipad Ⓗ. Routes must enter a runway from the end with the arrows. Aircraft without a route keep flying straight and turn back when they reach the edge.">從飛機身上按住並拖曳，畫一條路線到跑道：紅色客機降落在紅色長跑道，黃色小飛機降落在黃色短跑道，藍色直升機降落在藍色停機坪 Ⓗ。路線要從跑道有箭頭的那一端進場。沒有路線的飛機會一直直飛，飛出畫面邊緣會自己轉回來。</p></article><article><h2 data-en="Avoid collisions">小心相撞</h2><p data-en="A red warning ring appears when two aircraft get too close — redraw one of the routes right away. Jets are fastest and helicopters slowest, so fast traffic catches up with slow traffic. One collision ends the game.">兩架飛機太接近時會出現紅色警示圈，趕快重畫其中一架的路線。客機最快、直升機最慢，後面的快飛機會追上前面的慢飛機。只要相撞一次遊戲就結束。</p></article><article><h2 data-en="Leaderboard">排行榜</h2><p data-en="The leaderboard ranks the number of aircraft landed safely.">比安全降落的架次。</p></article></section>
+<footer class="k-foot"><span data-en="Free to play. Scores you choose to submit appear on the global leaderboard.">免費遊玩；選擇上傳的成績會顯示在全球排行榜。</span>　<a href="privacy.html" data-en="Privacy policy">隱私權政策與廣告說明</a></footer>
+<div class="k-ov" id="ovEnd" data-sticky><div class="k-modal center"><div class="k-big" id="endEmoji">🛫</div><h2 id="endTitle" data-en="Mid-air Collision!">空中相撞！</h2>
+  <div class="k-stats"><div><b id="endScore">0</b><span data-en="Landed">降落架次</span></div><div><b id="endTime">0</b><span data-en="Time on duty">值勤時間</span></div><div><b id="endMax">0</b><span data-en="Most in air">同時最多</span></div></div>
+  <p class="mute" id="endBest"></p><div class="k-row"><button class="btn big" id="bAgain" data-en="Play again">再玩一次</button><button class="btn ghost" data-close data-en="Close">關閉</button></div></div></div>
+<script src="/shared/fx.js?v=1.0" defer></script>
+<script src="game.js?v=1.0" defer></script>
+</body>
+</html>
