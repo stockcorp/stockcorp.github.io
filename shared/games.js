@@ -140,7 +140,26 @@
     '.scg-rail .scg-home{width:calc(var(--sc-rail) - 12px);padding:10px 4px;font-size:13px;flex-direction:column;gap:2px;border-radius:14px}',
     '.scg-rail .scg-home i{font-style:normal;font-size:22px;line-height:1}',
     '@media(min-width:1400px){.scg-rail .scg-home{flex-direction:row;font-size:15px;gap:6px;padding:12px 6px}.scg-rail .scg-home i{font-size:18px}}',
-    '.scg-bar .scg-home{flex:none;padding:8px 12px;font-size:13.5px}'
+    '.scg-bar .scg-home{flex:none;padding:8px 12px;font-size:13.5px}',
+    // 切換列固定在最上面，結算視窗開著時也看得到、按得到
+    'html.scg-narrow .scg-bar{position:sticky;top:0;z-index:60}',
+    'html.scg-rails .scg-rail{z-index:60}',
+    // 結算畫面：回大廳＋推薦下一款
+    '.scg-next{margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,.12);text-align:center;font-family:-apple-system,"Segoe UI","Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif}',
+    '.scg-next-h{font-size:13px;font-weight:700;color:#aab4cc;margin-bottom:8px;letter-spacing:1px}',
+    '.scg-next-g{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}',
+    '.scg-nx{position:relative;display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 4px 8px;border-radius:14px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:#e6ebf5!important;text-decoration:none!important;min-width:0;transition:transform .12s,border-color .12s}',
+    '.scg-nx:hover,.scg-nx:active{transform:translateY(-2px);border-color:#f5b83d}',
+    '.scg-nx b{font-size:12.5px;font-weight:700;line-height:1.3;max-width:100%;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}',
+    '.scg-nx i{position:absolute;top:-7px;left:50%;transform:translateX(-50%);font-style:normal;font-size:10px;font-weight:800;background:#f5b83d;color:#1a1205;border-radius:999px;padding:1px 7px;white-space:nowrap}',
+    '.scg-next-r{display:flex;gap:8px;margin-top:10px}',
+    '.scg-next-r .scg-home{flex:1;padding:11px 10px;font-size:14.5px}',
+    '.scg-next-r .scg-all{padding:10px 14px;font-size:13px}',
+    '.scg-sheet{position:fixed;left:0;right:0;bottom:0;z-index:2147482000;display:flex;justify-content:center;padding:8px;pointer-events:none;transform:translateY(110%);transition:transform .28s ease}',
+    '.scg-sheet.on{transform:none}',
+    '.scg-sheet>div{pointer-events:auto;position:relative;width:100%;max-width:460px;background:#141a29;border:1px solid #2a3550;border-radius:18px;padding:4px 14px 12px;box-shadow:0 -8px 30px rgba(0,0,0,.5)}',
+    '.scg-sheet .scg-next{margin-top:0;border-top:0}',
+    '.scg-sheet .scg-x{position:absolute;right:6px;top:2px;background:none;border:0;color:#8b97b3;font-size:22px;line-height:1;padding:6px 8px;cursor:pointer;z-index:1}'
   ].join('\n');
 
   function ico(g, size) { var t = g.icon.length === 1 && /[一-鿿]/.test(g.icon); return '<span class="scg-ico' + (t ? ' t' : '') + '" style="background:' + g.color + (g.fg ? ';color:' + g.fg + ';border-color:' + g.fg : '') + (size ? ';width:' + size + 'px;height:' + size + 'px' : '') + '">' + g.icon + '</span>'; }
@@ -173,11 +192,61 @@
     mode(); window.addEventListener('resize', mode);
     return [st, l, r, bar, ov];
   }
+  // ---------- 結算畫面：回大廳＋推薦下一款 ----------
+  var openAll = function () { var o = document.querySelector('.scg-ov'); if (o) o.classList.add('on'); };
+  function picks() {
+    var out = [], used = {}, me = GAMES[idx], i; used[cur] = 1;
+    var add = function (g) { if (g && !used[g.id] && out.length < 3) { used[g.id] = 1; out.push(g); } };
+    add(next);
+    var same = GAMES.filter(function (g) { return me && g.cat.some(function (c) { return me.cat.indexOf(c) >= 0; }); }), rest = GAMES.slice();
+    for (i = same.length - 1; i > 0; i--) { var j = (Math.random() * (i + 1)) | 0, t = same[i]; same[i] = same[j]; same[j] = t; }
+    for (i = rest.length - 1; i > 0; i--) { var k = (Math.random() * (i + 1)) | 0, u = rest[i]; rest[i] = rest[k]; rest[k] = u; }
+    add(same[0]); add(rest[0]); same.forEach(add); rest.forEach(add);
+    return out;
+  }
+  function nextBlock() {
+    var d = document.createElement('div'); d.className = 'scg-next';
+    d.innerHTML = '<div class="scg-next-h">' + (en() ? 'What to play next?' : '接下來玩什麼？') + '</div><div class="scg-next-g">' +
+      picks().map(function (g, i) { return '<a class="scg-nx" href="' + g.url + '">' + (i === 0 ? '<i>' + (en() ? 'Next' : '下一款') + '</i>' : '') + ico(g, 42) + '<b>' + nm(g) + '</b></a>'; }).join('') +
+      '</div><div class="scg-next-r"><a class="scg-home" href="/">🏠 ' + (en() ? 'Back to lobby' : '回遊戲大廳') + '</a><button class="scg-all" type="button">☰ ' + (en() ? 'All' : '全部') + '</button></div>';
+    d.querySelector('.scg-all').addEventListener('click', openAll);
+    return d;
+  }
+  function isOn(o) { return o && o.classList.contains('on'); }
+  function attach(ov) { // 把推薦區塊放進彈窗；彈窗關掉就拿掉（下次開會換一批推薦）
+    if (!ov) return false; var box = ov.firstElementChild; if (!box) return false;
+    var old = box.querySelector('.scg-next'); if (old) old.remove();
+    box.appendChild(nextBlock()); return true;
+  }
+  function watch(ov) {
+    if (!ov || ov._scg) return; ov._scg = 1;
+    new MutationObserver(function () { var b = ov.querySelector('.scg-next'); if (isOn(ov)) { if (!b) attach(ov); } else if (b) b.remove(); }).observe(ov, { attributes: true, attributeFilter: ['class'] });
+    if (isOn(ov)) attach(ov);
+  }
+  var sheet = null;
+  function showSheet() {
+    if (!sheet) { sheet = document.createElement('div'); sheet.className = 'scg-sheet'; sheet.innerHTML = '<div><button class="scg-x" type="button" aria-label="close">×</button></div>'; document.body.appendChild(sheet); sheet.querySelector('.scg-x').addEventListener('click', function () { sheet.classList.remove('on'); }); }
+    var box = sheet.firstElementChild, old = box.querySelector('.scg-next'); if (old) old.remove(); box.appendChild(nextBlock());
+    setTimeout(function () { sheet.classList.add('on'); }, 30);
+  }
+  function onGameOver() {
+    if (sheet) sheet.classList.remove('on');
+    setTimeout(function () {
+      var vis = [].some.call(document.querySelectorAll('.scg-next'), function (n) { return n.offsetParent !== null; }); if (vis) return;
+      var ovs = document.querySelectorAll('.k-ov.on, .ov.on'), top = ovs[ovs.length - 1];
+      if (top && top.firstElementChild) { watch(top); if (!top.querySelector('.scg-next')) attach(top); } else showSheet();
+    }, 2600);
+  }
+  function hookEnd() {
+    watch(document.getElementById('ovEnd'));
+    if (window.SC && !SC._scgPost) { var raw = SC.post; SC._scgPost = 1; SC.post = function (type, data) { try { if (type === 'gameover') { onGameOver(); if (data && data.win === true && window.K && K.confetti) K.confetti(); } else if (type === 'start' && sheet) sheet.classList.remove('on'); } catch (e) { /* 略過 */ } return raw.apply(SC, arguments); }; }
+  }
   var nodes = null, lastLang = null;
   function go() {
     var lg = en() ? 'en' : 'zh'; if (lg === lastLang) return; lastLang = lg;
     if (nodes) nodes.forEach(function (n) { n.remove(); });
-    nodes = build();
+    nodes = build(); hookEnd();
+    [].forEach.call(document.querySelectorAll('.scg-next'), function (n) { var p = n.parentNode; n.remove(); if (p) p.appendChild(nextBlock()); });
   }
   // 語言切換後更新名稱（我愛操盤手有中英切換）
   if (window.MutationObserver) new MutationObserver(function () { if (nodes) go(); }).observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });

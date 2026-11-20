@@ -10,3 +10,17 @@
 .g6 .cd .fr{font-size:min(6vw,30px)}
 .cd.ok .fr{background:#bbf7d0;animation:pulse .4s}@keyframes pulse{50%{transform:rotateY(180deg) scale(1.08)}}
 .lvs{justify-content:center}
+
+/* v1.1 強化：發牌動畫、立體牌背、配對特效 */
+body{background:radial-gradient(circle at 50% 0,#0f3350,#071623 60%) fixed}
+.cd{animation:deal .38s backwards;animation-delay:calc(var(--i,0)*22ms)}
+@keyframes deal{from{scale:0;translate:0 -30px}to{scale:1;translate:0 0}}
+.cd .bk{background:radial-gradient(circle at 30% 25%,rgba(255,255,255,.35),transparent 45%),linear-gradient(135deg,#0ea5e9,#2563eb 55%,#7c3aed);border:3px solid #e0f2fe;box-shadow:0 5px 0 #0c4a6e,0 8px 14px rgba(0,0,0,.45)}
+.cd .bk::after{content:"?";font:900 min(9vw,40px) ui-rounded,system-ui,sans-serif;color:rgba(255,255,255,.85);text-shadow:0 2px 0 rgba(0,0,0,.25)}
+.g6 .cd .bk::after{font-size:min(6vw,26px)}
+.cd .fr{background:linear-gradient(#fff,#e0f2fe);box-shadow:0 5px 0 #7dd3fc,0 8px 14px rgba(0,0,0,.4)}
+.cd:not(.up):not(.ok):hover{translate:0 -3px}
+.cd:not(.up):not(.ok):active{scale:.94}
+.cd.ok .fr{background:linear-gradient(#f0fdf4,#bbf7d0);box-shadow:0 5px 0 #4ade80,0 0 18px rgba(74,222,128,.55)}
+.cd.no .fr{background:linear-gradient(#fff1f2,#fecdd3);animation:no .3s}
+@keyframes no{25%{transform:rotateY(180deg) translateX(-5px)}75%{transform:rotateY(180deg) translateX(5px)}}

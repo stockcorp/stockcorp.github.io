@@ -10,7 +10,7 @@
     cancelAnimationFrame(raf);
     S = { cols: [], idx: 0, started: false, over: false, t0: 0 };
     for (var i = 0; i < TOTAL; i++) S.cols.push((Math.random() * 4) | 0);
-    $('clock').textContent = '0.000'; $('left').textContent = TOTAL; K.close('ovEnd'); render();
+    $('clock').textContent = '0.000'; $('left').textContent = TOTAL; $('spd').textContent = '0.0'; st.style.setProperty('--p', '0%'); K.close('ovEnd'); render();
   }
   function render() {
     st.innerHTML = '';
@@ -18,7 +18,7 @@
       var r = S.idx - 1 + k, row = document.createElement('div'); row.className = 'row'; row.style.bottom = (k * 25 - 25) + '%';
       if (r >= TOTAL) { row.className = 'row fin'; for (var c = 0; c < 4; c++) row.appendChild(document.createElement('i')); st.appendChild(row); continue; }
       for (c = 0; c < 4; c++) {
-        var e = document.createElement('i'); if (r >= 0 && S.cols[r] === c) { e.className = r < S.idx ? 'done' : 'k'; if (r === 0 && !S.started) { e.className += ' start'; e.dataset.t = L('開始', 'Start'); } }
+        var e = document.createElement('i'); if (r >= 0 && S.cols[r] === c) { e.className = r < S.idx ? 'done' : 'k'; e.style.setProperty('--h', 200 + r * 3.2); if (r === 0 && !S.started) { e.className += ' start'; e.dataset.t = L('開始', 'Start'); } }
         e.dataset.r = r; e.dataset.c = c; row.appendChild(e);
       }
       st.appendChild(row);
@@ -28,15 +28,20 @@
     if (!S || S.over) return;
     if (S.cols[S.idx] !== c) return fail(c);
     if (!S.started) { S.started = true; S.t0 = performance.now(); if (window.SCLB) SCLB.start(GAME, '50'); if (window.SC) SC.post('start', { game: GAME }); tickClock(); }
-    var n = NOTES[MEL[S.idx % MEL.length] % NOTES.length]; K.beep(n, 0.18, 'triangle', 0.07);
+    var n = NOTES[MEL[S.idx % MEL.length] % NOTES.length]; K.beep(n, 0.2, 'triangle', 0.07); K.beep(n / 2, 0.22, 'sine', 0.04);
+    var cur = st.children[1] && st.children[1].children[c], hue = 200 + S.idx * 3.2;
+    if (cur) K.burst(cur, { n: 7, c: ['hsl(' + hue + ',90%,65%)', '#fff'], size: 4, sp: 130, life: 0.4 });
     S.idx++; $('left').textContent = TOTAL - S.idx; render();
+    st.style.setProperty('--p', (S.idx / TOTAL * 100) + '%');
+    [].forEach.call(st.children, function (r) { if (r.animate) r.animate([{ transform: 'translateY(-100%)' }, { transform: 'none' }], { duration: 85, easing: 'ease-out' }); });
+    var el = (performance.now() - S.t0) / 1000; if (S.idx > 3 && el > 0) $('spd').textContent = (S.idx / el).toFixed(1);
     if (S.idx >= TOTAL) win();
   }
   function tickClock() { if (!S || S.over || !S.started) return; $('clock').textContent = ((performance.now() - S.t0) / 1000).toFixed(3); raf = requestAnimationFrame(tickClock); }
   function fail(c) {
     S.over = true; cancelAnimationFrame(raf);
     var row = st.children[1]; if (row && row.children[c]) row.children[c].classList.add('bad');
-    K.beep(110, 0.5, 'sawtooth', 0.08, 55); navigator.vibrate && navigator.vibrate(120);
+    K.beep(110, 0.5, 'sawtooth', 0.08, 55); navigator.vibrate && navigator.vibrate(120); K.shake(st, 10); if (row && row.children[c]) K.burst(row.children[c], { n: 22, c: ['#ef4444', '#fca5a5', '#fff'], sp: 240, size: 5 });
     setTimeout(function () {
       $('endEmoji').textContent = '💥'; $('endTitle').textContent = L('踩到白塊了！', 'You hit a white tile!');
       $('endTime').textContent = S.idx + '/' + TOTAL; $('endSpeed').textContent = '—'; $('endBest').textContent = '';
@@ -50,7 +55,7 @@
     $('endEmoji').textContent = '🎹'; $('endTitle').textContent = L('完成 50 塊！', '50 tiles done!');
     $('endTime').textContent = t.toFixed(3) + L(' 秒', 's'); $('endSpeed').textContent = (TOTAL / t).toFixed(2);
     $('endBest').textContent = nb ? L('🎉 新的個人紀錄！', '🎉 New personal best!') : L('個人最佳：', 'Personal best: ') + best.toFixed(3) + L(' 秒', 's');
-    K.beep(523, 0.5, 'triangle', 0.07, 1046);
+    K.tune([523, 659, 784, 1047, 1319], 95);
     if (window.SC) SC.post('gameover', { game: GAME, win: true, sec: t });
     setTimeout(function () { K.open('ovEnd'); if (window.SCLB) { var sec = SCLB.elapsed(GAME) || t; SCLB.offer({ game: GAME, mode: '50', score: sec, text: (TOTAL / t).toFixed(2) + L(' 塊/秒', ' tiles/s') }); } }, 400);
   }

@@ -444,6 +444,7 @@
       '<div class="kv"><div><small>' + T('遊戲月數') + '</small><b>' + S.month + '</b></div><div><small>' + T('交易次數') + '</small><b>' + S.stats.trades + '</b></div><div><small>' + T('已實現損益') + '</small><b class="' + cls(S.stats.realized) + '">' + money(S.stats.realized) + '</b></div><div><small>' + T('成就') + '</small><b>' + Object.keys(S.ach).length + ' / ' + D.ACHIEVEMENTS.length + '</b></div></div>' +
       '<div class="btn-row" style="justify-content:center">' + (canLB ? '<button class="btn" data-act="lbup">🏆 ' + T('上傳全球排行榜') + '</button>' : '') + '<button class="btn" data-act="newgame">' + T('再玩一次') + '</button><button class="btn ghost" data-act="share">' + T('複製成績分享') + '</button><button class="btn ghost" data-act="closemodal">' + T('關閉') + '</button></div>');
     if (canLB && !S.lbOffered) { S.lbOffered = true; save(); setTimeout(lbUpload, 600); }
+    if (window.SC && !S._goPosted) { S._goPosted = true; SC.post('gameover', { game: 'trader' }); }
   }
 
   /* ---------- 動作 ---------- */
