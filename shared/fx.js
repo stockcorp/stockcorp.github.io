@@ -175,6 +175,27 @@
       else { el.textContent = 'GO!'; el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop'); FX.sfx.go(); done(); setTimeout(function () { if (el.textContent === 'GO!') el.textContent = ''; }, 700); }
     }; f();
   };
+  // ---------- 畫布上的按鈕（即時模式）：每一幀 begin()，畫的時候 add() 登記範圍，點到就呼叫 ----------
+  FX.Hit = function (cv, ctx) {
+    var regs = [], Hh = { down: null, miss: null, move: null, up: null };
+    Hh.begin = function () { regs.length = 0; };
+    Hh.add = function (x, y, w, h, fn, data) { regs.push([x, y, w, h, fn, data]); };
+    Hh.at = function (p) { for (var i = regs.length - 1; i >= 0; i--) { var r = regs[i]; if (p.x >= r[0] && p.x <= r[0] + r[2] && p.y >= r[1] && p.y <= r[1] + r[3]) return r; } return null; };
+    cv.addEventListener('pointerdown', function (e) { var p = ctx.pt(e), r = Hh.at(p); e.preventDefault(); try { cv.setPointerCapture(e.pointerId); } catch (x) { /* 略過 */ } if (r) { r[4](r[5], p); return; } if (Hh.miss) Hh.miss(p, e); });
+    cv.addEventListener('pointermove', function (e) { if (Hh.move) Hh.move(ctx.pt(e), e); });
+    var up = function (e) { if (Hh.up) Hh.up(ctx.pt(e), e); }; cv.addEventListener('pointerup', up); cv.addEventListener('pointercancel', up);
+    return Hh;
+  };
+  // 圓角按鈕：o = { bg, fg, size, off（停用）, sel（選取）, sub（第二行小字）, r }
+  FX.button = function (ctx, x, y, w, h, label, o) {
+    o = o || {}; var r = o.r == null ? 10 : o.r, bg = o.off ? '#3a4152' : (o.bg || '#2563eb');
+    ctx.fillStyle = 'rgba(0,0,0,.35)'; FX.rr(ctx, x, y + 3, w, h, r); ctx.fill();
+    var g = ctx.createLinearGradient(0, y, 0, y + h); g.addColorStop(0, shade(bg, 0.18)); g.addColorStop(1, bg); ctx.fillStyle = g; FX.rr(ctx, x, y, w, h, r); ctx.fill();
+    if (o.sel) { ctx.strokeStyle = '#fff'; ctx.lineWidth = 3; ctx.stroke(); }
+    var fg = o.off ? '#8a93a6' : (o.fg || '#fff'), sz = o.size || 14;
+    if (o.sub) { FX.text(ctx, label, x + w / 2, y + h / 2 - sz * 0.45, sz, fg); FX.text(ctx, o.sub, x + w / 2, y + h / 2 + sz * 0.62, Math.max(9, sz * 0.72), o.off ? '#8a93a6' : (o.subc || 'rgba(255,255,255,.8)')); }
+    else FX.text(ctx, label, x + w / 2, y + h / 2 + 1, sz, fg);
+  };
   // 共用：靜音鍵、最佳紀錄
   FX.sound = function (onChange) { var b = K.$('bSound'); if (!b) return; var u = function () { b.textContent = K.muted ? '🔇' : '🔊'; }; b.onclick = function () { K.setMute(!K.muted); u(); if (onChange) onChange(); }; u(); };
   FX.best = function (key, v, lowerBetter) { var b = K.load(key, null), nb = b == null || (lowerBetter ? v < b : v > b); if (nb) K.save(key, v); return { best: nb ? v : b, isNew: nb }; };
