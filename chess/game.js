@@ -127,7 +127,10 @@
     var cap = st.b[m.t] || (ty(st.b[m.f]) === P && m.t === st.ep);
     make(st, ok[0]); st.keys.push(key(st));
     K.beep(cap ? 300 : 420, 0.06, 'triangle', 0.05);
-    if (inCheck(st, st.side)) setTimeout(function () { K.beep(880, 0.08, 'square', 0.03); }, 80);
+    try { var rc = cv.getBoundingClientRect(), q = xy(m.t), at = { x: rc.left + q[0] + size / 16, y: rc.top + q[1] + size / 16 };
+      if (cap) { K.burst(at, { n: 18, c: ['#fde68a', '#fff', '#92400e', '#1f2937'], size: 5, sp: 190 }); K.shake($('board'), 4); K.buzz(15); K.beep(140, 0.12, 'sawtooth', 0.04, 70); } else K.burst(at, { n: 4, c: ['#fff'], size: 2.5, sp: 60, life: 0.25, g: 0 });
+    } catch (e) { /* 特效失敗不影響下棋 */ }
+    if (inCheck(st, st.side)) setTimeout(function () { K.beep(880, 0.08, 'square', 0.03); K.beep(1175, 0.1, 'square', 0.03); try { K.float($('board'), L('將軍！', 'Check!'), '#f87171', 30); } catch (e) { /* 略過 */ } }, 80);
     return true;
   }
 

@@ -16,3 +16,7 @@
 #promo{display:none;position:absolute;inset:35% 10%;background:rgba(15,10,5,.92);border-radius:14px;align-items:center;justify-content:space-around;padding:8px}
 #promo button{font-size:min(12vw,56px);background:#eed8b0;border:0;border-radius:10px;width:22%;aspect-ratio:1;cursor:pointer;font-family:"Segoe UI Symbol","Noto Sans Symbols2","Apple Symbols",serif}
 #promo button.w{color:#fff;-webkit-text-stroke:1.5px #1f2937}#promo button.b{color:#111}
+
+/* v1.1 */
+body{background:radial-gradient(circle at 50% -10%,#3a2a14,var(--bg) 62%) fixed}
+#board{filter:drop-shadow(0 16px 26px rgba(0,0,0,.55))}

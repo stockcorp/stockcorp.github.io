@@ -31,7 +31,7 @@
     if (x === ex && y !== ey) step = y < ey ? -n : n; else if (y === ey && x !== ex) step = x < ex ? -1 : 1; else return;
     if (!S.started) { S.started = true; S.t0 = Date.now(); if (window.SCLB) SCLB.start(GAME, S.sz); if (window.SC) SC.post('start', { game: GAME, level: S.sz }); tick = setInterval(function () { if (!S.over) $('clock').textContent = K.fmtTime(Math.floor((Date.now() - S.t0) / 1000)); }, 500); }
     while (e !== i) { var nx = e + step; S.b[e] = S.b[nx]; S.b[nx] = 0; e = nx; S.moves++; }
-    $('moves').textContent = S.moves; K.beep(500, 0.03, 'triangle', 0.035); layout();
+    $('moves').textContent = S.moves; K.beep(500, 0.03, 'triangle', 0.035); K.buzz(6); layout();
     if (solved()) win();
   }
   function win() {
@@ -40,7 +40,7 @@
     if (nb) { best[S.sz] = t; K.save('scslide_best', best); }
     $('endTime').textContent = K.fmtTime(t); $('endMoves').textContent = S.moves;
     $('endBest').textContent = nb ? L('🎉 新的個人紀錄！', '🎉 New personal best!') : L('個人最佳：', 'Personal best: ') + K.fmtTime(best[S.sz]);
-    K.beep(523, 0.5, 'triangle', 0.07, 1046);
+    K.tune([523, 659, 784, 1047, 1319], 95);
     if (window.SC) SC.post('gameover', { game: GAME, win: true, sec: t });
     setTimeout(function () { K.open('ovEnd'); if (window.SCLB) { var sec = SCLB.elapsed(GAME) || t; SCLB.offer({ game: GAME, mode: S.sz, score: sec, text: S.sz.replace('x', '×') + '・' + S.moves + L(' 步', ' moves') }); } }, 500);
   }

@@ -16,3 +16,11 @@ body{background:radial-gradient(ellipse at 50% 20%,#0c4a36,#062016 70%)}
 .stock{position:absolute;cursor:pointer}
 .stock .cd{transition:none}
 .lvs{justify-content:center}.lvs button{min-width:96px}
+
+/* v1.1 強化：牌面質感、牌背花紋、牌桌 */
+body{background:radial-gradient(circle at 50% -10%,#14532d,var(--bg) 62%) fixed}
+.cd{background:linear-gradient(#fff,#f1f5f9);box-shadow:0 2px 4px rgba(0,0,0,.5),inset 0 0 0 1px rgba(255,255,255,.8)}
+.cd:not(.dn):hover{filter:brightness(1.04)}
+.dn{background:radial-gradient(circle at 50% 50%,rgba(255,255,255,.18) 0 18%,transparent 19%),repeating-linear-gradient(45deg,#7c2d12 0 5px,#9a3412 5px 10px),#7c2d12;border:2px solid #fff;box-shadow:0 2px 4px rgba(0,0,0,.5),inset 0 0 0 3px #7c2d12,inset 0 0 0 4px rgba(255,255,255,.5)}
+.drag{box-shadow:0 14px 28px rgba(0,0,0,.6)!important;filter:brightness(1.05)}
+.hint{outline:3px solid #facc15;outline-offset:-2px;animation:hintp .7s infinite}@keyframes hintp{50%{outline-color:#fff}}

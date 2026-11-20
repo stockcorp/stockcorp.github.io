@@ -54,6 +54,10 @@
     if (TARGET[st.side].indexOf(mv.f) >= 0 && TARGET[st.side].indexOf(mv.t) < 0) return false;
     st.b[mv.t] = st.side; st.b[mv.f] = 0; st.last = { f: mv.f, t: mv.t, path: R[mv.t] }; st.ply++; st.side = 3 - st.side;
     K.beep(R[mv.t].length > 2 ? 620 : 480, 0.05, 'triangle', 0.045);
+    try { var rc = cv.getBoundingClientRect(), path = R[mv.t], col = st.side === 1 ? ['#60a5fa', '#fff'] : ['#f87171', '#fff'];
+      path.forEach(function (c, k) { if (!k) return; setTimeout(function () { var q = pos(c); K.burst({ x: rc.left + q[0], y: rc.top + q[1] }, { n: k === path.length - 1 ? 12 : 5, c: col, size: 3.5, sp: 110, life: 0.4 }); if (path.length > 2) K.beep(520 + k * 90, 0.05, 'sine', 0.035); }, k * 70); });
+      if (path.length > 3) { var e = pos(mv.t); K.float({ x: rc.left + e[0], y: rc.top + e[1] - 14 }, L('連跳 ×', 'Chain ×') + (path.length - 1), '#fde047', 20); }
+    } catch (e2) { /* 特效失敗不影響下棋 */ }
     return true;
   }
   function result(st) {

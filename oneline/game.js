@@ -43,7 +43,7 @@
     var best = K.load('scone_best', 0), nb2 = S.solved > best; if (nb2) K.save('scone_best', S.solved);
     $('endSolved').textContent = S.solved; $('endBig').textContent = S.big ? S.big + '×' + S.big : '—';
     $('endBest').textContent = nb2 ? L('🎉 新的個人紀錄！', '🎉 New personal best!') : L('個人最佳：', 'Personal best: ') + best;
-    K.beep(523, 0.5, 'triangle', 0.07, 1046);
+    K.tune([523, 659, 784, 1047, 1319], 95);
     if (window.SC) SC.post('gameover', { game: GAME, score: S.solved });
     setTimeout(function () { K.open('ovEnd'); if (S.solved > 0 && window.SCLB) SCLB.offer({ game: GAME, mode: '3min', score: S.solved, text: L('最大 ', 'Largest ') + S.big + '×' + S.big }); }, 400);
   }
@@ -56,10 +56,12 @@
     for (var i = 0; i < n * n; i++) {
       var x = (i % n) * cs, y = ((i / n) | 0) * cs;
       if (P.blocked[i]) { ctx.fillStyle = '#04121a'; ctx.fillRect(x + gp, y + gp, cs - gp * 2, cs - gp * 2); continue; }
-      ctx.fillStyle = inP[i] ? '#0e7490' : '#1e4b5c'; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(x + gp, y + gp, cs - gp * 2, cs - gp * 2, cs * 0.18) : ctx.rect(x + gp, y + gp, cs - gp * 2, cs - gp * 2); ctx.fill();
+      var cg = ctx.createLinearGradient(x, y, x, y + cs); if (inP[i]) { cg.addColorStop(0, '#155e75'); cg.addColorStop(1, '#0e4a5c'); } else { cg.addColorStop(0, '#2a6478'); cg.addColorStop(1, '#1a4352'); } ctx.fillStyle = cg; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(x + gp, y + gp, cs - gp * 2, cs - gp * 2, cs * 0.18) : ctx.rect(x + gp, y + gp, cs - gp * 2, cs - gp * 2); ctx.fill();
     }
-    ctx.strokeStyle = '#a5f3fc'; ctx.lineWidth = cs * 0.28; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.beginPath();
-    P.path.forEach(function (c, k) { var x = (c % n) * cs + cs / 2, y = ((c / n) | 0) * cs + cs / 2; if (k) ctx.lineTo(x, y); else ctx.moveTo(x, y); }); ctx.stroke();
+    var lg = ctx.createLinearGradient(0, 0, size, size); lg.addColorStop(0, '#67e8f9'); lg.addColorStop(0.5, '#a78bfa'); lg.addColorStop(1, '#f472b6'); ctx.shadowColor = '#22d3ee'; ctx.shadowBlur = 16;
+    ctx.strokeStyle = lg; ctx.lineWidth = cs * 0.3; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.beginPath();
+    P.path.forEach(function (c, k) { var x = (c % n) * cs + cs / 2, y = ((c / n) | 0) * cs + cs / 2; if (k) ctx.lineTo(x, y); else ctx.moveTo(x, y); }); ctx.stroke(); ctx.shadowBlur = 0;
+    if (P.path.length) { var hc = P.path[P.path.length - 1], hx = (hc % n) * cs + cs / 2, hy = ((hc / n) | 0) * cs + cs / 2; ctx.fillStyle = '#fff'; ctx.shadowColor = '#fff'; ctx.shadowBlur = 14; ctx.beginPath(); ctx.arc(hx, hy, cs * 0.13, 0, 7); ctx.fill(); ctx.shadowBlur = 0; }
     var s = P.start, sx = (s % n) * cs + cs / 2, sy = ((s / n) | 0) * cs + cs / 2; ctx.fillStyle = '#facc15'; ctx.beginPath(); ctx.arc(sx, sy, cs * 0.22, 0, 7); ctx.fill();
     var e = P.path[P.path.length - 1], ex = (e % n) * cs + cs / 2, ey = ((e / n) | 0) * cs + cs / 2; ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(ex, ey, cs * 0.17, 0, 7); ctx.fill();
   }
@@ -77,7 +79,7 @@
   function solved() {
     P.done = true;
     S.solved++; S.big = Math.max(S.big, P.n); $('solved').textContent = S.solved;
-    K.beep(660, 0.15, 'triangle', 0.06, 990); navigator.vibrate && navigator.vibrate(15);
+    K.tune([660, 880, 1175], 55); navigator.vibrate && navigator.vibrate(15); K.burst(K.at || cv, { n: 18, star: 1, c: ['#22d3ee', '#fde047', '#fff'], size: 6, sp: 190 }); K.float(K.at || cv, '+1', '#22d3ee', 26);
     $('msg').textContent = '✓'; setTimeout(function () { $('msg').textContent = ''; }, 400);
     setTimeout(function () { if (!S.over) nextPuzzle(); }, 250);
   }

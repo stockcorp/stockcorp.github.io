@@ -18,3 +18,10 @@
 @media (max-width:600px){.c{width:44px;height:64px}.c .mid{font-size:20px}.c .tl{font-size:13px}.stock{width:46px;height:66px}}
 .lvs{justify-content:center}
 table.sc{margin:8px auto;border-collapse:collapse;font-size:14px}table.sc td,table.sc th{padding:4px 10px;border-bottom:1px solid var(--line);text-align:center}table.sc tr.tot td{font-weight:800;color:#fde68a}
+
+/* v1.1 強化：牌面質感、牌背花紋、牌桌 */
+body{background:radial-gradient(circle at 50% -10%,#7f1d1d,var(--bg) 62%) fixed}
+.c{background:linear-gradient(#fff,#eef2f7);box-shadow:0 3px 6px rgba(0,0,0,.45),inset 0 0 0 1px rgba(255,255,255,.9);transition:transform .12s,box-shadow .12s}
+.c:hover{transform:translateY(-4px);box-shadow:0 8px 14px rgba(0,0,0,.5)}
+.pool .c{animation:dealp .25s ease-out}
+@keyframes dealp{from{transform:scale(.6) rotate(-10deg);opacity:0}}

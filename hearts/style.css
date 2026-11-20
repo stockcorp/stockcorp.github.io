@@ -20,3 +20,10 @@
 .acts{display:flex;justify-content:center;gap:8px;flex-wrap:wrap}
 .lvs{justify-content:center}
 table.sc{margin:8px auto;border-collapse:collapse;font-size:14px}table.sc td,table.sc th{padding:4px 10px;border-bottom:1px solid var(--line);text-align:center}table.sc tr.tot td{font-weight:800;color:#fde68a}
+
+/* v1.1 強化：牌面質感、牌背花紋、牌桌 */
+body{background:radial-gradient(circle at 50% -10%,#7f1d1d,var(--bg) 62%) fixed}
+.table{box-shadow:inset 0 0 50px rgba(0,0,0,.55),0 0 0 6px #5b3a1e,0 0 0 8px #2a1a0c,0 16px 34px rgba(0,0,0,.6)}
+.back{background:radial-gradient(circle at 50% 50%,rgba(255,255,255,.2) 0 16%,transparent 17%),repeating-linear-gradient(45deg,#7f1d1d 0 4px,#991b1b 4px 8px)}
+.c{background:linear-gradient(#fff,#eef2f7);box-shadow:0 3px 6px rgba(0,0,0,.45),inset 0 0 0 1px rgba(255,255,255,.9)}
+.hand .c.sel{box-shadow:0 0 0 3px #facc15,0 10px 16px rgba(0,0,0,.5)}

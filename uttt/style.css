@@ -14,3 +14,7 @@
 .st{display:flex;align-items:center;justify-content:center;font-style:normal;font-weight:900;font-size:18px;background:#0f172a}
 .st.x{color:#ef4444}.st.x::before{content:"✕"}.st.o{color:#3b82f6}.st.o::before{content:"◯"}
 .board{border-radius:12px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,.55)}
+
+/* v1.1 */
+body{background:radial-gradient(circle at 50% -10%,#1e1b4b,var(--bg) 62%) fixed}
+#board{filter:drop-shadow(0 16px 26px rgba(0,0,0,.55))}

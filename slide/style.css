@@ -5,3 +5,10 @@
 .tile{position:absolute;border-radius:12px;background:linear-gradient(#fdba74,#f97316);color:#431407;font-weight:900;display:flex;align-items:center;justify-content:center;box-shadow:inset 0 -5px 0 rgba(0,0,0,.18),0 3px 6px rgba(0,0,0,.35);cursor:pointer;transition:left .1s,top .1s}
 .tile.ok{background:linear-gradient(#bbf7d0,#22c55e);color:#052e16}
 .lvs{justify-content:center}.lvs button{min-width:90px}
+
+/* v1.1 強化 */
+body{background:radial-gradient(circle at 50% -10%,#5a3215,#1a0f06 60%) fixed}
+.board{background:linear-gradient(135deg,#4a2c14,#2a180a);border:6px solid #6b4423;box-shadow:inset 0 0 26px rgba(0,0,0,.65),0 14px 34px rgba(0,0,0,.6),0 0 0 2px #2a180a}
+.tile{background:linear-gradient(160deg,#fed7aa,#fb923c 55%,#ea580c);box-shadow:inset 0 3px 0 rgba(255,255,255,.45),inset 0 -6px 0 rgba(0,0,0,.2),0 4px 8px rgba(0,0,0,.4);text-shadow:0 2px 0 rgba(255,255,255,.35);transition:left .12s cubic-bezier(.3,1.4,.6,1),top .12s cubic-bezier(.3,1.4,.6,1),filter .1s}
+.tile:active{filter:brightness(1.15)}
+.tile.ok{background:linear-gradient(160deg,#dcfce7,#4ade80 55%,#16a34a);box-shadow:inset 0 3px 0 rgba(255,255,255,.5),inset 0 -6px 0 rgba(0,0,0,.18),0 4px 8px rgba(0,0,0,.4),0 0 12px rgba(74,222,128,.35)}

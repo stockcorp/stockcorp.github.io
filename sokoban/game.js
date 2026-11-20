@@ -25,6 +25,7 @@
       if (S.wall[n2] || S.box[n2]) { K.beep(140, 0.04, 'square', 0.02); return false; }
       hist.push(snap()); delete S.box[n]; S.box[n2] = 1; S.pushes++;
       K.beep(S.tgt[n2] ? 880 : 330, 0.05, 'triangle', 0.04);
+      if (S.tgt[n2]) { var rc = cv.getBoundingClientRect(); K.burst({ x: rc.left + ((n2 % S.W) + 0.5) / S.W * rc.width, y: rc.top + (((n2 / S.W) | 0) + 0.5) / S.H * rc.height }, { n: 14, star: 1, c: ['#4ade80', '#fde047', '#fff'], size: 6, sp: 150 }); K.beep(1320, 0.1, 'sine', 0.04); K.buzz(10); }
     } else hist.push(snap());
     S.p = n; S.moves++; hud(); draw(); check(); return true;
   }
@@ -38,7 +39,7 @@
     $('endTitle').textContent = S.n === LV.length - 1 ? L('全部 30 關破完！', 'All 30 levels cleared!') : L('第 ' + cleared + ' 關過關！', 'Level ' + cleared + ' clear!');
     $('endBest').textContent = L('最少推數參考：', 'Fewest pushes possible: ') + LV[S.n].p;
     $('bAgain').style.display = S.n < LV.length - 1 ? '' : 'none';
-    K.beep(523, 0.5, 'triangle', 0.07, 1046);
+    K.tune([523, 659, 784, 1047, 1319], 95);
     if (window.SC) SC.post('gameover', { game: GAME, level: cleared });
     setTimeout(function () {
       K.open('ovEnd');
