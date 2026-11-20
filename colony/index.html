@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title data-en="Space Colony | Free Online Mars Base Survival Management Game">太空殖民地｜免費線上火星基地經營生存遊戲・資源管理・全球排行榜</title>
+<meta name="description" content="免費線上太空殖民地：在火星上建立基地，管理電力、氧氣、水、食物和礦石，蓋居住艙迎接新的殖民者，撐過沙塵暴、打下隕石、撿補給箱。60 個火星日的殖民分數上傳全球排行榜。">
+<meta name="google-adsense-account" content="ca-pub-3440199491716602">
+<meta name="theme-color" content="#160c08">
+<meta property="og:title" content="太空殖民地｜Stockcorp 遊戲大廳">
+<meta property="og:description" content="火星基地的資源管理生存遊戲。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://stockcorp.github.io/colony/">
+<link rel="canonical" href="https://stockcorp.github.io/colony/">
+<link rel="alternate" hreflang="zh-Hant" href="https://stockcorp.github.io/colony/?lang=zh">
+<link rel="alternate" hreflang="en" href="https://stockcorp.github.io/colony/?lang=en">
+<link rel="alternate" hreflang="x-default" href="https://stockcorp.github.io/colony/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%23ea580c'/%3E%3Ctext x='50' y='70' font-size='60' text-anchor='middle'%3E%F0%9F%AA%90%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/shared/kit.css?v=1.0">
+<link rel="stylesheet" href="style.css?v=1.0">
+<script src="/shared/app.js?v=1.2"></script>
+<script src="/shared/kit.js?v=1.0"></script>
+<script src="/shared/games.js?v=1.7" data-game="colony" defer></script>
+<script src="/shared/lb.js?v=1.0" defer></script>
+</head>
+<body>
+<header class="k-top">
+  <div class="k-brand"><span class="k-logo">🪐</span><div><h1 data-en="Space Colony">太空殖民地</h1><small id="sub"></small></div></div>
+  <div class="k-acts">
+    <button class="btn ghost" data-lang-toggle>EN</button>
+    <button class="btn ghost" id="bSound">🔊</button>
+    <a class="btn ghost" id="bLb" href="/leaderboard/?game=colony&mode=classic" style="text-decoration:none">🏆</a>
+    <button class="btn" id="bNew" data-en="Restart">重來</button>
+  </div>
+</header>
+<main class="wrap">
+  <div class="hud"><span class="pill">⭐ <b id="score">0</b></span><span class="pill">🧑‍🚀 <b id="pop">4/4</b></span><span class="pill">🪐 <span data-en="Sol">火星日</span> <b id="sol">1/60</b></span></div>
+  <div class="stage" id="stage"><canvas id="cv" width="480" height="660"></canvas><div class="big" id="big"></div>
+    <div class="cover" id="cover"><div class="ic">🪐</div><h3 data-en="Space Colony">太空殖民地</h3><p data-en="Survive 60 sols on Mars. Build solar panels, ice drills, oxygen plants and greenhouses to keep air, water and food flowing — then your colony can grow.">在火星撐過 60 個火星日：蓋太陽能板、鑽井、製氧機和溫室，讓氧氣、水、食物都夠用，殖民者才會越來越多。</p><button class="btn big2" id="bStart" data-en="Start">開始</button></div></div>
+
+</main>
+<section class="k-help"><article><h2 data-en="How to play">玩法</h2><p data-en="Pick a building below, then tap an empty pad to build it (costs ore). Every colonist uses 1 oxygen, 1 water and 1 food per sol; if any of them runs out, people start dying. Drills, oxygen plants and greenhouses each need one colonist to operate and all draw power (mines are automated and only need power). When power or workers run short, the newest buildings shut down (marked ⚠️).">先在下方選建築，再點空的基座蓋下去（要花礦石）。每位殖民者每個火星日會消耗氧氣、水、食物各 1；任何一項歸零就會有人撐不下去。鑽井、製氧機、溫室各需要 1 位殖民者操作，也都要用電（礦場是自動的，只用電）；電不夠或人不夠時，比較晚蓋的建築會停工（顯示 ⚠️）。</p></article><article><h2 data-en="Growth & events">成長與事件</h2><p data-en="A supply ship comes every 3 sols: if there is free housing and enough of all three supplies in stock, 2 more colonists arrive. Dust storms cut solar power to 40% (batteries cover the gap). Tap a falling meteor 3 times to destroy it, and tap parachute crates for free ore.">每 3 個火星日會有補給船：只要居住艙有空位、三種物資都有足夠存量，就會多 2 位殖民者。沙塵暴期間太陽能只剩四成（電池可以補上）。隕石掉下來時連點它 3 下可以打掉；降落傘補給箱點一下可得礦石。</p></article><article><h2 data-en="Leaderboard">排行榜</h2><p data-en="Each sol adds 10 points per living colonist. More people surviving longer means a higher score.">每過一個火星日，分數增加「殖民者人數 × 10」。人越多、撐越久，分數越高。</p></article></section>
+<footer class="k-foot"><span data-en="Free to play. Scores you choose to submit appear on the global leaderboard.">免費遊玩；選擇上傳的成績會顯示在全球排行榜。</span>　<a href="privacy.html" data-en="Privacy policy">隱私權政策與廣告說明</a></footer>
+<div class="k-ov" id="ovEnd" data-sticky><div class="k-modal center"><div class="k-big" id="endEmoji">🪐</div><h2 id="endTitle" data-en="Mission Over">任務結束</h2>
+  <div class="k-stats"><div><b id="endScore">0</b><span data-en="Colony score">殖民分數</span></div><div><b id="endPop">0</b><span data-en="Peak population">最多人口</span></div><div><b id="endSol">0</b><span data-en="Survived">存活</span></div></div>
+  <p class="mute" id="endBest"></p><div class="k-row"><button class="btn big" id="bAgain" data-en="Play again">再玩一次</button><button class="btn ghost" data-close data-en="Close">關閉</button></div></div></div>
+<script src="/shared/fx.js?v=1.0" defer></script>
+<script src="game.js?v=1.0" defer></script>
+</body>
+</html>
