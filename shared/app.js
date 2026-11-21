@@ -6,7 +6,11 @@
      2) WebView 的 User-Agent 加上 "StockcorpApp/版本"（舊的 WacpApp/、AigApp/ 也認得）
      3) 原生橋接物件：ReactNativeWebView、Capacitor、cordova、flutter_inappwebview、
         iOS webkit.messageHandlers.stockcorp、Android window.StockcorpAndroid
-   ■ 在 App 裡會：不載入 AdSense（App 請用 AdMob）、隱藏遊戲切換列、加上 html.in-app
+   ■ 在 App 裡會：不載入 AdSense（App 請用 AdMob）、加上 html.in-app。
+     遊戲切換列（回大廳／上一款／下一款）與結算推薦在大廳 App 裡照常顯示；
+     只包單一款遊戲的舊套殼（WacpApp／AigApp）或網址帶 ?nav=0 才隱藏。
+   ■ 套殼注意：WebView 的高度請用 match_parent，不要用 wrap_content、也不要包在 ScrollView 裡，
+     否則 CSS 的 vh 會變成 0。下面有自動修正，但原生端設對才是正解。
    ■ 原生 → 網頁：window.SC.back() 處理返回鍵（回傳 true 代表網頁已處理）、window.SC.pause()／resume()
    ■ 網頁 → 原生：window.SC.post(type, data)，例如 SC.post('gameover', {win:true})
    ■ 中英切換：SC.lang、SC.setLang('en')、SC.onLang(fn)；HTML 元素加 data-en="英文" 會自動替換，
@@ -30,8 +34,47 @@
   };
   if (!app) app = /(StockcorpApp|WacpApp|AigApp)\//.test(ua) || bridge.rn || bridge.ios || bridge.android || bridge.flutter || bridge.cap || bridge.cordova;
   w.SC_IS_APP = w.WACP_IS_APP = w.AIG_IS_APP = app;
+  // 只包「單一款遊戲」的舊套殼（Wacp／Aig）不顯示遊戲切換列；包整個大廳的 App 要顯示，玩家才回得了大廳
+  var single = false; try { single = localStorage.getItem('wacp_app') === '1' || localStorage.getItem('aig_app') === '1'; } catch (e) { /* 略過 */ }
+  w.SC_APP_NAV = !(single || /(WacpApp|AigApp)\//.test(ua) || !!w.WacpAndroid || /[?&]nav=0\b/.test(q));
   var html = d.documentElement;
   html.className += app ? ' in-app' : ' on-web';
+  // ---------- 套殼 App 的 WebView 高度修正 ----------
+  // 有些套殼把 WebView 的高度設成 wrap_content（或包在 ScrollView 裡），這時 CSS 的 vh 會是 0：
+  // 彈窗被壓成一條線、遊戲區高度變 0、切換列被「橫向矮螢幕」的規則藏起來。
+  // 偵測到就把樣式表裡的 vh 換成依螢幕高度算出來的 px，並修正跟高度有關的 @media。
+  // 一般瀏覽器不會進來；要強制開啟可在網址加 ?vhfix=1（?vhfix=0 取消）。
+  (function () {
+    var forced = false;
+    try { if (/[?&]vhfix=1\b/.test(q)) localStorage.setItem('sc_vhfix', '1'); if (/[?&]vhfix=0\b/.test(q)) localStorage.removeItem('sc_vhfix'); forced = localStorage.getItem('sc_vhfix') === '1'; } catch (e) { forced = /[?&]vhfix=1\b/.test(q); }
+    function probe() { var p = d.createElement('div'); p.style.cssText = 'position:absolute;left:-9px;top:0;width:1px;height:100vh;visibility:hidden;pointer-events:none'; html.appendChild(p); var h = p.offsetHeight; html.removeChild(p); return h; }
+    if (!forced && probe() >= 160) return;
+    var sh = (w.screen && w.screen.height) || 760, sw = (w.screen && w.screen.width) || 390, H = Math.max(420, Math.min(sh, 1400) - 190), W0 = w.innerWidth || sw;
+    w.SC_VH_FIX = H; html.className += ' vh-fix';
+    try { Object.defineProperty(w, 'innerHeight', { configurable: true, get: function () { return H; } }); } catch (e) { /* 略過 */ }
+    var RE = /(-?\d*\.?\d+)[dsl]?vh\b/g, YES = '(min-width:0px)', NO = '(max-width:0px)';
+    function media(t) {
+      return t.replace(/\(\s*(max|min)-height\s*:\s*(\d+)px\s*\)/g, function (m, k, n) { return (k === 'max' ? H <= +n : H >= +n) ? YES : NO; })
+        .replace(/\(\s*orientation\s*:\s*(landscape|portrait)\s*\)/g, function (m, o) { return ((W0 > H) === (o === 'landscape')) ? YES : NO; });
+    }
+    function walk(rules) {
+      for (var i = 0; rules && i < rules.length; i++) {
+        var r = rules[i];
+        try {
+          if (r.media && r.media.mediaText && /height|orientation/.test(r.media.mediaText)) { var nt = media(r.media.mediaText); if (nt !== r.media.mediaText) r.media.mediaText = nt; }
+          if (r.cssRules) walk(r.cssRules);
+          var st = r.style; if (!st || st.cssText.indexOf('vh') < 0) continue;
+          for (var k = 0; k < st.length; k++) { var p = st[k], v = st.getPropertyValue(p); if (v.indexOf('vh') >= 0) st.setProperty(p, v.replace(RE, function (m, n) { return (n * H / 100).toFixed(1) + 'px'; }), st.getPropertyPriority(p)); }
+        } catch (e) { /* 單一規則失敗就跳過 */ }
+      }
+    }
+    function fix() { for (var i = 0; i < d.styleSheets.length; i++) { try { walk(d.styleSheets[i].cssRules); } catch (e) { /* 跨網域樣式表讀不到 */ } } }
+    // 彈窗：WebView 被撐成整頁高時，「置中」會跑到看不到的地方，改成貼著上面
+    var css = d.createElement('style'); css.textContent = 'html.vh-fix .k-ov,html.vh-fix .ov,html.vh-fix .scg-ov{align-items:flex-start!important;padding-top:56px!important}html.vh-fix .scg-bar{display:flex!important}';
+    (d.head || html).appendChild(css);
+    fix(); d.addEventListener('DOMContentLoaded', fix); w.addEventListener('load', fix); [300, 1200, 3000].forEach(function (t) { setTimeout(fix, t); });
+  })();
+
   if (/iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1)) html.className += ' ios';
 
   /* ---- 語言：?lang=zh|en ＞ 上次選擇 ＞ 瀏覽器語言。全站共用（sc_lang，並同步我愛操盤手的 wacp_lang）---- */

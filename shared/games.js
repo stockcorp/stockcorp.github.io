@@ -2,7 +2,7 @@
    新增遊戲時只要在 GAMES 加一筆，所有遊戲頁面的左右切換就會自動更新；
    之後執行 node tools/build-sitemap.js（或推送後由 GitHub Actions 自動執行）就會更新 sitemap.xml。
    用法：<script src="/shared/games.js" data-game="遊戲 id" defer></script>
-   寬螢幕：左右兩側固定「上一款／下一款」；窄螢幕：頁面最上方一條切換列。App 內（SC_IS_APP）不顯示。 */
+   寬螢幕：左右兩側固定「上一款／下一款」；窄螢幕：頁面最上方一條切換列。大廳 App 內照常顯示；單一遊戲的舊套殼（SC_APP_NAV === false）不顯示。 */
 (function () {
   'use strict';
   // cat：board 棋牌、puzzle 益智、action 動作、racing 競速、sim 模擬經營（可多個）
@@ -89,7 +89,7 @@
   window.SC_GAMES = GAMES;
   var me = document.currentScript, cur = (me && me.getAttribute('data-game')) || '';
   // 大廳頁只需要遊戲清單，不顯示切換列；App 內也不顯示
-  if (window.SC_IS_APP || cur === 'lobby') return;
+  if ((window.SC_IS_APP && window.SC_APP_NAV === false) || cur === 'lobby') return;
   var idx = -1; for (var i = 0; i < GAMES.length; i++) if (GAMES[i].id === cur) idx = i;
   if (GAMES.length < 2) return;
   var en = function () { return /^en/i.test(document.documentElement.lang || ''); };
