@@ -297,7 +297,9 @@
   function fsEnter() {
     var n = fsNative();
     if (n) { fsMode = 'native'; try { n.setFullscreen(true, fsOrient); } catch (e) { /* 略過 */ } fsApply(true); return; }
-    var req = root.requestFullscreen || root.webkitRequestFullscreen;
+    // 套殼 App 一律不用瀏覽器的 Fullscreen API：Android WebView 要 App 自己接 onShowCustomView 才能顯示，
+    // 沒接好時 WebView 仍可能回報「支援」，結果網頁被搬到一個沒掛上畫面的 View，整個變黑（2026-11-23 game.lobby 1.3 實際發生）
+    var req = window.SC_IS_APP ? null : (root.requestFullscreen || root.webkitRequestFullscreen);
     if (req && (document.fullscreenEnabled || document.webkitFullscreenEnabled)) {
       fsMode = 'api';
       var lock = function () { try { var o = screen.orientation; if (o && o.lock) { var q = o.lock(fsOrient); if (q && q.catch) q.catch(function () { fsHint(); }); } } catch (e) { /* 略過 */ } };
