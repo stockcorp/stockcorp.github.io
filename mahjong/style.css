@@ -66,3 +66,29 @@ body{background:#0b2a26}
   .claim .btn{font-size:15px;padding:8px 12px}
 }
 @media(max-width:760px){.table{min-height:0}.center{padding:6px 0}}
+
+/* v1.3：橫向全螢幕（右下角全螢幕按鈕；shared/games.js 加上 html.scg-land） */
+html.scg-land{--tw:min(clamp(30px,10.4vh,54px),calc((100vw - 44px) / 18.2))}
+html.scg-land .table{flex:1;min-height:0;max-width:none;width:auto;margin:3px 4px 4px;padding:4px 8px;gap:3px 6px;border-width:4px;border-radius:18px;grid-template-columns:clamp(104px,14vw,170px) minmax(0,1fr) clamp(104px,14vw,170px);grid-template-areas:"s3 s2 s1" "s3 c s1" "me me me";grid-template-rows:auto minmax(0,1fr) auto}
+html.scg-land .seat{gap:3px;overflow:hidden}
+html.scg-land .s2{flex-direction:row;justify-content:center;align-items:center;gap:8px}
+html.scg-land .av{padding:2px 8px 2px 2px}
+html.scg-land .av .fc{width:28px;height:28px;font-size:16px}
+html.scg-land .av b{font-size:13px}html.scg-land .av small{font-size:11px}
+html.scg-land .mj.sm{--w:clamp(17px,5vh,26px)}
+html.scg-land .mj.xs{--w:clamp(15px,4.4vh,22px)}
+html.scg-land .center{gap:2px;min-height:0;padding:0}
+html.scg-land .info{font-size:12px;padding:2px 10px}
+html.scg-land .rivers{max-width:none;gap:4px;flex:1;min-height:0;grid-template-rows:1fr 1fr}
+html.scg-land .rv{min-height:0;padding:3px;overflow:hidden}
+html.scg-land .msg{font-size:13.5px;min-height:17px;line-height:17px}
+html.scg-land .me{position:relative;gap:2px;display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"top bar" "hand hand"}
+html.scg-land .meTop{grid-area:top;flex-wrap:nowrap;align-items:center;min-width:0}
+html.scg-land .meBar{grid-area:bar;flex-wrap:nowrap;gap:5px;padding-right:50px}
+html.scg-land .meBar .btn{padding:5px 10px;font-size:13px;white-space:nowrap}
+html.scg-land .hand{grid-area:hand;padding:12px 2px 3px;gap:1px}
+html.scg-land .hand .mj.sel{transform:translateY(-10px)}
+html.scg-land .hand .mj.new{margin-left:8px}
+html.scg-land .claim{position:absolute;left:0;right:0;bottom:calc(100% + 4px);z-index:6}
+html.scg-land .claim:not(:empty){padding:6px;background:rgba(3,36,32,.86);border-radius:14px;width:max-content;max-width:96%;margin:0 auto}
+html.scg-land .claim .btn{font-size:15px;padding:7px 14px}

@@ -111,3 +111,35 @@ a{color:var(--gold)}
 .emotes button:active{transform:scale(.9)}
 .me .bubble{order:2}
 @media(max-width:560px){.acts .btn{padding:7px 9px;font-size:13px}.brand h1{font-size:17px}.logo{width:34px;height:34px;font-size:18px}}
+/* v1.3：橫向全螢幕（右下角全螢幕按鈕；shared/games.js 加上 html.scg-land） */
+html.scg-land .top{padding:4px 10px}
+html.scg-land .brand small{display:none}
+html.scg-land .brand h1{font-size:17px}
+html.scg-land .logo{width:32px;height:32px;font-size:17px;border-width:2px}
+html.scg-land .acts .btn{padding:6px 10px;font-size:13px}
+html.scg-land .game{max-width:none;height:calc(100vh - 46px);padding:6px 8px;gap:6px 8px;grid-template-columns:clamp(128px,17vw,200px) minmax(0,1fr) auto clamp(128px,17vw,200px);grid-template-rows:minmax(0,1fr) auto;grid-template-areas:"ai board board me" "ai status tools me";align-items:center}
+html.scg-land .side{flex-direction:column;align-items:stretch;gap:8px;padding:8px;min-height:0;align-self:stretch;overflow:hidden}
+html.scg-land .side.ai{grid-area:ai}
+html.scg-land .side.me{grid-area:me;padding-bottom:58px}
+html.scg-land .who{gap:8px}
+html.scg-land .who b{font-size:15px}
+html.scg-land .avatar{width:38px;height:38px}
+html.scg-land .bubble{position:static;flex:none;font-size:12.5px;min-height:34px}
+html.scg-land .me .bubble{order:0}
+html.scg-land .tray,html.scg-land .me .tray{max-width:none;margin:0;justify-content:flex-start;align-content:flex-start;flex:1;min-height:0;overflow:hidden}
+html.scg-land .tray .mini{width:22px;height:22px;font-size:13px}
+html.scg-land .boardwrap{grid-area:board;justify-self:center}
+html.scg-land .status{grid-area:status;font-size:14px;min-height:20px;line-height:1.25;text-align:left;padding-left:4px}
+html.scg-land .status small{display:inline;margin-left:8px}
+html.scg-land .tools{grid-area:tools;flex-wrap:nowrap;gap:5px}
+html.scg-land .tools .btn{padding:5px 9px;font-size:13px;white-space:nowrap}
+html.scg-land .emotes{position:fixed;left:50%;bottom:4px;transform:translateX(-50%);z-index:8}
+html.scg-land .emotes button{font-size:18px;padding:2px 8px}
+html.scg-land .modal{max-width:720px;padding:12px 16px;max-height:calc(100vh - 16px)}
+html.scg-land .ov{padding:8px}
+html.scg-land .modal h2{margin:0 0 6px;font-size:19px}
+html.scg-land .modal h3{margin:8px 0 4px}
+html.scg-land .chips button{padding:6px 6px;font-size:14px}
+
+html.scg-land .who b{display:block}
+html.scg-land .lvl{margin-left:0;display:inline-block}

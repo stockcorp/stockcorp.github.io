@@ -11,3 +11,8 @@
 /* v1.1 氛圍 */
 body{background:radial-gradient(circle at 50% -10%,#134e4a,var(--bg) 62%) fixed}
 #cv{box-shadow:0 0 0 3px rgba(94,234,212,.35),0 0 28px rgba(94,234,212,.22),0 14px 36px rgba(0,0,0,.6)}
+
+/* v1.2：橫向全螢幕（右下角全螢幕按鈕；shared/games.js 加上 html.scg-land） */
+html.scg-land .wrap{flex:1;min-height:0;max-width:none;width:100%;padding:3px 8px 6px;display:flex;flex-direction:column}
+html.scg-land .bar{margin-bottom:3px;font-size:13px;gap:14px}
+html.scg-land .stage{flex:1;min-height:0;height:auto}

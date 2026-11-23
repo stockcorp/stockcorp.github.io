@@ -8,3 +8,11 @@
 /* v1.1 氛圍 */
 body{background:radial-gradient(circle at 50% -10%,#7c2d12,var(--bg) 62%) fixed}
 #cv{box-shadow:0 0 0 3px rgba(251,146,60,.35),0 0 28px rgba(251,146,60,.22),0 14px 36px rgba(0,0,0,.6)}
+
+/* v1.2：橫向全螢幕（右下角全螢幕按鈕；shared/games.js 加上 html.scg-land） */
+html.scg-land .wrap{flex:1;min-height:0;max-width:none;width:100%;padding:5px 8px 6px;display:flex;flex-direction:column;position:relative}
+html.scg-land .stage{flex:1;min-height:0;display:flex;justify-content:center;align-items:center}
+html.scg-land #cv{width:min(100%,calc((100vh - 58px) * 2.4));height:auto}
+@media(max-width:639px){html.scg-land #cv{width:min(100%,calc((100vh - 58px) * 1.5333))}}
+html.scg-land .ctl{position:absolute;left:14px;right:14px;bottom:12px;margin:0;pointer-events:none}
+html.scg-land .ctl .btn{pointer-events:auto;flex:none;width:clamp(84px,14vw,130px);height:52px;font-size:15px;opacity:.82;white-space:nowrap;padding:0 6px}

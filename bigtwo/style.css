@@ -52,3 +52,24 @@ body{background:#0d2a1d}
   .hand .card{margin-left:calc(var(--cw) * -.55)}
 }
 @media(max-width:400px){:root{--cw:42px}.hand .card{margin-left:calc(var(--cw) * -.6)}}
+
+/* v1.3：橫向全螢幕（右下角全螢幕按鈕；shared/games.js 加上 html.scg-land） */
+html.scg-land{--cw:clamp(38px,12.4vh,66px)}
+html.scg-land .table{flex:1;min-height:0;max-width:none;width:auto;margin:3px 4px 4px;padding:4px 8px;gap:2px 6px;border-width:4px;border-radius:18px;grid-template-columns:clamp(110px,16vw,170px) minmax(0,1fr) clamp(110px,16vw,170px);grid-template-areas:"s3 s2 s1" "s3 c s1" "me me me";grid-template-rows:auto minmax(0,1fr) auto}
+html.scg-land .seat{gap:3px}
+html.scg-land .s2{flex-direction:row;gap:8px}
+html.scg-land .s2 .backs{display:none}
+html.scg-land .av{padding:2px 10px 2px 2px}
+html.scg-land .av .fc{width:30px;height:30px;font-size:18px}
+html.scg-land .av b{font-size:13px}html.scg-land .av small{font-size:11px}
+html.scg-land .backs i{width:16px;height:24px;margin-left:-11px}
+html.scg-land .last{min-height:calc(26px * 1.42 + 2px)}
+html.scg-land .last .card{--cw:26px}
+html.scg-land .center{min-height:0;gap:2px}
+html.scg-land .trick{min-height:0}
+html.scg-land .msg{font-size:14px;min-height:18px}
+html.scg-land .me{gap:2px}
+html.scg-land .meBar{flex-wrap:nowrap;padding-right:50px}
+html.scg-land .meBar .btn{padding:6px 12px;font-size:14px;white-space:nowrap}
+html.scg-land .hand{padding:13px 4px 2px;min-height:0}
+html.scg-land .hand .card.sel{transform:translateY(-11px)}

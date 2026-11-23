@@ -157,6 +157,28 @@
     '.scg-next-r .scg-all{padding:10px 14px;font-size:13px}',
     '.scg-sheet{position:fixed;left:0;right:0;bottom:0;z-index:2147482000;display:flex;justify-content:center;padding:8px;pointer-events:none;transform:translateY(110%);transition:transform .28s ease}',
     '.scg-sheet.on{transform:none}',
+    // 全螢幕按鈕（右下角）與全螢幕時的版面
+    '.scg-fsb{position:fixed;right:10px;bottom:calc(10px + var(--sc-anchor,0px) + env(safe-area-inset-bottom,0px));z-index:2147480000;width:44px;height:44px;border-radius:50%;border:1px solid rgba(255,255,255,.3);background:rgba(15,20,32,.66);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;margin:0;opacity:.82;-webkit-tap-highlight-color:transparent;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);box-shadow:0 4px 14px rgba(0,0,0,.4);transition:opacity .2s,transform .15s,bottom .25s;touch-action:manipulation}',
+    '.scg-fsb:hover{opacity:1}.scg-fsb:active{transform:scale(.9)}',
+    '.scg-fsb svg{width:22px;height:22px;display:block;pointer-events:none}',
+    'html.scg-fs .scg-fsb{opacity:.55;width:40px;height:40px}',
+    'html.scg-fs .scg-bar,html.scg-fs .scg-rail,html.scg-fs .k-help,html.scg-fs .k-foot,html.scg-fs section.info,html.scg-fs footer.foot{display:none!important}',
+    'html.scg-fs.scg-rails body{padding-left:0;padding-right:0}',
+    'html.scg-fs,html.scg-fs body{overscroll-behavior:none}',
+    'html.scg-land,html.scg-land body{height:100%;overflow:hidden}',
+    // 橫向全螢幕的共用精簡：標題列變矮、彈窗塞進矮畫面；主要區塊由各遊戲自己的 style.css 排
+    'html.scg-land body{display:flex;flex-direction:column;min-height:0}',
+    'html.scg-land .k-top{padding:4px 10px;gap:6px;flex-wrap:nowrap;flex:none}',
+    'html.scg-land .k-logo{width:32px;height:32px;font-size:18px;border-radius:10px}',
+    'html.scg-land .k-brand h1{font-size:17px}html.scg-land .k-brand small{font-size:11px}',
+    'html.scg-land .k-acts{flex-wrap:nowrap;gap:4px}',
+    'html.scg-land .k-acts .btn{padding:6px 10px;font-size:13px;border-radius:10px;white-space:nowrap}',
+    'html.scg-land .k-ov{padding:8px}',
+    'html.scg-land .k-modal{max-height:calc(100vh - 16px);padding:12px 16px;max-width:min(680px,96vw)}',
+    'html.scg-land .k-modal h2{margin:0 0 6px;font-size:19px}html.scg-land .k-modal h3{margin:8px 0 5px}',
+    'html.scg-land .k-big{font-size:40px;line-height:1.1}',
+    '.scg-tip{position:fixed;left:50%;top:18%;transform:translate(-50%,-8px);z-index:2147480500;background:rgba(15,20,32,.94);color:#fff;border:1px solid rgba(255,255,255,.2);border-radius:999px;padding:10px 16px;font:700 14px/1.3 -apple-system,"Segoe UI","Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;opacity:0;transition:opacity .25s,transform .25s;pointer-events:none;max-width:86vw;text-align:center}',
+    '.scg-tip.on{opacity:1;transform:translate(-50%,0)}',
     '.scg-sheet>div{pointer-events:auto;position:relative;width:100%;max-width:460px;background:#141a29;border:1px solid #2a3550;border-radius:18px;padding:4px 14px 12px;box-shadow:0 -8px 30px rgba(0,0,0,.5)}',
     '.scg-sheet .scg-next{margin-top:0;border-top:0}',
     '.scg-sheet .scg-x{position:absolute;right:6px;top:2px;background:none;border:0;color:#8b97b3;font-size:22px;line-height:1;padding:6px 8px;cursor:pointer;z-index:1}'
@@ -241,11 +263,109 @@
     watch(document.getElementById('ovEnd'));
     if (window.SC && !SC._scgPost) { var raw = SC.post; SC._scgPost = 1; SC.post = function (type, data) { try { if (type === 'gameover') { onGameOver(); if (data && data.win === true && window.K && K.confetti) K.confetti(); } else if (type === 'start' && sheet) sheet.classList.remove('on'); } catch (e) { /* 略過 */ } return raw.apply(SC, arguments); }; }
   }
+  // ── 全螢幕（右下角按鈕）：依遊戲決定橫向或直向 ──────────────────────────
+  // 橫向的遊戲要在自己的 style.css 用 html.scg-land 寫好橫向版面，才能加進這張表
+  var FS_LAND = { darkchess: 1, bigtwo: 1, mahjong: 1, hearts: 1, runner: 1, blob: 1 };
+  var fsOrient = FS_LAND[cur] ? 'landscape' : 'portrait', fsOn = false, fsMode = '', fsBtn = null, fsSlot = 0, root = document.documentElement;
+  var ICO_IN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>';
+  var ICO_OUT = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/></svg>';
+  function fsNative() { try { var a = window.StockcorpAndroid; return a && typeof a.setFullscreen === 'function' ? a : null; } catch (e) { return null; } }
+  function fsEl() { return document.fullscreenElement || document.webkitFullscreenElement || null; }
+  function fsLand() {
+    var land = fsOn && fsOrient === 'landscape' && !window.SC_VH_FIX && window.innerWidth > window.innerHeight * 1.1;
+    if (root.classList.contains('scg-land') !== land) root.classList.toggle('scg-land', land);
+  }
+  function fsLabel() {
+    if (!fsBtn) return;
+    var t = fsOn ? (en() ? 'Exit full screen' : '離開全螢幕') : (en() ? 'Full screen' : '全螢幕');
+    fsBtn.innerHTML = fsOn ? ICO_OUT : ICO_IN; fsBtn.title = t; fsBtn.setAttribute('aria-label', t);
+  }
+  function fsApply(on) {
+    if (fsOn === on) { fsLand(); return; }
+    fsOn = on; root.classList.toggle('scg-fs', on); fsLand(); fsLabel();
+    try { window.scrollTo(0, 0); } catch (e) { /* 略過 */ }
+    try { if (window.SC && SC.post) SC.post('fullscreen', { on: on, orientation: fsOrient }); } catch (e) { /* 略過 */ }
+    // 畫布遊戲靠 resize 重新量尺寸
+    [60, 350, 900].forEach(function (ms) { setTimeout(function () { fsLand(); try { window.dispatchEvent(new Event('resize')); } catch (e) { /* 略過 */ } fsPlace(true); }, ms); });
+  }
+  function fsHint() {
+    if (fsOrient !== 'landscape' || window.SC_VH_FIX || window.innerWidth > window.innerHeight) return;
+    var m = en() ? 'Rotate your phone sideways for a bigger view' : '把手機轉成橫向，畫面會更大';
+    var t = document.createElement('div'); t.className = 'scg-tip'; t.textContent = m; document.body.appendChild(t);
+    setTimeout(function () { t.classList.add('on'); }, 30); setTimeout(function () { t.classList.remove('on'); setTimeout(function () { t.remove(); }, 400); }, 2800);
+  }
+  function fsEnter() {
+    var n = fsNative();
+    if (n) { fsMode = 'native'; try { n.setFullscreen(true, fsOrient); } catch (e) { /* 略過 */ } fsApply(true); return; }
+    var req = root.requestFullscreen || root.webkitRequestFullscreen;
+    if (req && (document.fullscreenEnabled || document.webkitFullscreenEnabled)) {
+      fsMode = 'api';
+      var lock = function () { try { var o = screen.orientation; if (o && o.lock) { var q = o.lock(fsOrient); if (q && q.catch) q.catch(function () { fsHint(); }); } } catch (e) { /* 略過 */ } };
+      var fail = function () { fsMode = 'css'; fsApply(true); fsHint(); };
+      try { var p = req.call(root, { navigationUI: 'hide' }); if (p && p.then) p.then(lock, fail); else setTimeout(lock, 80); } catch (e) { fail(); }
+      return;
+    }
+    fsMode = 'css'; fsApply(true); fsHint();
+  }
+  function fsExit() {
+    if (fsMode === 'native') { var n = fsNative(); try { if (n) n.setFullscreen(false, ''); } catch (e) { /* 略過 */ } fsApply(false); }
+    else if (fsMode === 'api' && fsEl()) { try { (document.exitFullscreen || document.webkitExitFullscreen).call(document); } catch (e) { fsApply(false); } }
+    else fsApply(false);
+  }
+  function fsChange() {
+    var on = !!fsEl();
+    if (on) { fsMode = 'api'; fsApply(true); }
+    else if (fsMode === 'api') { try { if (screen.orientation && screen.orientation.unlock) screen.orientation.unlock(); } catch (e) { /* 略過 */ } fsApply(false); }
+  }
+  // 按鈕預設在右下角；底下剛好有遊戲的按鈕時，沿著右邊往上讓開
+  function fsHits(strict) {
+    var r = fsBtn.getBoundingClientRect(), pts = [[r.left + r.width / 2, r.top + r.height / 2], [r.left + 5, r.top + 5], [r.right - 5, r.bottom - 5], [r.left + 5, r.bottom - 5]];
+    for (var i = 0; i < pts.length; i++) {
+      var els = document.elementsFromPoint ? document.elementsFromPoint(pts[i][0], pts[i][1]) : [];
+      for (var j = 0; j < els.length; j++) {
+        var e = els[j]; if (e === fsBtn || e === root || e === document.body) continue;
+        var tg = e.tagName; if (e.id === 'k-fx' || (e.closest && e.closest('.scg-sheet,.scg-ov'))) continue;
+        if (tg === 'BUTTON' || tg === 'A' || tg === 'INPUT' || tg === 'SELECT') return true;
+        var cs = getComputedStyle(e); if (cs.cursor === 'pointer') return true;
+        if (strict && tg === 'CANVAS' && cs.pointerEvents !== 'none') return true;
+      }
+    }
+    return false;
+  }
+  function fsSet(k) {
+    fsSlot = k;
+    // WebView 高度異常（app.js 的 SC_VH_FIX）時 bottom 不可靠，改用估算的可視高度由上往下定位
+    if (window.SC_VH_FIX) { fsBtn.style.bottom = 'auto'; fsBtn.style.top = Math.max(60, window.SC_VH_FIX - 56 - k * 54) + 'px'; return; }
+    fsBtn.style.top = ''; fsBtn.style.bottom = k ? 'calc(' + (10 + k * 54) + 'px + var(--sc-anchor,0px) + env(safe-area-inset-bottom,0px))' : '';
+  }
+  function fsPlace(reset) {
+    if (!fsBtn || !fsBtn.isConnected) return;
+    if (!reset && !fsHits(false)) return;
+    var max = Math.max(1, Math.min(7, Math.floor((window.innerHeight * 0.55 - 10) / 54))), k, pass;
+    var tr = fsBtn.style.transition; fsBtn.style.transition = 'none';
+    for (pass = 0; pass < 2; pass++) { for (k = 0; k <= max; k++) { fsSet(k); if (!fsHits(pass === 0)) { fsBtn.style.transition = tr; return; } } }
+    fsSet(0); fsBtn.style.transition = tr;
+  }
+  function fsBuild() {
+    if (fsBtn && fsBtn.isConnected) { fsLabel(); return; }
+    fsBtn = document.createElement('button'); fsBtn.type = 'button'; fsBtn.className = 'scg-fsb';
+    fsBtn.addEventListener('click', function (e) { e.preventDefault(); e.stopPropagation(); if (fsOn) fsExit(); else fsEnter(); });
+    document.body.appendChild(fsBtn); fsLabel();
+    [400, 1500].forEach(function (ms) { setTimeout(function () { fsPlace(true); }, ms); });
+  }
+  if (cur && idx >= 0) {
+    document.addEventListener('fullscreenchange', fsChange); document.addEventListener('webkitfullscreenchange', fsChange);
+    window.addEventListener('resize', function () { fsLand(); if (fsBtn) fsPlace(true); });
+    setInterval(function () { if (fsBtn) fsPlace(false); }, 2500);
+    if (window.SC && SC.onBack) SC.onBack(function () { if (fsOn) { fsExit(); return true; } return false; });
+    // 原生端自己離開全螢幕（例如系統手勢）時呼叫 SC_FS.sync(false)
+    window.SC_FS = { orientation: fsOrient, isOn: function () { return fsOn; }, enter: fsEnter, exit: fsExit, sync: function (on) { fsMode = on ? (fsNative() ? 'native' : 'css') : fsMode; fsApply(!!on); } };
+  }
   var nodes = null, lastLang = null;
   function go() {
     var lg = en() ? 'en' : 'zh'; if (lg === lastLang) return; lastLang = lg;
     if (nodes) nodes.forEach(function (n) { n.remove(); });
-    nodes = build(); hookEnd();
+    nodes = build(); hookEnd(); if (cur && idx >= 0) fsBuild();
     [].forEach.call(document.querySelectorAll('.scg-next'), function (n) { var p = n.parentNode; n.remove(); if (p) p.appendChild(nextBlock()); });
   }
   // 語言切換後更新名稱（我愛操盤手有中英切換）

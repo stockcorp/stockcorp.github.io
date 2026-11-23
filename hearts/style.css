@@ -27,3 +27,20 @@ body{background:radial-gradient(circle at 50% -10%,#7f1d1d,var(--bg) 62%) fixed}
 .back{background:radial-gradient(circle at 50% 50%,rgba(255,255,255,.2) 0 16%,transparent 17%),repeating-linear-gradient(45deg,#7f1d1d 0 4px,#991b1b 4px 8px)}
 .c{background:linear-gradient(#fff,#eef2f7);box-shadow:0 3px 6px rgba(0,0,0,.45),inset 0 0 0 1px rgba(255,255,255,.9)}
 .hand .c.sel{box-shadow:0 0 0 3px #facc15,0 10px 16px rgba(0,0,0,.5)}
+
+/* v1.2：橫向全螢幕（右下角全螢幕按鈕；shared/games.js 加上 html.scg-land） */
+html.scg-land .wrap{flex:1;min-height:0;max-width:none;width:100%;padding:4px 8px;display:flex;flex-direction:column;position:relative}
+html.scg-land .table{flex:1;min-height:0;height:auto;border-radius:16px;margin:4px 6px 0}
+html.scg-land .seat .back{width:26px;height:36px}
+html.scg-land .s2{flex-direction:row;gap:6px;top:4px;align-items:center}
+html.scg-land .s0{flex-direction:row;gap:6px;bottom:2px}
+html.scg-land .s1,html.scg-land .s3{top:28%}
+html.scg-land .trick{top:50%;transform:scale(.74)}
+@media(min-height:520px){html.scg-land .trick{transform:none}html.scg-land .hand .c{width:60px;height:86px;margin-left:-24px}html.scg-land .seat .back{width:34px;height:46px}}
+html.scg-land .msg{bottom:22px;font-size:13px}
+html.scg-land .hand{margin:4px auto 0;padding:10px 4px 2px;min-height:0}
+html.scg-land .hand .c{width:46px;height:66px;margin-left:-19px}
+html.scg-land .hand .c .mid{font-size:21px}
+html.scg-land .hand .c.sel{transform:translateY(-10px)}
+html.scg-land .acts{position:absolute;left:12px;bottom:6px;flex-direction:column;align-items:flex-start;gap:4px;z-index:5}
+html.scg-land .acts .btn.big{font-size:15px;padding:8px 14px}

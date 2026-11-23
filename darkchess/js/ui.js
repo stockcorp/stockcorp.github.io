@@ -82,12 +82,20 @@
   function pos(i) { const r = (i / 8) | 0, c = i % 8; return orient === 'L' ? { x: c, y: r } : { x: r, y: c }; }
   function center(i) { const p = pos(i), pad = cell * 0.12; return { x: pad + (p.x + 0.5) * cell, y: pad + (p.y + 0.5) * cell }; }
   function layout() {
-    const W = Math.min(document.querySelector('.game').clientWidth - 24, 940);
-    const used = ['pAI', 'pMe', 'status'].reduce((a, id) => a + $(id).offsetHeight, 0) + document.querySelector('.tools').offsetHeight + document.querySelector('.top').offsetHeight + 80;
-    const H = Math.max(240, window.innerHeight - used);
+    // 橫向全螢幕（html.scg-land）：左右是雙方資訊，中間整塊給棋盤
+    const land = document.documentElement.classList.contains('scg-land'), gm = document.querySelector('.game');
+    let W, H;
+    if (land) {
+      W = gm.clientWidth - 2 * ($('pAI').offsetWidth + 8) - 20;
+      H = window.innerHeight - document.querySelector('.top').offsetHeight - Math.max($('status').offsetHeight, document.querySelector('.tools').offsetHeight) - 30;
+    } else {
+      W = Math.min(gm.clientWidth - 24, 940);
+      const used = ['pAI', 'pMe', 'status'].reduce((a, id) => a + $(id).offsetHeight, 0) + document.querySelector('.tools').offsetHeight + document.querySelector('.top').offsetHeight + 80;
+      H = Math.max(240, window.innerHeight - used);
+    }
     const cl = Math.min(W / 8.3, H / 4.3), cp = Math.min(W / 4.3, H / 8.3);
-    const o = cp > cl * 1.2 ? 'P' : 'L';
-    cell = Math.floor(Math.max(34, Math.min(104, o === 'L' ? cl : cp))); orient = o;
+    const o = land ? 'L' : (cp > cl * 1.2 ? 'P' : 'L');
+    cell = Math.floor(Math.max(land ? 30 : 34, Math.min(land ? 140 : 104, o === 'L' ? cl : cp))); orient = o;
     const pad = Math.round(cell * 0.12), cols = o === 'L' ? 8 : 4, rows = o === 'L' ? 4 : 8;
     const st = document.documentElement.style;
     st.setProperty('--cell', cell + 'px'); st.setProperty('--pc', Math.round(cell * 0.86) + 'px'); st.setProperty('--pad', pad + 'px');
